@@ -11,9 +11,21 @@
             <input type="number" min="0" class="form-control" name="phone" id="phone" value="{{$donor->phone}}">
         </div>
         <div class="form-group">
-            <label for="price" class="form-control-label">اجمالي التبرعات</label>
-            <input type="number" min="0" class="form-control" name="price" id="price" value="{{$donor->price}}">
+            <label for="address" class="form-control-label">العنوان </label>
+            <input type="text" min="0" class="form-control" value="{{$donor->address}}" name="address" id="address">
         </div>
+        <div class="form-group">
+            <label for="burn_date" class="form-control-label">تاريخ الميلاد </label>
+            <input type="date"  class="form-control" value="{{$donor->burn_date}}" name="burn_date" id="burn_date">
+        </div>
+        <div class="form-group">
+            <label for="created_at" class="form-control-label">تاريخ الإنشاء</label>
+            <input type="date" class="form-control"
+                   value="{{ \Carbon\Carbon::parse($donor->created_at)->format('Y-m-d') }}"
+                   name="created_at" id="created_at">
+        </div>
+
+
         <div class="form-group">
             <label for="notes" class="form-control-label">الملاحظات</label>
             <textarea rows="3" class="form-control" name="notes" id="notes">{{$donor->note}}</textarea>

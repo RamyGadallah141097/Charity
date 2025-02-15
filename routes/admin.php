@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 
 
-
 Route::group(['prefix'=>'admin','middleware'=>'auth:admin'],function (){
 
     #### Home ####
@@ -27,6 +26,14 @@ Route::group(['prefix'=>'admin','middleware'=>'auth:admin'],function (){
     #### Donors ####
     Route::resource('donors','DonorController');
     Route::POST('delete_donors','DonorController@delete')->name('delete_donors');
+    Route::POST('Donations_donors','DonationController@delete')->name('donations_delete');
+    Route::resource('Donations',"DonationController");
+    Route::get('/get_donor_phone/{id}', 'DonationController@get_donor_phone')->name("get_donor_phone");
+    Route::get('/search-donor', 'DonationController@searchDonor')->name('search.donor');
+//    Route::get('/admin/search-donor', [YourController::class, 'searchDonor'])->name('search.donor');
+
+
+
 
     #### Subventions ####
     Route::resource('subventions','SubventionController');

@@ -1,16 +1,16 @@
 @extends('Admin/layouts/master')
 
 @section('title')
-    {{($setting->title) ?? ''}} | المتبرعين
+    {{($setting->title) ?? ''}} | التبرعات
 @endsection
-@section('page_name') المتبرعين @endsection
+@section('page_name') التبرعات @endsection
 @section('content')
 
     <div class="row">
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"> المتبرعين الي {{($setting->title) ?? ''}}</h3>
+                    <h3 class="card-title"> التبرعات من {{($setting->title) ?? ''}}</h3>
                     <div class="">
                         <button class="btn btn-secondary btn-icon text-white addBtn">
 									<span>
@@ -26,12 +26,11 @@
                             <thead>
                             <tr class="fw-bolder text-muted bg-light">
                                 <th class="min-w-25px">#</th>
-                                <th class="min-w-50px">الاسم</th>
-                                <th class="min-w-125px">الهاتف</th>
-                                <th class="min-w-125px">العنوان</th>
-                                <th class="min-w-125px">تاريخ الميلاد</th>
-                                <th class="min-w-125px">ملاحظات</th>
-                                <th class="min-w-125px">وقت التسجيل</th>
+                                <th class="min-w-50px"> الاسم المتبرع</th>
+                                <th class="min-w-125px"> الهاتف المتبرع</th>
+                                <th class="min-w-125px">تاريخ التبرع</th>
+                                <th class="min-w-125px">نوع التبرع </th>
+                                <th class="min-w-125px">قيمه التبرع </th>
                                 <th class="min-w-50px rounded-end">العمليات</th>
                             </tr>
                             </thead>
@@ -91,22 +90,18 @@
     <script>
         var columns = [
             {data: 'id', name: 'id'},
-            {data: 'name', name: 'name'},
-            {data: 'phone', name: 'phone'},
-            {data: 'address', name: 'address'},
-            {data: 'burn_date', name: 'burn_date'},
-            {data: 'notes', name: 'notes'},
+            {data: 'donor_name', name: 'donor_name'},
+            {data: 'donor_phone', name: 'donor_phone'},
             {data: 'created_at', name: 'created_at'},
+            {data: 'donation_type', name: 'donation_type'},
+            {data: 'donation_amount', name: 'donation_amount'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
-        showData('{{route('donors.index')}}', columns);
-        // Delete Using Ajax
-        deleteScript('{{route('delete_donors')}}');
-        // Add Using Ajax
-        showAddModal('{{route('donors.create')}}');
+        showData('{{route('Donations.index')}}', columns);
+        deleteScript('{{route('donations_delete')}}');
+        showAddModal('{{route('Donations.create')}}');
         addScript();
-        // Add Using Ajax
-        showEditModal('{{route('donors.edit',':id')}}');
+        showEditModal('{{route('Donations.edit',':id')}}');
         editScript();
     </script>
 @endsection

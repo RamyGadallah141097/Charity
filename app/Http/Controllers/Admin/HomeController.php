@@ -29,7 +29,7 @@ class HomeController extends Controller
         else
             $diff = 1;
 
-        $donors      = Donor::orderBy('price','DESC')->take(5)->get();
+        $donors      = Donor::take(5)->get();
         $subvention  = Subvention::orderBy('price','DESC')->first();
         $users       = User::latest()->take(5)->get();
         return view('Admin/index',compact('total_donors','users','donors','donors_count','diff','users_count','subvention','users_month','users_last_month','totalMonthlySubventions','accepted_users'));

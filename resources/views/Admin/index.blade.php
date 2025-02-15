@@ -81,6 +81,7 @@
                     </div>
                 </div>
             </div>
+            </div>
         </div><!-- COL END -->
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
             <div class="card bg-info img-card box-info-shadow">
@@ -134,7 +135,7 @@
                             </div>
                             <div class="col">
                                 <div class="float-left"><h4
-                                        class="font-weight-bold mb-0 mt-2 text-blue">{{$donor->price}}</h4></div>
+{{--                                        class="font-weight-bold mb-0 mt-2 text-blue">{{$donor->price}}</h4></div>--}}
                             </div>
                         </div>
                     @endforeach
@@ -146,7 +147,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class=""><p class="mb-1">أعلي مبلغ اعانة</p>
-                        <h2 class="mb-1  number-font"> {{$subvention->price}} جنية </h2></div>
+{{--                        <h2 class="mb-1  number-font"> {{$subvention->price}} جنية </h2></div>--}}
                     <div class="mt-5">
                         <p class="mb-1 d-flex"><span class=""><i
                                     class="fa fa-university ml-2 fs-16 text-muted"></i></span>

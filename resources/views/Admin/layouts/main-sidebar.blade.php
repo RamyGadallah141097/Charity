@@ -1,7 +1,7 @@
 <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
 <aside class="app-sidebar">
     <div class="side-header">
-        <a class="header-brand1" href="{{route('adminHome')}}">
+        <a class="header-brand1" >
             <img src="{{get_file($setting->logo)}}" class="header-brand-img light-logo1" alt="logo">
         </a>
         <!-- LOGO -->
@@ -50,12 +50,26 @@
             </a>
         </li>
 
-        <li class="slide">
-            <a class="side-menu__item" href="{{route('donors.index')}}">
+
+
+        <p>
+            <a class="side-menu__item" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
                 <i class="fe fe-award side-menu__icon"></i>
-                <span class="side-menu__label"> قائمة المتبرعين </span>
-            </a>
-        </li>
+                <span class="side-menu__label"> قائمة المتبرعين </span>            </a>
+
+        </p>
+        <ul class="collapse" id="collapseExample">
+            <li >
+                <a class="dropdown-item-text" href="{{route('donors.index')}}">
+                    <span class="side-menu__label"> قائمة المتبرعين </span>
+                </a>
+            </li>
+            <li >
+                <a class="dropdown-item-text" href="{{route('Donations.index')}}">
+                    <span class="side-menu__label"> قائمة التبرعات </span>
+                </a>
+            </li>
+        </ul>
 
         <li class="slide">
             <a class="side-menu__item" href="{{route('research.index')}}">
