@@ -72,12 +72,12 @@
         </p>
         <ul class="collapse" id="collapseExample">
             <li >
-                <a class="dropdown-item-text" href="{{route('donors.index')}}">
+                <a class="dropdown-item-text side-menu__item" href="{{route('donors.index')}}">
                     <span class="side-menu__label"> قائمة المتبرعين </span>
                 </a>
             </li>
             <li >
-                <a class="dropdown-item-text" href="{{route('Donations.index')}}">
+                <a class="dropdown-item-text side-menu__item" href="{{route('Donations.index')}}">
                     <span class="side-menu__label"> قائمة التبرعات </span>
                 </a>
             </li>
