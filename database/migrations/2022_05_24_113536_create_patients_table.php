@@ -22,7 +22,7 @@ class CreatePatientsTable extends Migration
             $table->tinyInteger('type')->default(0)->comment('0 means women and 1 means man');
             $table->text('treatment')->nullable();
             $table->text('treatment_pay_by')->nullable();
-            $table->tinyInteger('is_insurance')->default(0)->comment('0 means women and 1 means man');
+            $table->enum('is_insurance', ['0', '1'])->default(0)->comment("0 means he hasn't an insurance");
             $table->text('doctor_name')->nullable();
             $table->timestamps();
         });

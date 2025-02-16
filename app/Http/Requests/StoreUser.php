@@ -25,8 +25,8 @@ class StoreUser extends FormRequest
     {
         return [
             'husband_name'     => 'required',
-            'husband_national_id'=> 'required',
-            'social_status'    => 'required|in:single,married,divorced,widow',
+            'husband_national_id' => 'required',
+            'social_status'    => 'required|in:0,1,2,3',
             'husband_birthday' => 'required|date|before:today',
             'work_type'        => 'required',
             'nearest_phone'    => 'required',

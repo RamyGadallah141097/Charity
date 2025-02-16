@@ -13,11 +13,10 @@ use Yajra\DataTables\DataTables;
 class UserController extends Controller
 {
 
-    public function index(request $request, $status)
+    public function index(request $request)
     {
-        dd($status);
         if ($request->ajax()) {
-            $users = User::where('social_status', $status)->get();
+            $users = User::where('social_status')->get();
             return Datatables::of($users)
                 ->addColumn('action', function ($users) {
                     return '
@@ -27,12 +26,9 @@ class UserController extends Controller
                             </button>
                        ';
                 })
-
-
                 ->addColumn('details', function ($users) {
                     return '<button type="button" data-id="' . $users->id . '" class="btn btn-pill btn-default detailsBtn"> عرض</button>';
                 })
-
                 ->editColumn('social_status', function ($users) {
                     if ($users->social_status == 'single')
                         return 'أعزب';
@@ -83,6 +79,8 @@ class UserController extends Controller
 
     public function store(StoreUser $request)
     {
+        dd($request->all());
+
         try {
             // fetch user data
             $userData = $request->except('_token', 'name', 'children_national_id', 'birthday', 'age', 'schools', 'lessons_costs', 'academic_year', 'monthly_cost', 'notes', 'name', 'type', 'treatment_pay_by', 'is_insurance', 'doctor_name');
