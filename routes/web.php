@@ -18,17 +18,17 @@ Route::get('/', function () {
     return redirect('admin/login');
 });
 
-Route::get('webView',function(Request $request){
-    $validate = Validator::make($request->all(),[
-        'type'=>'required|in:terms,privacy'
+Route::get('webView', function (Request $request) {
+    $validate = Validator::make($request->all(), [
+        'type' => 'required|in:terms,privacy'
     ]);
 
-    if ($validate->fails()){
+    if ($validate->fails()) {
         return 'type is missing';
     }
 
     $type = $request->type;
     $text = \App\Models\Setting::first("$request->type");
     $text = $text->$type;
-    return view('webView',compact('text'));
+    return view('webView', compact('text'));
 });

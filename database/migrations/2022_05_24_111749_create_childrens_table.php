@@ -19,6 +19,9 @@ class CreateChildrensTable extends Migration
             $table->foreign('user_id')->references('id')
                 ->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->string('name');
+            $table->string('children_national_id');
+            $table->date('birthday')->nullable();
+            $table->integer('age')->nullable();
             $table->string('school')->nullable();
             $table->double('lessons_cost')->nullable()->default(0);
             $table->string('academic_year')->nullable();
