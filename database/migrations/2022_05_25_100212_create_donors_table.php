@@ -17,7 +17,8 @@ class CreateDonorsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('phone');
-            $table->double('price');
+            $table->string('address');
+            $table->date('burn_date');
             $table->text('notes')->nullable();
             $table->timestamps();
         });

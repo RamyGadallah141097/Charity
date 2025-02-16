@@ -29,7 +29,7 @@ class DonorController extends Controller
                     return ($donors->notes) ?? '-----';
                 })
                 ->editColumn('created_at', function ($donors) {
-                    return $donors->created_at->diffForHumans();
+                    return $donors->created_at->format('d-m-y');
                 })
                 ->escapeColumns([])
                 ->make(true);

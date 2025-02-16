@@ -22,13 +22,14 @@
                 <div class="card-body">
                     <div class="table-responsive">
                         <!--begin::Table-->
-                        <table class="table table-striped table-bordered text-nowrap w-100" id="dataTable">
+                        <table class="table table-striped table-bordered text-nowrap w-75" id="dataTable">
                             <thead>
                             <tr class="fw-bolder text-muted bg-light">
                                 <th class="min-w-25px">#</th>
                                 <th class="min-w-50px">الاسم</th>
                                 <th class="min-w-125px">الهاتف</th>
-                                <th class="min-w-125px">اجمالي التبرعات</th>
+                                <th class="min-w-125px">العنوان</th>
+                                <th class="min-w-125px">تاريخ الميلاد</th>
                                 <th class="min-w-125px">ملاحظات</th>
                                 <th class="min-w-125px">وقت التسجيل</th>
                                 <th class="min-w-50px rounded-end">العمليات</th>
@@ -92,7 +93,8 @@
             {data: 'id', name: 'id'},
             {data: 'name', name: 'name'},
             {data: 'phone', name: 'phone'},
-            {data: 'price', name: 'price'},
+            {data: 'address', name: 'address'},
+            {data: 'burn_date', name: 'burn_date'},
             {data: 'notes', name: 'notes'},
             {data: 'created_at', name: 'created_at'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
