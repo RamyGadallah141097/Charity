@@ -12,6 +12,7 @@
     </div>
     <ul class="side-menu">
         <li>
+            <h3>المستخدمين</h3>
             <h3>العناصر</h3>
         </li>
         <li class="slide">
