@@ -18,6 +18,7 @@ class CreateDonationsTable extends Migration
             $table->foreignId("donor_id")->references("id")->on("donors")->cascadeOnDelete();
             $table->integer("donation_type");
             $table->integer("donation_amount");
+            $table->date("created");
             $table->timestamps();
         });
     }

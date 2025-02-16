@@ -7,7 +7,6 @@ use App\Http\Requests\DonationsRequest;
 use App\Http\Requests\StoreDonate;
 use App\Models\Donation;
 use App\Models\Donor;
-use http\Env\Response;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -28,8 +27,9 @@ class DonationController extends Controller
                 })->editColumn('created_at', function ($donation) {
                     return $donation->created_at ? $donation->created_at->format('d-m-y') : 'غير متوفر';
 
-                })->editColumn('donation_type', function ($donation) {
-                     switch ($donation->donation_type) {
+                })
+                ->editColumn('donation_type', function ($donation) {
+                    switch ($donation->donation_type) {
                         case 0:
                             return 'زكاة المال';
                             break;
@@ -64,24 +64,23 @@ class DonationController extends Controller
     public function create()
     {
         $donors = Donor::all();
-        return view('Admin/donations/parts/create' , ["donors" => $donors]);
+        return view('Admin/donations/parts/create', ["donors" => $donors]);
     }
-
 
 
     public function store(DonationsRequest $request)
     {
         if (Donation::create($request->except('_token'))) {
-            return response()->json(['status'=>200]);
-        }else{
-            return response()->json(["status" => 405]);
+            return response()->json(['status' => 200]);
+        } else {
+            return response()->json(["status" => 500]);
         }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -93,18 +92,17 @@ class DonationController extends Controller
     public function edit($id)
     {
         $donation = Donation::find($id);
-        return view('Admin/donations/parts/edit' , ["donation" => $donation , "donors" => Donor::all()]);
+        return view('Admin/donations/parts/edit', ["donation" => $donation, "donors" => Donor::all()]);
     }
-
 
 
     public function update(DonationsRequest $request, $id)
     {
         $donation = Donation::find($id);
-        if($donation->update($request->except('_token' , '_method'))){
+        if ($donation->update($request->except('_token', '_method'))) {
             return response()->json(['status' => 200]);
-        }else{
-            return response()->json(["satus" => 405]);
+        } else {
+            return response()->json(["status" => 405]);
         }
 
     }
@@ -112,7 +110,7 @@ class DonationController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -124,10 +122,9 @@ class DonationController extends Controller
     {
         try {
             Donation::find($request->id)->delete();
-            return response(['message'=>'تم الحذف بنجاح','status'=>200],200);
-        }
-        catch (\Exception $ex){
-            return response(['message'=>$ex->getMessage(),'status'=>400]);
+            return response(['message' => 'تم الحذف بنجاح', 'status' => 200], 200);
+        } catch (\Exception $ex) {
+            return response(['message' => $ex->getMessage(), 'status' => 400]);
         }
 
     }
@@ -140,12 +137,11 @@ class DonationController extends Controller
 //
 //        return response()->json($products);
 //    }
-    public function get_donor_phone(  $id){
-        $donor_phone  = Donor::where("id" , $id)->pluck("phone");
+    public function get_donor_phone($id)
+    {
+        $donor_phone = Donor::where("id", $id)->pluck("phone");
         return response()->json(['donor_phone' => $donor_phone]);
     }
-
-
 
 
     public function searchDonor(Request $request)

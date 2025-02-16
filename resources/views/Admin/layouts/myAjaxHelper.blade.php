@@ -82,7 +82,7 @@
         $(document).on('click', '#delete_btn', function (event) {
             var id = $("#delete_id").val();
             $.ajax({
-                type: 'POST',
+                type: 'POST ',
                 url: routeOfDelete,
                 data: {
                     '_token': "{{csrf_token()}}",
@@ -130,9 +130,13 @@
                         ' ></span> <span style="margin-left: 4px;">انتظر ..</span>').attr('disabled', true);
                 },
                 success: function (data) {
-                    if (data.status == 200) {
+                    if (data.status == 200)
+                    {
                         $('#dataTable').DataTable().ajax.reload();
                         toastr.success('تم الاضافة بنجاح');
+                        $('#editOrCreate').modal('hide')
+
+
                     } else
                         toastr.error('There is an error');
                     $('#addButton').html(`اضافة`).attr('disabled', false);

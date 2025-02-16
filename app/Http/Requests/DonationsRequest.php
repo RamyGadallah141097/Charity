@@ -27,6 +27,7 @@ class DonationsRequest extends FormRequest
             "donor_id"=>"required",
             "donation_amount"=>"required|min:1",
             "donation_type"=>"required",
+            "created"=>"required",
         ];
     }
 
@@ -36,7 +37,8 @@ class DonationsRequest extends FormRequest
             "donor_id.required" => "يجب تحديد المتبرع",
             "donation_amount.required" => "يجب تحديد المبلغ",
             "donation_amount.min" => "  يجب تحديد مبلغ صالح ",
-            "donation_type.required"=>"يجب تحديد النوع"
+            "donation_type.required"=>"يجب تحديد النوع",
+            "created.required"=>" يجب  تحديد التاريخ"
         ];
     }
 
