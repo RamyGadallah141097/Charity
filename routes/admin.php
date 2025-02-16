@@ -52,6 +52,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 
 
 
+//    the route of the task s
+    Route::resource("tasks","TaskController");
+    Route::POST('delete_task','TaskController@delete')->name('delete_task');
+
+
+
+
     #### Auth ####
     Route::get('logout', 'AuthController@logout')->name('admin.logout');
 });

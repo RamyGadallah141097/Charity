@@ -23,12 +23,20 @@ class DonationsRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            "donor_id"=>"required",
-            "donation_amount"=>"required|min:1",
-            "donation_type"=>"required",
-            "created"=>"required",
+
+        $rules = [
+            "donor_id" => "required",
+            "donation_type" => ["required", "string"],
+            "created_at" => "required",
+            "donation_amount" => ['required', 'integer', 'min:1'],
         ];
+
+        if ($this->donation_type == 3) {
+            $rules['donation_amount'] = ['required', 'string', 'regex:/^[^\d]+$/'];
+        }
+
+        return $rules;
+
     }
 
     public function messages()
@@ -36,9 +44,11 @@ class DonationsRequest extends FormRequest
         return [
             "donor_id.required" => "يجب تحديد المتبرع",
             "donation_amount.required" => "يجب تحديد المبلغ",
-            "donation_amount.min" => "  يجب تحديد مبلغ صالح ",
+            "donation_amount.string" => "  يجب   ادخال  التبرع نصا ",
+            "donation_amount.integer" => "  يجب   ادخال  التبرع رقما  ",
             "donation_type.required"=>"يجب تحديد النوع",
-            "created.required"=>" يجب  تحديد التاريخ"
+            "created.required"=>" يجب  تحديد التاريخ",
+            'donation_amount.regex' => 'يجب   ادخال  التبرع نصا في حاله التبرع العيني.',
         ];
     }
 

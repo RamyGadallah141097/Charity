@@ -2,6 +2,12 @@
 <aside class="app-sidebar">
     <div class="side-header">
 
+
+        <a class="header-brand1" >
+            <img src="{{get_file($setting->logo)}}" class="header-brand-img light-logo1" alt="logo">
+        <a class="header-brand1" href="{{ route('adminHome') }}">
+{{--            <img src="#" class="header-brand-img light-logo1" alt="logo">--}}
+
         <a class="header-brand1">
             {{-- <img src="{{ get_file($setting->logo) }}" class="header-brand-img light-logo1" alt="logo"> --}}
             <a class="header-brand1" href="{{ route('adminHome') }}">
@@ -60,6 +66,12 @@
 
 
         <p>
+
+            <a class="side-menu__item" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                <i class="fe fe-users side-menu__icon"></i>
+                <span class="side-menu__label"> التبرعات والمتبرعين </span>
+            </a>
+
             <a class="side-menu__item" data-toggle="collapse" href="#collapseExample" role="button"
                 aria-expanded="false" aria-controls="collapseExample">
 
@@ -68,6 +80,7 @@
 
                         <i class="fe fe-award side-menu__icon"></i>
                         <span class="side-menu__label"> قائمة المتبرعين </span> </a>
+
 
         </p>
         <ul class="collapse" id="collapseExample">
@@ -91,6 +104,14 @@
         </ul>
 
         <li class="slide">
+            <a class="side-menu__item" href="{{ route('tasks.index') }}">
+                <i class="fe fe-file-text side-menu__icon"></i>
+                <span class="side-menu__label"> بنك الافكار   </span>
+            </a>
+        </li>
+
+
+       <li class="slide">
             <a class="side-menu__item" href="{{ route('research.index') }}">
                 <i class="fe fe-file-text side-menu__icon"></i>
                 <span class="side-menu__label"> طباعة بحث اجتماعي </span>

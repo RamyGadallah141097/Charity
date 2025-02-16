@@ -54,6 +54,7 @@ class AdminController extends Controller
                 unlink($admin->image);
             }
             $admin->delete();
+            return redirect()->back();
             return response(['message'=>'تم الحذف بنجاح','status'=>200],200);
         }
     }
