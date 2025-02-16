@@ -1,6 +1,6 @@
 @extends('Admin/layouts/master')
 @section('title')
-    {{ $setting->title }} | اضافة مستفيد
+    {{ isset($setting->title) ? $setting->title : '' }} | اضافة مستفيد
 @endsection
 @section('page_name')
     مستفيد جديد
@@ -24,8 +24,10 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="mb-0">اضافة بيانات مستفيد جديد</h2>
+                        <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">اضافة بيانات
+                            مستفيد جديد</h2>
                     </div>
+
                     <div class="card-body">
                         <div class="row">
 
@@ -94,7 +96,10 @@
                         </div>
                         <hr>
 
-                        <h3 class="mt-2">اجمالي الدخل</h3>
+                        <div class="card-header">
+                            <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;"> اجمالى الدخل
+                            </h2>
+                        </div>
                         <div class="row">
                             <div class="col-md-3">
                                 <label class="form-label">مرتب</label>
@@ -130,7 +135,10 @@
                             </div>
                         </div>
                         <hr>
-                        <h3 class="mt-4">اجمالي النفقات</h3>
+                        <div class="card-header">
+                            <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">
+                                اجمالى النفقات</h2>
+                        </div>
                         <div class="row">
                             <div class="col-md-2">
                                 <label class="form-label">إيجار</label>
@@ -147,10 +155,6 @@
                             <div class="col-md-3">
                                 <label class="form-label">مياه</label>
                                 <input type="number" class="form-control" name="water" placeholder="">
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">علاج</label>
-                                <input type="number" class="form-control" name="treatment" placeholder="">
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">كهرباء</label>
@@ -176,17 +180,31 @@
                         </div>
                         <hr>
                         <div class="d-flex justify-content-between">
-                            <h3 class="mt-4">الاولاد</h3>
+                            <div>
+                                <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">الاطفال
+                                </h2>
+                            </div>
                             <div class="d-flex justify-content-end mb-3">
-                                <button type="button" class="btn btn-success" id="add">
-                                    <i class="fe fe-plus"></i> {{ 'Add' }}
+                                <button type="button" class="btn btn-primary" id="add">
+                                    <i class="fe fe-plus"></i> {{ 'Add Child' }}
                                 </button>
                             </div>
                         </div>
+
                         <hr>
 
-                        <div id="bus_times_container">
-                            <div class="bus-time-row row">
+                        <div id="child_container">
+
+                            <div class="child-row row">
+                                <div class="col-12">
+                                    <h4 class="bg-danger text-white"
+                                        style="width: max-content;
+                                       padding: 8px 15px;
+                                       border-radius: 5px;">
+                                        الطفل
+                                        <span id="child_number">1</span>
+                                    </h4>
+                                </div>
 
                                 <div class="col-3">
                                     <div class="form-group">
@@ -194,6 +212,7 @@
                                         <input type="text" class="form-control" name="name[]" required>
                                     </div>
                                 </div>
+
 
                                 <div class="col-3">
                                     <div class="form-group">
@@ -252,133 +271,224 @@
                                         <input type="text" class="form-control" name="notes[]" required>
                                     </div>
                                 </div>
-
                             </div>
 
                         </div>
 
 
 
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary"
-                                data-bs-dismiss="modal">{{ 'close' }}</button>
-                            <button type="submit" class="btn btn-primary" id="addButton">{{ 'save' }}</button>
+
+                        <div class="card-header">
+                            <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;"> الحالة
+                                الصحية</h2>
                         </div>
+                        <div class="row">
+                            <!-- Patient Name and Treatment Pay By in one row -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">اسم المريض</label>
+                                    <input type="text" class="form-control" name="name_patient" placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">وسيلة صرف العلاج</label>
+                                    <input type="text" class="form-control" name="treatment_pay_by" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Patient Type, Attending Doctor, and Medication in one row with specified column widths -->
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                    <label class="form-label">نوع المريض</label>
+                                    <select class="form-control select2" name="type_gender"
+                                        data-placeholder="اختيار نوع المريض">
+                                        <option value="1">ذكر</option>
+                                        <option value="0">أنثي</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="form-label">الطبيب المعالج</label>
+                                    <input type="text" class="form-control" name="doctor_name" placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label class="form-label">الدواء</label>
+                                    <input type="text" class="form-control" name="treatment" placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                    <label class="form-label mb-4">هل له تأمين</label>
+                                    <div class="material-switch pull-left mb-5">
+                                        <input id="is_insurance" name="is_insurance" type="checkbox">
+                                        <label for="is_insurance" class="label-success"></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-header">
+                            <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">
+                                اصول المستفيد</h2>
+                        </div>
+
+
+                        <div class="row mt-5">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label mb-4">هل فيه أملاك</label>
+                                    <div class="material-switch pull-left mb-5">
+                                        <input id="has_property" name="has_property" type="checkbox">
+                                        <label for="has_property" class="label-success"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label mb-4">هل فيه دفتر توفير</label>
+                                    <div class="material-switch pull-left mb-5">
+                                        <input id="has_savings_book" name="has_savings_book" type="checkbox">
+                                        <label for="has_savings_book" class="label-success"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <input type="file" class="col-md-12" multiple name="images[]">
+
+                        </div>
+
+                        <div class="card-header">
+                            <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">
+                                المرفقات </h2>
+                        </div>
+
+                        <div class="row mt-5">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <input type="file" class="form-control" name="attachments[]" multiple>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 text-center">
+                        <button class="btn btn-lg btn-outline-primary mt-2 mb-2">حفظ البيانات</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- COL END -->
     </form>
-
-
-
-    <h3 class="mt-4">الحالة الصحية</h3>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label class="form-label">اسم المريض</label>
-                <input type="text" class="form-control" name="name" placeholder="">
-            </div>
-            <div class="form-group">
-                <label class="form-label">نوع المريض</label>
-                <select name="type" class="form-control select2" data-placeholder="اختيار نوع المريض">
-                    <option value="1">ذكر</option>
-                    <option value="0">أنثي</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label class="form-label">الدواء</label>
-                <input type="text" class="form-control" name="treatment" placeholder="">
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                <label class="form-label">وسيلة صرف العلاج</label>
-                <input type="text" class="form-control" name="treatment_pay_by" placeholder="">
-            </div>
-            <div class="form-group">
-                <label class="form-label mb-4">هل تأمين</label>
-                <div class="material-switch pull-left mb-5">
-                    <input id="is_insurance" name="is_insurance" type="checkbox">
-                    <label for="is_insurance" class="label-success"></label>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label">الطبيب المعالج</label>
-                <input type="text" class="form-control" name="doctor_name" placeholder="">
-            </div>
-        </div>
-    </div>
-
-    <div class="row mt-5">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label class="form-label mb-4">هل فيه أملاك</label>
-                <div class="material-switch pull-left mb-5">
-                    <input id="has_property" name="has_property" type="checkbox">
-                    <label for="has_property" class="label-success"></label>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                <label class="form-label mb-4">هل فيه دفتر توفير</label>
-                <div class="material-switch pull-left mb-5">
-                    <input id="has_savings_book" name="has_savings_book" type="checkbox">
-                    <label for="has_savings_book" class="label-success"></label>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-    <div class="col-12 text-center">
-        <button class="btn btn-lg btn-outline-primary mt-2 mb-2">حفظ البيانات</button>
-    </div>
-    </div>
-    </div>
-    </div>
-    <!-- COL END -->
-    </form>
-
-
 
 @endsection
 @section('js')
     <script>
-        jQuery(document).delegate('a.add-record', 'click', function(e) {
-            e.preventDefault();
-            var content = jQuery('#sample_table tr'),
-                size = jQuery('#tbl_posts >tbody >tr').length + 1,
-                element = null,
-                element = content.clone();
-            element.attr('id', 'rec-' + size);
-            element.find('.delete-record').attr('data-id', size);
-            element.appendTo('#tbl_posts_body');
-            element.find('.sn').html(size);
+        var childNumber = 1;
+        $('#add').on('click', function() {
+            childNumber++;
 
+            let newRow = `
+
+            <div class="child-row row">
+
+                    <div class="col-12">
+                        <h4 class="bg-danger text-white"
+                    style="width: max-content;
+                           padding: 8px 15px;
+                           border-radius: 5px;">
+                    الطفل
+                    <span id="child_number">${childNumber}</span>
+                    </h4>
+
+                        </div>
+
+                    <div class="col-3">
+                        <div class="form-group">
+                        <label for="name" class="form-control-label"> الاسم </label>
+                        <input type="text" class="form-control" name="name[]" required>
+                        </div>
+                    </div>
+
+                    <div class="col-3">
+                        <div class="form-group">
+                        <label for="children_national_id" class="form-control-label"> الرقم القومى
+                        </label>
+                        <input type="text" class="form-control" name="children_national_id[]"
+                            required>
+                        </div>
+                    </div>
+
+                    <div class="col-3">
+                        <div class="form-group">
+                        <label for="schools" class="form-control-label"> تاريخ الميلاد </label>
+                        <input type="date" class="form-control" name="birthday[]" required>
+                        </div>
+                    </div>
+
+                    <div class="col-3">
+                        <div class="form-group">
+                        <label for="schools" class="form-control-label"> السن </label>
+                        <input type="text" class="form-control" name="age[]">
+                        </div>
+                    </div>
+
+
+                    <div class="col-2">
+                        <div class="form-group">
+                        <label for="schools" class="form-control-label"> المدرسة </label>
+                        <input type="text" class="form-control" name="schools[]" required>
+                        </div>
+                    </div>
+
+                    <div class="col-2">
+                        <div class="form-group">
+                        <label for="lessons_costs" class="form-control-label"> تكلفة الدروس </label>
+                        <input type="text" class="form-control" name="lessons_costs[]" required>
+                        </div>
+                    </div>
+
+                    <div class="col-2">
+                        <div class="form-group">
+                        <label for="academic_year" class="form-control-label"> السنة الدراسية </label>
+                        <input type="text" class="form-control" name="academic_year[]" required>
+                        </div>
+                    </div>
+
+                    <div class="col-2">
+                        <div class="form-group">
+                        <label for="monthly_cost" class="form-control-label"> التكلفة الشهرية </label>
+                        <input type="text" class="form-control" name="monthly_cost[]" required>
+                        </div>
+                    </div>
+
+                    <div class="col-3">
+                        <div class="form-group">
+                        <label for="notes" class="form-control-label"> ملاحظات </label>
+                        <input type="text" class="form-control" name="notes[]" required>
+                        </div>
+                    </div>
+
+                      <div class="col-1">
+                <button type="button" class="btn btn-danger mt-5 removeColor">
+                <i class="fe fe-trash"></i>
+                </button>
+            </div>
+
+                    </div>
+
+
+            `;
+
+            $('#child_container').append(newRow);
         });
-        jQuery(document).delegate('a.delete-record', 'click', function(e) {
 
-            e.preventDefault();
-
-            var numdivs = $('.MainDivs').length;
-
-            if (numdivs == 2) {
-                alert('لا يمكن الحذف')
-            } else {
-                var id = jQuery(this).attr('data-id');
-                var targetDiv = jQuery(this).attr('targetDiv');
-                jQuery('#rec-' + id).remove();
-
-                //regnerate index number on table
-                $('#tbl_posts_body tr').each(function(index) {
-                    //alert(index);
-                    $(this).find('span.sn').html(index + 1);
-                });
-                return true;
-            }
-            // var didConfirm = confirm("Are you sure You want to delete");
-            // if (didConfirm == true) {
-
-            // } else {
-            //   return false;
-            // }
+        $('#child_container').on('click', '.removeColor', function() {
+            $(this).closest('.child-row').remove();
         });
     </script>
 @endsection
