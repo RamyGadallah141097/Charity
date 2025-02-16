@@ -55,13 +55,13 @@
                 <option value="0">زكاة المال </option>  // the first type 0
                 <option value="1"> صدقات</option> // the second type 1
                 <option value="2">قرض حسن </option>// the third type 2
-                <option value="2">تبرع عيني  </option>// the forth type 3
+                <option value="3">تبرع عيني  </option>// the forth type 3
             </select>
         </div>
 
         <div class="form-group">
             <label for="donation_amount" class="form-control-label">مبلغ التبرع</label>
-            <input type="number" class="form-control" name="donation_amount" id="donation_amount" >
+            <input type="text" class="form-control" name="donation_amount" id="donation_amount" >
         </div>
 
         <div class="form-group">
@@ -76,6 +76,7 @@
         </div>
     </form>
 </div>
+
 <script>
     $(document).ready(function() {
         $('#search_donor').on('keyup', function() {
@@ -88,19 +89,16 @@
                 success: function(response) {
                     $('#donor_name').empty();
                     $("#create_donor").empty();
-
                     $('#donor_name').append('<option value="">اختر متبرع</option>');
-
                     if (response.length > 0) {
                         $.each(response, function(key, donor) {
                             $('#donor_name').append('<option selected value="'+ donor.id +'">'+ donor.name +'</option>');
                         });
                     } else {
                         $("#create_donor").empty();
-                        $("#select_donor_container").empty();
                         $("#create_donor").append(`
-                            <button class="btn btn-secondary btn-icon text-white addBtn">
-                               <a class="text-white" href="{{route('donors.index')}}"> <i class="fe fe-plus"></i> اضافة متبرع جديد</>
+                            <button class="btn btn-secondary btn-icon text-white addBtn" >
+                               <a class="text-white" href="{{route("donors.index")}}"> <i class="fe fe-plus"></i> اضافة متبرع جديد</>
                             </button>
                         `);
                     }

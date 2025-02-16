@@ -90,6 +90,7 @@
                 },
                 success: function (data) {
                     if (data.status === 200) {
+                        console.log(data);
                         $("#dismiss_delete_modal")[0].click();
                         $('#dataTable').DataTable().ajax.reload();
                         toastr.success(data.message)

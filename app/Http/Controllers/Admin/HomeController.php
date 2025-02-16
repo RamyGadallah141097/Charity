@@ -31,7 +31,6 @@ class HomeController extends Controller
 
         $donors      = Donor::take(5)->get();
         $subvention  = Subvention::orderBy('price','DESC')->first();
-        $donors      = Donor::orderBy('price', 'DESC')->take(5)->get();
         $subvention  = Subvention::orderBy('price', 'DESC')->first();
 
         $users       = User::latest()->take(5)->get();

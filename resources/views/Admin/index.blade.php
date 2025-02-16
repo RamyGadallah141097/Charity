@@ -160,7 +160,7 @@
 {{--                                        class="font-weight-bold mb-0 mt-2 text-blue">{{$donor->price}}</h4></div>--}}
 
                                 <div class="float-left">
-                                    <h4 class="font-weight-bold mb-0 mt-2 text-blue">{{ $donor->price }}</h4>
+{{--                                    <h4 class="font-weight-bold mb-0 mt-2 text-blue">{{ $donor->price }}</h4>--}}
                                 </div>
 
                             </div>

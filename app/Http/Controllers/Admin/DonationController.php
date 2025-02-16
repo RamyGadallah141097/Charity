@@ -121,7 +121,8 @@ class DonationController extends Controller
     public function delete(Request $request)
     {
         try {
-            Donation::find($request->id)->delete();
+            Donation::destroy($request->id);
+            return redirect()->back();
             return response(['message' => 'تم الحذف بنجاح', 'status' => 200], 200);
         } catch (\Exception $ex) {
             return response(['message' => $ex->getMessage(), 'status' => 400]);

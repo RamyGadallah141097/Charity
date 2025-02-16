@@ -52,16 +52,20 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <div class="modal-body">
-                        <input id="delete_id" name="id" type="hidden">
-                        <p>هل انت متأكد من حذف البيانات التالية <span id="title" class="text-danger"></span>؟</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" id="dismiss_delete_modal">
-                            اغلاق
-                        </button>
-                        <button type="button" class="btn btn-danger" id="delete_btn">حذف !</button>
-                    </div>
+                    <form action="{{route("delete_donors")}}" method="post" >
+                        @csrf
+                        @method("post")
+                        <div class="modal-body">
+                            <input id="delete_id" name="id" type="hidden">
+                            <p>هل انت متأكد من حذف البيانات التالية <span id="title" class="text-danger"></span>؟</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id="dismiss_delete_modal">
+                                اغلاق
+                            </button>
+                            <button type="submit" class="btn btn-danger" id="delete_btn">حذف !</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

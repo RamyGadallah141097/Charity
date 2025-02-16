@@ -103,8 +103,9 @@ class SubventionController extends Controller
     public function delete(Request $request)
     {
         try {
-            Subvention::find($request->id)->delete();
-            return response(['message'=>'تم الحذف بنجاح','status'=>200],200);
+            Subvention::destroy($request->id);
+            return redirect()->back();
+//            return response(['message'=>'تم الحذف بنجاح','status'=>200],200);
         }
         catch (\Exception $ex){
             return response(['message'=>$ex->getMessage(),'status'=>400]);

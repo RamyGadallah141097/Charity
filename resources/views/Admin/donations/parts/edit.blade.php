@@ -58,13 +58,13 @@
                 <option value="0">زكاة المال </option>  // the first type 0
                 <option value="1"> صدقات</option> // the second type 1
                 <option value="2">قرض حسن </option>// the third type 2
-                <option value="2">تبرع عيني  </option>// the forth type 3
+                <option value="3">تبرع عيني  </option>// the forth type 3
             </select>
         </div>
 
         <div class="form-group">
             <label for="donation_amount" class="form-control-label">مبلغ التبرع</label>
-            <input type="number" class="form-control" name="donation_amount" id="donation_amount" value="{{ $donation->donation_amount }}">
+            <input type="text" class="form-control" name="donation_amount" id="donation_amount" value="{{ $donation->donation_amount }}">
         </div>
 
         <div class="form-group">
@@ -82,7 +82,6 @@
 
 
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
         $('#search_donor').on('keyup', function() {
