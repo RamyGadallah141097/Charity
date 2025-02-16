@@ -17,13 +17,16 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('husband_name');
             $table->string('wife_name')->nullable();
-            $table->date('husband_birthday');
+            $table->string('husband_national_id');
+            $table->integer('wife_national_id')->nullable();
+            $table->date('husband_birthday')->nullable();
             $table->date('wife_birthday')->nullable();
-            $table->enum('status',['new','preparing','accepted','refused'])->default('new');
-            $table->enum('social_status',['single','married','divorced','widow'])->default('married');
-            $table->string('nearest_phone');
+            $table->integer('age_husband')->nullable();
+            $table->text('address')->nullable();
+            $table->integer('age_wife')->nullable();
+            $table->enum('social_status', [0, 1, 2, 3])->default(1);
             $table->string('work_type');
-            $table->text('address');
+            $table->string('nearest_phone');
             $table->double('salary')->nullable()->default(0);
             $table->double('pension')->nullable()->default(0);
             $table->double('insurance')->nullable()->default(0);
@@ -31,7 +34,7 @@ class CreateUsersTable extends Migration
             $table->double('trade')->nullable()->default(0);
             $table->double('pillows')->nullable()->default(0);
             $table->double('other')->nullable()->default(0);
-            $table->double('gross_income')->nullable()->default(0);
+            $table->double('gross_income');
             $table->double('rent')->nullable()->default(0);
             $table->double('gas')->nullable()->default(0);
             $table->double('debt')->nullable()->default(0);
@@ -41,9 +44,9 @@ class CreateUsersTable extends Migration
             $table->double('association')->nullable()->default(0);
             $table->double('food')->nullable()->default(0);
             $table->double('study')->nullable()->default(0);
-            $table->double('total_expenses')->nullable()->default(0);
-            $table->enum('has_property',['0','1'])->default(0)->comment("0 means he hasn't any property");
-            $table->enum('has_savings_book',['0','1'])->default(0)->comment("0 means he hasn't a saving book");
+            $table->double('total_expenses');
+            $table->enum('has_property', ['0', '1'])->default(0)->comment("0 means he hasn't any property");
+            $table->enum('has_savings_book', ['0', '1'])->default(0)->comment("0 means he hasn't a saving book");
             $table->timestamps();
         });
     }
