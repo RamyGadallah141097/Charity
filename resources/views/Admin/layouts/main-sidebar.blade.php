@@ -3,7 +3,7 @@
     <div class="side-header">
 
         <a class="header-brand1">
-            <img src="{{ get_file($setting->logo) }}" class="header-brand-img light-logo1" alt="logo">
+            {{-- <img src="{{ get_file($setting->logo) }}" class="header-brand-img light-logo1" alt="logo"> --}}
             <a class="header-brand1" href="{{ route('adminHome') }}">
                 <img src="#" class="header-brand-img light-logo1" alt="logo">
 

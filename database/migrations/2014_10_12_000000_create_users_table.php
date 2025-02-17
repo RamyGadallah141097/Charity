@@ -44,9 +44,10 @@ class CreateUsersTable extends Migration
             $table->double('association')->nullable()->default(0);
             $table->double('food')->nullable()->default(0);
             $table->double('study')->nullable()->default(0);
-            $table->double('total_expenses');
+            $table->double('gross_expenses');
             $table->enum('has_property', ['0', '1'])->default(0)->comment("0 means he hasn't any property");
             $table->enum('has_savings_book', ['0', '1'])->default(0)->comment("0 means he hasn't a saving book");
+            $table->string('attachments')->nullable();
             $table->timestamps();
         });
     }
