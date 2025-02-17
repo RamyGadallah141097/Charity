@@ -18,8 +18,8 @@ class CreateChildrensTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')
                 ->on('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->string('name');
-            $table->string('children_national_id');
+            $table->string('child_name')->nullable();
+            $table->string('children_national_id')->nullable();
             $table->date('birthday')->nullable();
             $table->integer('age')->nullable();
             $table->string('school')->nullable();

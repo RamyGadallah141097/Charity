@@ -25,8 +25,8 @@ class CreateUsersTable extends Migration
             $table->text('address')->nullable();
             $table->integer('age_wife')->nullable();
             $table->enum('social_status', [0, 1, 2, 3])->default(1);
-            $table->string('work_type');
-            $table->string('nearest_phone');
+            $table->string('work_type')->nullable();
+            $table->string('nearest_phone')->nullable();
             $table->double('salary')->nullable()->default(0);
             $table->double('pension')->nullable()->default(0);
             $table->double('insurance')->nullable()->default(0);
@@ -34,7 +34,7 @@ class CreateUsersTable extends Migration
             $table->double('trade')->nullable()->default(0);
             $table->double('pillows')->nullable()->default(0);
             $table->double('other')->nullable()->default(0);
-            $table->double('gross_income');
+            $table->double('gross_income')->nullable();
             $table->double('rent')->nullable()->default(0);
             $table->double('gas')->nullable()->default(0);
             $table->double('debt')->nullable()->default(0);
@@ -44,7 +44,7 @@ class CreateUsersTable extends Migration
             $table->double('association')->nullable()->default(0);
             $table->double('food')->nullable()->default(0);
             $table->double('study')->nullable()->default(0);
-            $table->double('gross_expenses');
+            $table->double('gross_expenses')->nullable();
             $table->enum('has_property', ['0', '1'])->default(0)->comment("0 means he hasn't any property");
             $table->enum('has_savings_book', ['0', '1'])->default(0)->comment("0 means he hasn't a saving book");
             $table->string('attachments')->nullable();

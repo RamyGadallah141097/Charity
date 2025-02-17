@@ -12,7 +12,6 @@ use Yajra\DataTables\DataTables;
 
 class UserController extends Controller
 {
-
     public function index(request $request)
     {
         if ($request->ajax()) {
@@ -79,11 +78,12 @@ class UserController extends Controller
 
     public function store(StoreUser $request)
     {
-        dd($request->all());
 
         try {
+
+
             // fetch user data
-            $userData = $request->except('_token', 'name', 'children_national_id', 'birthday', 'age', 'schools', 'lessons_costs', 'academic_year', 'monthly_cost', 'notes', 'name', 'type', 'treatment_pay_by', 'is_insurance', 'doctor_name');
+            $userData = $request->except('_token', 'attachments', 'child_name', 'children_national_id', 'birthday', 'age', 'schools', 'lessons_costs', 'academic_year', 'monthly_cost', 'notes', 'patient_name', 'type', 'treatment_pay_by', 'is_insurance', 'doctor_name');
 
             // adjust user data then save it
             if ($request->has('has_savings_book'))
@@ -96,42 +96,53 @@ class UserController extends Controller
             else
                 $userData['has_property'] = '0';
 
-            $userData['gross_income']   = $userData['salary'] + $userData['pension'] + $userData['insurance'] + $userData['dignity'] + $userData['trade'] + $userData['pillows'] + $userData['other'];
-            $userData['total_expenses'] = $userData['rent'] + $userData['gas'] + $userData['debt'] + $userData['water'] + $userData['electricity'] + $userData['association'] + $userData['food'] + $userData['study'];
+
+            if ($request->has('attachments')) {
+                $attachmentsName = [];
+                foreach ($request->attachments as $attachment) {
+                    $attachmentsName[] = $attachment->store('attachments', 'public');
+                }
+                $userData['attachments'] = $attachmentsName;
+            }
+
+
 
             $user = User::create($userData);
 
-            if ($user) {
-                foreach ($request->names as $key => $name) {
-                    if ($request->names[$key] != null) {
-                        Children::create([
-                            'user_id'      => $user->id,
-                            'name'         => $request->names[$key],
-                            'school'       => $request->schools[$key],
-                            'lessons_cost' => $request->lessons_costs[$key],
-                            'academic_year' => $request->academic_year[$key],
-                            'monthly_cost' => $request->monthly_cost[$key],
-                            'notes'        => $request->notes[$key],
-                        ]);
-                    }
+            if (isset($request->child_name)) {
+                foreach (array_keys($request->child_name) as $key) {
+
+                    Children::create([
+                        'user_id'      => $user->id,
+                        'child_name'  => $request->child_name[$key] ?? null,
+                        'children_national_id'  => $request->children_national_id[$key] ?? null,
+                        'birthday'     => $request->birthday[$key] ?? null,
+                        'age'          => $request->age[$key] ?? null,
+                        'school'       => $request->schools[$key] ?? null,
+                        'lessons_cost' => $request->lessons_costs[$key] ?? null,
+                        'academic_year' => $request->academic_year[$key] ?? null,
+                        'monthly_cost' => $request->monthly_cost[$key] ?? null,
+                        'notes'        => $request->notes[$key] ?? null,
+                    ]);
                 }
-                $patientData = $request->only('name', 'type', 'treatment_pay_by', 'is_insurance', 'doctor_name', 'treatment');
-
-                if ($request->has('is_insurance') && $request->is_insurance == 'on')
-                    $patientData['is_insurance'] = 1;
-                else
-                    $patientData['is_insurance'] = 0;
-
-                $patientData['user_id'] = $user->id;
-                if ($request->name != null)
-                    Patient::create($patientData);
-                toastr('تم اضافة مستفيد جديد', 'success');
-                return redirect(route('users.index', 'new'));
             }
+            $patientData = $request->only('patient_name', 'type',  'treatment', 'treatment_pay_by', 'is_insurance', 'doctor_name');
+
+            if ($request->has('is_insurance') && $request->is_insurance == 'on')
+                $patientData['is_insurance'] = 1;
+            else
+                $patientData['is_insurance'] = 0;
+
+            $patientData['user_id'] = $user->id;
+            if ($request->patient_name != null)
+                Patient::create($patientData);
+            toastr('تم اضافة مستفيد جديد', 'success');
+            return redirect(route('users.index', 'new'));
         } catch (\Exception $ex) {
             return back()->withErrors($ex->getMessage());
         }
     }
+
 
     /**
      * Display the specified resource.

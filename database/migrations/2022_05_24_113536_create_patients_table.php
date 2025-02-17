@@ -18,7 +18,7 @@ class CreatePatientsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')
                 ->on('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->string('name');
+            $table->string('patient_name')->nullable();
             $table->tinyInteger('type')->default(0)->comment('0 means women and 1 means man');
             $table->text('treatment')->nullable();
             $table->text('treatment_pay_by')->nullable();
