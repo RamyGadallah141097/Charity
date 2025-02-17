@@ -26,7 +26,7 @@ class DonorController extends Controller
                        ';
                 })
                 ->editColumn('notes', function ($donors) {
-                    return ($donors->notes) ?? '-----';
+                    return '<span class="small-text-hover">' . ($donors->notes ?? '-----') . '</span>';
                 })
                 ->editColumn('created_at', function ($donors) {
                     return $donors->created_at->format('d-m-y');

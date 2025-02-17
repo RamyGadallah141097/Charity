@@ -45,7 +45,7 @@ class DonationsRequest extends FormRequest
             "donor_id.required" => "يجب تحديد المتبرع",
             "donation_amount.required" => "يجب تحديد المبلغ",
             "donation_amount.string" => "  يجب   ادخال  التبرع نصا ",
-            "donation_amount.integer" => "  يجب   ادخال  التبرع رقما  ",
+            "donation_amount.integer" => "  يجب   ادخال  التبرع رقما   ",
             "donation_type.required"=>"يجب تحديد النوع",
             "created.required"=>" يجب  تحديد التاريخ",
             'donation_amount.regex' => 'يجب   ادخال  التبرع نصا في حاله التبرع العيني.',

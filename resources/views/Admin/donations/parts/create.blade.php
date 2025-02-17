@@ -93,6 +93,8 @@
                     if (response.length > 0) {
                         $.each(response, function(key, donor) {
                             $('#donor_name').append('<option selected value="'+ donor.id +'">'+ donor.name +'</option>');
+                            $('input[id="donor_phone"]').val(donor.phone);
+
                         });
                     } else {
                         $("#create_donor").empty();
@@ -101,6 +103,7 @@
                                <a class="text-white" href="{{route("donors.index")}}"> <i class="fe fe-plus"></i> اضافة متبرع جديد</>
                             </button>
                         `);
+                        $("input[id='donor_phone']").empty();
                     }
                 },
                 error: function() {

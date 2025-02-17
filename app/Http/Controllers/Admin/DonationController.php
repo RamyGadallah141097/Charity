@@ -159,14 +159,5 @@ class DonationController extends Controller
         }
     }
 
-//    public function searchDonor(Request $request)
-//    {
-//        dd($request);
-//        $query = $request->input('donor_names');
-//
-//        $donors = Donor::where('name', 'LIKE', "%{$query}%")->get(); // Search by name
-//
-//        return response()->json($donors);
-//    }
 
 }
