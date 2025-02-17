@@ -6,12 +6,9 @@
         <a class="header-brand1" >
             <img src="{{get_file($setting->logo)}}" class="header-brand-img light-logo1" alt="logo">
         <a class="header-brand1" href="{{ route('adminHome') }}">
-{{--            <img src="#" class="header-brand-img light-logo1" alt="logo">--}}
 
         <a class="header-brand1">
-            {{-- <img src="{{ get_file($setting->logo) }}" class="header-brand-img light-logo1" alt="logo"> --}}
             <a class="header-brand1" href="{{ route('adminHome') }}">
-                <img src="#" class="header-brand-img light-logo1" alt="logo">
 
             </a>
             <!-- LOGO -->
@@ -66,12 +63,12 @@
 
 
         <p>
-            <a class="side-menu__item" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+            <a class="side-menu__item" data-toggle="collapse" href="#donationsDropdown" role="button" aria-expanded="false" aria-controls="collapseExample">
                 <i class="fe fe-users side-menu__icon"></i>
                 <span class="side-menu__label"> التبرعات والمتبرعين </span>
             </a>
         </p>
-        <ul class="collapse" id="collapseExample">
+        <ul class="collapse" id="donationsDropdown">
             <li >
                 <a class="dropdown-item-text side-menu__item" href="{{route('donors.index')}}">
                     <span class="side-menu__label"> قائمة المتبرعين </span>
@@ -90,10 +87,30 @@
                 <span class="side-menu__label"> بنك الافكار   </span>
             </a>
         </li>
-      
+
+        <p>
+            <a class="side-menu__item" data-toggle="collapse" href="#saferDropdown" role="button" aria-expanded="false" aria-controls="collapseExample">
+                <i class="fe fe-users side-menu__icon"></i>
+                <span class="side-menu__label"> الخزانه </span>
+            </a>
+        </p>
+        <ul class="collapse" id="saferDropdown">
+            <li >
+                <a class="dropdown-item-text side-menu__item" href="{{route('safer.index')}}">
+                    <span class="side-menu__label"> الصدقاة و الزكاة  </span>
+                </a>
+            </li>
+            <li >
+                <a class="dropdown-item-text side-menu__item" href="{{route('safer.loans')}}">
+                    <span class="side-menu__label">  القروض الحسنه </span>
+                </a>
+            </li>
+        </ul>
 
 
-       <li class="slide">
+
+
+        <li class="slide">
             <a class="side-menu__item" href="{{ route('research.index') }}">
                 <i class="fe fe-file-text side-menu__icon"></i>
                 <span class="side-menu__label"> طباعة بحث اجتماعي </span>

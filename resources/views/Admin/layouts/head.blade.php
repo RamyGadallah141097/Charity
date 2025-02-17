@@ -47,4 +47,28 @@
 <script defer src="{{ asset('assets/admin') }}/assets/iconfonts/font-awesome/js/solid.js"></script>
 <script defer src="{{ asset('assets/admin') }}/assets/iconfonts/font-awesome/js/fontawesome.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css" rel="stylesheet" />
+
+
+
+<style>
+
+    .small-text-hover {
+        font-size: 12px;
+        transition: font-size 0.3s ease-in-out;
+        display: inline-block;
+        max-width: 100px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .small-text-hover:hover {
+        font-size: 16px;
+        white-space: normal;
+        overflow: visible;
+    }
+
+
+
+</style>
 @yield('css')
