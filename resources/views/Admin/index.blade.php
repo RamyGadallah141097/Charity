@@ -9,6 +9,31 @@
     <link href="{{ asset('assets/admin') }}/assets/plugins/morris/morris.css" rel="stylesheet" />
 
 
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;" class="bg-white mt-5 mb-9 p-5 card   ">
+
+        <div class="card-header" >
+            <h2 class="card-title">لوحة تقدم الافكار</h2>
+        </div>
+
+        <div class="card-body d-flex g-2">
+            @foreach ($progressData as $index => $task)
+                <div style="text-align: center;" class="m-3">
+                    <canvas id="chart-{{ $index }}" width="120" height="120"></canvas>
+                    <p>
+                        {{ $task['title'] }}: {{ $task['progress'] }}%
+                    </p>
+                </div>
+            @endforeach
+        </div>
+    </div>
+
+
+
+
+
+
+
+
     @if ($total_donors >= 1000)
         <div class="row">
             <div class="col-md-12">
@@ -330,3 +355,32 @@
     <!--INTERNAL INDEX JS-->
     <script src="{{ asset('assets/admin') }}/assets/js/index4.js"></script>
 @endsection
+
+
+
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const progressData = @json($progressData);
+
+                progressData.forEach((task, index) => {
+                    const ctx = document.getElementById(`chart-${index}`).getContext('2d');
+
+                    new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            datasets: [{
+                                data: [task.progress, 100 - task.progress], // Access the correct progress value
+                                backgroundColor: ['#4CAF50', '#E0E0E0']
+                            }]
+                        },
+                        options: {
+                            cutout: '75%',
+                            responsive: false,
+                            maintainAspectRatio: false,
+                        }
+                    });
+                });
+            });
+        </script>
+

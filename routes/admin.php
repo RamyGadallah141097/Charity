@@ -34,6 +34,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 
 
 
+//    the route of the task s
+    Route::resource("tasks","TaskController");
+    Route::POST('delete_task','TaskController@delete')->name('delete_task');
+
+
+//    the safer routes
+    Route::get("safer" , "SaferController@index")->name("safer.index");
+    Route::get("safer/loans" , "SaferController@indexLoans")->name("safer.loans");
+
 
     #### Subventions ####
     Route::resource('subventions', 'SubventionController');
@@ -50,11 +59,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('setting', 'SettingController@index')->name('setting.index');
     Route::post('settingUpdate', 'SettingController@update')->name('settingUpdate');
 
-
-
-//    the route of the task s
-    Route::resource("tasks","TaskController");
-    Route::POST('delete_task','TaskController@delete')->name('delete_task');
 
 
 

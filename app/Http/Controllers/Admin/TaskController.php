@@ -63,6 +63,9 @@ class TaskController extends Controller
                             return 'تبرع عيني';
                     }
                 })
+                ->editColumn('description', function ($task) {
+                    return '<span class="small-text-hover">' . ($task->description ?? '-----') . '</span>';
+                })
                 ->addColumn('action', function ($task) {
                     return '
                         <button type="button" data-id="' . $task->id . '" class="btn btn-pill btn-info-light editBtn">
