@@ -18,7 +18,7 @@
             </ul>
         </div>
     @endif
-    <form action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
+    <form id="addForm" action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="row">
             <div class="col-md-12">
@@ -95,89 +95,99 @@
                             </div>
                         </div>
                         <hr>
+                        {{-- ______________________________________________________________________________________________________________________________ --}}
 
                         <div class="card-header">
-                            <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;"> اجمالى الدخل
+                            <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">
+                                إجمالى الدخل
                             </h2>
                         </div>
+
                         <div class="row">
                             <div class="col-md-3">
                                 <label class="form-label">مرتب</label>
-                                <input type="text" class="form-control" name="salary" placeholder="">
+                                <input type="text" class="form-control income-input" name="salary" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">معاش</label>
-                                <input type="text" class="form-control" name="pension" placeholder="">
+                                <input type="text" class="form-control income-input" name="pension" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">تأمين</label>
-                                <input type="text" class="form-control" name="insurance" placeholder="">
+                                <input type="text" class="form-control income-input" name="insurance" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">كرامة</label>
-                                <input type="text" class="form-control" name="dignity" placeholder="">
+                                <input type="text" class="form-control income-input" name="dignity" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">تجارة</label>
-                                <input type="text" class="form-control" name="trade" placeholder="">
+                                <input type="text" class="form-control income-input" name="trade" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">سادات</label>
-                                <input type="text" class="form-control" name="pillows" placeholder="">
+                                <input type="text" class="form-control income-input" name="pillows" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">غير ذلك</label>
-                                <input type="text" class="form-control" name="other" placeholder="">
+                                <input type="text" class="form-control income-input" name="other" placeholder="">
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label"> اجمالى الدخل</label>
-                                <input type="text" class="form-control" name="gross_income" placeholder="" readonly>
+                                <label class="form-label">إجمالى الدخل</label>
+                                <input type="text" class="form-control" name="gross_income" id="gross_income"
+                                    placeholder="" readonly>
                             </div>
                         </div>
+                        {{-- ______________________________________________________________________________________________________________________________ --}}
                         <hr>
                         <div class="card-header">
                             <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">
-                                اجمالى النفقات</h2>
+                                اجمالى النفقات
+                            </h2>
                         </div>
+
                         <div class="row">
                             <div class="col-md-2">
                                 <label class="form-label">إيجار</label>
-                                <input type="text" class="form-control" name="rent" placeholder="">
+                                <input type="text" class="form-control expense-input" name="rent" placeholder="">
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">غاز</label>
-                                <input type="number" class="form-control" name="gas" placeholder="">
+                                <input type="text" class="form-control expense-input" name="gas" placeholder="">
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">ديون</label>
-                                <input type="number" class="form-control" name="debt" placeholder="">
+                                <input type="text" class="form-control expense-input" name="debt" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">مياه</label>
-                                <input type="number" class="form-control" name="water" placeholder="">
+                                <input type="text" class="form-control expense-input" name="water" placeholder="">
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">كهرباء</label>
-                                <input type="number" class="form-control" name="electricity" placeholder="">
+                                <input type="text" class="form-control expense-input" name="electricity"
+                                    placeholder="">
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">جمعية</label>
-                                <input type="number" class="form-control" name="association" placeholder="">
+                                <input type="text" class="form-control expense-input" name="association"
+                                    placeholder="">
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">طعام</label>
-                                <input type="number" class="form-control" name="food" placeholder="">
+                                <input type="text" class="form-control expense-input" name="food" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">دراسة</label>
-                                <input type="number" class="form-control" name="study" placeholder="">
+                                <input type="text" class="form-control expense-input" name="study" placeholder="">
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label"> اجمالى النفقات</label>
-                                <input type="text" class="form-control" name="gross_expenses" placeholder=""
-                                    readonly>
+                                <label class="form-label">إجمالى النفقات</label>
+                                <input type="text" class="form-control" name="gross_expenses" id="gross_expenses"
+                                    placeholder="" readonly>
                             </div>
                         </div>
+                        {{-- ______________________________________________________________________________________________________________________________ --}}
                         <hr>
                         <div class="d-flex justify-content-between">
                             <div>
@@ -209,10 +219,9 @@
                                 <div class="col-3">
                                     <div class="form-group">
                                         <label for="name" class="form-control-label"> الاسم </label>
-                                        <input type="text" class="form-control" name="name[]" required>
+                                        <input type="text" class="form-control" name="child_name[]">
                                     </div>
                                 </div>
-
 
                                 <div class="col-3">
                                     <div class="form-group">
@@ -226,7 +235,7 @@
                                 <div class="col-3">
                                     <div class="form-group">
                                         <label for="schools" class="form-control-label"> تاريخ الميلاد </label>
-                                        <input type="date" class="form-control" name="birthday[]" required>
+                                        <input type="date" class="form-control" name="birthday[]">
                                     </div>
                                 </div>
 
@@ -272,10 +281,7 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
-
-
 
 
                         <div class="card-header">
@@ -287,7 +293,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">اسم المريض</label>
-                                    <input type="text" class="form-control" name="name_patient" placeholder="">
+                                    <input type="text" class="form-control" name="patient_name" placeholder="">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -303,7 +309,7 @@
                             <div class="col-md-1">
                                 <div class="form-group">
                                     <label class="form-label">نوع المريض</label>
-                                    <select class="form-control select2" name="type_gender"
+                                    <select class="form-control select2" name="type"
                                         data-placeholder="اختيار نوع المريض">
                                         <option value="1">ذكر</option>
                                         <option value="0">أنثي</option>
@@ -359,8 +365,6 @@
                                 </div>
                             </div>
 
-                            <input type="file" class="col-md-12" multiple name="images[]">
-
                         </div>
 
                         <div class="card-header">
@@ -387,6 +391,46 @@
 
 @endsection
 @section('js')
+    <script>
+        function calculateIncome() {
+            let total = 0;
+            document.querySelectorAll('.income-input').forEach(input => {
+                let value = parseFloat(input.value) || 0; // Convert input value to number or default to 0
+                total += value; // Add to total
+            });
+
+            // Check if the total is a whole number
+            if (total % 1 === 0) {
+                document.getElementById('gross_income').value = total; // Display as integer
+            } else {
+                document.getElementById('gross_income').value = total.toFixed(1); // Display with 1 decimal place
+            }
+        }
+
+        // Attach event listener to all income input fields
+        document.querySelectorAll('.income-input').forEach(input => {
+            input.addEventListener('input', calculateIncome);
+        });
+
+
+        // Function to calculate total expenses
+        function calculateExpenses() {
+            let total = 0;
+            document.querySelectorAll('.expense-input').forEach(input => {
+                let value = parseFloat(input.value) || 0; // Convert input value to number or default to 0
+                total += value; // Add to total
+            });
+
+            // Display as an integer if whole number, otherwise show one decimal place
+            document.getElementById('gross_expenses').value = (total % 1 === 0) ? total : total.toFixed(1);
+        }
+
+        // Attach event listener to all expense input fields
+        document.querySelectorAll('.expense-input').forEach(input => {
+            input.addEventListener('input', calculateExpenses);
+        });
+    </script>
+
     <script>
         var childNumber = 1;
         $('#add').on('click', function() {
@@ -480,8 +524,6 @@
             </div>
 
                     </div>
-
-
             `;
 
             $('#child_container').append(newRow);
