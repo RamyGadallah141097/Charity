@@ -16,7 +16,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 
     #### users ####
     //    Route::resource('users','UserController');
-    Route::get('users', 'UserController@index')->name('users.index');
+    Route::get('users/{status}', 'UserController@index')->name('users.index');
     Route::get('users.create', 'UserController@create')->name('users.create');
     Route::POST('users.store', 'UserController@store')->name('users.store');
     Route::POST('delete_users', 'UserController@delete')->name('delete_users');
@@ -30,19 +30,18 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::resource('Donations', "DonationController");
     Route::get('/get_donor_phone/{id}', 'DonationController@get_donor_phone')->name("get_donor_phone");
     Route::get('/search-donor', 'DonationController@searchDonor')->name('search.donor');
-    //    Route::get('/admin/search-donor', [YourController::class, 'searchDonor'])->name('search.donor');
 
 
 
-//    the route of the task s
-    Route::resource("tasks","TaskController");
-    Route::POST('delete_task','TaskController@delete')->name('delete_task');
+    //    the route of the task s
+    Route::resource("tasks", "TaskController");
+    Route::POST('delete_task', 'TaskController@delete')->name('delete_task');
 
 
-//    the safer routes
-    Route::get("safer" , "SaferController@index")->name("safer.index");
-    Route::get("safer/loans" , "SaferController@indexLoans")->name("safer.loans");
-
+    //    the safer routes
+    Route::get("safer", "SaferController@index")->name("safer.index");
+    Route::get("safer/loans", "SaferController@indexLoans")->name("safer.loans");
+    Route::get('safer/InKindDonations', 'SaferController@InKindDonations')->name('safer.InKindDonations');
 
     #### Subventions ####
     Route::resource('subventions', 'SubventionController');
@@ -60,9 +59,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::post('settingUpdate', 'SettingController@update')->name('settingUpdate');
 
 
-
-
-
     #### Auth ####
     Route::get('logout', 'AuthController@logout')->name('admin.logout');
 });
@@ -71,10 +67,4 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 Route::group(['prefix' => 'admin'], function () {
     Route::get('login', 'AuthController@index')->name('admin.login');
     Route::POST('login', 'AuthController@login')->name('admin.login');
-});
-
-#### Clear Cache ####
-Route::get('/clear/route', function () {
-    \Artisan::call('optimize:clear');
-    return 'done';
 });

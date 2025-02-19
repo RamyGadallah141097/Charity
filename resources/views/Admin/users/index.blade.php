@@ -33,12 +33,10 @@
                                     <th class="min-w-50px">اسم الزوجة</th>
                                     <th class="min-w-50px">الحالة الاجتماعية</th>
                                     <th class="min-w-50px">الهاتف</th>
-                                    <th class="min-w-50px">نوع العمل</th>
                                     <th class="min-w-50px">اجمالي الدخل</th>
                                     <th class="min-w-50px">اجمالي المصاريف</th>
-                                    <th class="min-w-50px">الحالة</th>
-                                    <th class="min-w-50px">تحديث</th>
-                                    <th class="min-w-50px">تفاصيل</th>
+                                    <th class="min-w-50px">الحالة </th>
+                                    <th class="min-w-50px"> تحديث</th>
                                     <th class="min-w-50px rounded-end">العمليات</th>
                                 </tr>
                             </thead>
@@ -78,7 +76,7 @@
         <!-- Edit MODAL -->
         <div class="modal fade bd-example-modal-lg" id="editOrCreate" data-backdrop="static" tabindex="-1" role="dialog"
             aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-dialog modal-" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="example-Modal3">تفاصيل عن المستفيد</h5>
@@ -87,6 +85,9 @@
                         </button>
                     </div>
                     <div class="modal-body" id="modal-body">
+
+
+
 
                     </div>
                 </div>
@@ -120,17 +121,14 @@
                 name: 'nearest_phone'
             },
             {
-                data: 'work_type',
-                name: 'work_type'
-            },
-            {
                 data: 'gross_income',
                 name: 'gross_income'
             },
             {
-                data: 'total_expenses',
-                name: 'total_expenses'
+                data: 'gross_expenses',
+                name: 'gross_expenses'
             },
+
             {
                 data: 'status',
                 name: 'status'
@@ -140,17 +138,13 @@
                 name: 'statusChange'
             },
             {
-                data: 'details',
-                name: 'details'
-            },
-            {
                 data: 'action',
                 name: 'action',
                 orderable: false,
                 searchable: false
             },
         ]
-        showData('{{ route('users.index') }}', columns);
+        showData('{{ route('users.index', request()->segment(3)) }}', columns);
 
         // Delete Using Ajax
         deleteScript('{{ route('delete_users') }}');
@@ -162,7 +156,6 @@
             url = url.replace(':id', id)
             $('#modal-body').html(loader)
             $('#editOrCreate').modal('show')
-
             setTimeout(function() {
                 $('#modal-body').load(url)
             }, 500)
