@@ -48,6 +48,7 @@ class CreateUsersTable extends Migration
             $table->enum('has_property', ['0', '1'])->default(0)->comment("0 means he hasn't any property");
             $table->enum('has_savings_book', ['0', '1'])->default(0)->comment("0 means he hasn't a saving book");
             $table->string('attachments')->nullable();
+            $table->enum('status',['new','preparing','accepted','refused'])->default('new');
             $table->timestamps();
         });
     }

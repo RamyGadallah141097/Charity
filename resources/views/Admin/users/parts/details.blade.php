@@ -1,7 +1,45 @@
+<h3>المستفيد</h3>
+<div class="table-responsive">
+    <table class="table table-striped table-bordered w-100">
+        <thead>
+            <tr class="fw-bolder text-muted bg-light">
+                <th class="min-w-25px">اسم الزوج</th>
+                <th class="min-w-25px">اسم الزوجة</th>
+                <th class="min-w-25px">الرقم القومى للزوج </th>
+                <th class="min-w-25px"> الرقم القومى للزوجة</th>
+                <th class="min-w-25px"> تاريخ ميلاد الزوج</th>
+                <th class="min-w-25px"> تاريخ ميلاد الزوجة</th>
+                <th class="min-w-25px">عمر الزوج</th>
+                <th class="min-w-25px">عمر الزوجة</th>
+                <th class="min-w-25px">الحالة الاجتماعية</th>
+                <th class="min-w-25px">الهاتف</th>
+                <th class="min-w-25px">نوع العمل</th>
+                <th class="min-w-25px"> العنوان</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ $user->husband_name }}</td>
+                <td>{{ $user->wife_name }}</td>
+                <td>{{ $user->husband_national_id }}</td>
+                <td>{{ $user->wife_national_id }}</td>
+                <td>{{ $user->husband_birthday }}</td>
+                <td>{{ $user->wife_birthday }}</td>
+                <td>{{ $user->age_husband }}</td>
+                <td>{{ $user->age_wife }}</td>
+                <td>{{ $user->social_status }}</td>
+                <td>{{ $user->nearest_phone }}</td>
+                <td>{{ $user->work_type }}</td>
+                <td>{{ $user->address }}</td>
+
+            </tr>
+        </tbody>
+    </table>
+</div>
+
 @if (count($user->childrens))
     <h3>الاولاد</h3>
     <div class="table-responsive">
-        <!--begin::Table-->
         <table class="table table-striped table-bordered w-100">
             <thead>
                 <tr class="fw-bolder text-muted bg-light">
