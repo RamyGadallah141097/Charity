@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUser;
 use App\Models\Children;
+use App\Models\Donation;
 use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -22,6 +23,7 @@ class UserController extends Controller
                 ->addColumn('action', function ($users) {
                     return '
                      <a href="' . route('userDetails', $users->id) . '" data-id="' . $users->id . '" class="btn btn-pill btn-default "> عرض</a>
+                     <a href="' . route('DonationDetails', $users->id) . '" data-id="' . $users->id . '" class="btn btn-pill btn-default "> عرض التبرعات</a>
                      <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
                              data-id="' . $users->id . '" data-title="' . $users->husband_name . '">
                              <i class="fas fa-trash"></i>
@@ -102,6 +104,26 @@ class UserController extends Controller
     {
         $user = User::find($id);
         return view('Admin/users/parts/detailswwww', compact('user'));
+    }
+
+
+    public function DonationDetails($id, Request $request)
+    {
+        if ($request->ajax()) {
+            $user = User::where("id", $id)->get();
+
+            return Datatables::of($user)
+                ->addColumn('name', function ($user) {
+                    return $user->husband_name;
+                })->addColumn('zakahTotal', function ($user) {
+                    return $user->subvention->price ?$user->subvention->price :  0;
+
+                })
+                ->escapeColumns([])
+                ->make(true);
+        } else {
+            return view('Admin.users.parts.DonationDetails', ['id' => $id]);
+        }
     }
 
     public function updateUserStatus(Request $request)

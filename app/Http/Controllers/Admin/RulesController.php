@@ -1,0 +1,152 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Donor;
+use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+
+
+class RulesController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+        if ($request->ajax()) {
+            $roles = Role::all();
+
+            return Datatables::of($roles)
+                ->editColumn("name", function ($role) {
+                    return $role->name;
+                })
+                ->addColumn("permissions", function ($role) {
+                    return $role->permissions->pluck('name') ?$role->permissions->pluck('name')->implode("  -  ") : "-";
+                })
+                ->addColumn('action', function ($role) {
+                    return '
+                <button type="button" data-id="' . $role->id . '" class="btn btn-pill btn-info-light editBtn">
+                    <i class="fa fa-edit"></i>
+                </button>
+                <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                        data-id="' . $role->id . '" data-title="' . $role->name . '">
+                    <i class="fas fa-trash"></i>
+                </button>
+            ';
+                })
+                ->escapeColumns([])
+                ->make(true);
+        } else {
+            return view('Admin/Roles/Roles');
+        }
+
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        $permissions = Permission::all();
+        return view('Admin/Roles/parts/create' , ["permissions" =>$permissions]) ;
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        try {
+            // Create the role
+            $role = Role::create(['name' => $request->name]);
+
+            if (!empty($request->permissions)) {
+                $permissionNames = \Spatie\Permission\Models\Permission::whereIn('id', $request->permissions)->pluck('name')->toArray();
+
+                $role->givePermissionTo($permissionNames);
+            }
+
+            return response()->json([
+                "status" => 200,
+                "message" => "Role created successfully"
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error creating role: ' . $e->getMessage());
+
+            return response()->json([
+                "status" => 500,
+                "message" => "Failed to create role",
+                "error" => $e->getMessage()
+            ]);
+        }
+
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Role $role)
+    {
+//        $role = Role::with("permission")->where("id" , $id)->find($id);
+        $permissions = Permission::all();
+        return view('Admin/Roles/parts/edit' , ["permissions" =>$permissions , "role" =>$role]) ;
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+
+    public function delete(Request $request)
+    {
+        try {
+            Role::destroy($request->id);
+            return redirect()->back();
+            return response(['message'=>'تم الحذف بنجاح','status'=>200],200);
+        }
+        catch (\Exception $ex){
+            return response(['message'=>$ex->getMessage(),'status'=>400]);
+        }
+
+    }
+
+}

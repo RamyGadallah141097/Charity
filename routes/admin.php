@@ -13,6 +13,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::resource('admins', 'AdminController');
     Route::POST('delete_admin', 'AdminController@delete')->name('delete_admin');
     Route::get('my_profile', 'AdminController@myProfile')->name('myProfile');
+    Route::post('changeRole', 'AdminController@changeRole')->name('changeRole');
+    Route::post('showChangeRole', 'AdminController@showChangeRole')->name('showChangeRole');
 
     #### users ####
     //    Route::resource('users','UserController');
@@ -22,6 +24,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::POST('delete_users', 'UserController@delete')->name('delete_users');
     Route::POST('updateUserStatus', 'UserController@updateUserStatus')->name('updateUserStatus');
     Route::get('userDetails/{id}', 'UserController@userDetails')->name('userDetails');
+    Route::get('DonationDetails/{id}', 'UserController@DonationDetails')->name('DonationDetails');
 
     #### Donors ####
     Route::resource('donors', 'DonorController');
@@ -54,10 +57,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('researchReceive', 'ResearchController@researchReceive')->name('research.receive');
 
 
-    #### Setting ####
-    Route::get('setting', 'SettingController@index')->name('setting.index');
-    Route::post('settingUpdate', 'SettingController@update')->name('settingUpdate');
 
+    #### Setting ####
+
+    Route::get('setting', 'SettingController@index')->name('setting.index')->middleware(["admin"]);
+    Route::post('settingUpdate', 'SettingController@update')->name('settingUpdate');
 
     #### Auth ####
     Route::get('logout', 'AuthController@logout')->name('admin.logout');
@@ -68,3 +72,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('login', 'AuthController@index')->name('admin.login');
     Route::POST('login', 'AuthController@login')->name('admin.login');
 });
+
+Route::resource("roles" , "RulesController" );
+Route::post("Role_delete" , "RulesController@delete" )->name("Role_delete");
+

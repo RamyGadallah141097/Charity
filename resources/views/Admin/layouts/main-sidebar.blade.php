@@ -152,10 +152,19 @@
         </li>
 
 
+        @can("setting.index")
         <li class="slide">
             <a class="side-menu__item" href="{{ route('subventions.index') }}">
                 <i class="fe fe-dollar-sign side-menu__icon"></i>
                 <span class="side-menu__label"> الإعانات </span>
+            </a>
+        </li>
+        @endcan
+
+        <li class="slide">
+            <a class="side-menu__item" href="{{ route('roles.index') }}">
+                <i class="fe fe-dollar-sign side-menu__icon"></i>
+                <span class="side-menu__label"> الصلاحيات  </span>
             </a>
         </li>
 

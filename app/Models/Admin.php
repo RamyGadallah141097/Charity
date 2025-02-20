@@ -12,6 +12,7 @@ use Spatie\Permission\Traits\HasRoles;
 class Admin extends Authenticatable
 {
 
+
     use HasRoles;
     use HasApiTokens, HasFactory, Notifiable;
     protected $guarded = [];
