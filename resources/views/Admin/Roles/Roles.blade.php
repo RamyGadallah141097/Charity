@@ -6,6 +6,28 @@
 @section('page_name') المتبرعين @endsection
 @section('content')
 
+
+
+    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+
+    <style>
+        .small-text-hover {
+            font-size: 12px;
+            transition: font-size 0.3s ease-in-out;
+            display: inline-block;
+            max-width: 100px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .small-text-hover:hover {
+            font-size: 16px;
+            white-space: normal;
+            overflow: visible;
+        }
+    </style>
+
     <div class="row">
         <div class="col-md-12 col-lg-12">
             <div class="card">
@@ -105,6 +127,7 @@
         showEditModal('{{route('roles.edit',':id')}}');
         editScript();
     </script>
+
 @endsection
 
 

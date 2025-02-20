@@ -64,7 +64,7 @@ class TaskController extends Controller
                     }
                 })
                 ->editColumn('description', function ($task) {
-                    return '<span class="small-text-hover">' . ($task->description ?? '-----') . '</span>';
+                    return '<span class="small-text-hover">' . ($task->description ? $task->description : '-----') . '</span>';
                 })
                 ->addColumn('action', function ($task) {
                     return '

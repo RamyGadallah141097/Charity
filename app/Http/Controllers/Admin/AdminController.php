@@ -29,12 +29,7 @@ class AdminController extends Controller
                             <i class="fa fa-edit"></i>
                         </button>
 
-                        <!-- Change Role Form -->
-                        <form action="' . route('showChangeRole') . '" method="POST" style="display: inline;">
-                            ' . csrf_field() . '
-                            <input type="hidden" name="admin_id" value="' . $admins->id . '">
-                            <button class="btn btn-pill btn-secondary-light" type="submit">Change Role</button>
-                        </form>
+
 
                         <!-- Delete Button -->
                         <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
@@ -45,7 +40,7 @@ class AdminController extends Controller
                 ';
                 })
                 ->addColumn("select_role", function ($admin) {
-                    return optional($admin->role)->name ?? 'No Role';
+                    return $admin->roles->pluck('name')->implode(', ') ?: 'No Role';
                 })
 
                 ->editColumn('created_at', function ($admins) {
@@ -88,7 +83,8 @@ class AdminController extends Controller
 
 
     public function create(){
-        return view('Admin/admin.parts.create');
+        $roles = Role::all();
+        return view('Admin/admin.parts.create' , ["roles" => $roles]);
     }
 
     public function store(request $request): \Illuminate\Http\JsonResponse
@@ -104,14 +100,16 @@ class AdminController extends Controller
                 $inputs['image'] = 'assets/uploads/admins/'.$file_name;
             }
             $inputs['password'] = Hash::make($request->password);
-            if(Admin::create($inputs))
+            if(Admin::create($inputs)->assignRole($request->adminRole))
+
                 return response()->json(['status'=>200]);
             else
                 return response()->json(['status'=>405]);
     }
 
     public function edit(Admin $admin){
-        return view('Admin/admin.parts.edit',compact('admin'));
+        $roles = Role::all();
+        return view('Admin/admin.parts.edit',compact('admin' , "roles"));
     }
 
     public function update(request $request,$id)
@@ -131,41 +129,43 @@ class AdminController extends Controller
         else
             unset($inputs['password']);
         $admin = Admin::findOrFail($id);
+//        $admin->syncRoles($request->adminRole);
+//        $admin->assignRole($request->adminRole);
+            $admin->syncRoles($request->adminRole);
         if ($admin->update($inputs))
             return response()->json(['status' => 200]);
         else
             return response()->json(['status' => 405]);
     }
 
-    public function showChangeRole(Request $request){
-            $admin = Admin::find($request->admin_id);
-            $roles = Role::all();
-            if (!$admin) {
-                return redirect()->back()->with('error', 'Admin not found');
-            }
+//    public function showChangeRole(Request $request){
+//            $admin = Admin::find($request->admin_id);
+//            $roles = Role::all();
+//            if (!$admin) {
+//                return redirect()->back()->with('error', 'Admin not found');
+//            }
+//
+//            return view('Admin.admin.parts.changeRole', compact('admin' , "roles"));
+//
+//    }
+//
+//    public function changeRole(Request $request)
+//    {
+//
+////        dd($request->id);
+////        dd($request->id);
+//        $admin = Admin::find($request->adminId);
+//
+//
+//
+//        $role = Role::findById($request->adminRole);
+//
+//
+//        $admin->syncRoles($role);
+//
+//
+//        return response()->json(['status' => 200, 'message' => 'Role updated successfully']);
+//    }
 
-            return view('Admin.admin.parts.changeRole', compact('admin' , "roles"));
-
-    }
-
-        public function changeRole(Request $request)
-        {
-
-
-            $admin = Admin::find($request->id);
-
-
-            // Find role
-            $role = Role::findById($request->adminRole);
-
-
-
-
-
-            $admin->syncRoles([$role->id]); // Correct way to assign a new role and remove old ones
-
-
-            return response()->json(['status' => 200, 'message' => 'Role updated successfully']);
-        }
 
 }//end class

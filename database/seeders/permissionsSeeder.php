@@ -103,7 +103,7 @@ class permissionsSeeder extends Seeder
         ];
 
         foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission]);
+            Permission::firstOrCreate(['name' => $permission , "guard_name" => 'admin']);
         }
 
         $this->command->info('Permissions seeded successfully!');

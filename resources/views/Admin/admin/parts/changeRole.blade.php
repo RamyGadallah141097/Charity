@@ -8,12 +8,14 @@
 
 
     <div class="modal-body">
-    <form id="addForm" class="addForm" method="POST" enctype="multipart/form-data" action="{{route('changeRole')}}">
+    <form id="addForm" class="addForm" method="POST" enctype="multipart/form-data"
+{{--          action="{{route('changeRole')}}"--}}
+    >
         @csrf
         <div class="form-group">
             <label for="name" class="form-control-label">الاسم</label>
             <input type="text" class="form-control" disabled value="{{$admin->name}}" >
-            <input type="hidden" class="form-control" disabled name="adminId" value="{{$admin->id}}" >
+            <input type="hidden" class="form-control"  name="id" value="{{$admin->id}}" >
 
         </div>
 

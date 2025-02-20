@@ -27,19 +27,23 @@ class RulesController extends Controller
                     return $role->name;
                 })
                 ->addColumn("permissions", function ($role) {
-                    return $role->permissions->pluck('name') ?$role->permissions->pluck('name')->implode("  -  ") : "-";
+                    return '<span class="small-text-hover"> ' .$role->permissions->pluck('name') ?$role->permissions->pluck('name')->implode("  -  ") : "-" . '</span>';
                 })
                 ->addColumn('action', function ($role) {
-                    return '
-                <button type="button" data-id="' . $role->id . '" class="btn btn-pill btn-info-light editBtn">
-                    <i class="fa fa-edit"></i>
-                </button>
-                <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
-                        data-id="' . $role->id . '" data-title="' . $role->name . '">
-                    <i class="fas fa-trash"></i>
-                </button>
-            ';
+                        return '
+                            <button type="button" data-id="' . e($role->id) . '"
+                                    class="btn btn-pill btn-info-light editBtn">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                            <button class="btn btn-pill btn-danger-light"
+                                    data-toggle="modal" data-target="#delete_modal"
+                                    data-id="' . e($role->id) . '"
+                                    data-title="' . e($role->name) . '">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        ';
                 })
+
                 ->escapeColumns([])
                 ->make(true);
         } else {
@@ -69,7 +73,7 @@ class RulesController extends Controller
     {
         try {
             // Create the role
-            $role = Role::create(['name' => $request->name]);
+            $role = Role::create(['name' => $request->name , "guard_name" => 'admin']);
 
             if (!empty($request->permissions)) {
                 $permissionNames = \Spatie\Permission\Models\Permission::whereIn('id', $request->permissions)->pluck('name')->toArray();
