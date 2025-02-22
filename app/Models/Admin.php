@@ -7,17 +7,19 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Traits\HasPermissions;
 use Spatie\Permission\Traits\HasRoles;
 
 class Admin extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles , HasPermissions;
+
 
     // Define the guard name for Spatie Roles
     protected $guard_name = 'admin';
 
     // Protect against mass assignment issues
-    protected $fillable = ['name', 'email', 'password'];
+    protected $fillable = ['name', 'email', 'password' , "image"];
 
     // Hide sensitive attributes when converting to JSON
     protected $hidden = [

@@ -27,21 +27,51 @@ class RulesController extends Controller
                     return $role->name;
                 })
                 ->addColumn("permissions", function ($role) {
-                    return '<span class="small-text-hover"> ' .$role->permissions->pluck('name') ?$role->permissions->pluck('name')->implode("  -  ") : "-" . '</span>';
+                    $permissions = $role->permissions->pluck('name')->implode(" - ");
+
+
+                    return '<span style="
+                        display: inline-block;max-width: 330px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;padding: 5px;transition: max-width 0.3s ease-in-out;position: relative;cursor: pointer;"onmouseover="this.style.maxWidth=\'100%\'; this.style.whiteSpace=\'normal\'; this.style.overflow=\'visible\';
+                        this.style.background=\'rgba(0, 0, 0, 0.7)\'; this.style.color=\'white\'; this.style.padding=\'8px\';
+                        this.style.borderRadius=\'5px\'; this.style.position=\'absolute\'; this.style.zIndex=\'1000\';"
+
+                        onmouseout="this.style.maxWidth=\'330px\'; this.style.whiteSpace=\'nowrap\'; this.style.overflow=\'hidden\';
+                        this.style.background=\'transparent\'; this.style.color=\'inherit\'; this.style.padding=\'5px\';
+                        this.style.borderRadius=\'0px\'; this.style.position=\'relative\'; this.style.zIndex=\'auto\';"
+
+                        title="' . e($permissions) . '">'
+
+                        . (!empty($permissions) ? e($permissions) : "-") .
+
+                        '</span>';
                 })
                 ->addColumn('action', function ($role) {
-                        return '
-                            <button type="button" data-id="' . e($role->id) . '"
-                                    class="btn btn-pill btn-info-light editBtn">
-                                <i class="fa fa-edit"></i>
-                            </button>
-                            <button class="btn btn-pill btn-danger-light"
-                                    data-toggle="modal" data-target="#delete_modal"
-                                    data-id="' . e($role->id) . '"
-                                    data-title="' . e($role->name) . '">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        ';
+                    $user = auth()->user();
+
+                    if (!$user) {return ''; }
+                                $buttons = '';
+
+                                if ($user->can('roles.edit')) {
+                                    $buttons .= '
+                                    <button type="button" data-id="' . e($role->id) . '"
+                                            class="btn btn-pill btn-info-light editBtn">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                ';
+                                            }
+
+                                            if ($user->can('roles.delete')) {
+                                                $buttons .= '
+                                    <button class="btn btn-pill btn-danger-light"
+                                            data-toggle="modal" data-target="#delete_modal"
+                                            data-id="' . e($role->id) . '"
+                                            data-title="' . e($role->name) . '">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                ';
+                                }
+
+                    return $buttons;
                 })
 
                 ->escapeColumns([])
@@ -130,7 +160,24 @@ class RulesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+
+
+            $role = Role::find($id);
+            $role->name = $request->name;
+            $role->save();
+            $role->permissions()->sync($request->permissions);
+
+            return response()->json([
+                "status"=>200,
+                "message"=>"<div class=\"alert alert-success\" role=\"alert\"> تم التعديل بنجاح </div>"
+            ]);
+        }catch (\Exception $e){
+            return response()->json([
+                "status"=>405,
+                "message"=>"<div class=\"alert alert-danger\" role=\"alert\"> ".$e->getMessage()." </div>"
+            ]);
+        }
     }
 
     /**

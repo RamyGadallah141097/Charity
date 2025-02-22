@@ -105,7 +105,9 @@
         ]
         showData('{{route('donors.index')}}', columns);
         // Delete Using Ajax
+
         deleteScript('{{route('delete_donors')}}');
+
         // Add Using Ajax
         showAddModal('{{route('donors.create')}}');
         addScript();

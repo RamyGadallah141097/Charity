@@ -1,6 +1,7 @@
 
 <div class="modal-body">
-    <form id="addForm" class="addForm" method="POST" enctype="multipart/form-data" action="{{route('roles.store')}}">
+    <form id="addForm" class="addForm" method="POST" enctype="multipart/form-data" action="{{route('roles.update' , $role->id)}}">
+        @method("put")
         @csrf
         <div class="form-group">
             <label for="name" class="form-control-label">الاسم</label>

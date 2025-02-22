@@ -11,21 +11,23 @@
                     <a class="header-brand1" href="{{ route('adminHome') }}">
 
                     </a>
+                </a>
+            </a>
+        </a>
                     <!-- LOGO -->
     </div>
+
     <ul class="side-menu">
         <li>
             <h3>العناصر</h3>
         </li>
 
-        @can("main.index")
             <li class="slide">
                 <a class="side-menu__item" href="{{ route('adminHome') }}">
                     <i class="icon icon-home side-menu__icon"></i>
                     <span class="side-menu__label">الرئيسية</span>
                 </a>
             </li>
-        @endcan
         @can("admins.index")
         <li class="slide">
             <a class="side-menu__item" href="{{ route('admins.index') }}">
