@@ -9,6 +9,7 @@ use App\Traits\PhotoTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Role;
 use Yajra\DataTables\DataTables;
 
 class AdminController extends Controller
@@ -18,16 +19,32 @@ class AdminController extends Controller
     {
         if($request->ajax()) {
             $admins = Admin::latest()->get();
+
             return Datatables::of($admins)
                 ->addColumn('action', function ($admins) {
-                    return '
-                            <button type="button" data-id="' . $admins->id . '" class="btn btn-pill btn-info-light editBtn"><i class="fa fa-edit"></i></button>
-                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
-                                    data-id="' . $admins->id . '" data-title="' . $admins->name . '">
-                                    <i class="fas fa-trash"></i>
-                            </button>
-                       ';
+                    if(auth()->user()->can('admins.delete')) {
+                        return '
+                    <div class="d-flex">
+                        <!-- Edit Button -->
+                        <button type="button" data-id="' . $admins->id . '" class="btn btn-pill btn-info-light editBtn">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                    ';}
+                    if(auth()->user()->can("admins.delete")){
+                        return '
+                           <!-- Delete Button -->
+                        <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                                data-id="' . $admins->id . '" data-title="' . $admins->name . '">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                        ';
+                    }
                 })
+                ->addColumn("select_role", function ($admin) {
+                    return $admin->roles->pluck('name')->implode(', ') ?: 'No Role';
+                })
+
                 ->editColumn('created_at', function ($admins) {
                     return $admins->created_at->diffForHumans();
                 })
@@ -68,7 +85,8 @@ class AdminController extends Controller
 
 
     public function create(){
-        return view('Admin/admin.parts.create');
+        $roles = Role::all();
+        return view('Admin/admin.parts.create' , ["roles" => $roles]);
     }
 
     public function store(request $request): \Illuminate\Http\JsonResponse
@@ -84,14 +102,16 @@ class AdminController extends Controller
                 $inputs['image'] = 'assets/uploads/admins/'.$file_name;
             }
             $inputs['password'] = Hash::make($request->password);
-            if(Admin::create($inputs))
+            if(Admin::create($inputs)->assignRole($request->adminRole))
+
                 return response()->json(['status'=>200]);
             else
                 return response()->json(['status'=>405]);
     }
 
     public function edit(Admin $admin){
-        return view('Admin/admin.parts.edit',compact('admin'));
+        $roles = Role::all();
+        return view('Admin/admin.parts.edit',compact('admin' , "roles"));
     }
 
     public function update(request $request,$id)
@@ -111,9 +131,43 @@ class AdminController extends Controller
         else
             unset($inputs['password']);
         $admin = Admin::findOrFail($id);
+//        $admin->syncRoles($request->adminRole);
+//        $admin->assignRole($request->adminRole);
+            $admin->syncRoles($request->adminRole);
         if ($admin->update($inputs))
             return response()->json(['status' => 200]);
         else
             return response()->json(['status' => 405]);
     }
+
+//    public function showChangeRole(Request $request){
+//            $admin = Admin::find($request->admin_id);
+//            $roles = Role::all();
+//            if (!$admin) {
+//                return redirect()->back()->with('error', 'Admin not found');
+//            }
+//
+//            return view('Admin.admin.parts.changeRole', compact('admin' , "roles"));
+//
+//    }
+//
+//    public function changeRole(Request $request)
+//    {
+//
+////        dd($request->id);
+////        dd($request->id);
+//        $admin = Admin::find($request->adminId);
+//
+//
+//
+//        $role = Role::findById($request->adminRole);
+//
+//
+//        $admin->syncRoles($role);
+//
+//
+//        return response()->json(['status' => 200, 'message' => 'Role updated successfully']);
+//    }
+
+
 }//end class

@@ -18,6 +18,13 @@
         <label for="password" class="form-control-label">كلمة المرور</label>
         <input type="password" class="form-control" name="password" id="password">
     </div>
+        <div class="row">
+            <select name="adminRole" class="form-control w-95">
+                @foreach($roles as $role)
+                    <option value="{{$role->name}}">{{$role->name}}</option>
+                @endforeach
+            </select>
+        </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
             <button type="submit" class="btn btn-primary" id="addButton">اضافة</button>

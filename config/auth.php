@@ -40,15 +40,30 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'admin' => [  // Ensure the admin guard exists
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
         'provider' => [
             'driver' => 'session',
             'provider' => 'providers',
         ],
-        'admin' => [
-            'driver' => 'session',
-            'provider' => 'admins',
+        'providers' => [
+            'admins' => [
+                'driver' => 'eloquent',
+                'model' => App\Models\Admin::class,
+            ],
+        ],
+        'guards' => [
+            'admin' => [
+                'driver' => 'session',
+                'provider' => 'admins',
+            ],
         ],
     ],
+
+
 
     /*
     |--------------------------------------------------------------------------
@@ -80,6 +95,7 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
         ],
+
 
         // 'users' => [
         //     'driver' => 'database',
