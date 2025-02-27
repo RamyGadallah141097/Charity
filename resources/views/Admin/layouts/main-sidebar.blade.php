@@ -76,7 +76,7 @@
 
         <p>
             <a class="side-menu__item" data-toggle="collapse" href="#donationsDropdown" role="button"
-                aria-expanded="false" aria-controls="collapseExample">
+               aria-expanded="false" aria-controls="collapseExample">
                 <i class="fe fe-users side-menu__icon"></i>
                 <span class="side-menu__label"> التبرعات والمتبرعين </span>
             </a>
@@ -96,7 +96,7 @@
 
         <p>
             <a class="side-menu__item" data-toggle="collapse" href="#saferDropdown" role="button" aria-expanded="false"
-                aria-controls="collapseExample">
+               aria-controls="collapseExample">
                 <i class="fe fe-users side-menu__icon"></i>
                 <span class="side-menu__label"> الخزانه </span>
             </a>
@@ -119,6 +119,8 @@
             </li>
 
         </ul>
+
+
 
         {{-- بنك الافكار  --}}
         <li class="slide">
