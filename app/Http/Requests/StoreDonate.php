@@ -25,7 +25,7 @@ class StoreDonate extends FormRequest
     {
         return [
             'name'  => 'required|max:255',
-            'phone' => 'required|max:255|digits_between:7,50|max:12',
+            'phone' => 'required|max:255|digits_between:7,50|max:12|unique:donors,phone',
             'address' => 'required',
             'burn_date' => 'required|date',
         ];

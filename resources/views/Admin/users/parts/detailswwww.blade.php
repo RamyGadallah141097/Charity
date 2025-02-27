@@ -10,10 +10,15 @@
 
 
 @section('content')
-    <h3>المستفيد</h3>
-    <div class="table-responsive">
-        <table class="table table-striped table-bordered w-100">
-            <thead>
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">بيانات المستفيد</h3>
+    </div>
+    <div class="card-body">
+        <h3>المستفيد</h3>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered w-100">
+                <thead>
                 <tr class="fw-bolder text-muted bg-light">
                     <th class="min-w-25px">اسم الزوج</th>
                     <th class="min-w-25px">اسم الزوجة</th>
@@ -28,8 +33,8 @@
                     <th class="min-w-25px">نوع العمل</th>
                     <th class="min-w-25px"> العنوان</th>
                 </tr>
-            </thead>
-            <tbody>
+                </thead>
+                <tbody>
                 <tr>
                     <td>{{ $user->husband_name }}</td>
                     <td>{{ $user->wife_name }}</td>
@@ -45,14 +50,14 @@
                     <td>{{ $user->address }}</td>
 
                 </tr>
-            </tbody>
-        </table>
-    </div>
+                </tbody>
+            </table>
+        </div>
 
-    <h3> تفاصيل الدخل</h3>
-    <div class="table-responsive">
-        <table class="table table-striped table-bordered w-100">
-            <thead>
+        <h3> تفاصيل الدخل</h3>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered w-100">
+                <thead>
                 <tr class="fw-bolder text-muted bg-light">
                     <th class="min-w-25px">الراتب </th>
                     <th class="min-w-25px">معاش </th>
@@ -63,8 +68,8 @@
                     <th class="min-w-25px">اخرى </th>
                     <th class="min-w-25px">اجمالى الدخل </th>
                 </tr>
-            </thead>
-            <tbody>
+                </thead>
+                <tbody>
                 <tr>
                     <td>{{ $user->salary }}</td>
                     <td>{{ $user->pension }}</td>
@@ -75,14 +80,14 @@
                     <td>{{ $user->other }}</td>
                     <td>{{ $user->gross_income }}</td>
                 </tr>
-            </tbody>
-        </table>
-    </div>
+                </tbody>
+            </table>
+        </div>
 
-    <h3> تفاصيل النفقات</h3>
-    <div class="table-responsive">
-        <table class="table table-striped table-bordered w-100">
-            <thead>
+        <h3> تفاصيل النفقات</h3>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered w-100">
+                <thead>
                 <tr class="fw-bolder text-muted bg-light">
                     <th class="min-w-25px">ايجار </th>
                     <th class="min-w-25px">غاز </th>
@@ -95,8 +100,8 @@
                     <th class="min-w-25px">دراسة</th>
                     <th class="min-w-25px">اجمالى النفقات </th>
                 </tr>
-            </thead>
-            <tbody>
+                </thead>
+                <tbody>
                 <tr>
                     <td>{{ $user->rent }}</td>
                     <td>{{ $user->gas }}</td>
@@ -110,15 +115,15 @@
                     <td>{{ $user->gross_expenses }}</td>
 
                 </tr>
-            </tbody>
-        </table>
-    </div>
+                </tbody>
+            </table>
+        </div>
 
-    @if (count($user->childrens))
-        <h3>الابناء </h3>
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered w-100">
-                <thead>
+        @if (count($user->childrens))
+            <h3>الابناء </h3>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered w-100">
+                    <thead>
                     <tr class="fw-bolder text-muted bg-light">
                     <tr class="fw-bolder text-muted bg-light">
                         <th class="min-w-25px"> #</th>
@@ -132,8 +137,8 @@
                         <th class="min-w-25px"> التكلفة الشهرية</th>
                         <th class="min-w-25px">ملاحظات</th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     @foreach ($user->childrens as $boy)
                         <tr>
                             <td>{{ $boy->id }}</td>
@@ -148,16 +153,16 @@
                             <td>{{ $boy->notes }}</td>
                         </tr>
                     @endforeach
-                </tbody>
-            </table>
-        </div>
-    @endif
-    @if ($user->patient != null)
-        <h3>الحالة الصحية</h3>
-        <div class="table-responsive">
-            <!--begin::Table-->
-            <table class="table table-striped table-bordered w-100">
-                <thead>
+                    </tbody>
+                </table>
+            </div>
+        @endif
+        @if ($user->patient != null)
+            <h3>الحالة الصحية</h3>
+            <div class="table-responsive">
+                <!--begin::Table-->
+                <table class="table table-striped table-bordered w-100">
+                    <thead>
                     <tr class="fw-bolder text-muted bg-light">
                         <th class="min-w-25px">اسم المريض</th>
                         <th class="min-w-20px">وسيلة صرف الدواء</th>
@@ -166,8 +171,8 @@
                         <th class="min-w-20px">الدواء</th>
                         <th class="min-w-20px">هل تأمين ؟</th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     <tr>
                         <td>{{ $user->patient->name }}</td>
                         <td>{{ $user->patient->type == 1 ? 'ذكر' : 'أنثي' }}</td>
@@ -176,46 +181,44 @@
                         <td>{{ $user->patient->is_insurance == 0 ? 'لا' : 'نعم' }}</td>
                         <td>{{ $user->patient->doctor_name }}</td>
                     </tr>
-                </tbody>
-            </table>
-        </div>
-    @endif
-    <div class="card">
+                    </tbody>
+                </table>
+            </div>
+        @endif
+        <div class="card">
 
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <li class="list-group-item"> هل فيه املاك
-                        <div class="material-switch pull-left mt-4">
-                            <input id="has_property" disabled readonly name="has_property" type="checkbox"
-                                {{ $user->has_property == 1 ? 'checked' : '' }}>
-                            <label for="has_property" class="label-success mt-2"></label>
-                        </div>
-                    </li>
-                </div>
-                <div class="col-md-6">
-                    <li class="list-group-item"> هل فيه دفتر توفير
-                        <div class="material-switch pull-left mt-4">
-                            <input id="has_savings_book" disabled readonly name="has_savings_book" type="checkbox"
-                                {{ $user->has_savings_book == 1 ? 'checked' : '' }}>
-                            <label for="has_savings_book" class="label-success mt-2"></label>
-                        </div>
-                    </li>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <li class="list-group-item"> هل فيه املاك
+                            <div class="material-switch pull-left mt-4">
+                                <input id="has_property" disabled readonly name="has_property" type="checkbox"
+                                    {{ $user->has_property == 1 ? 'checked' : '' }}>
+                                <label for="has_property" class="label-success mt-2"></label>
+                            </div>
+                        </li>
+                    </div>
+                    <div class="col-md-6">
+                        <li class="list-group-item"> هل فيه دفتر توفير
+                            <div class="material-switch pull-left mt-4">
+                                <input id="has_savings_book" disabled readonly name="has_savings_book" type="checkbox"
+                                    {{ $user->has_savings_book == 1 ? 'checked' : '' }}>
+                                <label for="has_savings_book" class="label-success mt-2"></label>
+                            </div>
+                        </li>
+                    </div>
                 </div>
             </div>
+
+            <h3> المرفقات</h3>
+            <textarea name="health_status" id="health_status" cols="30" rows="10" class="form-control" disabled>{{$user->attachments}}</textarea>
         </div>
 
-        <h3> المرفقات</h3>
-        <textarea name="health_status" id="health_status" cols="30" rows="10" class="form-control" disabled>
-            $user->attachments
-        </textarea>
 
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
+        </div>
     </div>
-
-
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
-    </div>
-
+</div>
 
 @stop
