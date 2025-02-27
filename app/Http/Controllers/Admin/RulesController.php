@@ -46,33 +46,21 @@ class RulesController extends Controller
                         '</span>';
                 })
                 ->addColumn('action', function ($role) {
-                    $user = auth()->user();
+                    return '
+                        <button type="button" data-id="' . e($role->id) . '"
+                                class="btn btn-pill btn-info-light editBtn">
+                            <i class="fa fa-edit"></i>
+                        </button>
 
-                    if (!$user) {return ''; }
-                                $buttons = '';
-
-                                if ($user->can('roles.edit')) {
-                                    $buttons .= '
-                                    <button type="button" data-id="' . e($role->id) . '"
-                                            class="btn btn-pill btn-info-light editBtn">
-                                        <i class="fa fa-edit"></i>
-                                    </button>
-                                ';
-                                            }
-
-                                            if ($user->can('roles.delete')) {
-                                                $buttons .= '
-                                    <button class="btn btn-pill btn-danger-light"
-                                            data-toggle="modal" data-target="#delete_modal"
-                                            data-id="' . e($role->id) . '"
-                                            data-title="' . e($role->name) . '">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                ';
-                                }
-
-                    return $buttons;
+                        <button class="btn btn-pill btn-danger-light"
+                                data-toggle="modal" data-target="#delete_modal"
+                                data-id="' . e($role->id) . '"
+                                data-title="' . e($role->name) . '">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    ';
                 })
+
 
                 ->escapeColumns([])
                 ->make(true);

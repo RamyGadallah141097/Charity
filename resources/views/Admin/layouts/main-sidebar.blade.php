@@ -28,6 +28,24 @@
                 <span class="side-menu__label">الرئيسية</span>
             </a>
         </li>
+        @can("admins.index")
+            <li class="slide">
+                <a class="side-menu__item" href="{{ route('admins.index') }}">
+                    <i class="fe fe-users side-menu__icon"></i>
+                    <span class="side-menu__label">المشرفين</span>
+                </a>
+            </li>
+        @endcan
+
+        {{-- المستفيدين --}}
+        @can("users.index")
+            <p>
+                <a class="side-menu__item" data-toggle="collapse" href="#sersDropdown" role="button" aria-expanded="false"
+                   aria-controls="collapseExample">
+                    <i class="fe fe-users side-menu__icon"></i>
+                    <span class="side-menu__label"> المستفيدين </span>
+                </a>
+            </p>
         {{-- @can('admins.index') --}}
         <li class="slide">
             <a class="side-menu__item" href="{{ route('admins.index') }}">
@@ -46,7 +64,6 @@
                 <span class="side-menu__label"> المستفيدين </span>
             </a>
         </p>
-
         <ul class="collapse" id="sersDropdown">
             <li>
                 <a class="dropdown-item-text side-menu__item" href="{{ route('users.index', 'new') }}">
@@ -68,7 +85,83 @@
                     <span class="side-menu__label"> المستفيدين قيد التنفيذ </span>
                 </a>
             </li>
+                <li>
+                    <a class="dropdown-item-text side-menu__item" href="{{ route('users.index', 'refused') }}">
+                        <i class="fe fe-user-x side-menu__icon"></i>
+                        <span class="side-menu__label"> المستفيدين المرفوضين </span>
+                    </a>
+                </li>
+                @endcan
+            </ul>
+            {{-- المستفيدين --}}
 
+
+            {{--  التبرعات والمتبرعين  --}}
+
+            @can("donors.index")
+                @can("Donations.index")
+                    <p>
+                        <a class="side-menu__item" data-toggle="collapse" href="#donationsDropdown" role="button"
+                           aria-expanded="false" aria-controls="collapseExample">
+                            <i class="fe fe-users side-menu__icon"></i>
+                            <span class="side-menu__label"> التبرعات والمتبرعين </span>
+                        </a>
+                    </p>
+
+                    <ul class="collapse" id="donationsDropdown">
+                        <li>
+                            <a class="dropdown-item-text side-menu__item" href="{{ route('donors.index') }}">
+                                <span class="side-menu__label"> قائمة المتبرعين </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item-text side-menu__item" href="{{ route('Donations.index') }}">
+                                <span class="side-menu__label"> قائمة التبرعات </span>
+                            </a>
+                        </li>
+                    </ul>
+
+                @endcan
+            @endcan
+
+            @can("safer.index")
+
+               <p>
+                    <a class="side-menu__item" data-toggle="collapse" href="#saferDropdown" role="button" aria-expanded="false"
+                       aria-controls="collapseExample">
+                        <i class="fe fe-users side-menu__icon"></i>
+                        <span class="side-menu__label"> الخزانه </span>
+                    </a>
+                </p>
+                <ul class="collapse" id="saferDropdown">
+                    <li>
+                        <a class="dropdown-item-text side-menu__item" href="{{ route('safer.index') }}">
+                            <span class="side-menu__label"> الصدقاة و الزكاة </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item-text side-menu__item" href="{{ route('safer.loans') }}">
+                            <span class="side-menu__label"> القروض الحسنه </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item-text side-menu__item" href="{{ route('safer.InKindDonations') }}">
+                            <span class="side-menu__label"> تبرعات عينية </span>
+                        </a>
+                    </li>
+
+                </ul>
+            @endcan
+
+            @can("tasks.index")
+                {{-- بنك الافكار  --}}
+                <li class="slide">
+                    <a class="side-menu__item" href="{{ route('tasks.index') }}">
+                        <i class="fe fe-file-text side-menu__icon"></i>
+                        <span class="side-menu__label"> بنك الافكار </span>
+                    </a>
+                </li>
+            @endcan 
             <li>
                 <a class="dropdown-item-text side-menu__item" href="{{ route('users.index', 'refused') }}">
                     <i class="fe fe-user-x side-menu__icon"></i>
@@ -259,12 +352,54 @@
                 </li>
                 {{-- @endcan --}}
 
+            @can("research.index")
                 <li class="slide">
-                    <a class="side-menu__item" href="{{ route('admin.logout') }}">
-                        <i class="icon icon-lock side-menu__icon"></i>
-                        <span class="side-menu__label">تسجيل الخروج</span>
+                    <a class="side-menu__item" href="{{ route('research.index') }}">
+                        <i class="fe fe-file-text side-menu__icon"></i>
+                        <span class="side-menu__label"> طباعة بحث اجتماعي </span>
                     </a>
                 </li>
+                <li class="slide">
+                    <a class="side-menu__item" href="{{ route('research.receive') }}">
+                        <i class="fe fe-printer side-menu__icon"></i>
+                        <span class="side-menu__label"> طباعة اقرار استلام </span>
+                    </a>
+                </li>
+            @endcan
 
-            </ul>
+            @can("setting.index")
+                <li class="slide">
+                    <a class="side-menu__item" href="{{ route('setting.index') }}">
+                        <i class="fe fe-settings side-menu__icon"></i>
+                        <span class="side-menu__label"> الاعدادت </span>
+                    </a>
+                </li>
+            @endcan
+
+
+            @can("subventions.index")
+                <li class="slide">
+                    <a class="side-menu__item" href="{{ route('subventions.index') }}">
+                        <i class="fe fe-dollar-sign side-menu__icon"></i>
+                        <span class="side-menu__label"> الإعانات </span>
+                    </a>
+                </li>
+            @endcan
+
+            @can("roles.index")
+                <li class="slide">
+                    <a class="side-menu__item" href="{{ route('roles.index') }}">
+                        <i class="fe fe-dollar-sign side-menu__icon"></i>
+                        <span class="side-menu__label"> الصلاحيات  </span>
+                    </a>
+                </li>
+            @endcan
+
+            <li class="slide">
+                <a class="side-menu__item" href="{{ route('admin.logout') }}">
+                    <i class="icon icon-lock side-menu__icon"></i>
+                    <span class="side-menu__label">تسجيل الخروج</span>
+                </a>
+            </li>
+    </ul>
 </aside>
