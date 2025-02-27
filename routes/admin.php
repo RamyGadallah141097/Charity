@@ -38,15 +38,18 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::POST('delete_task', 'TaskController@delete')->name('delete_task');
 
 
-    //    the safer routes
-    Route::get("safer", "SaferController@index")->name("safer.index");
-    Route::get("safer/loans", "SaferController@indexLoans")->name("safer.loans");
-    Route::get('safer/InKindDonations', 'SaferController@InKindDonations')->name('safer.InKindDonations');
+    //    الخزنة
+    Route::get("safer/Charity", "SaferController@indexCharity")->name("safer.charity"); //الصدقات
+    Route::get("safer/Zakat", "SaferController@indexZakat")->name("safer.Zakat"); //الصدقات
+    Route::get("safer/loans", "SaferController@indexLoans")->name("safer.loans"); // القروض الحسنه
+    Route::get('safer/InKindDonations', 'SaferController@InKindDonations')->name('safer.InKindDonations'); //التبرعات العينية   
 
     #### Subventions ####
     Route::resource('subventions', 'SubventionController');
     Route::get('showSubventions', 'SubventionController@showSubventions')->name('showSubventions');
     Route::POST('delete_subventions', 'SubventionController@delete')->name('delete_subventions');
+    // اعانات القرض الحسن
+    Route::get('SubventionsLoans/index', 'SubventionsLoansController@index')->name('SubventionsLoans.index');
 
     #### Research ####
     Route::get('research', 'ResearchController@index')->name('research.index');

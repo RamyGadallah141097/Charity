@@ -16,14 +16,14 @@ class CreatePatientsTable extends Migration
         Schema::create('patients', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')
-                ->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->string('patient_name')->nullable();
-            $table->tinyInteger('type')->default(0)->comment('0 means women and 1 means man');
             $table->text('treatment')->nullable();
             $table->text('treatment_pay_by')->nullable();
-            $table->enum('is_insurance', ['0', '1'])->default(0)->comment("0 means he hasn't an insurance");
+            $table->tinyInteger('type')->default(0)->comment('0 means women and 1 means man');
             $table->text('doctor_name')->nullable();
+            $table->enum('is_insurance', ['0', '1'])->default(0)->comment("0 means he hasn't an insurance");
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }

@@ -1,49 +1,40 @@
 @extends('Admin/layouts/master')
 
 @section('title')
-    {{ $setting->title ?? '' }} | القروض الحسنة
+    {{ $setting->title ?? '' }} | الاعانات
 @endsection
 @section('page_name')
-    القروض الحسنة
+    الاعانات
 @endsection
 @section('content')
     <div class="row">
         <div class="col-md-12 col-lg-12">
             <div class="card">
-                <div class="p-3">
-                    <h3 class="card-title"> القروض الحسنة {{ $setting->title ?? '' }}</h3>
-
-                    <div class="card-body w-100">
-                        <div class="row w-100"> <!-- Ensuring full width -->
-                            <div class="col-12"> <!-- Making it take full width -->
-                                <div class="card bg-secondary img-card box-secondary-shadow">
-                                    <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
-                                        <span class="text-white fs-30"> خزنة القروض الحسنة </span>
-                                        <span class="text-white fs-30">{{ $loans }} EGP</span>
-                                        <!-- Changed dollar icon to EGP -->
-                                    </div>
-
-                                    <div class="card-body">
-                                        <div class="row text-white">
-                                            <div class="col-4 text-end"> <!-- Added text-end for right alignment -->
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div><!-- COL END -->
-                        </div><!-- ROW END -->
+                <div class="card-header">
+                    <h3 class="card-title"> تخصيص اعانات القرض الحسن للمستفيدين المقبولين </h3>
+                    <div class="">
+                        <a href="{{ route('showSubventions') }}" title="طباعة" class="btn btn-success btn-icon text-white">
+                            طباعة
+                            <i class="fa fa-print"></i>
+                        </a>
+                        <button class="btn btn-secondary btn-icon text-white addBtn">
+                            <span>
+                                <i class="fe fe-plus"></i>
+                            </span> اضافة جديد
+                        </button>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <!--begin::Table-->
-                        <table class="table table-striped table-bordered text-nowrap w-75" id="dataTable">
+                        <table class="table table-striped table-bordered text-nowrap w-100" id="dataTable">
                             <thead>
                                 <tr class="fw-bolder text-muted bg-light">
                                     <th class="min-w-25px">#</th>
-                                    <th class="min-w-50px"> الاسم المتبرع</th>
-                                    <th class="min-w-125px">تاريخ التبرع</th>
-                                    <th class="min-w-125px">قيمه التبرع </th>
+                                    <th class="min-w-50px">المستفيد</th>
+                                    <th class="min-w-125px">المبلغ</th>
+                                    <th class="min-w-125px"> النسبة الشهرية </th>
+                                    <th class="min-w-50px rounded-end">العمليات</th>
                                 </tr>
                             </thead>
                         </table>
@@ -63,7 +54,7 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <form action="{{ route('donations_delete') }}" method="post">
+                    <form action="{{ route('delete_subventions') }}" method="post">
                         @csrf
                         @method('post')
                         <div class="modal-body">
@@ -87,7 +78,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="example-Modal3">بيانات المتبرع</h5>
+                        <h5 class="modal-title" id="example-Modal3">بيانات الإعانة</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -109,18 +100,32 @@
                 name: 'id'
             },
             {
-                data: 'donor_name',
-                name: 'donor_name'
+                data: 'user_id',
+                name: 'user_id'
             },
             {
-                data: 'created_at',
-                name: 'created_at'
+                data: 'price',
+                name: 'price'
             },
             {
-                data: 'donation_amount',
-                name: 'donation_amount'
+                data: 'type',
+                name: 'type'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
             },
         ]
-        showData('{{ route('safer.loans') }}', columns);
+        showData('{{ route('subventions.index') }}', columns);
+        // Delete Using Ajax
+        deleteScript('{{ route('delete_subventions') }}');
+        // Add Using Ajax
+        showAddModal('{{ route('subventions.create') }}');
+        addScript();
+        // Add Using Ajax
+        showEditModal('{{ route('subventions.edit', ':id') }}');
+        editScript();
     </script>
 @endsection

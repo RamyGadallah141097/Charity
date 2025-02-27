@@ -14,7 +14,7 @@
                     </svg></span>
             </div>
             <input type="text" id="search_donor" aria-label="Username" aria-describedby="basic-addon1"
-                class="form-control" placeholder="ابحث عن اسم المتبرع...">
+                class="form-control" placeholder="ابحث عن اسم المتبرع.">
         </div>
 
         <div class="" id="create_donor">
@@ -34,8 +34,6 @@
         <div class="form-group">
             <label for="name" class="form-control-label">رقم المتبرع</label>
             <input type="text" class="form-control" disabled id="donor_phone">
-
-
         </div>
 
 
@@ -43,10 +41,10 @@
         <div class="form-group">
             <label for="donation_type" class="form-control-label">نوع التبرع </label>
             <select name="donation_type" id="type" class="form-control">
-                <option value="0">زكاة المال </option> // the first type 0
-                <option value="1"> صدقات</option> // the second type 1
-                <option value="2">قرض حسن </option>// the third type 2
-                <option value="3">تبرع عيني </option>// the forth type 3
+                <option value="0">زكاة المال </option>
+                <option value="1"> صدقات</option>
+                <option value="2">قرض حسن </option>
+                <option value="3">تبرع عيني </option>
             </select>
         </div>
 

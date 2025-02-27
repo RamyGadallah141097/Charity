@@ -68,50 +68,106 @@
                 </a>
             </li>
 
+            <li>
+                <a class="dropdown-item-text side-menu__item" href="{{ route('subventions.index') }}">
+                    <i class="fe fe-credit-card side-menu__icon"></i>
+                    <span class="side-menu__label"> الاعانات الشهرية للمستفيدين </span>
+                </a>
+            </li>
+
         </ul>
         {{-- المستفيدين --}}
 
+        {{-- ____________________________________________________ --}}
 
-        {{--  التبرعات والمتبرعين  --}}
-
+        {{-- المقترضين --}}
         <p>
-            <a class="side-menu__item" data-toggle="collapse" href="#donationsDropdown" role="button"
+            <a class="side-menu__item" data-toggle="collapse" href="#BorrowersDropdown" role="button"
                 aria-expanded="false" aria-controls="collapseExample">
-                <i class="fe fe-users side-menu__icon"></i>
-                <span class="side-menu__label"> التبرعات والمتبرعين </span>
+                <i class="fe fe-credit-card side-menu__icon"></i> <!-- استخدام أيقونة القروض -->
+                <span class="side-menu__label"> القروض الحسنة </span>
             </a>
         </p>
-        <ul class="collapse" id="donationsDropdown">
+
+
+
+        <ul class="collapse" id="BorrowersDropdown">
             <li>
-                <a class="dropdown-item-text side-menu__item" href="{{ route('donors.index') }}">
-                    <span class="side-menu__label"> قائمة المتبرعين </span>
-                </a>
-            </li>
-            <li>
-                <a class="dropdown-item-text side-menu__item" href="{{ route('Donations.index') }}">
-                    <span class="side-menu__label"> قائمة التبرعات </span>
+                <a class="dropdown-item-text side-menu__item" href="{{ route('safer.loans') }}">
+                    <i class="fe fe-user-check side-menu__icon"></i> <!-- أيقونة تعبيرية عن المقترضين -->
+                    <span class="side-menu__label"> المقترضين </span>
                 </a>
             </li>
         </ul>
 
-        <p>
-            <a class="side-menu__item" data-toggle="collapse" href="#saferDropdown" role="button" aria-expanded="false"
-                aria-controls="collapseExample">
-                <i class="fe fe-users side-menu__icon"></i>
-                <span class="side-menu__label"> الخزانه </span>
-            </a>
-        </p>
-        <ul class="collapse" id="saferDropdown">
+        <ul class="collapse" id="BorrowersDropdown">
             <li>
-                <a class="dropdown-item-text side-menu__item" href="{{ route('safer.index') }}">
-                    <span class="side-menu__label"> الصدقاة و الزكاة </span>
+                <a class="dropdown-item-text side-menu__item" href="{{ route('SubventionsLoans.index') }}">
+                    <i class="fe fe-dollar-sign side-menu__icon"></i> <!-- أيقونة تعبيرية عن القروض أو المال -->
+                    <span class="side-menu__label"> القروض </span>
                 </a>
             </li>
+        </ul>
+
+        <ul class="collapse" id="BorrowersDropdown">
             <li>
                 <a class="dropdown-item-text side-menu__item" href="{{ route('safer.loans') }}">
-                    <span class="side-menu__label"> القروض الحسنه </span>
+                    <i class="fe fe-lock side-menu__icon"></i>
+                    <span class="side-menu__label"> الخزنة والمتبرعين </span>
                 </a>
             </li>
+        </ul>
+        {{-- ____________________________________________________ --}}
+
+        {{-- الصدقات والزكاة --}}
+        <p>
+            <a class="side-menu__item" data-toggle="collapse" href="#CharityAndZakatDropdown" role="button"
+                aria-expanded="false" aria-controls="collapseExample">
+                <i class="fe fe-credit-card side-menu__icon"></i> <!-- استخدام أيقونة القروض -->
+                <span class="side-menu__label"> التبرعات والمتبرعين </span>
+            </a>
+        </p>
+
+        <ul class="collapse" id="CharityAndZakatDropdown">
+            <li>
+                <a class="dropdown-item-text side-menu__item" href="{{ route('donors.index') }}">
+                    <span class="side-menu__label"> المتبرعين </span>
+                </a>
+            </li>
+        </ul>
+
+        <ul class="collapse" id="CharityAndZakatDropdown">
+            <li>
+                <a class="dropdown-item-text side-menu__item" href="{{ route('Donations.index') }}">
+                    <span class="side-menu__label"> التبرعات </span>
+                </a>
+            </li>
+        </ul>
+
+        {{-- ____________________________________________________ --}}
+
+        <p>
+            <a class="side-menu__item" data-toggle="collapse" href="#saferDropdown" role="button"
+                aria-expanded="false" aria-controls="collapseExample">
+                <i class="fe fe-users side-menu__icon"></i>
+                <span class="side-menu__label"> الخزنة </span>
+            </a>
+        </p>
+
+        <ul class="collapse" id="saferDropdown">
+            <li>
+                <a class="dropdown-item-text side-menu__item" href="{{ route('safer.charity') }}">
+                    <span class="side-menu__label"> الصدقات </span>
+                </a>
+            </li>
+
+            <li>
+                <a class="dropdown-item-text side-menu__item" href="{{ route('safer.Zakat') }}">
+                    <span class="side-menu__label"> الزكات </span>
+                </a>
+            </li>
+
+
             <li>
                 <a class="dropdown-item-text side-menu__item" href="{{ route('safer.InKindDonations') }}">
                     <span class="side-menu__label"> تبرعات عينية </span>
@@ -119,6 +175,8 @@
             </li>
 
         </ul>
+
+
 
         {{-- بنك الافكار  --}}
         <li class="slide">
@@ -151,13 +209,6 @@
             </a>
         </li>
 
-
-        <li class="slide">
-            <a class="side-menu__item" href="{{ route('subventions.index') }}">
-                <i class="fe fe-dollar-sign side-menu__icon"></i>
-                <span class="side-menu__label"> الإعانات </span>
-            </a>
-        </li>
 
         <li class="slide">
             <a class="side-menu__item" href="{{ route('admin.logout') }}">
