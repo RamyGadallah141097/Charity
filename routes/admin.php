@@ -5,8 +5,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 
     #### Home ####
-    Route::get('/', 'HomeController@index')->name('adminHome')->middleware('permission:admin.home');
-
+    Route::get('/', 'HomeController@index')->name('adminHome');
     #### Admins ####
     Route::resource('admins', 'AdminController')->middleware('permission:admins.index');
     Route::POST('delete_admin', 'AdminController@delete')->name('delete_admin')->middleware('permission:delete_admin');
@@ -36,7 +35,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     #### Tasks ####
     Route::resource("tasks", "TaskController")->middleware('permission:tasks.index');
     Route::POST('delete_task', 'TaskController@delete')->name('delete_task')->middleware('permission:delete_task');
-
     //    the route of the task s
     Route::resource("tasks", "TaskController");
     Route::POST('delete_task', 'TaskController@delete')->name('delete_task');
@@ -81,7 +79,6 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('login', 'AuthController@index')->name('admin.login');
     Route::POST('login', 'AuthController@login')->name('admin.login');
 });
-
 #### Roles ####
 Route::resource("roles", "RulesController")->middleware('permission:roles.index');
 Route::post("Role_delete", "RulesController@delete")->name("Role_delete")->middleware('permission:Role_delete');
