@@ -16,7 +16,8 @@ class DonationController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $donations = Donation::where("donation_type", [0, 1, 3])->get();
+            $donations = Donation::whereIn("donation_type", [0, 1, 2, 3])->get();
+
 
             return Datatables::of($donations)
                 ->addColumn('donor_name', function ($donation) {
@@ -43,20 +44,22 @@ class DonationController extends Controller
                     }
                 })
                 ->addColumn('action', function ($donation) {
-                    if(auth()->user()->can('donations.update')){
-                    return '
+                    if (auth()->user()->can('donations.update')) {
+                        return '
                         <button type="button" data-id="' . $donation->id . '" class="btn btn-pill btn-info-light editBtn">
                             <i class="fa fa-edit"></i>
                         </button>
-                    ';}
-                    if(auth()->user()->can('donations.delete')){
+                    ';
+                    }
+                    if (auth()->user()->can('donations.delete')) {
                         return '
 
                         <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
                                 data-id="' . $donation->id . '">
                             <i class="fas fa-trash"></i>
                         </button>
-                    ';}
+                    ';
+                    }
                 })
                 ->escapeColumns([])
                 ->make(true);

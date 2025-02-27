@@ -121,6 +121,6 @@
                 name: 'donation_amount'
             },
         ]
-        showData('{{ route('safer.charity') }}', columns);
+        showData('{{ route('safer.CharityZakat') }}', columns);
     </script>
 @endsection

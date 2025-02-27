@@ -121,6 +121,6 @@
                 name: 'donation_amount'
             },
         ]
-        showData('{{ route('safer.loans') }}', columns);
+        showData('{{ route('indexLoans') }}', columns);
     </script>
 @endsection
