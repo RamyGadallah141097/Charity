@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 
     #### Home ####
-    Route::get('/', 'HomeController@index')->name('adminHome');
+    Route::get('/', 'HomeController@index')->name('adminHome')->middleware('permission:admin.home');
 
     #### Admins ####
     Route::resource('admins', 'AdminController')->middleware('permission:admins.index');
@@ -28,6 +28,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
         Route::resource('donors', 'DonorController');
         Route::POST('delete_donors', 'DonorController@delete')->name('delete_donors')->middleware('permission:delete_donors');
         Route::POST('Donations_donors', 'DonationController@delete')->name('donations_delete')->middleware('permission:donations_delete');
+
         Route::resource('Donations', "DonationController");
         Route::get('/get_donor_phone/{id}', 'DonationController@get_donor_phone')->name("get_donor_phone")->middleware('permission:get_donor_phone');
         Route::get('/search-donor', 'DonationController@searchDonor')->name('search.donor')->middleware('permission:search.donor');
@@ -45,6 +46,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 
     //    الخزنة
     Route::get("safer/Charity", "SaferController@indexCharity")->name("safer.charity"); //الصدقات
+    Route::get("safer/Donors", "SaferController@Donors")->name("safer.Donors"); //التبرعين للقروض الحسنه
     Route::get("safer/Zakat", "SaferController@indexZakat")->name("safer.Zakat"); //الصدقات
     Route::get("safer/loans", "SaferController@indexLoans")->name("safer.loans"); // القروض الحسنه
     Route::get('safer/InKindDonations', 'SaferController@InKindDonations')->name('safer.InKindDonations'); //التبرعات العينية
@@ -56,7 +58,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     // اعانات القرض الحسن
     Route::get('SubventionsLoans/index', 'SubventionsLoansController@index')->name('SubventionsLoans.index');
     #### Safer ####
-    Route::get("safer", "SaferController@index")->name("safer.index")->middleware('permission:safer.index');
+//    Route::resource("safer", "SaferController")->name("safer")->middleware('permission:safer.index');
+    Route::get("safer", "SaferController@index")->name("safer.index");
     Route::get("safer/loans", "SaferController@indexLoans")->name("safer.loans")->middleware('permission:safer.loans');
     Route::get('safer/InKindDonations', 'SaferController@InKindDonations')->name('safer.InKindDonations')->middleware('permission:safer.InKindDonations');
 

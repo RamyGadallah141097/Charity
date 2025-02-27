@@ -109,6 +109,33 @@
             @endcan
 
 
+
+                <p>
+                    <a class="side-menu__item" data-toggle="collapse" href="#saferDropdown" role="button" aria-expanded="false"
+                       aria-controls="collapseExample">
+                        <i class="fe fe-users side-menu__icon"></i>
+                        <span class="side-menu__label"> القروض الحسنه </span>
+                    </a>
+                </p>
+                <ul class="collapse" id="saferDropdown">
+
+                    <li>
+                        <a class="dropdown-item-text side-menu__item" href="{{ route('safer.loans') }}">
+                            <span class="side-menu__label">  القروض الحسنه  </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item-text side-menu__item" href="{{ route('safer.Donors') }}">
+                            <span class="side-menu__label">  التبرعات </span>
+                        </a>
+                    </li>
+
+
+
+                </ul>
+
+
+
             @can("safer.index")
 
                 <p>
@@ -119,6 +146,10 @@
                     </a>
                 </p>
                 <ul class="collapse" id="saferDropdown">
+
+
+
+
                     <li>
                         <a class="dropdown-item-text side-menu__item" href="{{ route('safer.index') }}">
                             <span class="side-menu__label"> الصدقاة و الزكاة </span>

@@ -8,8 +8,13 @@ use App\Models\Donor;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
-class saferController extends Controller
+class SaferController extends Controller
 {
+
+    public function index()
+    {
+        return "not exist ";
+    }
 
     //زكاة مال
     public function indexCharity(Request $request)
@@ -64,6 +69,7 @@ class saferController extends Controller
                 ->editColumn('created_at', function ($donation) {
                     return $donation->created_at ? $donation->created_at->format('d-m-y') : 'غير متوفر';
                 })
+
                 ->escapeColumns([])
                 ->make(true);
         } else {
@@ -91,4 +97,24 @@ class saferController extends Controller
             return view('Admin/safer/InKindDonations');
         }
     }
+
+    public function Donors(Request $request)
+    {
+        if ($request->ajax()) {
+            $donations = Donation::where("donation_type", [3])->get();
+            return Datatables::of($donations)
+                ->addColumn("donor_name", function ($donation) {
+                    return $donation->donor->name ?? 'غير معروف';
+                })
+                ->editColumn('created_at', function ($donation) {
+                    return $donation->created_at ? $donation->created_at->format('d-m-y') : 'غير متوفر';
+                })
+                ->escapeColumns([])
+                ->make(true);
+        } else {
+            return view('Admin/safer/loansDonors');
+        }
+    }
+
+
 }
