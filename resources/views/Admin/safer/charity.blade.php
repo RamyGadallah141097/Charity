@@ -1,40 +1,31 @@
 @extends('Admin/layouts/master')
 
 @section('title')
-    {{($setting->title) ?? ''}} | الصدقات و الزكاة
+    {{ $setting->title ?? '' }} | الصدقات
 @endsection
-@section('page_name') الصدقات و الزكاة @endsection
+@section('page_name')
+    الصدقات
+@endsection
 @section('content')
-
     <div class="row">
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="p-3">
-                    <h3 class="card-title">  اجمالي الصدقات و الزكاة في {{($setting->title) ?? ''}}</h3>
+                    <h3 class="card-title"> اجمالي الصدقات {{ $setting->title ?? '' }}</h3>
 
                     <div class="card-body w-100">
                         <div class="row w-100"> <!-- Ensuring full width -->
                             <div class="col-12"> <!-- Making it take full width -->
                                 <div class="card bg-secondary img-card box-secondary-shadow">
                                     <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
-                                        <h4 class="text-white ">إجمالي التبرعات</h4>
-                                        <i class="fe fe-dollar-sign text-white fs-30"></i>
+                                        <span class="text-white fs-30"> خزنة الصدقات </span>
+                                        <span class="text-white fs-30">{{ $Charity }} EGP</span>
+                                        <!-- Changed dollar icon to EGP -->
                                     </div>
-
 
                                     <div class="card-body">
                                         <div class="row text-white">
-                                            <div class="col-4">
-                                                <h5>الصدقات</h5>
-                                                <p>{{$cheraty}}</p>
-                                            </div>
-                                            <div class="col-4">
-                                                <h5>الزكاة</h5>
-                                                <p>{{$zakat}}</p>
-                                            </div>
-                                            <div class="col-4">
-                                                <h5>الاجمالي</h5>
-                                                <p>{{$total}}</p>
+                                            <div class="col-4 text-end"> <!-- Added text-end for right alignment -->
                                             </div>
                                         </div>
                                     </div>
@@ -42,22 +33,18 @@
                             </div><!-- COL END -->
                         </div><!-- ROW END -->
                     </div>
-
-
-
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <!--begin::Table-->
                         <table class="table table-striped table-bordered text-nowrap w-75" id="dataTable">
                             <thead>
-                            <tr class="fw-bolder text-muted bg-light">
-                                <th class="min-w-25px">#</th>
-                                <th class="min-w-50px"> الاسم المتبرع</th>
-                                <th class="min-w-125px">تاريخ التبرع</th>
-                                <th class="min-w-125px">نوع التبرع </th>
-                                <th class="min-w-125px">قيمه التبرع </th>
-                            </tr>
+                                <tr class="fw-bolder text-muted bg-light">
+                                    <th class="min-w-25px">#</th>
+                                    <th class="min-w-50px"> الاسم المتبرع</th>
+                                    <th class="min-w-125px">تاريخ التبرع</th>
+                                    <th class="min-w-125px">قيمه التبرع </th>
+                                </tr>
                             </thead>
                         </table>
                     </div>
@@ -67,7 +54,7 @@
 
         <!--Delete MODAL -->
         <div class="modal fade" id="delete_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
+            aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -76,9 +63,9 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <form action="{{route("donations_delete")}}" method="post" >
+                    <form action="{{ route('donations_delete') }}" method="post">
                         @csrf
-                        @method("post")
+                        @method('post')
                         <div class="modal-body">
                             <input id="delete_id" name="id" type="hidden">
                             <p>هل انت متأكد من حذف البيانات التالية <span id="title" class="text-danger"></span>؟</p>
@@ -117,16 +104,23 @@
 @endsection
 @section('ajaxCalls')
     <script>
-        var columns = [
-            {data: 'id', name: 'id'},
-            {data: 'donor_name', name: 'donor_name'},
-            {data: 'created_at', name: 'created_at'},
-            {data: 'donation_type', name: 'donation_type'},
-            {data: 'donation_amount', name: 'donation_amount'},
+        var columns = [{
+                data: 'id',
+                name: 'id'
+            },
+            {
+                data: 'donor_name',
+                name: 'donor_name'
+            },
+            {
+                data: 'created_at',
+                name: 'created_at'
+            },
+            {
+                data: 'donation_amount',
+                name: 'donation_amount'
+            },
         ]
-        showData('{{route('safer.index')}}', columns);
-
+        showData('{{ route('safer.charity') }}', columns);
     </script>
 @endsection
-
-

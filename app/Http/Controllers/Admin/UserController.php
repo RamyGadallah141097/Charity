@@ -49,6 +49,8 @@ class UserController extends Controller
                 })
                 ->editColumn('gross_expenses', function ($users) {
                     return '<span class="badge badge-success p-2" style="font-size: 12px;">' . number_format($users->gross_expenses, 1) . ' EGP</span>';
+                })->editColumn('standard_living', function ($users) {
+                    return '<span class="badge badge-danger p-2" style="font-size: 12px;">' . number_format($users->standard_living, 1) . ' EGP</span>';
                 })->addColumn('statusChange', function ($users) {
                     if ($users->status == 'new') {
                         $available_actions = '
@@ -58,12 +60,10 @@ class UserController extends Controller
                     } elseif ($users->status == 'accepted') {
                         $available_actions = '
                                <li><a data-id="' . $users->id . '" data-status="preparing" href="#" class="statusBtn ">قيد التنفيذ</a></li>
-                               <li><a data-id="' . $users->id . '" data-status="waiting" href="#" class="statusBtn ">فى الانتظار </a></li>
                                <li><a data-id="' . $users->id . '" data-status="refused" href="#" class="statusBtn "> رفض</a></li>
                     ';
                     } elseif ($users->status == 'preparing') {
                         $available_actions = '
-                               <li><a data-id="' . $users->id . '" data-status="waiting" href="#" class="statusBtn ">فى الانتظار </a></li>
                                <li><a data-id="' . $users->id . '" data-status="refused" href="#" class="statusBtn ">رفض</a></li>
                     ';
                     } else { // waiting
@@ -103,7 +103,8 @@ class UserController extends Controller
     public function userDetails($id)
     {
         $user = User::find($id);
-        return view('Admin/users/parts/detailswwww', compact('user'));
+        $patients = Patient::where('user_id', $id)->get();
+        return view('Admin/users/parts/details', compact('user', 'patients'));
     }
 
 
@@ -146,68 +147,88 @@ class UserController extends Controller
 
     public function store(StoreUser $request)
     {
+        $userData = $request->except('_token', 'attachments', 'child_names',  'children_national_id',  'age', 'schools', 'monthly_cost', 'notes', 'patient_name',  'treatment_pay_by', 'type', 'doctor_name', 'treatment');
 
-        try {
+        $user = User::create([
+            'husband_name' => $request->husband_name,
+            'wife_name' => $request->wife_name,
+            'husband_national_id' => $request->husband_national_id,
+            'wife_national_id' => $request->wife_national_id,
+            'age_husband' => $request->age_husband,
+            'address' => $request->address,
+            'age_wife' => $request->age_wife,
+            'social_status' => $request->social_status,
+            'work_type' => $request->work_type,
+            'nearest_phone' => $request->nearest_phone,
+            'salary' => $request->salary,
+            'pension' => $request->pension,
+            'insurance' => $request->insurance,
+            'dignity' => $request->dignity,
+            'trade' => $request->trade,
+            'pillows' => $request->pillows,
+            'other' => $request->other,
+            'gross_income' => $request->gross_income,
+            'rent' => $request->rent,
+            'gas' => $request->gas,
+            'debt' => $request->debt,
+            'water' => $request->water,
+            'electricity' => $request->electricity,
+            'association' => $request->association,
+            'food' => $request->food,
+            'study' => $request->study,
+            'gross_expenses' => $request->gross_expenses,
+            'standard_living' => $request->standard_living,
+            'Case_evaluation' => $request->Case_evaluation,
+        ]);
 
-            // fetch user data
-            $userData = $request->except('_token', 'attachments', 'child_name', 'children_national_id', 'birthday', 'age', 'schools', 'lessons_costs', 'academic_year', 'monthly_cost', 'notes', 'patient_name', 'type', 'treatment_pay_by', 'is_insurance', 'doctor_name');
 
-            // adjust user data then save it
-            if ($request->has('has_savings_book'))
-                $userData['has_savings_book'] = '1';
-            else
-                $userData['has_savings_book'] = '0';
-
-            if ($request->has('has_property'))
-                $userData['has_property'] = '1';
-            else
-                $userData['has_property'] = '0';
-
-
-            if ($request->has('attachments')) {
-                $attachmentsName = [];
-                foreach ($request->attachments as $attachment) {
-                    $attachmentsName[] = $attachment->store('attachments', 'public');
-                }
-                $userData['attachments'] = $attachmentsName;
+        if (isset($request->child_names)) {
+            for ($i = 0; $i < count($request->child_names); $i++) {
+                Children::create([
+                    'user_id' => $user->id,
+                    'child_name' => $request->child_names[$i] ?? null,
+                    'children_national_id' => $request->children_national_id[$i] ?? null,
+                    'age' => $request->age[$i] ?? null,
+                    'school' => $request->schools[$i] ?? null,
+                    'monthly_cost' => $request->monthly_cost[$i] ?? null,
+                    'notes' => $request->notes[$i] ?? null,
+                ]);
             }
-
-
-
-            $user = User::create($userData);
-
-            if (isset($request->child_name)) {
-                foreach (array_keys($request->child_name) as $key) {
-
-                    Children::create([
-                        'user_id'      => $user->id,
-                        'child_name'  => $request->child_name[$key] ?? null,
-                        'children_national_id'  => $request->children_national_id[$key] ?? null,
-                        'birthday'     => $request->birthday[$key] ?? null,
-                        'age'          => $request->age[$key] ?? null,
-                        'school'       => $request->schools[$key] ?? null,
-                        'lessons_cost' => $request->lessons_costs[$key] ?? null,
-                        'academic_year' => $request->academic_year[$key] ?? null,
-                        'monthly_cost' => $request->monthly_cost[$key] ?? null,
-                        'notes'        => $request->notes[$key] ?? null,
-                    ]);
-                }
-            }
-            $patientData = $request->only('patient_name', 'type',  'treatment', 'treatment_pay_by', 'is_insurance', 'doctor_name');
-
-            if ($request->has('is_insurance') && $request->is_insurance == 'on')
-                $patientData['is_insurance'] = 1;
-            else
-                $patientData['is_insurance'] = 0;
-
-            $patientData['user_id'] = $user->id;
-            if ($request->patient_name != null)
-                Patient::create($patientData);
-            toastr('تم اضافة مستفيد جديد', 'success');
-            return redirect(route('users.index', 'new'));
-        } catch (\Exception $ex) {
-            return back()->withErrors($ex->getMessage());
         }
+
+        $patientData = $request->only('patient_name',  'treatment', 'treatment_pay_by', 'type', 'doctor_name', 'is_insurance', 'notes');
+
+        if ($request->has('is_insurance') && $request->is_insurance == 'on')
+            $patientData['is_insurance'] = '1';
+        else
+            $patientData['is_insurance'] = '0';
+
+        $patientData['user_id'] = $user->id;
+
+        if (isset($patientData['patient_name']))
+            for ($i = 0; $i < count($patientData['patient_name']); $i++) {
+                Patient::create([
+                    'user_id' => $patientData['user_id'],
+                    'patient_name' => $patientData['patient_name'][$i],
+                    'treatment' => $patientData['treatment'][$i],
+                    'treatment_pay_by' => $patientData['treatment_pay_by'][$i],
+                    'type' => $patientData['type'][$i],
+                    'doctor_name' => $patientData['doctor_name'][$i],
+                    'is_insurance' => $patientData['is_insurance'],
+                    'notes' => $patientData['notes'][$i],
+                ]);
+            }
+
+        if ($request->has('attachments')) {
+            $attachmentsName = [];
+            foreach ($request->attachments as $attachment) {
+                $attachmentsName[] = $attachment->store('attachments', 'public');
+                $user->attachments = $attachmentsName;
+                $user->save();
+            }
+        }
+        toastr('تم اضافة مستفيد جديد', 'success');
+        return redirect(route('users.index', 'new'));
     }
 
 

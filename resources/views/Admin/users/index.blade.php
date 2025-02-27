@@ -35,6 +35,7 @@
                                     <th class="min-w-50px">الهاتف</th>
                                     <th class="min-w-50px">اجمالي الدخل</th>
                                     <th class="min-w-50px">اجمالي المصاريف</th>
+                                    <th class="min-w-50px">مستوى المعيشة</th>
                                     <th class="min-w-50px">الحالة </th>
                                     <th class="min-w-50px"> تحديث</th>
                                     <th class="min-w-50px rounded-end">العمليات</th>
@@ -127,6 +128,10 @@
             {
                 data: 'gross_expenses',
                 name: 'gross_expenses'
+            },
+            {
+                data: 'standard_living',
+                name: 'standard_living'
             },
 
             {
