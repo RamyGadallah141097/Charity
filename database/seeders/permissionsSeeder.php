@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class permissionsSeeder extends Seeder
 {
@@ -105,6 +106,8 @@ class permissionsSeeder extends Seeder
         foreach ($permissions as $permission) {
             Permission::firstOrCreate(['name' => $permission , "guard_name" => 'admin']);
         }
+
+
 
         $this->command->info('Permissions seeded successfully!');
     }

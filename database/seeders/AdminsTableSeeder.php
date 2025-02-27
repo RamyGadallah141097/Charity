@@ -1,10 +1,12 @@
 <?php
 
 namespace Database\Seeders;
+use App\Models\Admin;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class AdminsTableSeeder extends Seeder
 {
@@ -15,7 +17,7 @@ class AdminsTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('admins')->insert([
+         DB::table('admins')->insert([
             'name' => 'Admin',
             'email' => 'admin@admin.com',
             'password' => Hash::make('123456'),
@@ -23,5 +25,21 @@ class AdminsTableSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        $admin = Admin::first();
+
+        if (!$admin) {
+            die("Admin user not found!");
+        }
+
+        $role = Role::where('name', 'super_admin')->first();
+
+        if (!$role) {
+            die("Role not found!");
+        }
+
+        $admin->assignRole($role->name); // أو $admin->assignRole($role);
+
+
     }
 }
