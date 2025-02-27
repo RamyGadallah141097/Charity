@@ -1,16 +1,38 @@
 @extends('Admin/layouts/master')
 
 @section('title')
-    {{($setting->title) ?? ''}} | المشرفين
+    {{($setting->title) ?? ''}} | المتبرعين
 @endsection
-@section('page_name') المشرفين @endsection
+@section('page_name') المتبرعين @endsection
 @section('content')
+
+
+
+    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+
+    <style>
+        .small-text-hover {
+            font-size: 12px;
+            transition: font-size 0.3s ease-in-out;
+            display: inline-block;
+            max-width: 100px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .small-text-hover:hover {
+            font-size: 16px;
+            white-space: normal;
+            overflow: visible;
+        }
+    </style>
 
     <div class="row">
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"> مشرفين {{($setting->title) ?? ''}}</h3>
+                    <h3 class="card-title"> المتبرعين الي {{($setting->title) ?? ''}}</h3>
                     <div class="">
                         <button class="btn btn-secondary btn-icon text-white addBtn">
 									<span>
@@ -22,14 +44,12 @@
                 <div class="card-body">
                     <div class="table-responsive">
                         <!--begin::Table-->
-                        <table class="table table-striped table-bordered text-nowrap w-100" id="dataTable">
+                        <table class="table table-striped table-bordered text-nowrap w-75" id="dataTable">
                             <thead>
                             <tr class="fw-bolder text-muted bg-light">
                                 <th class="min-w-25px">#</th>
-                                <th class="min-w-50px">الصورة</th>
                                 <th class="min-w-50px">الاسم</th>
-                                <th class="min-w-125px">الايميل</th>
-                                <th class="min-w-125px">القواعد</th>
+                                <th class="min-w-50px">الصلاحيات</th>
                                 <th class="min-w-50px rounded-end">العمليات</th>
                             </tr>
                             </thead>
@@ -50,7 +70,7 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <form action="{{route("delete_admin")}}" method="post" >
+                    <form action="{{route("Role_delete")}}" method="post" >
                         @csrf
                         @method("post")
                         <div class="modal-body">
@@ -74,7 +94,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="example-Modal3">بيانات المشرف</h5>
+                        <h5 class="modal-title" id="example-Modal3">بيانات المتبرع</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -93,22 +113,21 @@
     <script>
         var columns = [
             {data: 'id', name: 'id'},
-            {data: 'image', name: 'image'},
             {data: 'name', name: 'name'},
-            {data: 'email', name: 'email'},
-            {data: 'select_role', name: 'select_role'},
+            {data: 'permissions', name: 'permissions'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
-        showData('{{route('admins.index')}}', columns);
+        showData('{{route('roles.index')}}', columns);
         // Delete Using Ajax
-        deleteScript('{{route('delete_admin')}}');
+        deleteScript('{{route('Role_delete')}}');
         // Add Using Ajax
-        showAddModal('{{route('admins.create')}}');
+        showAddModal('{{route('roles.create')}}');
         addScript();
         // Add Using Ajax
-        showEditModal('{{route('admins.edit',':id')}}');
+        showEditModal('{{route('roles.edit',':id')}}');
         editScript();
     </script>
+
 @endsection
 
 

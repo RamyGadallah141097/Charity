@@ -220,9 +220,9 @@ class ComposerStaticInitebadef4a2fe32872459d1dcc93c1fe4b
         ),
         'Yajra\\DataTables\\' => 
         array (
-            0 => __DIR__ . '/..' . '/yajra/laravel-datatables-buttons/src',
+            0 => __DIR__ . '/..' . '/yajra/laravel-datatables-fractal/src',
             1 => __DIR__ . '/..' . '/yajra/laravel-datatables-editor/src',
-            2 => __DIR__ . '/..' . '/yajra/laravel-datatables-fractal/src',
+            2 => __DIR__ . '/..' . '/yajra/laravel-datatables-buttons/src',
             3 => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src',
             4 => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src',
         ),
@@ -639,6 +639,7 @@ class ComposerStaticInitebadef4a2fe32872459d1dcc93c1fe4b
         'App\\Http\\Controllers\\Admin\\DonorController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/DonorController.php',
         'App\\Http\\Controllers\\Admin\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/HomeController.php',
         'App\\Http\\Controllers\\Admin\\ResearchController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/ResearchController.php',
+        'App\\Http\\Controllers\\Admin\\RulesController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/RulesController.php',
         'App\\Http\\Controllers\\Admin\\SettingController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/SettingController.php',
         'App\\Http\\Controllers\\Admin\\SubventionController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/SubventionController.php',
         'App\\Http\\Controllers\\Admin\\TaskController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/TaskController.php',
@@ -660,6 +661,7 @@ class ComposerStaticInitebadef4a2fe32872459d1dcc93c1fe4b
         'App\\Http\\Requests\\StoreUser' => __DIR__ . '/../..' . '/app/Http/Requests/StoreUser.php',
         'App\\Http\\Requests\\TaskRequest' => __DIR__ . '/../..' . '/app/Http/Requests/TaskRequest.php',
         'App\\Http\\Requests\\UpdateSetting' => __DIR__ . '/../..' . '/app/Http/Requests/UpdateSetting.php',
+        'App\\Jobs\\MonthlySubventionJob' => __DIR__ . '/../..' . '/app/Jobs/MonthlySubventionJob.php',
         'App\\Models\\Admin' => __DIR__ . '/../..' . '/app/Models/Admin.php',
         'App\\Models\\Children' => __DIR__ . '/../..' . '/app/Models/Children.php',
         'App\\Models\\Donation' => __DIR__ . '/../..' . '/app/Models/Donation.php',

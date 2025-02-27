@@ -359,14 +359,16 @@
                                 المرفقات </h2>
                         </div>
 
-                        <div class="row mt-5">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <input type="file" class="form-control" name="attachments[]" multiple>
-                                </div>
-                            </div>
-                        </div>
+{{--                        <div class="row mt-5">--}}
+{{--                            <div class="col-md-12">--}}
+{{--                                <div class="form-group">--}}
+{{--                                    <input type="file" class="form-control" name="attachments[]" multiple>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
                     </div>
+                    <input type="file" class="dropify" name="attachments[]"  accept="image/png, image/gif, image/jpeg,image/jpg"/>
+
                     <div class="col-12 text-center">
                         <button class="btn btn-lg btn-outline-primary mt-2 mb-2">حفظ البيانات</button>
                     </div>
@@ -378,6 +380,10 @@
 @endsection
 
 @section('js')
+    <script>
+        $('.dropify').dropify()
+    </script>
+
     <script>
         function calculateIncome() {
             let total = 0;

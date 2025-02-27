@@ -52,4 +52,5 @@ class User extends Authenticatable
         return $this->hasOne(Subvention::class,'user_id');
     }
 
+
 }
