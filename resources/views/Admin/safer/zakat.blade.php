@@ -1,25 +1,25 @@
 @extends('Admin/layouts/master')
 
 @section('title')
-    {{ $setting->title ?? '' }} | القروض الحسنة
+    {{ $setting->title ?? '' }} | الزكاة
 @endsection
 @section('page_name')
-    القروض الحسنة
+    الزكاة
 @endsection
 @section('content')
     <div class="row">
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="p-3">
-                    <h3 class="card-title"> القروض الحسنة {{ $setting->title ?? '' }}</h3>
+                    <h3 class="card-title"> اجمالي الزكاة {{ $setting->title ?? '' }}</h3>
 
                     <div class="card-body w-100">
                         <div class="row w-100"> <!-- Ensuring full width -->
                             <div class="col-12"> <!-- Making it take full width -->
                                 <div class="card bg-secondary img-card box-secondary-shadow">
                                     <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
-                                        <span class="text-white fs-30"> خزنة القروض الحسنة </span>
-                                        <span class="text-white fs-30">{{ $loans }} EGP</span>
+                                        <span class="text-white fs-30"> خزنة الزكاة </span>
+                                        <span class="text-white fs-30">{{ $zakat }} EGP</span>
                                         <!-- Changed dollar icon to EGP -->
                                     </div>
 
@@ -121,6 +121,6 @@
                 name: 'donation_amount'
             },
         ]
-        showData('{{ route('safer.loans') }}', columns);
+        showData('{{ route('safer.Zakat') }}', columns);
     </script>
 @endsection

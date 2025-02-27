@@ -16,15 +16,11 @@ class CreateChildrensTable extends Migration
         Schema::create('childrens', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')
-                ->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->string('child_name')->nullable();
             $table->string('children_national_id')->nullable();
-            $table->date('birthday')->nullable();
             $table->integer('age')->nullable();
             $table->string('school')->nullable();
-            $table->double('lessons_cost')->nullable()->default(0);
-            $table->string('academic_year')->nullable();
             $table->double('monthly_cost')->nullable()->default(0);
             $table->text('notes')->nullable();
             $table->timestamps();

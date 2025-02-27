@@ -17,10 +17,8 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('husband_name');
             $table->string('wife_name')->nullable();
-            $table->string('husband_national_id');
+            $table->integer('husband_national_id');
             $table->integer('wife_national_id')->nullable();
-            $table->date('husband_birthday')->nullable();
-            $table->date('wife_birthday')->nullable();
             $table->integer('age_husband')->nullable();
             $table->text('address')->nullable();
             $table->integer('age_wife')->nullable();
@@ -45,10 +43,10 @@ class CreateUsersTable extends Migration
             $table->double('food')->nullable()->default(0);
             $table->double('study')->nullable()->default(0);
             $table->double('gross_expenses')->nullable();
-            $table->enum('has_property', ['0', '1'])->default(0)->comment("0 means he hasn't any property");
-            $table->enum('has_savings_book', ['0', '1'])->default(0)->comment("0 means he hasn't a saving book");
-            $table->string('attachments')->nullable();
-            $table->enum('status',['new','preparing','accepted','refused'])->default('new');
+            $table->double('standard_living')->nullable();
+            $table->longText('Case_evaluation')->nullable();
+            $table->longText('attachments')->nullable();
+            $table->enum('status', ['new', 'preparing', 'accepted', 'refused'])->default('new');
             $table->timestamps();
         });
     }

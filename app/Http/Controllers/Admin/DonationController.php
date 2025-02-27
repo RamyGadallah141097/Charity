@@ -16,7 +16,7 @@ class DonationController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $donations = Donation::with('donor')->latest()->get();
+            $donations = Donation::where("donation_type", [0, 1, 3])->get();
 
             return Datatables::of($donations)
                 ->addColumn('donor_name', function ($donation) {
@@ -26,7 +26,6 @@ class DonationController extends Controller
                     return $donation->donor->phone ?? 'غير متوفر';
                 })->editColumn('created_at', function ($donation) {
                     return $donation->created_at ? $donation->created_at->format('d-m-y') : 'غير متوفر';
-
                 })
                 ->editColumn('donation_type', function ($donation) {
                     switch ($donation->donation_type) {
@@ -66,6 +65,7 @@ class DonationController extends Controller
         }
     }
 
+
     public function create()
     {
         $donors = Donor::all();
@@ -82,12 +82,7 @@ class DonationController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
         //
@@ -109,19 +104,14 @@ class DonationController extends Controller
         } else {
             return response()->json(["status" => 405]);
         }
-
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy($id)
     {
         //
     }
+
 
     public function delete(Request $request)
     {
@@ -132,17 +122,9 @@ class DonationController extends Controller
         } catch (\Exception $ex) {
             return response(['message' => $ex->getMessage(), 'status' => 400]);
         }
-
     }
 
-//    public function search(Request $request)
-//    {
-//        $query = $request->get('query');
-//
-//        $products = \App\Models\Donor::where('name', 'like', "%{$query}%")->get();
-//
-//        return response()->json($products);
-//    }
+
     public function get_donor_phone($id)
     {
         $donor_phone = Donor::where("id", $id)->pluck("phone");
@@ -163,6 +145,4 @@ class DonationController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
-
 }

@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row align-items-center flex-row-reverse">
             <div class="col-md-12 col-sm-12 text-center">
-                حقوق النشر © {{date('Y')}} <a href="http://motaweron.com/index.html">شركة المطورون</a>. جميع الحقوق محفوظة
+                <p class="text-muted">Powered By Top Business Solutions</p>
             </div>
         </div>
     </div>

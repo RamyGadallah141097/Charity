@@ -1,21 +1,22 @@
 @extends('Admin/layouts/master')
 
 @section('title')
-    {{($setting->title) ?? ''}} | التبرعات
+    {{ $setting->title ?? '' }} | التبرعات
 @endsection
-@section('page_name') التبرعات @endsection
+@section('page_name')
+    التبرعات
+@endsection
 @section('content')
-
     <div class="row">
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"> التبرعات من {{($setting->title) ?? ''}}</h3>
+                    <h3 class="card-title"> قائمة تبرعات الصدقات والزكاة </h3>
                     <div class="">
                         <button class="btn btn-secondary btn-icon text-white addBtn">
-									<span>
-										<i class="fe fe-plus"></i>
-									</span> اضافة جديد
+                            <span>
+                                <i class="fe fe-plus"></i>
+                            </span> اضافة جديد
                         </button>
                     </div>
                 </div>
@@ -24,15 +25,15 @@
                         <!--begin::Table-->
                         <table class="table table-striped table-bordered text-nowrap w-75" id="dataTable">
                             <thead>
-                            <tr class="fw-bolder text-muted bg-light">
-                                <th class="min-w-25px">#</th>
-                                <th class="min-w-50px"> الاسم المتبرع</th>
-                                <th class="min-w-125px"> الهاتف المتبرع</th>
-                                <th class="min-w-125px">تاريخ التبرع</th>
-                                <th class="min-w-125px">نوع التبرع </th>
-                                <th class="min-w-125px">قيمه التبرع </th>
-                                <th class="min-w-50px rounded-end">العمليات</th>
-                            </tr>
+                                <tr class="fw-bolder text-muted bg-light">
+                                    <th class="min-w-25px">#</th>
+                                    <th class="min-w-50px"> الاسم المتبرع</th>
+                                    <th class="min-w-125px"> الهاتف المتبرع</th>
+                                    <th class="min-w-125px">تاريخ التبرع</th>
+                                    <th class="min-w-125px">نوع التبرع </th>
+                                    <th class="min-w-125px">قيمه التبرع </th>
+                                    <th class="min-w-50px rounded-end">العمليات</th>
+                                </tr>
                             </thead>
                         </table>
                     </div>
@@ -42,7 +43,7 @@
 
         <!--Delete MODAL -->
         <div class="modal fade" id="delete_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
+            aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -51,9 +52,9 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <form action="{{route("donations_delete")}}" method="post" >
+                    <form action="{{ route('donations_delete') }}" method="post">
                         @csrf
-                        @method("post")
+                        @method('post')
                         <div class="modal-body">
                             <input id="delete_id" name="id" type="hidden">
                             <p>هل انت متأكد من حذف البيانات التالية <span id="title" class="text-danger"></span>؟</p>
@@ -92,22 +93,42 @@
 @endsection
 @section('ajaxCalls')
     <script>
-        var columns = [
-            {data: 'id', name: 'id'},
-            {data: 'donor_name', name: 'donor_name'},
-            {data: 'donor_phone', name: 'donor_phone'},
-            {data: 'created_at', name: 'created_at'},
-            {data: 'donation_type', name: 'donation_type'},
-            {data: 'donation_amount', name: 'donation_amount'},
-            {data: 'action', name: 'action', orderable: false, searchable: false},
+        var columns = [{
+                data: 'id',
+                name: 'id'
+            },
+            {
+                data: 'donor_name',
+                name: 'donor_name'
+            },
+            {
+                data: 'donor_phone',
+                name: 'donor_phone'
+            },
+            {
+                data: 'created_at',
+                name: 'created_at'
+            },
+            {
+                data: 'donation_type',
+                name: 'donation_type'
+            },
+            {
+                data: 'donation_amount',
+                name: 'donation_amount'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
         ]
-        showData('{{route('Donations.index')}}', columns);
-        deleteScript('{{route('donations_delete')}}');
-        showAddModal('{{route('Donations.create')}}');
+        showData('{{ route('Donations.index') }}', columns);
+        deleteScript('{{ route('donations_delete') }}');
+        showAddModal('{{ route('Donations.create') }}');
         addScript();
-        showEditModal('{{route('Donations.edit',':id')}}');
+        showEditModal('{{ route('Donations.edit', ':id') }}');
         editScript();
     </script>
 @endsection
-
-
