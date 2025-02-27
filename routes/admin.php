@@ -37,8 +37,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::resource("tasks", "TaskController")->middleware('permission:tasks.index');
     Route::POST('delete_task', 'TaskController@delete')->name('delete_task')->middleware('permission:delete_task');
 
-<<<<<<< HEAD
-
     //    the route of the task s
     Route::resource("tasks", "TaskController");
     Route::POST('delete_task', 'TaskController@delete')->name('delete_task');
@@ -48,7 +46,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get("safer/Charity", "SaferController@indexCharity")->name("safer.charity"); //الصدقات
     Route::get("safer/Zakat", "SaferController@indexZakat")->name("safer.Zakat"); //الصدقات
     Route::get("safer/loans", "SaferController@indexLoans")->name("safer.loans"); // القروض الحسنه
-    Route::get('safer/InKindDonations', 'SaferController@InKindDonations')->name('safer.InKindDonations'); //التبرعات العينية   
+    Route::get('safer/InKindDonations', 'SaferController@InKindDonations')->name('safer.InKindDonations'); //التبرعات العينية
 
     #### Subventions ####
     Route::resource('subventions', 'SubventionController');
@@ -56,7 +54,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::POST('delete_subventions', 'SubventionController@delete')->name('delete_subventions');
     // اعانات القرض الحسن
     Route::get('SubventionsLoans/index', 'SubventionsLoansController@index')->name('SubventionsLoans.index');
-=======
     #### Safer ####
     Route::get("safer", "SaferController@index")->name("safer.index")->middleware('permission:safer.index');
     Route::get("safer/loans", "SaferController@indexLoans")->name("safer.loans")->middleware('permission:safer.loans');
@@ -66,8 +63,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::resource('subventions', 'SubventionController')->middleware('permission:subventions.index');
     Route::get('showSubventions', 'SubventionController@showSubventions')->name('showSubventions')->middleware('permission:showSubventions');
     Route::POST('delete_subventions', 'SubventionController@delete')->name('delete_subventions')->middleware('permission:delete_subventions');
->>>>>>> c8c44b7a0d46e5f66d59e9568ef4d2bfcfcfe95f
-
     #### Research ####
     Route::get('research', 'ResearchController@index')->name('research.index')->middleware('permission:research.index');
     Route::get('social_research/{user_id}', 'ResearchController@social_research')->name('social_research')->middleware('permission:social_research');
