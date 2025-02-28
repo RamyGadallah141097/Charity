@@ -17,18 +17,14 @@ class DonorController extends Controller
             $donors = Donor::latest()->get();
             return Datatables::of($donors)
                 ->addColumn('action', function ($donors) {
-                    if (auth()->user()->can('donors.update')) {
                     return '
                             <button type="button" data-id="' . $donors->id . '" class="btn btn-pill btn-info-light editBtn"><i class="fa fa-edit"></i></button>
-                       ';}
-                    if(auth()->user()->can('donors.delete')) {
-                        return'
+
                                 <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
                                         data-id="' . $donors->id . '" data-title="' . $donors->name . '">
                                         <i class="fas fa-trash"></i>
                                 </button>
                         ';
-                    }
                 })
                 ->editColumn('notes', function ($donors) {
                     return '<span class="small-text-hover">' . ($donors->notes ?? '-----') . '</span>';
