@@ -44,6 +44,7 @@
                                     <th class="min-w-50px"> الاسم المتبرع</th>
                                     <th class="min-w-125px">تاريخ التبرع</th>
                                     <th class="min-w-125px">قيمه التبرع </th>
+                                    <th class="min-w-125px">العمليات  </th>
                                 </tr>
                             </thead>
                         </table>
@@ -99,20 +100,7 @@
             </div>
         </div>
 
-        <!-- Modal for view all donations of the donor !!!!!! -->
-        <div class="modal fade" id="donationsModal" tabindex="-1" aria-labelledby="donationsModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="donationsModalLabel">تفاصيل التبرعات</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body" id="donationsModalBody">
 
-                    </div>
-                </div>
-            </div>
-        </div>
         <!-- Modal for view all donations of the donor !!!!!! -->
 
         <!-- Create Or Edit Modal -->
@@ -137,41 +125,16 @@
                 data: 'donation_amount',
                 name: 'donation_amount'
             },
+            {
+                data: 'operations',
+                name: 'operations'
+            },
 
         ]
         showData('{{ route('indexLoans') }}', columns);
     </script>
 
-    <script>
-        $(document).ready(function () {
-            $(document).on('click', '.view-donations', function () {
-                let donorId = $(this).data('donor');
 
-                $.ajax({
-                    url: "{{ route('getDonors') }}",
-                    type: "GET",
-                    data: { donor_id: donorId },
-                    success: function (response) {
-                        let modalBody = $('#donationsModalBody');
-                        modalBody.empty();
-
-                        if (response.length > 0) {
-                            response.forEach(function (donation) {
-
-                                modalBody.append(
-                                    `<p>المبلغ: ${donation.amount} - التاريخ: ${donation.date}</p>`
-                                );
-                            });
-                        } else {
-                            modalBody.append('<p>لا يوجد تبرعات</p>');
-                        }
-
-                        $('#donationsModal').modal('show');
-                    }
-                });
-            });
-        });
-    </script>
 
 @endsection
 
