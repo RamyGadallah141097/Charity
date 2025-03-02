@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Donation;
-use App\Models\Donor;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -37,14 +36,7 @@ class SaferController extends Controller
     }
 
 
-    //القرض الحسن
-//    function to return amount of donation for the donor if it just one donation
-//but if he had more than one donation ? display all his donations هححححح
-    public function indexLoans(Request $request)
-    {
 
-
-    }
 
 
     //تبرعات عينية
@@ -98,6 +90,4 @@ class SaferController extends Controller
             ];
         }));
     }
-
-
 }

@@ -39,20 +39,24 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::resource("tasks", "TaskController");
     Route::POST('delete_task', 'TaskController@delete')->name('delete_task');
 
-
-    //  القروض الحسنة
-    Route::get("GoodLoansDropdown/indexLoans", "SaferController@indexLoans")->name("indexLoans"); // تبرعات القروض الحسنه
-    Route::get('/getDonation', "SaferController@getDonation")->name('getDonors');
-
+    //القروض الحسنة
+    Route::get("GoodLoansDonations", "GoodloansController@indexLoansDonations")->name("indexLoansDonations"); // التبرعات والمتبرعين
+    Route::get('/getDonation', "GoodloansController@getDonation")->name('getDonors');
 
 
-    // الزكاة والصدقات
+
+    //الزكاة والصدقات
     Route::get("safer/CharityZakat", "SaferController@indexCharityZakat")->name("safer.CharityZakat"); //تبرعات الزكاة والصدقات
 
 
 
-    //    التبرعات العينية
+    //التبرعات العينية
     Route::get('safer/InKindDonations', 'SaferController@InKindDonations')->name('safer.InKindDonations'); //التبرعات العينية
+
+
+
+
+
 
     #### Subventions ####
     Route::resource('subventions', 'SubventionController');
@@ -87,7 +91,3 @@ Route::group(['prefix' => 'admin'], function () {
 #### Roles ####
 Route::resource("roles", "RulesController")->middleware('permission:roles.index');
 Route::post("Role_delete", "RulesController@delete")->name("Role_delete")->middleware('permission:Role_delete');
-
-
-
-
