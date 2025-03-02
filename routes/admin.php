@@ -42,7 +42,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 
     //  القروض الحسنة
     Route::get("GoodLoansDropdown/indexLoans", "SaferController@indexLoans")->name("indexLoans"); // تبرعات القروض الحسنه
-
+    Route::get('/getDonation', "SaferController@getDonation")->name('getDonors');
 
 
 
@@ -87,3 +87,7 @@ Route::group(['prefix' => 'admin'], function () {
 #### Roles ####
 Route::resource("roles", "RulesController")->middleware('permission:roles.index');
 Route::post("Role_delete", "RulesController@delete")->name("Role_delete")->middleware('permission:Role_delete');
+
+
+
+
