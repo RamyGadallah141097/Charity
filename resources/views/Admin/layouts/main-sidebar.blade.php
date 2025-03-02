@@ -119,7 +119,7 @@
 
                 <ul class="collapse" id="GoodLoansDropdown">
                     <li>
-                        <a class="dropdown-item-text side-menu__item" href="{{ route('indexLoans') }}">
+                        <a class="dropdown-item-text side-menu__item" href="{{ route('indexLoansDonations') }}">
                             <span class="side-menu__label"> التبرعات </span>
                         </a>
                     </li>
