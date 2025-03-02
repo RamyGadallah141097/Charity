@@ -139,24 +139,26 @@
             },
 
         ]
-        showData('{{ route('indexLoans') }}', columns);
+        showData('{{ route('indexLoansDonations') }}', columns);
     </script>
 
     <script>
-        $(document).ready(function () {
-            $(document).on('click', '.view-donations', function () {
+        $(document).ready(function() {
+            $(document).on('click', '.view-donations', function() {
                 let donorId = $(this).data('donor');
 
                 $.ajax({
                     url: "{{ route('getDonors') }}",
                     type: "GET",
-                    data: { donor_id: donorId },
-                    success: function (response) {
+                    data: {
+                        donor_id: donorId
+                    },
+                    success: function(response) {
                         let modalBody = $('#donationsModalBody');
                         modalBody.empty();
 
                         if (response.length > 0) {
-                            response.forEach(function (donation) {
+                            response.forEach(function(donation) {
 
                                 modalBody.append(
                                     `<p>المبلغ: ${donation.amount} - التاريخ: ${donation.date}</p>`
@@ -172,6 +174,4 @@
             });
         });
     </script>
-
 @endsection
-
