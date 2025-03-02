@@ -187,30 +187,29 @@
                     success: function (response) {
                         let modalBody = $('#donationsModalBody');
                         modalBody.empty();
-
                         if (response.length > 0) {
-                            response.forEach(function (donation) {
-
-
-
+                            response.forEach(function (donation , index) {
                                 modalBody.append(
                                     `
                                     <table class="table">
                                       <thead class="thead-light">
                                         <tr>
-                                          <th scope="col">#</th>
+                                          <th scope="col">${index+1}</th>
                                           <th scope="col">المبلغ</th>
                                           <th scope="col">${donation.amount}</th>
                                         </tr>
                                       </thead>
                                       <tbody>
                                         <tr>
-                                          <th scope="row">1</th>
+                                          <th scope="row"> </th>
                                           <td>التاريخ</td>
                                           <td> ${donation.date}</td>
                                         </tr>
                                       </tbody>
-                                    </table>`
+                                    </table>
+
+
+                                    `
                                 );
                             });
                         } else {
