@@ -137,7 +137,6 @@
                 data: 'donation_amount',
                 name: 'donation_amount'
             },
-
         ]
         showData('{{ route('indexLoansDonations') }}', columns);
     </script>
