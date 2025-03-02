@@ -44,6 +44,7 @@
                                     <th class="min-w-50px"> الاسم المتبرع</th>
                                     <th class="min-w-125px">تاريخ التبرع</th>
                                     <th class="min-w-125px">قيمه التبرع </th>
+                                    <th class="min-w-125px">العمليات  </th>
                                 </tr>
                             </thead>
                         </table>
@@ -108,11 +109,36 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body" id="donationsModalBody">
+                        <div class="total_amount">
+                            <div class="card-body w-100">
+                                <div class="row w-100"> <!-- Ensuring full width -->
+                                    <div class="col-12"> <!-- Making it take full width -->
+                                        <div class="card bg-secondary img-card box-secondary-shadow">
+                                            <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
+                                                <span class="text-white fs-30"> خزنة القروض الحسنة </span>
+                                                <span class="text-white fs-30">${total} EGP</span>
+                                                <!-- Changed dollar icon to EGP -->
+                                            </div>
 
+                                            <div class="card-body">
+                                                <div class="row text-white">
+                                                    <div class="col-4 text-end"> <!-- Added text-end for right alignment -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><!-- COL END -->
+                                </div><!-- ROW END -->
+                            </div>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
+    </div>
+
+
         <!-- Modal for view all donations of the donor !!!!!! -->
 
         <!-- Create Or Edit Modal -->
@@ -137,31 +163,53 @@
                 data: 'donation_amount',
                 name: 'donation_amount'
             },
+            {
+                data: 'operations',
+                name: 'operations'
+            },
 
         ]
         showData('{{ route('indexLoansDonations') }}', columns);
     </script>
 
+
+
     <script>
-        $(document).ready(function() {
-            $(document).on('click', '.view-donations', function() {
+        $(document).ready(function () {
+            $(document).on('click', '.view-donations', function () {
                 let donorId = $(this).data('donor');
+                let total = $(this).data('total');
 
                 $.ajax({
                     url: "{{ route('getDonors') }}",
                     type: "GET",
-                    data: {
-                        donor_id: donorId
-                    },
-                    success: function(response) {
+                    data: { donor_id: donorId },
+                    success: function (response) {
                         let modalBody = $('#donationsModalBody');
                         modalBody.empty();
-
                         if (response.length > 0) {
-                            response.forEach(function(donation) {
-
+                            response.forEach(function (donation , index) {
                                 modalBody.append(
-                                    `<p>المبلغ: ${donation.amount} - التاريخ: ${donation.date}</p>`
+                                    `
+                                    <table class="table">
+                                      <thead class="thead-light">
+                                        <tr>
+                                          <th scope="col">${index+1}</th>
+                                          <th scope="col">المبلغ</th>
+                                          <th scope="col">${donation.amount}</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr>
+                                          <th scope="row"> </th>
+                                          <td>التاريخ</td>
+                                          <td> ${donation.date}</td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+
+
+                                    `
                                 );
                             });
                         } else {
@@ -174,4 +222,6 @@
             });
         });
     </script>
+
 @endsection
+
