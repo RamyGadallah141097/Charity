@@ -13,7 +13,12 @@ class GoodloansController extends Controller
 {
     //القرض الحسن
     //داله لعرض جميع التبرعات في صفحة التبرعات في القرض الحسمه
-    // و عند وجود اكثر من تبرع لمتبرع يظهر داله لاظهار جميع التبرعات
+    // و عند وجود اكثر من تبرع لمتبرع يظهر داله لاظهار جميع التبرعا
+
+    // {- التبرعات والمتبرعين-}
+
+    //function to return amount of donation for the donor if it just one donation
+    //but if he had more than one donation ? display all his donations
     public function indexLoansDonations(Request $request)
     {
         if ($request->ajax()) {
@@ -52,8 +57,7 @@ class GoodloansController extends Controller
             return view('Admin/safer/loans', ["loans" => $loans]);
         }
     }
-
-
+    // {- التبرعات والمتبرعين-}
 
 //    داله لاظهار جميع التبرعات للمتبرع في صفحة التبرعات في القرض الحسمه
     public  function getDonation(Request $request)
