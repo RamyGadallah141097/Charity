@@ -100,48 +100,51 @@
             </div>
         </div>
 
+        <!-- Create Or Edit Modal -->
+
         <!-- Modal for view all donations of the donor !!!!!! -->
         <div class="modal fade" id="donationsModal" tabindex="-1" aria-labelledby="donationsModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="donationsModalLabel">تفاصيل التبرعات</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn btn-danger" id="forceCloseModal"><i class="fa fa-window-close"></i></button>
                     </div>
-                    <div class="modal-body" id="donationsModalBody">
-                        <div class="total_amount">
-                            <div class="card-body w-100">
-                                <div class="row w-100"> <!-- Ensuring full width -->
-                                    <div class="col-12"> <!-- Making it take full width -->
-                                        <div class="card bg-secondary img-card box-secondary-shadow">
-                                            <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
-                                                <span class="text-white fs-30"> خزنة القروض الحسنة </span>
-                                                <span class="text-white fs-30">${total} EGP</span>
-                                                <!-- Changed dollar icon to EGP -->
-                                            </div>
-
-                                            <div class="card-body">
-                                                <div class="row text-white">
-                                                    <div class="col-4 text-end"> <!-- Added text-end for right alignment -->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div><!-- COL END -->
-                                </div><!-- ROW END -->
+                    <div class="card-body w-100">
+                        <div class="row w-100">
+                            <div class="col-12">
+                                <div class="card bg-secondary img-card box-secondary-shadow">
+                                    <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
+                                        <span class="text-white fs-20">  مجموع التبرعات  </span>
+                                        <span class="text-white fs-20"><p id="total_amount"></p> </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="modal-body" id="donationsModalBody">
+                        <hr>
+                        <table class="table">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">المبلغ</th>
+                                <th scope="col">التاريخ</th>
+                            </tr>
+                            </thead>
+                            <tbody id="donationsModalBodyTable">
+
+                            </tbody>
+                        </table>
                     </div>
 
                 </div>
             </div>
         </div>
     </div>
-
-
         <!-- Modal for view all donations of the donor !!!!!! -->
 
-        <!-- Create Or Edit Modal -->
+
     </div>
     @include('Admin/layouts/myAjaxHelper')
 @endsection
@@ -185,32 +188,20 @@
                     type: "GET",
                     data: { donor_id: donorId },
                     success: function (response) {
-                        let modalBody = $('#donationsModalBody');
+                        let modalBody = $('#donationsModalBodyTable');
                         modalBody.empty();
                         if (response.length > 0) {
                             response.forEach(function (donation , index) {
                                 modalBody.append(
                                     `
-                                    <table class="table">
-                                      <thead class="thead-light">
-                                        <tr>
-                                          <th scope="col">${index+1}</th>
-                                          <th scope="col">المبلغ</th>
-                                          <th scope="col">${donation.amount}</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody>
-                                        <tr>
-                                          <th scope="row"> </th>
-                                          <td>التاريخ</td>
-                                          <td> ${donation.date}</td>
-                                        </tr>
-                                      </tbody>
-                                    </table>
-
-
+                                            <tr>
+                                              <th scope="row">${index+1}</th>
+                                              <td>${donation.amount}</td>
+                                              <td> ${donation.date}</td>
+                                            </tr>
                                     `
                                 );
+                                $("#total_amount").text(total);
                             });
                         } else {
                             modalBody.append('<p>لا يوجد تبرعات</p>');
@@ -223,5 +214,15 @@
         });
     </script>
 
+    <script>
+        $(document).ready(function() {
+            $('#forceCloseModal').click(function() {
+                $('#donationsModal').modal('hide');
+                $('.modal-backdrop').remove();
+                $('body').removeClass('modal-open');
+            });
+        });
+
+    </script>
 @endsection
 

@@ -124,7 +124,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item-text side-menu__item" href="#">
+                        <a class="dropdown-item-text side-menu__item" href="{{route("borrowers.index")}}">
                             <span class="side-menu__label"> المقترضين </span>
                         </a>
                     </li>
