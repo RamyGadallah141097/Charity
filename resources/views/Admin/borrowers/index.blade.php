@@ -31,14 +31,16 @@
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="p-3">
-                    <h3 class="card-title">المقترضين من  القروض الحسنة  {{ $setting->title ?? '' }}</h3>
 
-                    <div class="">
-                        <button class="btn btn-secondary btn-icon text-white addBtn">
+                    <div class="card-header">
+                        <h3 class="card-title">المقترضين من  القروض الحسنة  {{ $setting->title ?? '' }}</h3>
+                        <div class="">
+                            <button class="btn btn-secondary btn-icon text-white addBtn">
 									<span>
 										<i class="fe fe-plus"></i>
 									</span> اضافة جديد
-                        </button>
+                            </button>
+                        </div>
                     </div>
 
                 </div>
@@ -164,13 +166,14 @@
                 data: 'nationalID',
                 name: 'nationalID'
             },
-            {
-                data: 'phone',
-                name: 'phone'
-            },
+
             {
                 data: 'address',
                 name: 'address'
+            },
+            {
+                data: 'job',
+                name: 'job'
             },
             {
                 data: 'action',
