@@ -22,6 +22,16 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('userDetails/{id}', 'UserController@userDetails')->name('userDetails')->middleware('permission:userDetails');
     Route::get('DonationDetails/{id}', 'UserController@DonationDetails')->name('DonationDetails')->middleware('permission:DonationDetails');
 
+//    الراوتس الخاصه بالمقترض
+    Route::resource("borrowers", "BorrowerController");
+    Route::get('getGuarantor', 'BorrowerController@getGuarantor')->name('getGuarantor');
+    Route::POST('delete_borrowers', 'BorrowerController@delete')->name('delete_borrowers');
+//    Route::get('guarantorDetails/{id}', 'BorrowerController@delete')->name('guarantorDetails');
+
+
+
+
+
     #### Donors ####
     Route::middleware(['permission:donors.index'])->group(function () {
         Route::resource('donors', 'DonorController');
