@@ -2,8 +2,6 @@
     <form id="addForm" class="addForm" method="POST" enctype="multipart/form-data"
         action="{{ route('Donations.store') }}">
         @csrf
-
-
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text" id="donor_search_bar">
@@ -14,7 +12,7 @@
                     </svg></span>
             </div>
             <input type="text" id="search_donor" aria-label="Username" aria-describedby="basic-addon1"
-                class="form-control" placeholder="ابحث عن اسم المتبرع.">
+                class="form-control" placeholder="ابحث عن اسم المقترض.">
         </div>
 
         <div class="" id="create_donor">
@@ -24,32 +22,18 @@
         <div class="form-group" id="select_donor_container">
             <label for="donor_id" class="form-control-label">اسم المتبرع</label>
             <select name="donor_id" id="donor_name" class="form-control">
-                <option value="">اختر متبرع</option>
-                @foreach ($donors as $donor)
-                    <option value="{{ $donor->id }}">{{ $donor->name }}</option>
-                @endforeach
+                <option value="">اختر مقترض</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label for="name" class="form-control-label">رقم المتبرع</label>
+            <label for="name" class="form-control-label">رقم المقترض</label>
             <input type="text" class="form-control" disabled id="donor_phone">
         </div>
 
 
-
         <div class="form-group">
-            <label for="donation_type" class="form-control-label">نوع التبرع </label>
-            <select name="donation_type" id="type" class="form-control">
-                <option value="0">زكاة المال </option>
-                <option value="1"> صدقات</option>
-                <option value="2">قرض حسن </option>
-                <option value="3">تبرع عيني </option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="donation_amount" class="form-control-label">مبلغ التبرع</label>
+            <label for="donation_amount" class="form-control-label">مبلغ القرض </label>
             <input type="text" class="form-control" name="donation_amount" id="donation_amount">
         </div>
 
@@ -80,7 +64,7 @@
                 success: function(response) {
                     $('#donor_name').empty();
                     $("#create_donor").empty();
-                    $('#donor_name').append('<option value="">اختر متبرع</option>');
+                    $('#donor_name').append('<option value="">اختر المقترض</option>');
                     if (response.length > 0) {
                         $.each(response, function(key, donor) {
                             $('#donor_name').append('<option selected value="' +
@@ -106,30 +90,3 @@
     });
 </script>
 
-
-<script>
-    $(document).ready(function() {
-        $('select[id="donor_name"]').on('change', function() {
-                var donor_name = $(this).val();
-                $.ajax({
-                    url: '{{ route('get_donor_phone', ':donor_name') }}'.replace(":donor_name",
-                        donor_name),
-                    type: "GET",
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        id: donor_name
-                    },
-                    dataType: "json",
-                    success: function(response) {
-                        if (response && response.donor_phone) {
-                            $('input[id="donor_phone"]').val(response.donor_phone);
-                        } else {
-                            $('input[id="donor_phone"]').val('غير متوفر');
-                        }
-                    },
-                });
-            }
-
-        );
-    });
-</script>

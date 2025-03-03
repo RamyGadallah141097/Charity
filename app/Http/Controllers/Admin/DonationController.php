@@ -133,7 +133,6 @@ class DonationController extends Controller
     {
         try {
             $query = $request->input('donor_names');
-
             // Make sure the table exists and the column name is correct
             $donors = Donor::where('name', 'LIKE', "%{$query}%")->get();
 

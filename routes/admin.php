@@ -22,11 +22,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('userDetails/{id}', 'UserController@userDetails')->name('userDetails')->middleware('permission:userDetails');
     Route::get('DonationDetails/{id}', 'UserController@DonationDetails')->name('DonationDetails')->middleware('permission:DonationDetails');
 
-//    الراوتس الخاصه بالمقترض
+    //    الراوتس الخاصه بالمقترض
     Route::resource("borrowers", "BorrowerController");
     Route::get('getGuarantor', 'BorrowerController@getGuarantor')->name('getGuarantor');
     Route::POST('delete_borrowers', 'BorrowerController@delete')->name('delete_borrowers');
-//    Route::get('guarantorDetails/{id}', 'BorrowerController@delete')->name('guarantorDetails');
+    //    Route::get('guarantorDetails/{id}', 'BorrowerController@delete')->name('guarantorDetails');
 
 
 
@@ -52,6 +52,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     //القروض الحسنة
     Route::get("GoodLoansDonations", "GoodloansController@indexLoansDonations")->name("indexLoansDonations"); // التبرعات والمتبرعين
     Route::get('/getDonation', "GoodloansController@getDonors")->name('getDonors');
+
+    // القروضsearchDonor
+    Route::get('indexLoans', 'loansController@indexLoans')->name('index.Loans');
+    Route::get('createLoans', 'loansController@createLoans')->name('create.Loans');
+    Route::get('searchBorrowers', 'loansController@searchBorrowers')->name('search.Borrowers');
 
 
 

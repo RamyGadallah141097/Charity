@@ -129,7 +129,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item-text side-menu__item" href="#">
+                        <a class="dropdown-item-text side-menu__item" href="{{route("index.Loans")}}">
                             <span class="side-menu__label"> القروض </span>
                         </a>
                     </li>
