@@ -44,7 +44,7 @@
                                     <th class="min-w-50px"> الاسم المتبرع</th>
                                     <th class="min-w-125px">تاريخ التبرع</th>
                                     <th class="min-w-125px">قيمه التبرع </th>
-                                    <th class="min-w-125px">العمليات  </th>
+                                    <th class="min-w-125px">العمليات </th>
                                 </tr>
                             </thead>
                         </table>
@@ -122,7 +122,8 @@
 
                                             <div class="card-body">
                                                 <div class="row text-white">
-                                                    <div class="col-4 text-end"> <!-- Added text-end for right alignment -->
+                                                    <div class="col-4 text-end">
+                                                        <!-- Added text-end for right alignment -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -139,9 +140,9 @@
     </div>
 
 
-        <!-- Modal for view all donations of the donor !!!!!! -->
+    <!-- Modal for view all donations of the donor !!!!!! -->
 
-        <!-- Create Or Edit Modal -->
+    <!-- Create Or Edit Modal -->
     </div>
     @include('Admin/layouts/myAjaxHelper')
 @endsection
@@ -163,11 +164,11 @@
                 data: 'donation_amount',
                 name: 'donation_amount'
             },
+
             {
                 data: 'operations',
                 name: 'operations'
             },
-
         ]
         showData('{{ route('indexLoansDonations') }}', columns);
     </script>
@@ -175,20 +176,22 @@
 
 
     <script>
-        $(document).ready(function () {
-            $(document).on('click', '.view-donations', function () {
+        $(document).ready(function() {
+            $(document).on('click', '.view-donations', function() {
                 let donorId = $(this).data('donor');
                 let total = $(this).data('total');
 
                 $.ajax({
                     url: "{{ route('getDonors') }}",
                     type: "GET",
-                    data: { donor_id: donorId },
-                    success: function (response) {
+                    data: {
+                        donor_id: donorId
+                    },
+                    success: function(response) {
                         let modalBody = $('#donationsModalBody');
                         modalBody.empty();
                         if (response.length > 0) {
-                            response.forEach(function (donation , index) {
+                            response.forEach(function(donation, index) {
                                 modalBody.append(
                                     `
                                     <table class="table">
@@ -206,22 +209,16 @@
                                           <td> ${donation.date}</td>
                                         </tr>
                                       </tbody>
-                                    </table>
-
-
-                                    `
+                                    </table>   `
                                 );
                             });
                         } else {
                             modalBody.append('<p>لا يوجد تبرعات</p>');
                         }
-
                         $('#donationsModal').modal('show');
                     }
                 });
             });
         });
     </script>
-
 @endsection
-

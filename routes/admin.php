@@ -41,7 +41,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 
     //القروض الحسنة
     Route::get("GoodLoansDonations", "GoodloansController@indexLoansDonations")->name("indexLoansDonations"); // التبرعات والمتبرعين
-    Route::get('/getDonation', "GoodloansController@getDonation")->name('getDonors');
+    Route::get('/getDonation', "GoodloansController@getDonors")->name('getDonors');
 
 
 

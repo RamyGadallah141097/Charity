@@ -11,7 +11,9 @@ use App\Models\Donation;
 
 class GoodloansController extends Controller
 {
-    //القرض الحسن
+
+    // {- التبرعات والمتبرعين-}
+
     //function to return amount of donation for the donor if it just one donation
     //but if he had more than one donation ? display all his donations
     public function indexLoansDonations(Request $request)
@@ -52,8 +54,7 @@ class GoodloansController extends Controller
             return view('Admin/safer/loans', ["loans" => $loans]);
         }
     }
-
-
+    // {- التبرعات والمتبرعين-}
 
     public  function getDonation(Request $request)
     {
