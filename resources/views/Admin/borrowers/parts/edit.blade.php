@@ -1,3 +1,10 @@
+<style>
+    .modal-dialog {
+        max-width: calc(100vw - 100px) !important;
+        margin: auto;
+    }
+</style>
+
 <div class="modal-body">
     <form id="borrowerForm" class="borrowerForm" method="POST" enctype="multipart/form-data"
           action="{{ isset($borrower) ? route('borrowers.update', $borrower->id) : route('borrowers.store') }}">

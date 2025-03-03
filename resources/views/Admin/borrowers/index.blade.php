@@ -143,6 +143,29 @@
         </div>
 
         <!-- Modal for view all donations of the donor !!!!!! -->
+        <!-- Media Modal -->
+        <div class="modal fade" id="mediaModal" tabindex="-1" role="dialog" aria-labelledby="mediaModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">صور المقترض والضامن</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Borrower Images -->
+                        <h5 class="text-primary">صور المقترض</h5>
+                        <div class="row" id="borrowerMedia"></div>
+
+                        <hr>
+
+                        <!-- Guarantor Images -->
+                        <h5 class="text-secondary">صور الضامن</h5>
+                        <div class="row" id="guarantorMedia"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
 
     </div>
@@ -251,6 +274,51 @@
                 $('body').removeClass('modal-open');
             });
         });
+
+    </script>
+
+
+    <script>
+        //اظهار الصور كلها
+        $(document).on("click", ".viewMedia", function () {
+            let borrowerId = $(this).data("id");
+            loadMedia(borrowerId);
+            $("#mediaModal").modal("show");
+        });
+    </script>
+
+    <script>
+        function loadMedia(borrowerId) {
+            let basePath = "{{ asset('') }}";
+            $.ajax({
+                url: `/admin/borrowers/${borrowerId}/media`,
+                type: "GET",
+                success: function (response) {
+                    let borrowerHtml = "";
+                    let guarantorHtml = "";
+
+                    response.media.forEach((media) => {
+                        let imageUrl = basePath + media.path;
+                        let mediaHtml = `
+                        <div class="col-md-3 mb-3">
+                            <img src="${imageUrl}" class="img-fluid img-thumbnail">
+                        </div>
+                `;
+                        if (media.type == 1) {
+                            guarantorHtml += mediaHtml;
+                        } else {
+                            borrowerHtml += mediaHtml;
+                        }
+                    });
+
+                    $("#borrowerMedia").html(borrowerHtml);
+                    $("#guarantorMedia").html(guarantorHtml);
+                },
+                error: function () {
+                    toastr.error("فشل في تحميل الصور");
+                },
+            });
+        }
 
     </script>
 

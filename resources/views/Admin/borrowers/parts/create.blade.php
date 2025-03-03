@@ -1,40 +1,45 @@
 
 <style>
     .modal-dialog {
-        max-width: calc(100vw - 100px) !important;
+        max-width: calc(80vw - 80px) !important;
         margin: auto;
     }
 </style>
 
 <div class="modal-body ">
+    <h4 class="text-primary">معلومات المقترض</h4>
     <form id="addBorrowerForm" class="addForm" method="POST" enctype="multipart/form-data" action="{{ route('borrowers.store') }}">
         @csrf
 
-        <!-- Borrower Fields -->
-        <h4 class="text-primary">معلومات المقترض</h4>
-        <div class="form-group">
-            <label for="name" class="form-control-label">الاسم</label>
-            <input type="text" class="form-control" name="name" id="name" required>
-        </div>
 
-        <div class="form-group">
-            <label for="phone" class="form-control-label">الهاتف</label>
-            <input type="number" class="form-control" name="phone" maxlength="12"  minlength="11" id="phone" required>
-        </div>
+        <div class="form-group row">
+            <!-- Borrower Fields -->
 
-        <div class="form-group">
-            <label for="nationalID" class="form-control-label">الرقم القومي</label>
-            <input type="number" class="form-control" name="nationalID" maxlength="15" minlength="14" id="nationalID" required>
-        </div>
+            <div class="form-group col-6">
+                <label for="name" class="form-control-label">الاسم</label>
+                <input type="text" class="form-control" name="name" id="name" required>
+            </div>
 
-        <div class="form-group">
-            <label for="address" class="form-control-label">العنوان</label>
-            <input type="text" class="form-control" name="address" id="address" required>
-        </div>
+            <div class="form-group col-6">
+                <label for="phone" class="form-control-label">الهاتف</label>
+                <input type="number" class="form-control" name="phone" maxlength="12"  minlength="11" id="phone" required>
+            </div>
 
-        <div class="form-group">
-            <label for="job" class="form-control-label">المهنة</label>
-            <input type="text" class="form-control" name="job" id="job" required>
+            <div class="form-group col-6">
+                <label for="nationalID" class="form-control-label">الرقم القومي</label>
+                <input type="number" class="form-control" name="nationalID" maxlength="15" minlength="14" id="nationalID" required>
+            </div>
+
+            <div class="form-group col-6">
+                <label for="address" class="form-control-label">العنوان</label>
+                <input type="text" class="form-control" name="address" id="address" required>
+            </div>
+
+            <div class="form-group col-6">
+                <label for="job" class="form-control-label">المهنة</label>
+                <input type="text" class="form-control" name="job" id="job" required>
+            </div>
+
         </div>
 
         <h4 class="text-primary mt-4"> معلومات الضامنين</h4>
