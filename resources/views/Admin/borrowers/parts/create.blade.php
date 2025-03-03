@@ -11,12 +11,12 @@
 
         <div class="form-group">
             <label for="phone" class="form-control-label">الهاتف</label>
-            <input type="text" class="form-control" name="phone" id="phone" required>
+            <input type="number" class="form-control" name="phone" id="phone" required>
         </div>
 
         <div class="form-group">
             <label for="nationalID" class="form-control-label">الرقم القومي</label>
-            <input type="text" class="form-control" name="nationalID" id="nationalID" required>
+            <input type="number" class="form-control" name="nationalID" id="nationalID" required>
         </div>
 
         <div class="form-group">
@@ -29,14 +29,13 @@
             <input type="text" class="form-control" name="job" id="job" required>
         </div>
 
-        <!-- Guarantors Section -->
         <h4 class="text-primary mt-4">الضامنين</h4>
         <div id="guarantorsContainer">
-            <!-- Dynamic Guarantor Fields will be added here -->
+
         </div>
 
-        <!-- Button to Add More Guarantors -->
-        <button type="button" class="btn btn-success mb-3" id="addGuarantor">إضافة كفيل</button>
+
+        <button type="button" class="btn btn-success mb-3" id="addGuarantor">إضافة ضامن</button>
 
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">إغلاق</button>
@@ -65,12 +64,12 @@
 
                 <div class="form-group">
                     <label for="guarantors[${guarantorIndex}][phone]" class="form-control-label">هاتف الضامن</label>
-                    <input type="text" class="form-control" name="guarantors[${guarantorIndex}][phone]" required>
+                    <input type="number" class="form-control" name="guarantors[${guarantorIndex}][phone]" required>
                 </div>
 
                 <div class="form-group">
                     <label for="guarantors[${guarantorIndex}][nationalID]" class="form-control-label">الرقم القومي</label>
-                    <input type="text" class="form-control" name="guarantors[${guarantorIndex}][nationalID]" required>
+                    <input type="number" class="form-control" name="guarantors[${guarantorIndex}][nationalID]" required>
                 </div>
 
                 <div class="form-group">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\BorrowerRequest;
 use App\Models\Borrower;
 use App\Http\Controllers\Controller;
 use App\Models\Guarantor;
@@ -59,22 +60,8 @@ class BorrowerController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function store(Request $request)
+    public function store(BorrowerRequest $request)
     {
-//        dd($request->all());
-//        $validatedData = $request->validate([
-//            'name' => 'required|string|max:255',
-//            'phone' => 'required|numeric',
-//            'nationalID' => 'required|numeric|unique:borrowers,nationalID',
-//            'address' => 'required|string|max:255',
-//            'job' => 'required|string|max:255',
-//            'guarantors.*.name' => 'required|string|max:255',
-//            'guarantors.*.phone' => 'required|numeric',
-//            'guarantors.*.nationalID' => 'required|numeric|unique:guarantors,nationalID',
-//            'guarantors.*.address' => 'required|string|max:255',
-//            'guarantors.*.job' => 'required|string|max:255',
-//        ]);
-
         // Create Borrower
         $borrower = Borrower::create([
             'name' => $request->name,
@@ -116,8 +103,9 @@ class BorrowerController extends Controller
      */
     public function edit(Borrower $borrower)
     {
-        return view('Admin\borrowers\parts\parts\edit', compact('borrower'));
+        return view('Admin\borrowers\parts\edit', compact('borrower'));
     }
+
 
 
     /**
@@ -127,21 +115,9 @@ class BorrowerController extends Controller
      * @param  \App\Models\Borrower  $borrower
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Borrower $borrower)
+    public function update(BorrowerRequest $request, Borrower $borrower)
     {
-        dd($request->all());
-//        $request->validate([
-//            'name' => 'required|string|max:255',
-//            'phone' => 'required|string|max:20',
-//            'nationalID' => 'required|string|max:20',
-//            'address' => 'required|string|max:255',
-//            'job' => 'required|string|max:255',
-//            'guarantors.*.name' => 'required|string|max:255',
-//            'guarantors.*.phone' => 'required|string|max:20',
-//            'guarantors.*.nationalID' => 'required|string|max:20',
-//            'guarantors.*.address' => 'required|string|max:255',
-//            'guarantors.*.job' => 'required|string|max:255',
-//        ]);
+
 
         // تحديث بيانات المقترض
         $borrower->update([
