@@ -17,6 +17,15 @@
             overflow-y: auto;
         }
     </style>
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+               @foreach($errors->all() as $error)
+                   {{$error}}
+               @endforeach
+            </ul>
+        </div>
+    @endif
 
     <div class="row">
         <div class="col-md-12 col-lg-12">
@@ -222,6 +231,15 @@
     });
 
 </script>
+
+    <script>
+        $(document).ready(function() {
+            @if ($errors->any())
+            $('#borrowerModal').modal('show');
+            @endif
+        });
+    </script>
+
     <script>
         $(document).ready(function() {
             $('#forceCloseModal').click(function() {
