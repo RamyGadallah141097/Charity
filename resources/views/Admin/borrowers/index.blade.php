@@ -230,8 +230,9 @@
                     let modalBody = $('#guarantorModalBodyTable'); // Correct modal
                     modalBody.empty();
 
-                    if (response.length > 0) {
-                        response.forEach(function (guarantor, index) {
+                    if (response.guarantors.length > 0) {
+
+                        response.guarantors.forEach(function (guarantor, index) {
                             modalBody.append(
                                 `<tr>
                                 <th scope="row">${index + 1}</th>
@@ -294,6 +295,8 @@
                 url: `/admin/borrowers/${borrowerId}/media`,
                 type: "GET",
                 success: function (response) {
+                    $("#borrowerMedia").empty();
+                    $("#guarantorMedia").empty();
                     let borrowerHtml = "";
                     let guarantorHtml = "";
 

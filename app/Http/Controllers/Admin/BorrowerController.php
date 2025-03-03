@@ -302,7 +302,12 @@ class BorrowerController extends Controller
     public function getGuarantor(Request $request)
     {
         $guarantors = Guarantor::where('borrower_id', $request->borrower_id)->get();
-        return response()->json($guarantors);
+        $borrower = Borrower::with('media')->findOrFail($request->borrower_id);
+        return response()->json([
+            'guarantors' => $guarantors,
+            'media' => $borrower->media
+        ]);
+
 
     }
 
