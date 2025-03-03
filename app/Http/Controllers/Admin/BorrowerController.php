@@ -34,7 +34,7 @@ class BorrowerController extends Controller
                     <button class="btn btn-primary view-guarantors" data-id="'.$borrower->id.'">  <i class="fa fa-eye"></i> </button>
                 ';
                 })
-                ->rawColumns(['action']) // ✅ Ensure action column renders HTML
+                ->rawColumns(['action'])
                 ->make(true);
         }
 
@@ -82,8 +82,6 @@ class BorrowerController extends Controller
         return redirect()->back();
     }
 
-
-
     /**
      * Display the specified resource.
      *
@@ -105,8 +103,6 @@ class BorrowerController extends Controller
     {
         return view('Admin\borrowers\parts\edit', compact('borrower'));
     }
-
-
 
     /**
      * Update the specified resource in storage.
