@@ -41,7 +41,7 @@ class GoodloansController extends Controller
                         'id' => $donationsByDonor->first()->donor_id,
                         'donor_name' => $donationsByDonor->first()->donor->name ?? 'غير معروف',
                         'donation_amount' => $donationsByDonor->sum('donation_amount'),
-                        "operations" => '<button class="btn btn-primary view-donations" data-total="'.$donationsByDonor->sum('donation_amount'). ' EGP" data-donor="' . $donationsByDonor->first()->donor_id . '">  <i class="fa fa-eye"></i> </button>',
+                        "operations" => '<button class="btn btn-primary view-donations" data-total="'.$donationsByDonor->sum('donation_amount'). ' " data-donor="' . $donationsByDonor->first()->donor_id . '">  <i class="fa fa-eye"></i> </button>',
                         'created_at' => optional($donationsByDonor->first()->created_at)->format('d-m-y') ?? '-',
                     ];
                 }
@@ -60,7 +60,7 @@ class GoodloansController extends Controller
     // {- التبرعات والمتبرعين-}
 
 //    داله لاظهار جميع التبرعات للمتبرع في صفحة التبرعات في القرض الحسمه
-    public  function getDonation(Request $request)
+    public  function getDonors(Request $request)
     {
         $donations = Donation::where("donor_id", $request->donor_id)
             ->where("donation_type", 2)

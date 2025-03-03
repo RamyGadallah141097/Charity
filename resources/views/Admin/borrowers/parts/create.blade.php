@@ -1,4 +1,12 @@
-<div class="modal-body">
+
+<style>
+    .modal-dialog {
+        max-width: calc(100vw - 100px) !important;
+        margin: auto;
+    }
+</style>
+
+<div class="modal-body ">
     <form id="addBorrowerForm" class="addForm" method="POST" enctype="multipart/form-data" action="{{ route('borrowers.store') }}">
         @csrf
 
@@ -11,12 +19,12 @@
 
         <div class="form-group">
             <label for="phone" class="form-control-label">الهاتف</label>
-            <input type="number" class="form-control" name="phone" id="phone" required>
+            <input type="number" class="form-control" name="phone" maxlength="12"  minlength="11" id="phone" required>
         </div>
 
         <div class="form-group">
             <label for="nationalID" class="form-control-label">الرقم القومي</label>
-            <input type="number" class="form-control" name="nationalID" id="nationalID" required>
+            <input type="number" class="form-control" name="nationalID" maxlength="15" minlength="14" id="nationalID" required>
         </div>
 
         <div class="form-group">
@@ -29,13 +37,28 @@
             <input type="text" class="form-control" name="job" id="job" required>
         </div>
 
-        <h4 class="text-primary mt-4">الضامنين</h4>
+        <h4 class="text-primary mt-4"> معلومات الضامنين</h4>
         <div id="guarantorsContainer">
 
         </div>
 
 
         <button type="button" class="btn btn-success mb-3" id="addGuarantor">إضافة ضامن</button>
+
+
+        <hr>
+
+        <div class="row form-group">
+            <div class="col-6">
+                <label>ملفات المقترض</label>
+                <input class="form-control" accept="image/*"  type="file"  name="borrowerMedia[]" multiple />
+            </div>
+            <div class="col-6">
+                <label>ملفات الضامن</label>
+                <input class="form-control" accept="image/*" type="file" name="guarantorMedia[]" multiple />
+            </div>
+        </div>
+
 
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">إغلاق</button>
@@ -47,15 +70,15 @@
 <!-- JavaScript to Handle Dynamic Form -->
 <script>
     $(document).ready(function () {
-        let guarantorIndex = 0; // Track guarantor count
+        let guarantorIndex = 0;
 
-        // Function to add a new guarantor form
+        //اضافه ضامن جديد في الفورم
         $('#addGuarantor').click(function () {
             guarantorIndex++;
 
             $('#guarantorsContainer').append(`
             <div class="guarantor-item border p-3 mb-2" id="guarantor_${guarantorIndex}">
-                <h5 class="text-secondary">كفيل ${guarantorIndex}</h5>
+                <h5 class="text-secondary"> ${guarantorIndex} ضامن  ${guarantorIndex}</h5>
 
                 <div class="form-group">
                     <label for="guarantors[${guarantorIndex}][name]" class="form-control-label">اسم الضامن</label>
@@ -83,14 +106,74 @@
                 </div>
 
                 <button type="button" class="btn btn-danger removeGuarantor" data-id="${guarantorIndex}">حذف الضامن</button>
+
             </div>
+
+
         `);
         });
 
-        // Function to remove a guarantor form
+        //حذف الضامن من الفورم
         $(document).on('click', '.removeGuarantor', function () {
             let id = $(this).data('id');
             $('#guarantor_' + id).remove();
         });
     });
 </script>
+
+<script>
+    $(document).ready(function () {
+        $("#addBorrowerForm").on("submit", function (e) {
+            e.preventDefault();
+
+            let formData = new FormData(this);
+
+            $.ajax({
+                url: $(this).attr("action"),
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $(".text-danger").remove();
+                    $("input, select, textarea").removeClass("is-invalid");
+                },
+                success: function (response) {
+                    if (response.status === 200) {
+                        toastr.success("تمت الإضافة بنجاح!");
+
+                        setTimeout(function () {
+                            location.reload();
+                        }, 500);
+                    }
+                },
+                error: function (xhr) {
+                    if (xhr.status === 422) {
+                        let errors = xhr.responseJSON.errors;
+                        $.each(errors, function (key, messages) {
+                            let field = $(`[name="${key}"]`);
+
+                            if (field.length) {
+                                field.addClass("is-invalid");
+                                field.after(
+                                    `<span class="text-danger">${messages[0]}</span>`
+                                );
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "خطأ!",
+                            text: "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.",
+                            confirmButtonText: "موافق",
+                        });
+                    }
+                },
+            });
+        });
+    });
+
+
+</script>
+
+

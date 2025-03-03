@@ -25,20 +25,22 @@ class BorrowerRequest extends FormRequest
     {
         $rules = [
             'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:12',
-            'nationalID' => 'required|string|min:14|max:15',
+            'phone' => 'required',
+            'nationalID' => 'required',
             'address' => 'required|string|max:255',
             'job' => 'required|string|max:255',
             'guarantors.*.name' => 'required|string|max:255',
-            'guarantors.*.phone' => 'required|max:12',
-            'guarantors.*.nationalID' => 'required|string|max:20',
+            'guarantors.*.phone' => 'required',
+            'guarantors.*.nationalID' => 'required',
             'guarantors.*.address' => 'required|string|max:255',
             'guarantors.*.job' => 'required|string|max:255',
         ];
 
         if (request()->isMethod('post')) {
             $rules['phone'] .= '|unique:borrowers,phone';
+            $rules['nationalID'] .= '|unique:borrowers,nationalID';
         }
+
 
         return $rules;
     }

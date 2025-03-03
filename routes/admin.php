@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
@@ -106,3 +107,14 @@ Route::group(['prefix' => 'admin'], function () {
 #### Roles ####
 Route::resource("roles", "RulesController")->middleware('permission:roles.index');
 Route::post("Role_delete", "RulesController@delete")->name("Role_delete")->middleware('permission:Role_delete');
+
+
+Route::get('/clear', function () {
+
+    Artisan::call('cache:clear');
+    Artisan::call('key:generate');
+    Artisan::call('config:clear');
+    Artisan::call('optimize:clear');
+    return response()->json(['status' => 'success', 'code' => 1000000000]);
+});
+

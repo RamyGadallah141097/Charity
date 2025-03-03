@@ -6,6 +6,7 @@ use App\Http\Requests\BorrowerRequest;
 use App\Models\Borrower;
 use App\Http\Controllers\Controller;
 use App\Models\Guarantor;
+use App\Models\Media;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -31,7 +32,7 @@ class BorrowerController extends Controller
                                 data-id="' . $borrower->id . '">
                             <i class="fas fa-trash"></i>
                         </button>
-                    <button class="btn btn-primary view-guarantors" data-id="'.$borrower->id.'">  <i class="fa fa-eye"></i> </button>
+                    <button class="btn btn-pill view-guarantors btn-success-light" data-id="'.$borrower->id.'">  <i class="fa fa-eye"></i> </button>
                 ';
                 })
                 ->rawColumns(['action'])
@@ -57,29 +58,89 @@ class BorrowerController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
 
     public function store(BorrowerRequest $request)
     {
-        // Create Borrower
-        $borrower = Borrower::create([
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'nationalID' => $request->nationalID,
-            'address' => $request->address,
-            'job' => $request->job,
-        ]);
+      try{
+          // Create Borrower
+          $borrower = Borrower::create([
+              'name' => $request->name,
+              'phone' => $request->phone,
+              'nationalID' => $request->nationalID,
+              'address' => $request->address,
+              'job' => $request->job,
+          ]);
+
+//          dd($borrower);
+
+          if ($borrower){
+
+              $borrower_id = $borrower->id;
+
+              // Create Guarantors for the Borrower
+              if ($request->has('guarantors')) {
+                  foreach ($request->guarantors as $guarantor) {
+                      $borrower->guarantors()->create($guarantor);
+                  }
+              }
 
 
-        // Create Guarantors for the Borrower
-        if ($request->has('guarantors')) {
-            foreach ($request->guarantors as $guarantor) {
-                $borrower->guarantors()->create($guarantor);
-            }
-        }
+              if ($request->hasFile('borrowerMedia')) {
+                  foreach ($request->file('borrowerMedia') as $borrowerMedia) {
+                      if ($borrowerMedia->isValid()) {
+                          $file_name = time() . "_"  . $borrowerMedia->getClientOriginalName();
+                          $storagePath = 'BorrowerUploads/Borrower';
+                          $borrowerMedia->move(public_path($storagePath), $file_name);
+                          Media::create([
+                              'name' => $file_name,
+                              'path' => $storagePath . '/' . $file_name,
+                              'type' => 0, // 0 = Borrower Media
+                              'borrower_id' => $borrower_id,
+                              'guarantor_id' => null
+                          ]);
+                      }
+                  }
 
-        return redirect()->back();
+
+              }
+
+
+
+              if ($request->hasFile('guarantorMedia')) {
+                  foreach ($request->file('guarantorMedia') as $guarantorMedia) {
+                      if ($guarantorMedia->isValid()) {
+                          $file_name = time() . "_" . $guarantorMedia->getClientOriginalName();
+                          $file_path = "GuarantorUploads/Guarantor";
+                          $guarantorMedia->move(public_path($file_path), $file_name);
+                          Media::create([
+                              "name" => $file_name,
+                              "path" => $file_path . "/" . $file_name,
+                              "type" => 1,
+                              "borrower_id" => $borrower_id,
+                              "guarantor_id" => null
+                          ]);
+                      }
+                  }
+              }
+
+
+          }
+
+          return response()->json([
+              "status"=>200,
+              "success"=>"added successfully",
+          ]);
+      }catch (\Exception $e){
+          return response()->json([
+              "status"=>405,
+              "errors"=>"faild ". $e->getMessage(),
+          ]);
+      }
+
+
+
     }
 
     /**
@@ -109,50 +170,106 @@ class BorrowerController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Borrower  $borrower
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(BorrowerRequest $request, Borrower $borrower)
     {
 
+        try {
+            // تحديث بيانات المقترض
+            $borrower->update([
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'nationalID' => $request->nationalID,
+                'address' => $request->address,
+                'job' => $request->job,
+            ]);
 
-        // تحديث بيانات المقترض
-        $borrower->update([
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'nationalID' => $request->nationalID,
-            'address' => $request->address,
-            'job' => $request->job,
-        ]);
-
-        // تحديث أو إضافة الضامنين
-        if ($request->has('guarantors')) {
-            foreach ($request->guarantors as $guarantorData) {
-                if (isset($guarantorData['id'])) {
-                    // تحديث الضامن الحالي
-                    $guarantor = $borrower->guarantors()->find($guarantorData['id']);
-                    if ($guarantor) {
-                        $guarantor->update([
-                            'name' => $guarantorData['name'],
-                            'phone' => $guarantorData['phone'],
-                            'nationalID' => $guarantorData['nationalID'],
-                            'address' => $guarantorData['address'],
-                            'job' => $guarantorData['job'],
-                        ]);
+            // تحديث أو إضافة الضامنين
+            if ($request->has('guarantors')) {
+                foreach ($request->guarantors as $guarantorData) {
+                    if (isset($guarantorData['id'])) {
+                        // تحديث الضامن الحالي
+                        $guarantor = $borrower->guarantors()->find($guarantorData['id']);
+                        if ($guarantor) {
+                            $guarantor->update([
+                                'name' => $guarantorData['name'],
+                                'phone' => $guarantorData['phone'],
+                                'nationalID' => $guarantorData['nationalID'],
+                                'address' => $guarantorData['address'],
+                                'job' => $guarantorData['job'],
+                            ]);
+                        }
+                    } else {
+                        // إنشاء ضامن جديد
+                        $borrower->guarantors()->create($guarantorData);
                     }
-                } else {
-                    // إنشاء ضامن جديد
-                    $borrower->guarantors()->create($guarantorData);
                 }
             }
-        }
 
-        // حذف الضامنين الذين تم إرسالهم للحذف
-        if ($request->has('remove_guarantors')) {
-            $borrower->guarantors()->whereIn('id', $request->remove_guarantors)->delete();
-        }
+            $borrower_id = $borrower->id;
 
-        return redirect()->route('borrowers.index')->with('success', 'تم تحديث المقترض بنجاح!');
+            // تحديث ملفات المقترض
+            if ($request->hasFile('borrowerMedia')) {
+                // حذف الملفات القديمة فقط إذا تم رفع ملفات جديدة
+                $borrower->media()->where('type', 0)->delete();
+
+                foreach ($request->file('borrowerMedia') as $borrowerMedia) {
+                    if ($borrowerMedia->isValid()) {
+                        $file_name = time() . "_" . $borrowerMedia->getClientOriginalName();
+                        $storagePath = 'BorrowerUploads/Borrower';
+                        $borrowerMedia->move(public_path($storagePath), $file_name);
+
+                        Media::create([
+                            'name' => $file_name,
+                            'path' => $storagePath . '/' . $file_name,
+                            'type' => 0,
+                            'borrower_id' => $borrower_id,
+                            'guarantor_id' => null
+                        ]);
+                    }
+                }
+            }
+
+            // تحديث ملفات الضامن
+            if ($request->hasFile('guarantorMedia')) {
+                // حذف الملفات القديمة فقط إذا تم رفع ملفات جديدة
+                $borrower->media()->where('type', 1)->delete();
+
+                foreach ($request->file('guarantorMedia') as $guarantorMedia) {
+                    if ($guarantorMedia->isValid()) {
+                        $file_name = time() . "_" . $guarantorMedia->getClientOriginalName();
+                        $file_path = "GuarantorUploads/Guarantor";
+                        $guarantorMedia->move(public_path($file_path), $file_name);
+
+                        Media::create([
+                            "name" => $file_name,
+                            "path" => $file_path . "/" . $file_name,
+                            "type" => 1,
+                            "borrower_id" => $borrower_id,
+                            "guarantor_id" => null
+                        ]);
+                    }
+                }
+            }
+
+            // حذف الضامنين المحددين للحذف
+            if ($request->has('remove_guarantors') && count($request->remove_guarantors) > 0) {
+                $borrower->guarantors()->whereIn('id', $request->remove_guarantors)->delete();
+            }
+
+            return response()->json([
+                "status" => 200,
+                "success" => "تم التحديث بنجاح",
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                "status" => 405,
+                "errors" => "فشل التحديث: " . $e->getMessage(),
+            ]);
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.

@@ -15,4 +15,8 @@ class Borrower extends Model
     {
         return $this->hasMany(Guarantor::class , "borrower_id");
     }
+    public function media()
+    {
+        return $this->hasMany(media::class , "borrower_id");
+    }
 }
