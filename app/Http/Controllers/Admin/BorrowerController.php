@@ -27,12 +27,15 @@ class BorrowerController extends Controller
                     return '
                     <button type="button" data-id="' . $borrower->id . '" class="btn btn-pill btn-info-light editBtn">
                             <i class="fa fa-edit"></i>
-                        </button>
+                    </button>
                      <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
                                 data-id="' . $borrower->id . '">
                             <i class="fas fa-trash"></i>
-                        </button>
+                    </button>
                     <button class="btn btn-pill view-guarantors btn-success-light" data-id="'.$borrower->id.'">  <i class="fa fa-eye"></i> </button>
+                    <button class="btn  btn-pill btn-primary-light viewMedia" data-id="'.$borrower->id.'">
+                        <i class="fa fa-photo-video"></i>
+                    </button>
                 ';
                 })
                 ->rawColumns(['action'])
@@ -162,6 +165,8 @@ class BorrowerController extends Controller
      */
     public function edit(Borrower $borrower)
     {
+//        $media1 = Media::where("borrower_id" , $borrower->id)->where("type" , null);
+//        $media2 = Media::where("borrower_id" , $borrower->id)->where("type" , 1);
         return view('Admin\borrowers\parts\edit', compact('borrower'));
     }
 
@@ -293,8 +298,21 @@ class BorrowerController extends Controller
     public function getGuarantor(Request $request)
     {
         $guarantors = Guarantor::where('borrower_id', $request->borrower_id)->get();
-        return response()->json($guarantors);
+        $borrower = Borrower::with('media')->findOrFail($request->borrower_id);
+        return response()->json([
+            'guarantors' => $guarantors,
+            'media' => $borrower->media
+        ]);
+
 
     }
+
+    public function getMedia($id)
+    {
+
+        $borrower = Borrower::with('media')->findOrFail($id);
+        return response()->json(['media' => $borrower->media]);
+    }
+
 
 }

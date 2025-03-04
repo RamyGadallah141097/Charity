@@ -22,16 +22,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::POST('updateUserStatus', 'UserController@updateUserStatus')->name('updateUserStatus')->middleware('permission:updateUserStatus');
     Route::get('userDetails/{id}', 'UserController@userDetails')->name('userDetails')->middleware('permission:userDetails');
     Route::get('DonationDetails/{id}', 'UserController@DonationDetails')->name('DonationDetails')->middleware('permission:DonationDetails');
-
     //    الراوتس الخاصه بالمقترض
     Route::resource("borrowers", "BorrowerController");
     Route::get('getGuarantor', 'BorrowerController@getGuarantor')->name('getGuarantor');
     Route::POST('delete_borrowers', 'BorrowerController@delete')->name('delete_borrowers');
     //    Route::get('guarantorDetails/{id}', 'BorrowerController@delete')->name('guarantorDetails');
-
-
-
-
 
     #### Donors ####
     Route::middleware(['permission:donors.index'])->group(function () {
@@ -52,7 +47,16 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 
     //القروض الحسنة
     Route::get("GoodLoansDonations", "GoodloansController@indexLoansDonations")->name("indexLoansDonations"); // التبرعات والمتبرعين
-    Route::get('/getDonation', "GoodloansController@getDonors")->name('getDonors');
+    Route::get('/getDonation', "GoodloansController@getDonors")->name('getDonors')
+
+//    الراوتس الخاصه بالمقترض
+    Route::resource("borrowers", "BorrowerController");
+    Route::get('getGuarantor', 'BorrowerController@getGuarantor')->name('getGuarantor');
+    Route::POST('delete_borrowers', 'BorrowerController@delete')->name('delete_borrowers');
+    Route::get('/borrowers/{id}/media', 'BorrowerController@getMedia');
+
+
+//    Route::get('guarantorDetails/{id}', 'BorrowerController@delete')->name('guarantorDetails');
 
     // القروضsearchDonor
     Route::get('indexLoans', 'loansController@indexLoans')->name('index.Loans');
@@ -60,20 +64,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('searchBorrowers', 'loansController@searchBorrowers')->name('search.Borrowers');
     Route::post('storeLoans', 'loansController@storeLoans')->name('store.loans');
     Route::get('personLoans/{id}', 'loansController@personLoans')->name('person.loans');
-
     //الزكاة والصدقات
     Route::get("safer/CharityZakat", "SaferController@indexCharityZakat")->name("safer.CharityZakat"); //تبرعات الزكاة والصدقات
-
-
-
     //التبرعات العينية
     Route::get('safer/InKindDonations', 'SaferController@InKindDonations')->name('safer.InKindDonations'); //التبرعات العينية
-
-
-
-
-
-
     #### Subventions ####
     Route::resource('subventions', 'SubventionController');
     Route::get('showSubventions', 'SubventionController@showSubventions')->name('showSubventions');
@@ -107,7 +101,6 @@ Route::group(['prefix' => 'admin'], function () {
 #### Roles ####
 Route::resource("roles", "RulesController")->middleware('permission:roles.index');
 Route::post("Role_delete", "RulesController@delete")->name("Role_delete")->middleware('permission:Role_delete');
-
 
 Route::get('/clear', function () {
 
