@@ -86,3 +86,7 @@
 
 
 @endsection
+
+<script>
+    $('.dropify').dropify()
+</script>

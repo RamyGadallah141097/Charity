@@ -15,6 +15,15 @@
             <label for="price" class="form-control-label">المبلغ</label>
             <input type="number" min="0" class="form-control" required name="price" id="price">
         </div>
+
+
+            <select class="form-control" name="asset_id" id="asset">
+                @foreach($assets as $item)
+                    <option value="{{$item->id}}">{{$item->name}}</option>
+                @endforeach
+            </select>
+
+
         <div>
             <div class="form-group form-elements">
                 <div class="form-label">نوعية الصرف</div>

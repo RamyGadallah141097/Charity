@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Asset;
 use App\Models\Donor;
 use App\Models\Subvention;
 use App\Models\User;
@@ -46,7 +47,9 @@ class SubventionController extends Controller
     public function create()
     {
         $users = User::where('status','accepted')->whereDoesntHave('subvention')->select('id','husband_name')->latest()->get();
-        return view('Admin/subventions/parts/create',compact('users'));
+        $assets = Asset::all();
+        return view('Admin/subventions/parts/create',compact('users' , "assets"));
+
     }
 
 

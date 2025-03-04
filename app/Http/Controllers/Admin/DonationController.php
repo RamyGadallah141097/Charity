@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DonationsRequest;
 use App\Http\Requests\StoreDonate;
+use App\Models\Asset;
 use App\Models\Donation;
 use App\Models\Donor;
 use Illuminate\Http\Request;
@@ -58,7 +59,7 @@ class DonationController extends Controller
                 ->escapeColumns([])
                 ->make(true);
         } else {
-            return view('Admin/donations/index');
+            return view('Admin/donations/index' );
         }
     }
 
@@ -66,17 +67,29 @@ class DonationController extends Controller
     public function create()
     {
         $donors = Donor::all();
-        return view('Admin/donations/parts/create', ["donors" => $donors]);
+        $assets = Asset::all();
+
+        return view('Admin/donations/parts/create', ["donors" => $donors ,  "assets" => $assets]);
     }
 
 
     public function store(DonationsRequest $request)
     {
-        if (Donation::create($request->except('_token'))) {
+        try {
+
+            $asset = Asset::find($request->asset_id);
+            $asset->update(['counter' => $asset->counter + $request->asset_count]);
+//            add the amount of assets to asset table
+
+//            create the donation
+            Donation::create($request->except('_token'));
+
             return response()->json(['status' => 200]);
-        } else {
+
+        }catch (\Exception $e){
             return response()->json(["status" => 500]);
         }
+
     }
 
 

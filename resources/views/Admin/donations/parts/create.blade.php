@@ -49,8 +49,18 @@
         </div>
 
         <div class="form-group">
-            <label for="donation_amount" class="form-control-label">مبلغ التبرع</label>
-            <input type="text" class="form-control" name="donation_amount" id="donation_amount">
+            <div class="pay">
+                <label for="donation_amount" class="form-control-label">مبلغ التبرع</label>
+                <input type="text" value=0 class="form-control" name="donation_amount" id="donation_amount">
+            </div>
+            <div class="asset">
+                <select class="form-control mb-3" name="asset_id" id="asset">
+                    @foreach($assets as $item)
+                        <option value="{{$item->id}}">{{$item->name}}</option>
+                    @endforeach
+                </select>
+                <input name="asset_count" type="number"  class="form-control" id="asset_count">
+            </div>
         </div>
 
         <div class="form-group">
@@ -69,6 +79,7 @@
 
 <script>
     $(document).ready(function() {
+
         $('#search_donor').on('keyup', function() {
             let query = $(this).val();
             $.ajax({
@@ -133,3 +144,20 @@
         );
     });
 </script>
+<script>
+    $("document").ready(function(){
+        $('.asset').hide();
+        $('select[name="donation_type"]').on("change" , function(){
+            let type = $(this).val();
+
+            if (type == 3) {
+                $('.pay').hide();
+                $('.asset').show();
+            } else {
+                $('.pay').show();
+                $('.asset').hide();
+            }
+        })
+    });
+</script>
+

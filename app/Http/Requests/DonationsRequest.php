@@ -28,12 +28,13 @@ class DonationsRequest extends FormRequest
             "donor_id" => "required",
             "donation_type" => ["required", "string"],
             "created_at" => "required",
-            "donation_amount" => ['required', 'integer', 'min:1'],
+            "donation_amount" => ['required', 'integer'],
+            "donation_amount" => ['required', 'integer'],
         ];
 
-        if ($this->donation_type == 3) {
-            $rules['donation_amount'] = ['required', 'string', 'regex:/^[^\d]+$/'];
-        }
+//        if ($this->donation_type == 3) {
+//            $rules['donation_amount'] = ['required', 'string', 'regex:/^[^\d]+$/'];
+//        }
 
         return $rules;
 

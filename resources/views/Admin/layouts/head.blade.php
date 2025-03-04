@@ -31,6 +31,9 @@
 <!-- SIDEBAR CSS -->
 <link href="{{ asset('assets/admin') }}/assets/plugins/sidebar/sidebar.css" rel="stylesheet">
 
+<!-- Dropify CSS -->
+{{--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropify/0.2.2/css/dropify.min.css">--}}
+
 <!-- COLOR SKIN CSS -->
 <link id="theme" rel="stylesheet" type="text/css" media="all"
     href="{{ asset('assets/admin') }}/assets/colors/color1.css" />

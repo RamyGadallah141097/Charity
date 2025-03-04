@@ -28,146 +28,182 @@
                 <span class="side-menu__label">الرئيسية</span>
             </a>
         </li>
-        @can('admins.index')
             <li class="slide">
                 <a class="side-menu__item" href="{{ route('admins.index') }}">
-                    <i class="fe fe-users side-menu__icon"></i>
+                    <i class="fe fe-users side-menu__icon"  ></i>
                     <span class="side-menu__label">المشرفين</span>
                 </a>
             </li>
-        @endcan
 
 
         {{-- المستفيدين --}}
         <p>
-            <a class="side-menu__item" data-toggle="collapse" href="#sersDropdown" role="button" aria-expanded="false"
-                aria-controls="collapseExample">
-                <i class="fe fe-users side-menu__icon"></i>
+            <a class="side-menu__item {{ request()->routeIs('users.index') ? 'active' : '' }} {{ request()->segment(1) === 'users' ? 'active' : '' }}"
+               data-toggle="collapse"
+               href="#sersDropdown" role="button"
+               aria-expanded="{{ request()->segment(1) === 'users' ? 'true' : 'false' }}"
+               aria-controls="sersDropdown">
+                <i class="fas fa-hand-holding-usd" style="margin-left: 10px;"></i>
                 <span class="side-menu__label"> المستفيدين </span>
             </a>
         </p>
-        <ul class="collapse" id="sersDropdown">
+
+        <ul class="collapse {{ request()->segment(1) === 'users' ? 'show' : '' }}" id="sersDropdown">
             <li>
-                <a class="dropdown-item-text side-menu__item" href="{{ route('users.index', 'new') }}">
-                    <i class="fe fe-user-plus side-menu__icon"></i>
+                <a class="dropdown-item-text side-menu__item {{ request()->is('users/index/new') ? 'active' : '' }}"
+                   href="{{ route('users.index', 'new') }}">
+                    <i class="fas fa-user-plus" style="margin-left: 10px;"></i>
                     <span class="side-menu__label"> المستفيدين الجدد </span>
                 </a>
             </li>
 
             <li>
-                <a class="dropdown-item-text side-menu__item" href="{{ route('users.index', 'accepted') }}">
+                <a class="dropdown-item-text side-menu__item {{ request()->is('users/index/accepted') ? 'active' : '' }}"
+                   href="{{ route('users.index', 'accepted') }}">
                     <i class="fe fe-user-check side-menu__icon"></i>
                     <span class="side-menu__label"> المستفيدين المقبولين </span>
                 </a>
             </li>
 
             <li>
-                <a class="dropdown-item-text side-menu__item" href="{{ route('users.index', 'preparing') }}">
+                <a class="dropdown-item-text side-menu__item {{ request()->is('users/index/preparing') ? 'active' : '' }}"
+                   href="{{ route('users.index', 'preparing') }}">
                     <i class="fe fe-user side-menu__icon"></i>
                     <span class="side-menu__label"> المستفيدين قيد التنفيذ </span>
                 </a>
             </li>
+
             <li>
-                <a class="dropdown-item-text side-menu__item" href="{{ route('users.index', 'refused') }}">
+                <a class="dropdown-item-text side-menu__item {{ request()->is('users/index/refused') ? 'active' : '' }}"
+                   href="{{ route('users.index', 'refused') }}">
                     <i class="fe fe-user-x side-menu__icon"></i>
                     <span class="side-menu__label"> المستفيدين المرفوضين </span>
                 </a>
             </li>
         </ul>
+
+
         {{-- المستفيدين --}}
 
 
         {{--   التبرعات والمتبرعين   --}}
-        @can('donors.index')
-            @can('Donations.index')
-                <p>
-                    <a class="side-menu__item" data-toggle="collapse" href="#donationsDropdown" role="button"
-                        aria-expanded="false" aria-controls="collapseExample">
-                        <i class="fe fe-users side-menu__icon"></i>
-                        <span class="side-menu__label"> المتبرعين والتبرعات </span>
-                    </a>
-                </p>
 
-                <ul class="collapse" id="donationsDropdown">
-                    <li>
-                        <a class="dropdown-item-text side-menu__item" href="{{ route('donors.index') }}">
-                            <span class="side-menu__label"> المتبرعين </span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item-text side-menu__item" href="{{ route('Donations.index') }}">
-                            <span class="side-menu__label"> التبرعات </span>
-                        </a>
-                    </li>
-                </ul>
-            @endcan
-        @endcan
+        <p>
+            <a class="side-menu__item
+       {{ request()->routeIs('donors.index') || request()->routeIs('Donations.index') ? 'active' : '' }}"
+               data-toggle="collapse"
+               href="#donationsDropdown" role="button"
+               aria-expanded="{{ request()->routeIs('donors.index') || request()->routeIs('Donations.index') ? 'true' : 'false' }}"
+               aria-controls="donationsDropdown">
+                <i class="fas fa-hand-holding-heart" style="margin-left: 10px;"></i>
+                <span class="side-menu__label"> المتبرعين والتبرعات </span>
+            </a>
+        </p>
+
+        <ul class="collapse {{ request()->routeIs('donors.index') || request()->routeIs('Donations.index') ? 'show' : '' }}" id="donationsDropdown">
+            <li>
+                <a class="dropdown-item-text side-menu__item {{ request()->routeIs('donors.index') ? 'active' : '' }}"
+                   href="{{ route('donors.index') }}">
+                    <i class="fas fa-user-friends" style="margin-left: 10px;"></i>
+                    <span class="side-menu__label"> المتبرعين </span>
+                </a>
+            </li>
+
+            <li>
+                <a class="dropdown-item-text side-menu__item {{ request()->routeIs('Donations.index') ? 'active' : '' }}"
+                   href="{{ route('Donations.index') }}">
+                    <i class="fas fa-donate" style="margin-left: 5px;"></i>
+                    <span class="side-menu__label"> التبرعات </span>
+                </a>
+            </li>
+        </ul>
+
+
+
         {{--   التبرعات والمتبرعين   --}}
 
 
 
         {{--    القروض الحسنة   --}}
-        @can('donors.index')
-            @can('Donations.index')
-                <p>
-                    <a class="side-menu__item" data-toggle="collapse" href="#GoodLoansDropdown" role="button"
-                        aria-expanded="false" aria-controls="collapseExample">
-                        <i class="fe fe-users side-menu__icon"></i>
-                        <span class="side-menu__label"> القروض الحسنة </span>
-                    </a>
-                </p>
 
-                <ul class="collapse" id="GoodLoansDropdown">
-                    <li>
-                        <a class="dropdown-item-text side-menu__item" href="{{ route('indexLoansDonations') }}">
-                            <span class="side-menu__label"> التبرعات </span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item-text side-menu__item" href="{{route("borrowers.index")}}">
-                            <span class="side-menu__label"> المقترضين </span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item-text side-menu__item" href="{{route("index.Loans")}}">
-                            <span class="side-menu__label"> القروض </span>
-                        </a>
-                    </li>
+        <p>
+            <a class="side-menu__item
+       {{ request()->routeIs('indexLoansDonations') || request()->routeIs('borrowers.index') || request()->routeIs('index.Loans') ? 'active' : '' }}"
+               data-toggle="collapse"
+               href="#GoodLoansDropdown" role="button"
+               aria-expanded="{{ request()->routeIs('indexLoansDonations') || request()->routeIs('borrowers.index') || request()->routeIs('index.Loans') ? 'true' : 'false' }}"
+               aria-controls="GoodLoansDropdown">
+                <i class="fas fa-hand-holding-usd side-menu__icon"></i>
+                <span class="side-menu__label"> القروض الحسنة </span>
+            </a>
+        </p>
 
-                </ul>
-            @endcan
-        @endcan
+        <ul class="collapse {{ request()->routeIs('indexLoansDonations') || request()->routeIs('borrowers.index') || request()->routeIs('index.Loans') ? 'show' : '' }}" id="GoodLoansDropdown">
+            <li>
+                <a class="dropdown-item-text side-menu__item {{ request()->routeIs('indexLoansDonations') ? 'active' : '' }}"
+                   href="{{ route('indexLoansDonations') }}">
+                    <i class="fas fa-hand-holding-heart" style="margin-left: 10px;"></i>
+                    <span class="side-menu__label"> التبرعات </span>
+                </a>
+            </li>
+
+            <li>
+                <a class="dropdown-item-text side-menu__item {{ request()->routeIs('borrowers.index') ? 'active' : '' }}"
+                   href="{{ route('borrowers.index') }}">
+                    <i class="fas fa-user" style="margin-left: 10px;"></i>
+                    <span class="side-menu__label"> المقترضين </span>
+                </a>
+            </li>
+
+            <li>
+                <a class="dropdown-item-text side-menu__item {{ request()->routeIs('index.Loans') ? 'active' : '' }}"
+                   href="{{ route('index.Loans') }}">
+                    <i class="fas fa-money-check-alt" style="margin-left: 10px;"></i>
+                    <span class="side-menu__label"> القروض </span>
+                </a>
+            </li>
+        </ul>
+
+
         {{--    القروض الحسنة   --}}
 
 
         {{--     الزكاة والصدقات   --}}
         <p>
-            <a class="side-menu__item" data-toggle="collapse" href="#CharityZakatDropdown" role="button"
-                aria-expanded="false" aria-controls="collapseExample">
-                <i class="fe fe-users side-menu__icon"></i>
+            <a class="side-menu__item
+       {{ request()->routeIs('safer.CharityZakat') ? 'active' : '' }}"
+               data-toggle="collapse"
+               href="#CharityZakatDropdown" role="button"
+               aria-expanded="{{ request()->routeIs('safer.CharityZakat') ? 'true' : 'false' }}"
+               aria-controls="CharityZakatDropdown">
+                <i class="fas fa-hand-holding-heart side-menu__icon"></i>
                 <span class="side-menu__label"> الزكاة والصدقات </span>
             </a>
         </p>
 
-        <ul class="collapse" id="CharityZakatDropdown">
+        <ul class="collapse {{ request()->routeIs('safer.CharityZakat') ? 'show' : '' }}" id="CharityZakatDropdown">
             <li>
-                <a class="dropdown-item-text side-menu__item" href="{{ route('safer.CharityZakat') }}">
+                <a class="dropdown-item-text side-menu__item {{ request()->routeIs('safer.CharityZakat') ? 'active' : '' }}"
+                   href="{{ route('safer.CharityZakat') }}">
+                    <i class="fas fa-donate" style="margin-left: 10px;"></i>
                     <span class="side-menu__label"> التبرعات </span>
                 </a>
             </li>
-
         </ul>
+
         {{--     الزكاة والصدقات   --}}
 
         {{--     التبرعات العينية    --}}
-        <ul>
-            <li>
-                <a class="dropdown-item-text side-menu__item" href="{{ route('safer.CharityZakat') }}">
-                    <i class="fe fe-users side-menu__icon"></i>
-                    <span class="side-menu__label"> التبرعات العينية </span>
-                </a>
-            </li>
-        </ul>
+{{--        <ul>--}}
+{{--            <li>--}}
+{{--                <a class="dropdown-item-text side-menu__item {{ request()->routeIs('safer.CharityZakat') ? 'active' : '' }}"--}}
+{{--                   href="{{ route('safer.CharityZakat') }}">--}}
+{{--                    <i class="fas fa-box-open side-menu__icon" style="margin-left: 10px;"></i>--}}
+{{--                    <span class="side-menu__label"> التبرعات العينية </span>--}}
+{{--                </a>--}}
+{{--            </li>--}}
+{{--        </ul>--}}
+
         {{--     التبرعات العينية    --}}
 
 
@@ -184,34 +220,62 @@
                 <span class="side-menu__label"> بنك الافكار </span>
             </a>
         </li>
+
+    </ul>
+
+{{--الاعانات الشهريه و حواراتها --}}
+
+    <p>
+        <a class="side-menu__item {{ request()->routeIs('subventions.*') ? 'active' : '' }} {{ request()->routeIs('assets.*') ? 'active' : '' }} "
+           data-toggle="collapse"
+           href="#subventionsDropdown" role="button"
+           aria-expanded="{{ request()->routeIs('subventions.*') ? 'true' : 'false' }} {{ request()->routeIs('assets.*') ? 'active' : '' }}"
+           aria-controls="subventionsDropdown">
+            <i class="fe fe-credit-card side-menu__icon"></i>
+            <span class="side-menu__label"> الإعانات الشهرية </span>
+        </a>
+    </p>
+
+    <ul class="collapse {{ request()->routeIs('subventions.*') ? 'show' : '' }}" id="subventionsDropdown">
         <li>
-            <a class="dropdown-item-text side-menu__item" href="{{ route('subventions.index') }}">
-                <i class="fe fe-credit-card side-menu__icon"></i>
-                <span class="side-menu__label"> الاعانات الشهرية للمستفيدين </span>
+            <a class="dropdown-item-text side-menu__item {{ request()->routeIs('subventions.index') ? 'active' : '' }}"
+               href="{{ route('subventions.index') }}">
+                <i class="fe fe-users" style="margin-left: 10px;"></i>
+                <span class="side-menu__label"> الإعانات الشهرية للمستفيدين </span>
             </a>
         </li>
-        {{-- @endcan --}}
+
+        <li>
+            <a class="dropdown-item-text side-menu__item {{ request()->routeIs('assets.index') ? 'active' : '' }}"
+               href="{{ route('assets.index') }}">
+                <i class="fe fe-users" style="margin-left: 10px;"></i>
+                <span class="side-menu__label"> انواع الاعانات </span>
+            </a>
+        </li>
     </ul>
+
+
+
+{{--الاعانات الشهريه و حواراتها --}}
+
+
+
     <ul>
 
 
-        @can('setting.index')
             <li class="slide">
                 <a class="side-menu__item" href="{{ route('setting.index') }}">
                     <i class="fe fe-settings side-menu__icon"></i>
                     <span class="side-menu__label"> الاعدادت </span>
                 </a>
             </li>
-        @endcan
 
-        @can('roles.index')
             <li class="slide">
                 <a class="side-menu__item" href="{{ route('roles.index') }}">
                     <i class="fe fe-dollar-sign side-menu__icon"></i>
                     <span class="side-menu__label"> الصلاحيات </span>
                 </a>
             </li>
-        @endcan
 
         <li class="slide">
             <a class="side-menu__item" href="{{ route('admin.logout') }}">

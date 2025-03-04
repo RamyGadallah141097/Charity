@@ -47,7 +47,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 
     //القروض الحسنة
     Route::get("GoodLoansDonations", "GoodloansController@indexLoansDonations")->name("indexLoansDonations"); // التبرعات والمتبرعين
-    Route::get('/getDonation', "GoodloansController@getDonors")->name('getDonors')
+    Route::get('/getDonation', "GoodloansController@getDonors")->name('getDonors');
 
 //    الراوتس الخاصه بالمقترض
     Route::resource("borrowers", "BorrowerController");
@@ -72,14 +72,27 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::resource('subventions', 'SubventionController');
     Route::get('showSubventions', 'SubventionController@showSubventions')->name('showSubventions');
     Route::POST('delete_subventions', 'SubventionController@delete')->name('delete_subventions');
+
+
     // اعانات القرض الحسن
     Route::get('SubventionsLoans/index', 'SubventionsLoansController@index')->name('SubventionsLoans.index');
     #### Safer ####
 
     #### Subventions ####
+//    الاعانات الشهرية للمستفيدين
     Route::resource('subventions', 'SubventionController')->middleware('permission:subventions.index');
     Route::get('showSubventions', 'SubventionController@showSubventions')->name('showSubventions')->middleware('permission:showSubventions');
     Route::POST('delete_subventions', 'SubventionController@delete')->name('delete_subventions')->middleware('permission:delete_subventions');
+//    assets
+    Route::resource("assets" , "AssetController");
+    Route::get('assetsShow', 'AssetController@show')->name('assetsShow')->middleware('permission:showSubventions');
+    Route::POST('assetsDelete', 'AssetController@delete')->name('assetsDelete')->middleware('permission:delete_subventions');
+
+
+
+
+
+
     #### Research ####
     Route::get('research', 'ResearchController@index')->name('research.index')->middleware('permission:research.index');
     Route::get('social_research/{user_id}', 'ResearchController@social_research')->name('social_research')->middleware('permission:social_research');
