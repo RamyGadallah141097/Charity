@@ -71,7 +71,6 @@
     $(document).ready(function() {
         $('#search_donor').on('keyup', function() {
             let query = $(this).val();
-
             $.ajax({
                 url: "{{ route('search.donor') }}",
                 method: 'GET',
