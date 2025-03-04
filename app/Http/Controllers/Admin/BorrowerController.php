@@ -147,8 +147,6 @@ class BorrowerController extends Controller
 
     }
 
-
-
     /**
      * Display the specified resource.
      *
@@ -172,8 +170,6 @@ class BorrowerController extends Controller
 //        $media2 = Media::where("borrower_id" , $borrower->id)->where("type" , 1);
         return view('Admin\borrowers\parts\edit', compact('borrower'));
     }
-
-
 
     /**
      * Update the specified resource in storage.

@@ -13,10 +13,15 @@ class Borrower extends Model
 
     public function guarantors()
     {
-        return $this->hasMany(Guarantor::class , "borrower_id");
+        return $this->hasMany(Guarantor::class, "borrower_id");
     }
     public function media()
     {
-        return $this->hasMany(media::class , "borrower_id");
+        return $this->hasMany(media::class, "borrower_id");
+    }
+
+    public function loans()
+    {
+        return $this->hasMany(Loan::class, "borrower_id");
     }
 }
