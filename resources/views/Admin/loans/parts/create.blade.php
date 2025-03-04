@@ -1,6 +1,5 @@
 <div class="modal-body">
-    <form id="addForm" class="addForm" method="POST" enctype="multipart/form-data"
-        action="{{ route('Donations.store') }}">
+    <form id="addForm" class="addForm" method="POST" enctype="multipart/form-data" action="{{ route('store.loans') }}">
         @csrf
         <div class="input-group mb-3">
             <div class="input-group-prepend">
@@ -11,7 +10,7 @@
                             d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
                     </svg></span>
             </div>
-            <input type="text" id="search_donor" aria-label="Username" aria-describedby="basic-addon1"
+            <input type="text" id="search_borrower" aria-label="Username" aria-describedby="basic-addon1"
                 class="form-control" placeholder="ابحث عن اسم المقترض.">
         </div>
 
@@ -20,26 +19,28 @@
         </div>
 
         <div class="form-group" id="select_donor_container">
-            <label for="donor_id" class="form-control-label">اسم المتبرع</label>
-            <select name="donor_id" id="donor_name" class="form-control">
+            <label for="borrower_id" class="form-control-label">اسم المقترض</label>
+            <select name="borrower_id" id="borrower_id" class="form-control">
                 <option value="">اختر مقترض</option>
+                @foreach ($borrowers as $borrower)
+                    <option value="{{ $borrower->id }}">{{ $borrower->name }}</option>
+                @endforeach
             </select>
         </div>
 
         <div class="form-group">
-            <label for="name" class="form-control-label">رقم المقترض</label>
-            <input type="text" class="form-control" disabled id="donor_phone">
+            <label for="borrower_phone" class="form-control-label">رقم المقترض</label>
+            <input type="text" class="form-control" name="borrower_phone" id="borrower_phone" readonly>
         </div>
-
 
         <div class="form-group">
             <label for="donation_amount" class="form-control-label">مبلغ القرض </label>
-            <input type="text" class="form-control" name="donation_amount" id="donation_amount">
+            <input type="text" class="form-control" name="loan_amount" id="loan_amount">
         </div>
 
         <div class="form-group">
-            <label for="created_at" class="form-control-label">تاريخ الانشاء </label>
-            <input type="date" class="form-control" name="created_at" id="created_at"
+            <label for="loan_date" class="form-control-label">تاريخ القرض </label>
+            <input type="date" class="form-control" name="loan_date" id="loan_date"
                 value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
         </div>
 
@@ -53,40 +54,54 @@
 
 <script>
     $(document).ready(function() {
-        $('#search_donor').on('keyup', function() {
+        let borrowersData = {}; // كائن لتخزين بيانات المقترضين
+
+        $('#search_borrower').on('keyup', function() {
             let query = $(this).val();
+
             $.ajax({
-                url: "{{ route('search.donor') }}",
+                url: "{{ route('search.Borrowers') }}",
                 method: 'GET',
                 data: {
-                    donor_names: query
+                    borrower_name: query
                 },
                 success: function(response) {
-                    $('#donor_name').empty();
-                    $("#create_donor").empty();
-                    $('#donor_name').append('<option value="">اختر المقترض</option>');
-                    if (response.length > 0) {
-                        $.each(response, function(key, donor) {
-                            $('#donor_name').append('<option selected value="' +
-                                donor.id + '">' + donor.name + '</option>');
-                            $('input[id="donor_phone"]').val(donor.phone);
+                    $('#borrower_id').empty();
+                    $('#borrower_id').append('<option value="">اختر المقترض</option>');
 
+                    // تفريغ بيانات المقترضين قبل التحديث
+                    borrowersData = {};
+
+                    if (response.length > 0) {
+                        $.each(response, function(key, borrower) {
+                            $('#borrower_id').append('<option value="' +
+                                borrower.id + '">' + borrower.name + '</option>'
+                            );
+
+                            // تخزين رقم الهاتف لكل مقترض باستخدام ID كـ مفتاح
+                            borrowersData[borrower.id] = borrower.phone;
                         });
                     } else {
-                        $("#create_donor").empty();
-                        $("#create_donor").append(`
-                            <button class="btn btn-secondary btn-icon text-white addBtn" >
-                               <a class="text-white" href="{{ route('donors.index') }}"> <i class="fe fe-plus"></i> اضافة متبرع جديد</>
-                            </button>
-                        `);
-                        $("input[id='donor_phone']").empty();
+                        $('#borrower_id').append(
+                            '<option value="" disabled>لا يوجد نتائج</option>');
+                        $("input[id='borrower_phone']").val('');
                     }
                 },
                 error: function() {
-                    console.log("Error retrieving donors");
+                    console.log("Error retrieving borrowers");
                 }
             });
         });
+
+        // عند اختيار مقترض، يتم جلب رقمه تلقائيًا
+        $('#borrower_id').on('change', function() {
+            let selectedBorrowerId = $(this).val(); // الحصول على ID المقترض المختار
+
+            if (borrowersData[selectedBorrowerId]) {
+                $('#borrower_phone').val(borrowersData[selectedBorrowerId]);
+            } else {
+                $('#borrower_phone').val('');
+            }
+        });
     });
 </script>
-

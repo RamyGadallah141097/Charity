@@ -58,8 +58,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('indexLoans', 'loansController@indexLoans')->name('index.Loans');
     Route::get('createLoans', 'loansController@createLoans')->name('create.Loans');
     Route::get('searchBorrowers', 'loansController@searchBorrowers')->name('search.Borrowers');
-
-
+    Route::post('storeLoans', 'loansController@storeLoans')->name('store.loans');
+    Route::get('personLoans/{id}', 'loansController@personLoans')->name('person.loans');
 
     //الزكاة والصدقات
     Route::get("safer/CharityZakat", "SaferController@indexCharityZakat")->name("safer.CharityZakat"); //تبرعات الزكاة والصدقات
@@ -117,4 +117,3 @@ Route::get('/clear', function () {
     Artisan::call('optimize:clear');
     return response()->json(['status' => 'success', 'code' => 1000000000]);
 });
-
