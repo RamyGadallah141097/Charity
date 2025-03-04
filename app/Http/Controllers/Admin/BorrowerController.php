@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Guarantor;
 use App\Models\Media;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Yajra\DataTables\DataTables;
 
 class BorrowerController extends Controller
@@ -221,6 +222,13 @@ class BorrowerController extends Controller
             // تحديث ملفات المقترض
             if ($request->hasFile('borrowerMedia')) {
                 // حذف الملفات القديمة فقط إذا تم رفع ملفات جديدة
+                if ($borrower->media()->where('type'  ,  0)->count() > 0){
+                    foreach ($borrower->media()->where('type' , 0)->get() as $media){
+                        if (File::exists(public_path($media->path))){
+                            File::delete(public_path($media->path));
+                        }
+                    }
+                }
                 $borrower->media()->where('type', 0)->delete();
 
                 foreach ($request->file('borrowerMedia') as $borrowerMedia) {
@@ -243,6 +251,13 @@ class BorrowerController extends Controller
             // تحديث ملفات الضامن
             if ($request->hasFile('guarantorMedia')) {
                 // حذف الملفات القديمة فقط إذا تم رفع ملفات جديدة
+                if ($borrower->media()->where("type" , 1)->count() > 0){
+                    foreach ($borrower->media()->where('type', 1)->get() as $media){
+                        if(FILE::exists(public_path($media->paht))){
+                            File::delete(public_path($media->path));
+                        }
+                    }
+                }
                 $borrower->media()->where('type', 1)->delete();
 
                 foreach ($request->file('guarantorMedia') as $guarantorMedia) {
@@ -290,6 +305,15 @@ class BorrowerController extends Controller
     {
         try {
             $borrower = Borrower::find($request->id);
+
+            if ($borrower->media()->count() > 0){
+                foreach ($borrower->media()->get() as $media){
+                    if (File::exists(public_path($media->path))){
+                        File::delete(public_path($media->path));
+                    }
+                }
+
+            }
             $borrower->delete();
             toastr()->success("deleted successfully");
             return redirect()->back();
@@ -302,11 +326,8 @@ class BorrowerController extends Controller
     public function getGuarantor(Request $request)
     {
         $guarantors = Guarantor::where('borrower_id', $request->borrower_id)->get();
-        $borrower = Borrower::with('media')->findOrFail($request->borrower_id);
-        return response()->json([
-            'guarantors' => $guarantors,
-            'media' => $borrower->media
-        ]);
+
+        return response()->json(['guarantors' => $guarantors,]);
 
 
     }
