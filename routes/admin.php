@@ -71,6 +71,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     #### Subventions ####
     Route::resource('subventions', 'SubventionController');
     Route::get('showSubventions', 'SubventionController@showSubventions')->name('showSubventions');
+    Route::get('showOneSubvention', 'SubventionController@showOneSubvention')->name('showOneSubvention');
     Route::POST('delete_subventions', 'SubventionController@delete')->name('delete_subventions');
 
 

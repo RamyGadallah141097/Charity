@@ -122,4 +122,8 @@ class SubventionController extends Controller
         $subventions = Subvention::where('type','monthly')->latest()->get();
         return view('Admin.print.subvention-print',compact('subventions'));
     }
+    public function showOneSubvention(){
+        $subventions = Subvention::where('type','once')->latest()->get();
+        return view('Admin.print.subvention-print',compact('subventions'));
+    }
 }
