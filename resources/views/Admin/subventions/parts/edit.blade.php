@@ -15,6 +15,23 @@
             <label for="price" class="form-control-label">المبلغ</label>
             <input type="number" min="0" class="form-control" required name="price" id="price" value="{{$subvention->price}}">
         </div>
+
+        <select class="form-control mb-3" name="asset_id" id="asset">
+            <option value="{{$subvention->asset_id}}">
+                {{ optional($subvention->asset)->name ?? 'Select an Asset' }}
+            </option>
+            @foreach($assets as $item)
+                <option value="{{$item->id}}" {{ $item->id == $subvention->asset_id ? 'selected' : '' }}>
+                    {{$item->name}}
+                </option>
+            @endforeach
+        </select>
+
+        <input type="number" class="form-control" name="asset_count" id="asset_count" value="{{$subvention->asset_count}}">
+
+
+
+
         <div>
             <div class="form-group form-elements">
                 <div class="form-label">نوعية الصرف</div>

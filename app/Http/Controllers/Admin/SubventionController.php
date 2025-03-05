@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\subventionRequest;
 use App\Models\Asset;
 use App\Models\Donor;
 use App\Models\Subvention;
@@ -53,8 +54,9 @@ class SubventionController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function store(subventionRequest $request)
     {
+
         if(Subvention::create($request->except('_token')))
             return response()->json(['status'=>200]);
         else
@@ -80,7 +82,8 @@ class SubventionController extends Controller
             ->orWhere('id',$subvention->user_id)
             ->select('id','husband_name')
             ->latest()->get();
-        return view('Admin/subventions/parts/edit',compact('users','subvention'));
+        $assets = Asset::all();
+        return view('Admin/subventions/parts/edit',compact('users','subvention' , "assets"));
     }
 
 

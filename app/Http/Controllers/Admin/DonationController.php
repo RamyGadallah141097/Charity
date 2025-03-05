@@ -78,7 +78,8 @@ class DonationController extends Controller
         try {
 
             $asset = Asset::find($request->asset_id);
-            $asset->update(['counter' => $asset->counter + $request->asset_count]);
+            $asset->counter += $request->asset_count;
+            $asset->save();
 //            add the amount of assets to asset table
 
 //            create the donation

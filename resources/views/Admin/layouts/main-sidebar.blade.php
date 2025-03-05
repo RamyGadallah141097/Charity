@@ -236,7 +236,7 @@
         </a>
     </p>
 
-    <ul class="collapse {{ request()->routeIs('subventions.*') ? 'show' : '' }}" id="subventionsDropdown">
+    <ul class="collapse {{ request()->routeIs('subventions.*') ? 'show' : '' }} {{request()->routeIs('assets.*') ? 'show' : ''}}" id="subventionsDropdown">
         <li>
             <a class="dropdown-item-text side-menu__item {{ request()->routeIs('subventions.index') ? 'active' : '' }}"
                href="{{ route('subventions.index') }}">
@@ -249,7 +249,7 @@
             <a class="dropdown-item-text side-menu__item {{ request()->routeIs('assets.index') ? 'active' : '' }}"
                href="{{ route('assets.index') }}">
                 <i class="fe fe-users" style="margin-left: 10px;"></i>
-                <span class="side-menu__label"> انواع الاعانات </span>
+                <span class="side-menu__label"> خزنة التبرعات العينيه  </span>
             </a>
         </li>
     </ul>

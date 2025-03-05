@@ -1,9 +1,9 @@
 @extends('Admin/layouts/master')
 
 @section('title')
-    {{($setting->title) ?? ''}} | المتبرعين
+    {{($setting->title) ?? ''}} | الصلاحيات
 @endsection
-@section('page_name') المتبرعين @endsection
+@section('page_name') الصلاحيات @endsection
 @section('content')
 
 

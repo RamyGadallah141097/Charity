@@ -13,14 +13,15 @@
         </div>
         <div class="form-group">
             <label for="price" class="form-control-label">المبلغ</label>
-            <input type="number" min="0" class="form-control" required name="price" id="price">
+            <input type="number" value=0 class="form-control"  name="price" id="price">
         </div>
 
 
-            <select class="form-control" name="asset_id" id="asset">
+            <select class="form-control mb-3" name="asset_id" id="asset">
                 @foreach($assets as $item)
                     <option value="{{$item->id}}">{{$item->name}}</option>
                 @endforeach
+                <input type="number" class="form-control" name="asset_count" id="asset_count">
             </select>
 
 
