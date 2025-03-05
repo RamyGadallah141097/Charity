@@ -30,6 +30,8 @@ class UpdateSetting extends FormRequest
             'sub_address'     => 'required',
             'branch'          => 'required',
             'section'         => 'required',
+            'maxSubvention'   => 'required',
+            'maxLoan'         => 'required',
         ];
     }
     public function messages(){

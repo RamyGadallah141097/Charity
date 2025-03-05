@@ -1,24 +1,24 @@
 @extends('Admin/layouts/master')
 
 @section('title')
-    {{ $setting->title ?? '' }} | الصدقات
+    {{ $setting->title ?? '' }} |  الصدقات و الذكاة
 @endsection
 @section('page_name')
-    الصدقات
+    الصدقات و الذكاة
 @endsection
 @section('content')
     <div class="row">
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="p-3">
-                    <h3 class="card-title"> اجمالي الصدقات {{ $setting->title ?? '' }}</h3>
+                    <h3 class="card-title"> اجمالي الصدقات و الذكاة {{ $setting->title ?? '' }}</h3>
 
                     <div class="card-body w-100">
                         <div class="row w-100"> <!-- Ensuring full width -->
                             <div class="col-12"> <!-- Making it take full width -->
                                 <div class="card bg-secondary img-card box-secondary-shadow">
                                     <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
-                                        <span class="text-white fs-30"> خزنة الصدقات </span>
+                                        <span class="text-white fs-30"> خزنة الصدقات و الذكاة </span>
                                         <span class="text-white fs-30">{{ $Charity }} EGP</span>
                                         <!-- Changed dollar icon to EGP -->
                                     </div>

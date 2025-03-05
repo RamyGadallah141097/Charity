@@ -665,6 +665,7 @@ class ComposerStaticInitebadef4a2fe32872459d1dcc93c1fe4b
         'App\\Http\\Requests\\StoreUser' => __DIR__ . '/../..' . '/app/Http/Requests/StoreUser.php',
         'App\\Http\\Requests\\TaskRequest' => __DIR__ . '/../..' . '/app/Http/Requests/TaskRequest.php',
         'App\\Http\\Requests\\UpdateSetting' => __DIR__ . '/../..' . '/app/Http/Requests/UpdateSetting.php',
+        'App\\Http\\Requests\\subventionRequest' => __DIR__ . '/../..' . '/app/Http/Requests/subventionRequest.php',
         'App\\Jobs\\MonthlySubventionJob' => __DIR__ . '/../..' . '/app/Jobs/MonthlySubventionJob.php',
         'App\\Models\\Admin' => __DIR__ . '/../..' . '/app/Models/Admin.php',
         'App\\Models\\Asset' => __DIR__ . '/../..' . '/app/Models/Asset.php',

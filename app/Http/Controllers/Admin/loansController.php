@@ -65,6 +65,7 @@ class loansController extends Controller
     {
 
 
+
         try {
             Loan::create($request->all());
             return response()->json(['status' => 200]);

@@ -38,7 +38,7 @@
 
         {{-- المستفيدين --}}
         <p>
-            <a class="side-menu__item {{ request()->routeIs('users.index') ? 'active' : '' }} {{ request()->segment(1) === 'users' ? 'active' : '' }}"
+            <a class="side-menu__item {{ request()->routeIs('users.index') ? 'active ' : '' }} {{ request()->segment(1) === 'users' ? 'active ' : '' }}"
                data-toggle="collapse"
                href="#sersDropdown" role="button"
                aria-expanded="{{ request()->segment(1) === 'users' ? 'true' : 'false' }}"
@@ -48,7 +48,7 @@
             </a>
         </p>
 
-        <ul class="collapse {{ request()->segment(1) === 'users' ? 'show' : '' }}" id="sersDropdown">
+        <ul class="collapse {{ request()->segment(1) === 'users' ? 'show' : '' }} {{ request()->routeIs('users.index') ? 'show ' : '' }}" id="sersDropdown">
             <li>
                 <a class="dropdown-item-text side-menu__item {{ request()->is('users/index/new') ? 'active' : '' }}"
                    href="{{ route('users.index', 'new') }}">

@@ -13,13 +13,13 @@
             <div class="card" id="printDiv">
                 <div id="printDiv">
                     <div class="text-center">
-                        <h4 class="mb-0 mt-5">{{$setting->section}} ({{$setting->branch}})</h4>
+{{--                        <h4 class="mb-0 mt-5">{{$setting->section}} ({{$setting->branch}})</h4>--}}
                     </div>
-                    <div class="text-center">
-                        <h4 class="mt-4 mb-1">بيان باسماء الحالات المطلوب تقرير / صرف / زكاة لهم</h4>
+                    <div class="text-center" style="margin-top:100px ">
+                        <h4 class="mt-4 mb-1">بيان باسماء حالات  الاعانه الشهريه / {{$setting->title}}</h4>
                         <hr style="width: 40%" class="mt-0 mb-1 text-dark"></hr>
-                        <h4 class="mt-4 mb-2">{{$setting->title}}</h4>
-                        <h4 class="mt-4 mb-2">{{$setting->address}}</h4>
+                        <h4 class="mt-4 mb-2"></h4>
+{{--                        <h4 class="mt-4 mb-2">{{$setting->address}}</h4>--}}
                     </div>
                     <div class="card-header mt-4 mb-2" style="justify-content:space-between">
                         <div class="fw-bold" style="font-size: 1.125rem">
@@ -57,13 +57,13 @@
                             </table>
                         </div>
                     </div>
-                    <div class="text-center">
-                        <h4 class="mb-2">
-                            1-...............................................2-............................................3-.......................................
-                        </h4>
-                        <h4 class="mb-2">
-                            4-...............................................5-............................................6-.....................................
-                        </h4>
+                    <div class="text-center" style="margin-top:100px ; margin-bottom: 50px ">
+{{--                        <h4 class="mb-2">--}}
+{{--                            1-...............................................2-............................................3-.......................................--}}
+{{--                        </h4>--}}
+{{--                        <h4 class="mb-2">--}}
+{{--                            4-...............................................5-............................................6-.....................................--}}
+{{--                        </h4>--}}
                         <h4 class="mb-2">
                             عضو له حق التوقيع ...................................... أمين الصندوق .............................................. مقرر اللجنة..............................................
                         </h4>

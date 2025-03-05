@@ -57,7 +57,7 @@ class SubventionController extends Controller
     public function store(subventionRequest $request)
     {
 
-        if(Subvention::create($request->except('_token')))
+        if(Subvention::create($request->except('_token' , "sub_type")))
             return response()->json(['status'=>200]);
         else
             return response()->json(['status'=>405]);

@@ -48,6 +48,7 @@ return array(
     'App\\Http\\Requests\\StoreUser' => $baseDir . '/app/Http/Requests/StoreUser.php',
     'App\\Http\\Requests\\TaskRequest' => $baseDir . '/app/Http/Requests/TaskRequest.php',
     'App\\Http\\Requests\\UpdateSetting' => $baseDir . '/app/Http/Requests/UpdateSetting.php',
+    'App\\Http\\Requests\\subventionRequest' => $baseDir . '/app/Http/Requests/subventionRequest.php',
     'App\\Jobs\\MonthlySubventionJob' => $baseDir . '/app/Jobs/MonthlySubventionJob.php',
     'App\\Models\\Admin' => $baseDir . '/app/Models/Admin.php',
     'App\\Models\\Asset' => $baseDir . '/app/Models/Asset.php',

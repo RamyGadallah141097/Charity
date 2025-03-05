@@ -36,6 +36,7 @@
                                            placeholder="اسم الفرع" value="{{($setting->branch) ?? ''}}">
                                 </div>
                             </div>
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="form-label">المشهرة برقم</label>
@@ -49,6 +50,18 @@
                                                placeholder="اسم القطاع مثلا : قطاع التكافل" value="{{($setting->section) ?? ''}}">
                                     </div>
                                 </div>
+                            <div class="col-12 row">
+                                <div class="form-group col-6 ">
+                                    <label class="form-label">الحد الاقصي للاعانات السنويه </label>
+                                    <input type="number" class="form-control" name="maxSubvention"
+                                           placeholder="الحد الاقصي " value="{{($setting->maxSubvention) ?? ''}}">
+                                </div>
+                                <div class="form-group col-6 ">
+                                    <label class="form-label">الحد الاقصي للتبرعات السنويه </label>
+                                    <input type="number" class="form-control" name="maxLoan"
+                                           placeholder="الحد الاقصي  " value="{{($setting->maxLoan) ?? ''}}">
+                                </div>
+                            </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">

@@ -11,23 +11,37 @@
                 @endforeach
             </select>
         </div>
-        <div class="form-group">
-            <label for="price" class="form-control-label">المبلغ</label>
-            <input type="number" min="0" class="form-control" required name="price" id="price" value="{{$subvention->price}}">
+
+        <div class="mt-4 ">
+            <label>نوع الاعانه</label>
+            <select id="sub_type" name="sub_type" class="form-control">
+                <option value=0>ماديه</option>
+                <option value=1>عينيه</option>
+            </select>
         </div>
 
-        <select class="form-control mb-3" name="asset_id" id="asset">
-            <option value="{{$subvention->asset_id}}">
-                {{ optional($subvention->asset)->name ?? 'Select an Asset' }}
-            </option>
-            @foreach($assets as $item)
-                <option value="{{$item->id}}" {{ $item->id == $subvention->asset_id ? 'selected' : '' }}>
-                    {{$item->name}}
-                </option>
-            @endforeach
-        </select>
 
-        <input type="number" class="form-control" name="asset_count" id="asset_count" value="{{$subvention->asset_count}}">
+        <div class="form-group mt-4 mb-4" id="money">
+            <label for="price" class="form-control-label">المبلغ</label>
+            <input type="number" value=0 class="form-control"  name="price" id="price">
+        </div>
+
+
+
+        <div class="row mt-4 mb-4" id="subvention">
+            <label for="price" class="form-control-label">العينيه و قيمتها </label>
+            <div class="input-group">
+                <select  class="form-select bx-outline" name="asset_id" id="asset">
+                    {{--                        <option selected value=0>initially dummy option</option>--}}
+                    @foreach($assets as $item)
+                        <option value="{{$item->id}}">{{$item->name}}</option>
+                    @endforeach
+                </select>
+                <input type="number" value=0 class="form-control" name="asset_count" id="asset_count" placeholder="العدد">
+            </div>
+
+        </div>
+
 
 
 
@@ -53,3 +67,20 @@
         </div>
     </form>
 </div>
+
+
+<script>
+    $("document").ready(function(){
+        $("#subvention").hide();
+        $("select[id='sub_type']").on("change" , function(){
+            let type = $(this).val();
+            if(type == 1){
+                $("#money").hide();
+                $("#subvention").show();
+            }else{
+                $("#money").show();
+                $("#subvention").hide();
+            }
+        })
+    })
+</script>
