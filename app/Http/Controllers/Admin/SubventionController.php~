@@ -135,6 +135,7 @@ class SubventionController extends Controller
         try {
             $subvention = Subvention::where('id',$request->id)->first();
             $asset = Asset::find($subvention->asset_id);
+            dd($asset->counter);
             $asset->counter += Subvention::where('id',$request->id)->first()->asset_count;
             $asset->save();
             Subvention::destroy($request->id);

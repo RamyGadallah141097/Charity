@@ -35,7 +35,7 @@
                             <tr class="fw-bolder text-muted bg-light">
                                 <th class="min-w-25px">#</th>
                                 <th class="min-w-50px">المستفيد</th>
-                                <th class="min-w-125px">المبلغ</th>
+                                <th class="min-w-125px">القيمه</th>
                                 <th class="min-w-125px">شهري/ مرة</th>
                                 <th class="min-w-50px rounded-end">العمليات</th>
                             </tr>
