@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSubventionsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -14,13 +14,13 @@ class CreateSubventionsTable extends Migration
     public function up()
     {
         Schema::create('subventions', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')
-                ->on('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->double('price');
-            $table->enum('type',['monthly','once'])->default('once');
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id')->index('subventions_user_id_foreign');
+            $table->double('price')->default(0);
+            $table->enum('type', ['monthly', 'once'])->default('once');
             $table->timestamps();
+            $table->string('asset_id')->nullable();
+            $table->integer('asset_count')->nullable();
         });
     }
 
@@ -33,4 +33,4 @@ class CreateSubventionsTable extends Migration
     {
         Schema::dropIfExists('subventions');
     }
-}
+};

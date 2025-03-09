@@ -1,10 +1,10 @@
-  <?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSettingsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -14,12 +14,17 @@ class CreateSettingsTable extends Migration
     public function up()
     {
         Schema::create('settings', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->string('title');
             $table->string('logo');
             $table->string('vat_number');
             $table->string('address');
             $table->timestamps();
+            $table->integer('maxSubvention')->nullable();
+            $table->integer('maxLoan')->nullable();
+            $table->string('branch')->nullable();
+            $table->string('section')->nullable();
+            $table->string('sub_address')->nullable();
         });
     }
 
@@ -32,4 +37,4 @@ class CreateSettingsTable extends Migration
     {
         Schema::dropIfExists('settings');
     }
-}
+};

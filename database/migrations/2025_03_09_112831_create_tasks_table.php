@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBorrowersTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateBorrowersTable extends Migration
      */
     public function up()
     {
-        Schema::create('borrowers', function (Blueprint $table) {
-            $table->id();
-            $table->string("name");
-            $table->integer("phone");
-            $table->integer("nationalID");
-            $table->string("address");
-            $table->string("job");
+        Schema::create('tasks', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('title');
+            $table->string('description');
+            $table->integer('status')->default(0);
+            $table->date('from_date');
+            $table->date('to_date');
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ class CreateBorrowersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('borrowers');
+        Schema::dropIfExists('tasks');
     }
-}
+};

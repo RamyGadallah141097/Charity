@@ -17,15 +17,12 @@ class RoleSeeder extends Seeder
     {
         Role::query()->insert([
             ['name' => 'super_admin', 'guard_name' => 'admin'],
-            ['name' => 'admin', 'guard_name' => 'admin'],
         ]);
 
         $role = Role::query()->find(1);
-        $role2 = Role::query()->find(2);
 
         $permissions = Permission::all();
 
         $role->syncPermissions($permissions);
-        $role2->syncPermissions($permissions);
     }
 }
