@@ -278,14 +278,25 @@
         @endif
 
         {{-- الصلاحيات --}}
-        @can('roles.index')
-            <li class="slide">
-                <a class="side-menu__item" href="{{ route('roles.index') }}">
-                    <i class="fe fe-lock side-menu__icon"></i>
-                    <span class="side-menu__label"> الصلاحيات </span>
-                </a>
-            </li>
-        @endcan
+{{--        @can('roles.index')--}}
+{{--            <li class="slide">--}}
+{{--                <a class="side-menu__item" href="{{ route('roles.index') }}">--}}
+{{--                    <i class="fe fe-lock side-menu__icon"></i>--}}
+{{--                    <span class="side-menu__label"> الصلاحيات </span>--}}
+{{--                </a>--}}
+{{--            </li>--}}
+{{--        @endcan--}}
+        @if(auth()->check())
+            @if(auth()->user()->can('roles.index') || auth()->user()->can('roles.create'))
+                <li class="slide">
+                    <a class="side-menu__item" href="{{ route('roles.index') }}">
+                        <i class="fe fe-lock side-menu__icon"></i>
+                        <span class="side-menu__label"> الصلاحيات </span>
+                    </a>
+                </li>
+            @endif
+        @endif
+
 
         {{-- تسجيل الخروج --}}
         @if(auth()->check() && auth()->user()->can('admin.logout'))

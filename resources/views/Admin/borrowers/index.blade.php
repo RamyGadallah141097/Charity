@@ -34,13 +34,15 @@
 
                     <div class="card-header">
                         <h3 class="card-title">المقترضين من  القروض الحسنة  {{ $setting->title ?? '' }}</h3>
-                        <div class="">
-                            <button class="btn btn-secondary btn-icon text-white addBtn">
-									<span>
-										<i class="fe fe-plus"></i>
-									</span> اضافة جديد
-                            </button>
-                        </div>
+                        @can("borrower.create")
+                            <div class="">
+                                <button class="btn btn-secondary btn-icon text-white addBtn">
+                                        <span>
+                                            <i class="fe fe-plus"></i>
+                                        </span> اضافة جديد
+                                </button>
+                            </div>
+                        @endcan
                     </div>
 
                 </div>

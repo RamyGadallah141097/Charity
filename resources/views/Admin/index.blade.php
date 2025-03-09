@@ -76,6 +76,27 @@
         </div>
     @endif
 
+
+    <div class="row">
+        <div class="col-md-6">
+            <canvas id="usersChart"></canvas>
+        </div>
+
+        <div class="col-md-6">
+            <canvas id="donorsChart"></canvas>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <canvas id="zakatChart"></canvas>
+        </div>
+
+        <div class="col-md-6">
+            <canvas id="loansChart"></canvas>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
             <div class="card bg-danger img-card box-primary-shadow">
@@ -330,4 +351,150 @@
                 });
             });
         </script>
+
+{{--charts for users--}}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var ctx = document.getElementById('usersChart').getContext('2d');
+        var usersChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ["إجمالي المستفيدين", "المقبولين", "المعلقين", "المرفوضين"],
+                datasets: [{
+                    label: "عدد المستفيدين",
+                    data: [{{ $users_count }}, {{ $accepedUsers }}, {{ $subUsers }}, {{ $rejectedUsers }}],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(75, 192, 192, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+{{--charts for donors--}}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var ctx = document.getElementById('donorsChart').getContext('2d');
+        var donorsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ["إجمالي المتبرعين", "إجمالي التبرعات", "إجمالي الاعانات الشهرية"],
+                datasets: [{
+                    label: "إحصائيات التبرعات",
+                    data: [{{ $donors_count }}, {{ $totalDonations }}, {{ $totalMonthlySubventions }}],
+                    backgroundColor: [
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(33, 37, 41, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(33, 37, 41, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+{{--charts for zakat--}}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var ctx = document.getElementById('zakatChart').getContext('2d');
+        var zakatChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ["إجمالي الزكاة والصدقات", "إجمالي الإعانات الشهرية"],
+                datasets: [{
+                    label: "إحصائيات الزكاة والصدقات",
+                    data: [{{ $totalZakat }}, {{ $totalMonthlySubventions }}],
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 206, 86, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+{{--charts for loans--}}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var ctx = document.getElementById('loansChart').getContext('2d');
+        var loansChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ["إجمالي القروض", "إجمالي المقترضين", "إجمالي التبرعات", "إجمالي القروض الخارجة"],
+                datasets: [{
+                    label: "إحصائيات القروض",
+                    data: [{{ $totalLoans }}, {{ $totalBorrowers }}, {{ $totalLoansDonations }}, {{ $totalLoanOut }}],
+                    backgroundColor: [
+                        'rgba(40, 167, 69, 0.5)',
+                        'rgba(0, 123, 255, 0.5)',
+                        'rgba(108, 117, 125, 0.5)',
+                        'rgba(220, 53, 69, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(40, 167, 69, 1)',
+                        'rgba(0, 123, 255, 1)',
+                        'rgba(108, 117, 125, 1)',
+                        'rgba(220, 53, 69, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+</script>
 
