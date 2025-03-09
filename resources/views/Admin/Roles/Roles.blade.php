@@ -33,13 +33,15 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title"> المتبرعين الي {{($setting->title) ?? ''}}</h3>
-                    <div class="">
-                        <button class="btn btn-secondary btn-icon text-white addBtn">
-									<span>
-										<i class="fe fe-plus"></i>
-									</span> اضافة جديد
-                        </button>
-                    </div>
+                    @can("roles.create")
+                        <div class="">
+                            <button class="btn btn-secondary btn-icon text-white addBtn">
+                                        <span>
+                                            <i class="fe fe-plus"></i>
+                                        </span> اضافة جديد
+                            </button>
+                        </div>
+                    @endcan
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

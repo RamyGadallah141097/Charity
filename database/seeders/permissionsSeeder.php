@@ -46,6 +46,7 @@ class permissionsSeeder extends Seeder
             'donors.update',
             'donors.destroy',
             'delete_donors',
+//            donations
             'donations_delete',
             'Donations.index',
             'Donations.create',
