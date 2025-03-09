@@ -20,6 +20,7 @@ return array(
     'App\\Http\\Controllers\\Admin\\DonorController' => $baseDir . '/app/Http/Controllers/Admin/DonorController.php',
     'App\\Http\\Controllers\\Admin\\GoodloansController' => $baseDir . '/app/Http/Controllers/Admin/GoodloansController.php',
     'App\\Http\\Controllers\\Admin\\HomeController' => $baseDir . '/app/Http/Controllers/Admin/HomeController.php',
+    'App\\Http\\Controllers\\Admin\\LockController' => $baseDir . '/app/Http/Controllers/Admin/LockController.php',
     'App\\Http\\Controllers\\Admin\\ResearchController' => $baseDir . '/app/Http/Controllers/Admin/ResearchController.php',
     'App\\Http\\Controllers\\Admin\\RulesController' => $baseDir . '/app/Http/Controllers/Admin/RulesController.php',
     'App\\Http\\Controllers\\Admin\\SaferController' => $baseDir . '/app/Http/Controllers/Admin/SaferController.php',

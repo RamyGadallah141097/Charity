@@ -21,7 +21,7 @@ class DonationsRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules() :array
     {
 
         $rules = [
@@ -29,7 +29,8 @@ class DonationsRequest extends FormRequest
             "donation_type" => ["required", "string"],
             "created_at" => "required",
             "donation_amount" => ['required', 'integer'],
-            "donation_amount" => ['required', 'integer'],
+            "asset_id" => "",
+            "asset_count" =>"",
         ];
 
 //        if ($this->donation_type == 3) {

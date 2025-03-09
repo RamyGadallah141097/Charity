@@ -675,6 +675,7 @@ class ComposerStaticInitebadef4a2fe32872459d1dcc93c1fe4b
         'App\\Http\\Controllers\\Admin\\DonorController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/DonorController.php',
         'App\\Http\\Controllers\\Admin\\GoodloansController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/GoodloansController.php',
         'App\\Http\\Controllers\\Admin\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/HomeController.php',
+        'App\\Http\\Controllers\\Admin\\LockController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/LockController.php',
         'App\\Http\\Controllers\\Admin\\ResearchController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/ResearchController.php',
         'App\\Http\\Controllers\\Admin\\RulesController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/RulesController.php',
         'App\\Http\\Controllers\\Admin\\SaferController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/SaferController.php',

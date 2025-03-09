@@ -92,6 +92,11 @@ class UserController extends Controller
                     else
                         return '<span class="badge badge-danger">مرفوض</span>';
                 })
+                ->editColumn('wife_name', function ($users) {
+                    return $users->wife_name ? $users->wife_name : '-';
+                })->editColumn('husband_name', function ($users) {
+                    return $users->husband_name ? $users->husband_name : '-';
+                })
 
                 ->escapeColumns([])
                 ->make(true);
@@ -117,7 +122,7 @@ class UserController extends Controller
                 ->addColumn('name', function ($user) {
                     return $user->husband_name;
                 })->addColumn('zakahTotal', function ($user) {
-                    return $user->subvention->price ?$user->subvention->price :  0;
+                    return $user->subvention ?$user->subvention->price :  0;
 
                 })
                 ->escapeColumns([])
@@ -232,50 +237,7 @@ class UserController extends Controller
     }
 
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 
     public function delete(Request $request)
     {

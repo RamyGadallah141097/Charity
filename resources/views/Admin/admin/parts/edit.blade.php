@@ -18,8 +18,9 @@
             <label for="password" class="form-control-label">كلمة المرور</label>
             <input type="password" class="form-control" name="password" id="password" placeholder="********">
         </div>
-        <div class="row">
-            <select name="adminRole" class="form-control w-95">
+        <div class="form-group">
+            <label> الصلاحيه</label>
+            <select name="adminRole" class="form-control ">
                 @foreach($roles as $role)
                     <option value="{{ $role->name }}"
                         {{ $admin->roles->pluck('name')->contains($role->name) ? 'selected' : '' }}>
