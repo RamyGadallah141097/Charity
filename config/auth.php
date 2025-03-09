@@ -41,6 +41,7 @@ return [
             'provider' => 'users',
         ],
 
+
         'admin' => [  // Ensure the admin guard exists
             'driver' => 'session',
             'provider' => 'admins',

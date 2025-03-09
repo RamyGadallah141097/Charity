@@ -22,16 +22,17 @@
             <h3>العناصر</h3>
         </li>
 
-        @if(auth()->user()->can('admin.home'))
-            <li class="slide">
+{{--        @can('admin.home')--}}
+
+        <li class="slide">
                 <a class="side-menu__item" href="{{ route('adminHome') }}">
                     <i class="icon icon-home side-menu__icon"></i>
                     <span class="side-menu__label">الرئيسية</span>
                 </a>
             </li>
-        @endif
+{{--        @endcan--}}
 
-        @if(auth()->user()->can('admins.index'))
+        @if(auth()->check() && auth()->user()->can('admins.index'))
             <li class="slide">
                 <a class="side-menu__item" href="{{ route('admins.index') }}">
                     <i class="fe fe-users side-menu__icon"></i>
@@ -41,20 +42,21 @@
         @endif
 
         {{-- المستفيدين --}}
-        @if(auth()->user()->can('users.index'))
+        @if( auth()->check() && auth()->user()->can('users.index'))
             <p>
-                <a class="side-menu__item"
+                <a class="side-menu__item {{ request()->routeIs('users.index') ? 'active ' : '' }} {{ request()->segment(1) === 'users' ? 'active ' : '' }}"
                    data-toggle="collapse"
-                   href="#sersDropdown"
-                   aria-expanded="{{ request()->segment(1) === 'users' ? 'true' : 'false' }}">
+                   href="#sersDropdown" role="button"
+                   aria-expanded="{{ request()->segment(1) === 'users' ? 'true' : 'false' }}"
+                   aria-controls="sersDropdown">
                     <i class="fas fa-hand-holding-usd" style="margin-left: 10px;"></i>
                     <span class="side-menu__label"> المستفيدين </span>
                 </a>
             </p>
 
-            <ul class="collapse {{ request()->segment(1) === 'users' ? 'show' : '' }}" id="sersDropdown">
+            <ul class="collapse {{ request()->segment(1) === 'users' ? 'show' : '' }} {{ request()->routeIs('users.index') ? 'show ' : '' }}" id="sersDropdown">
                 <li>
-                    <a class="dropdown-item-text side-menu__item"
+                    <a class="dropdown-item-text side-menu__item {{ request()->is('users/index/new') ? 'active' : '' }}"
                        href="{{ route('users.index', 'new') }}">
                         <i class="fas fa-user-plus" style="margin-left: 10px;"></i>
                         <span class="side-menu__label"> المستفيدين الجدد </span>
@@ -62,12 +64,13 @@
                 </li>
 
                 <li>
-                    <a class="dropdown-item-text side-menu__item"
+                    <a class="dropdown-item-text side-menu__item {{ request()->is('users/index/accepted') ? 'active' : '' }}"
                        href="{{ route('users.index', 'accepted') }}">
                         <i class="fe fe-user-check side-menu__icon"></i>
                         <span class="side-menu__label"> المستفيدين المقبولين </span>
                     </a>
                 </li>
+
                 <li>
                     <a class="dropdown-item-text side-menu__item {{ request()->is('users/index/preparing') ? 'active' : '' }}"
                        href="{{ route('users.index', 'preparing') }}">
@@ -83,49 +86,54 @@
                         <span class="side-menu__label"> المستفيدين المرفوضين </span>
                     </a>
                 </li>
-
             </ul>
         @endif
 
         {{-- التبرعات والمتبرعين --}}
-        @if(auth()->user()->can('donors.index') || auth()->user()->can('Donations.index'))
-            <p>
-                <a class="side-menu__item"
-                   data-toggle="collapse"
-                   href="#donationsDropdown"
-                   aria-expanded="{{ request()->routeIs('donors.index') || request()->routeIs('Donations.index') ? 'true' : 'false' }}">
-                    <i class="fas fa-hand-holding-heart" style="margin-left: 10px;"></i>
-                    <span class="side-menu__label"> المتبرعين والتبرعات </span>
-                </a>
-            </p>
+        @if(auth()->check() )
+        @if( auth()->user()->can('donors.index') || auth()->user()->can('Donations.index'))
+                <p>
+                    <a class="side-menu__item
+                        {{ request()->routeIs('donors.index') || request()->routeIs('Donations.index') ? 'active' : '' }}"
+                       data-toggle="collapse"
+                       href="#donationsDropdown" role="button"
+                       aria-expanded="{{ request()->routeIs('donors.index') || request()->routeIs('Donations.index') ? 'true' : 'false' }}"
+                       aria-controls="donationsDropdown">
+                        <i class="fas fa-hand-holding-heart" style="margin-left: 10px;"></i>
+                        <span class="side-menu__label"> المتبرعين والتبرعات </span>
+                    </a>
+                </p>
 
             <ul class="collapse {{ request()->routeIs('donors.index') || request()->routeIs('Donations.index') ? 'show' : '' }}" id="donationsDropdown">
-                @if(auth()->user()->can('donors.index'))
+                @if( auth()->check() && auth()->user()->can('donors.index'))
                     <li>
-                        <a class="dropdown-item-text side-menu__item"
+                        <a class="dropdown-item-text side-menu__item {{ request()->routeIs('donors.index') ? 'active' : '' }}"
                            href="{{ route('donors.index') }}">
                             <i class="fas fa-user-friends" style="margin-left: 10px;"></i>
                             <span class="side-menu__label"> المتبرعين </span>
                         </a>
                     </li>
+
                 @endif
-                @if(auth()->user()->can('Donations.index'))
-                    <li>
-                        <a class="dropdown-item-text side-menu__item"
-                           href="{{ route('Donations.index') }}">
-                            <i class="fas fa-donate" style="margin-left: 5px;"></i>
-                            <span class="side-menu__label"> التبرعات </span>
-                        </a>
-                    </li>
-                @endif
+                @if( auth()->check() && auth()->user()->can('Donations.index'))
+                        <li>
+                            <a class="dropdown-item-text side-menu__item {{ request()->routeIs('Donations.index') ? 'active' : '' }}"
+                               href="{{ route('Donations.index') }}">
+                                <i class="fas fa-donate" style="margin-left: 5px;"></i>
+                                <span class="side-menu__label"> التبرعات </span>
+                            </a>
+                        </li>
+
+                    @endif
             </ul>
+        @endif
         @endif
 
         {{--    القروض الحسنة   --}}
 
         <p>
             <a class="side-menu__item
-       {{ request()->routeIs('indexLoansDonations') || request()->routeIs('borrowers.index') || request()->routeIs('index.Loans') ? 'active' : '' }}"
+            {{ request()->routeIs('indexLoansDonations') || request()->routeIs('borrowers.index') || request()->routeIs('index.Loans') ? 'active' : '' }}"
                data-toggle="collapse"
                href="#GoodLoansDropdown" role="button"
                aria-expanded="{{ request()->routeIs('indexLoansDonations') || request()->routeIs('borrowers.index') || request()->routeIs('index.Loans') ? 'true' : 'false' }}"
@@ -209,7 +217,7 @@
 
 
         {{-- بنك الافكار --}}
-        @if(auth()->user()->can('tasks.index'))
+        @if( auth()->check() && auth()->user()->can('tasks.index'))
             <li class="slide">
                 <a class="side-menu__item" href="{{ route('tasks.index') }}">
                     <i class="fe fe-file-text side-menu__icon"></i>
@@ -222,25 +230,28 @@
 
 
         {{-- الإعانات الشهرية --}}
-        @if(auth()->user()->can('subventions.index'))
+        @if(auth()->check() &&  auth()->user()->can('subventions.index'))
             <p>
-                <a class="side-menu__item"
+                <a class="side-menu__item {{ request()->routeIs('subventions.*') ? 'active' : '' }} {{ request()->routeIs('assets.*') ? 'active' : '' }} "
                    data-toggle="collapse"
-                   href="#subventionsDropdown"
-                   aria-expanded="{{ request()->routeIs('subventions.*') ? 'true' : 'false' }}">
+                   href="#subventionsDropdown" role="button"
+                   aria-expanded="{{ request()->routeIs('subventions.*') ? 'true' : 'false' }} {{ request()->routeIs('assets.*') ? 'active' : '' }}"
+                   aria-controls="subventionsDropdown">
                     <i class="fe fe-credit-card side-menu__icon"></i>
                     <span class="side-menu__label"> الإعانات الشهرية </span>
                 </a>
             </p>
 
-            <ul class="collapse {{ request()->routeIs('subventions.*') ? 'show' : '' }}" id="subventionsDropdown">
+
+            <ul class="collapse {{ request()->routeIs('subventions.*') ? 'show' : '' }} {{request()->routeIs('assets.*') ? 'show' : ''}}" id="subventionsDropdown">
                 <li>
-                    <a class="dropdown-item-text side-menu__item"
+                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('subventions.index') ? 'active' : '' }}"
                        href="{{ route('subventions.index') }}">
                         <i class="fe fe-users" style="margin-left: 10px;"></i>
                         <span class="side-menu__label"> الإعانات الشهرية للمستفيدين </span>
                     </a>
                 </li>
+
                 <li>
                     <a class="dropdown-item-text side-menu__item {{ request()->routeIs('assets.index') ? 'active' : '' }}"
                        href="{{ route('assets.index') }}">
@@ -248,12 +259,12 @@
                         <span class="side-menu__label"> خزنة التبرعات العينيه  </span>
                     </a>
                 </li>
-
             </ul>
+
         @endif
 
         {{-- الإعدادات --}}
-        @if(auth()->user()->can('setting.index'))
+        @if(auth()->check() && auth()->user()->can('setting.index'))
             <li class="slide">
                 <a class="side-menu__item" href="{{ route('setting.index') }}">
                     <i class="fe fe-settings side-menu__icon"></i>
@@ -263,17 +274,17 @@
         @endif
 
         {{-- الصلاحيات --}}
-        @if(auth()->user()->can('roles.index'))
+        @can('roles.index')
             <li class="slide">
                 <a class="side-menu__item" href="{{ route('roles.index') }}">
                     <i class="fe fe-lock side-menu__icon"></i>
                     <span class="side-menu__label"> الصلاحيات </span>
                 </a>
             </li>
-        @endif
+        @endcan
 
         {{-- تسجيل الخروج --}}
-        @if(auth()->user()->can('admin.logout'))
+        @if(auth()->check() && auth()->user()->can('admin.logout'))
             <li class="slide">
                 <a class="side-menu__item" href="{{ route('admin.logout') }}">
                     <i class="icon icon-lock side-menu__icon"></i>
