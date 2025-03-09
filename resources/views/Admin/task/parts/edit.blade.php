@@ -24,6 +24,12 @@
                 <div class="form-group">
                     <label for="status" class="form-control-label"> تعديل تقدم الفكره ؟ </label>
                     <select name="status" id="type" class="form-control">
+                        <option value="{{$task->status}}" selected>
+                            {{$task->status == 0 ? '0%' :
+                                ($task->status == 1 ? '25%' :
+                                 ($task->status == 2 ? '50%' :
+                                  ($task->status == 3 ? '75%' : '100%'))) }}
+                        </option>  // selected
                         <option value="0"> 0%  </option>  // the first type 0
                         <option value=1"> 25%  </option>  // the first type 1
                         <option value="2"> 50%</option> // the second type 2

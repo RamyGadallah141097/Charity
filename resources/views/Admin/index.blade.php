@@ -327,7 +327,7 @@
     <script src="{{ asset('assets/admin') }}/assets/js/index4.js"></script>
 @endsection
 
-        <script>
+<script>
             document.addEventListener("DOMContentLoaded", function () {
                 const progressData = @json($progressData);
 
