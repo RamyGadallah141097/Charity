@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
     {
 
         View::share('setting',Setting::first());
-
+        //ddd
 
     }
 }
