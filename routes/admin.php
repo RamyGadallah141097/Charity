@@ -81,9 +81,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 
     #### Subventions ####
 //    الاعانات الشهرية للمستفيدين
-    Route::resource('subventions', 'SubventionController')->middleware('permission:subventions.index');
-    Route::get('showSubventions', 'SubventionController@showSubventions')->name('showSubventions')->middleware('permission:showSubventions');
-    Route::POST('delete_subventions', 'SubventionController@delete')->name('delete_subventions')->middleware('permission:delete_subventions');
+//    Route::resource('subventions', 'SubventionController')->middleware('permission:subventions.index');
+//    Route::get('showSubventions', 'SubventionController@showSubventions')->name('showSubventions')->middleware('permission:showSubventions');
+//    Route::POST('delete_subventions', 'SubventionController@delete')->name('delete_subventions')->middleware('permission:delete_subventions');
 //    assets
     Route::resource("assets" , "AssetController");
     Route::get('assetsShow', 'AssetController@show')->name('assetsShow')->middleware('permission:showSubventions');

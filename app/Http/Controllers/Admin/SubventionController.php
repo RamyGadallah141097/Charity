@@ -32,7 +32,7 @@ class SubventionController extends Controller
                 })
                 ->editColumn('price', function ($data) {
                     if ($data->price == 0){
-                        return " عدد : ". $data->asset_count . "من  " . $data->asset ?  $data->asset->name ?? "-" : "-";
+                        return ' عدد : ' . $data->asset_count . ' من ' . ($data->asset ? ($data->asset->name ?? '-') : '-');
                     }else{
                         return " مبلغ قدره : " . $data->price . " جنيه";
                     }

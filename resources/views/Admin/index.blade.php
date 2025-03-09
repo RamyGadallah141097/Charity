@@ -78,7 +78,7 @@
 
     <div class="row">
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card bg-primary img-card box-primary-shadow">
+            <div class="card bg-danger img-card box-primary-shadow">
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
@@ -91,7 +91,7 @@
             </div>
         </div><!-- COL END -->
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card bg-info img-card box-info-shadow">
+            <div class="card bg-secondary  img-card box-info-shadow">
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
@@ -104,7 +104,7 @@
             </div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card bg-secondary img-card box-secondary-shadow">
+            <div class="card bg-primary  img-card box-secondary-shadow">
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
@@ -117,7 +117,7 @@
             </div>
         </div><!-- COL END -->
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card  bg-success img-card box-success-shadow">
+            <div class="card  bg-success  img-card box-success-shadow">
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
@@ -138,7 +138,7 @@
     <div class="row">
 
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card  bg-success img-card box-success-shadow">
+            <div class="card  bg-warning  img-card box-success-shadow">
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
@@ -152,7 +152,7 @@
         </div>
 
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card bg-secondary img-card box-secondary-shadow">
+            <div class="card bg-info img-card box-secondary-shadow">
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
@@ -165,7 +165,7 @@
             </div>
         </div><!-- COL END -->
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card bg-secondary img-card box-secondary-shadow">
+            <div class="card bg-dark   img-card box-secondary-shadow">
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
@@ -189,7 +189,7 @@
 
 
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card bg-secondary img-card box-secondary-shadow">
+            <div class="card bg-info img-card box-secondary-shadow">
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
@@ -203,7 +203,7 @@
         </div><!-- COL END -->
 
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card bg-secondary img-card box-secondary-shadow">
+            <div class="card bg-warning img-card box-secondary-shadow">
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
@@ -240,7 +240,7 @@
             </div>
 
             <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-                <div class="card bg-secondary img-card box-secondary-shadow">
+                <div class="card bg-primary img-card box-secondary-shadow">
                     <div class="card-body">
                         <div class="d-flex">
                             <div class="text-white">
@@ -266,7 +266,7 @@
                 </div>
             </div><!-- COL END -->
             <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-                <div class="card bg-secondary img-card box-secondary-shadow">
+                <div class="card bg-danger img-card box-secondary-shadow">
                     <div class="card-body">
                         <div class="d-flex">
                             <div class="text-white">
