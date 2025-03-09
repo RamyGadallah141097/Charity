@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnsToSubventionsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,7 @@ class AddColumnsToSubventionsTable extends Migration
     public function up()
     {
         Schema::table('subventions', function (Blueprint $table) {
-            $table->string("asset_id")->nullable();
-            $table->integer("asset_count")->nullable();
+            $table->foreign(['user_id'])->references(['id'])->on('users')->onUpdate('CASCADE')->onDelete('CASCADE');
         });
     }
 
@@ -27,8 +26,7 @@ class AddColumnsToSubventionsTable extends Migration
     public function down()
     {
         Schema::table('subventions', function (Blueprint $table) {
-            $table->string("asset_id")->nullable();
-            $table->integer("asset_count")->nullable();
+            $table->dropForeign('subventions_user_id_foreign');
         });
     }
-}
+};

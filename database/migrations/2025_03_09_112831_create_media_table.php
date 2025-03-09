@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Media extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -14,12 +14,12 @@ class Media extends Migration
     public function up()
     {
         Schema::create('media', function (Blueprint $table) {
-            $table->id();
-            $table->string("name");
-            $table->string("path");
-            $table->enum("type", [1, 0]); // 0 for $borrowers , // 1 for $guarantors
-            $table->foreignId("borrower_id")->nullable()->constrained('borrowers')->cascadeOnDelete();
-            $table->foreignId("guarantor_id")->nullable()->constrained('guarantors')->cascadeOnDelete();
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->string('path');
+            $table->enum('type', ['1', '0']);
+            $table->unsignedBigInteger('borrower_id')->nullable()->index('media_borrower_id_foreign');
+            $table->unsignedBigInteger('guarantor_id')->nullable()->index('media_guarantor_id_foreign');
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ class Media extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('media');
     }
-}
+};

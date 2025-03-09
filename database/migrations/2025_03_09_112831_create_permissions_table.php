@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLoansTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateLoansTable extends Migration
      */
     public function up()
     {
-        Schema::create('loans', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId("borrower_id")->constrained('borrowers')->cascadeOnDelete();
-            $table->string('borrower_phone');
-            $table->integer('loan_amount');
-            $table->date('loan_date');
+        Schema::create('permissions', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->string('guard_name');
             $table->timestamps();
+
+            $table->unique(['name', 'guard_name']);
         });
     }
 
@@ -30,6 +30,6 @@ class CreateLoansTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('loans');
+        Schema::dropIfExists('permissions');
     }
-}
+};

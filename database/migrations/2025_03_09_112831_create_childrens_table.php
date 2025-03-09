@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateChildrensTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -14,9 +14,8 @@ class CreateChildrensTable extends Migration
     public function up()
     {
         Schema::create('childrens', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id')->index('childrens_user_id_foreign');
             $table->string('child_name')->nullable();
             $table->string('children_national_id')->nullable();
             $table->integer('age')->nullable();
@@ -36,4 +35,4 @@ class CreateChildrensTable extends Migration
     {
         Schema::dropIfExists('childrens');
     }
-}
+};

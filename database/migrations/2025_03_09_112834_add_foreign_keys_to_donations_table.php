@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAssetsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,8 @@ class CreateAssetsTable extends Migration
      */
     public function up()
     {
-        Schema::create('assets', function (Blueprint $table) {
-            $table->id();
-            $table->string("name");
-            $table->string("description");
-            $table->integer("counter");
-            $table->timestamps();
+        Schema::table('donations', function (Blueprint $table) {
+            $table->foreign(['donor_id'])->references(['id'])->on('donors')->onUpdate('NO ACTION')->onDelete('CASCADE');
         });
     }
 
@@ -29,6 +25,8 @@ class CreateAssetsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('assets');
+        Schema::table('donations', function (Blueprint $table) {
+            $table->dropForeign('donations_donor_id_foreign');
+        });
     }
-}
+};
