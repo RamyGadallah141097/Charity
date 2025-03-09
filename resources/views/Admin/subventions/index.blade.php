@@ -16,6 +16,10 @@
                              طباعة
                             <i class="fa fa-print"></i>
                         </a>
+                        <a href="{{route('showOneSubvention')}}" title="طباعة" class="btn btn-success btn-icon text-white">
+                             طباعة الاعانه مره واحده
+                            <i class="fa fa-print"></i>
+                        </a>
                         <button class="btn btn-secondary btn-icon text-white addBtn">
 									<span>
 										<i class="fe fe-plus"></i>
@@ -31,7 +35,7 @@
                             <tr class="fw-bolder text-muted bg-light">
                                 <th class="min-w-25px">#</th>
                                 <th class="min-w-50px">المستفيد</th>
-                                <th class="min-w-125px">المبلغ</th>
+                                <th class="min-w-125px">القيمه</th>
                                 <th class="min-w-125px">شهري/ مرة</th>
                                 <th class="min-w-50px rounded-end">العمليات</th>
                             </tr>

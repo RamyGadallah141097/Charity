@@ -20,34 +20,36 @@
 
         <!-- Borrower Fields -->
         <h4 class="text-primary">معلومات المقترض</h4>
-        <div class="form-group">
-            <label for="name" class="form-control-label">الاسم</label>
-            <input type="text" class="form-control" name="name" id="name"
-                   value="{{ $borrower->name ?? '' }}" required>
-        </div>
+        <div class="row">
+            <div class="form-group col-6">
+                <label for="name" class="form-control-label">الاسم</label>
+                <input type="text" class="form-control" name="name" id="name"
+                       value="{{ $borrower->name ?? '' }}" required>
+            </div>
 
-        <div class="form-group">
-            <label for="phone" class="form-control-label">الهاتف</label>
-            <input type="text" class="form-control" name="phone" id="phone"
-                   value="{{ $borrower->phone ?? '' }}" required>
-        </div>
+            <div class="form-group col-6">
+                <label for="phone" class="form-control-label">الهاتف</label>
+                <input type="text" class="form-control" name="phone" id="phone"
+                       value="{{ $borrower->phone ?? '' }}" required>
+            </div>
 
-        <div class="form-group">
-            <label for="nationalID" class="form-control-label">الرقم القومي</label>
-            <input type="text" class="form-control" name="nationalID" id="nationalID"
-                   value="{{ $borrower->nationalID ?? '' }}" required>
-        </div>
+            <div class="form-group col-6">
+                <label for="nationalID" class="form-control-label">الرقم القومي</label>
+                <input type="text" class="form-control" name="nationalID" id="nationalID"
+                       value="{{ $borrower->nationalID ?? '' }}" required>
+            </div>
 
-        <div class="form-group">
-            <label for="address" class="form-control-label">العنوان</label>
-            <input type="text" class="form-control" name="address" id="address"
-                   value="{{ $borrower->address ?? '' }}" required>
-        </div>
+            <div class="form-group col-6">
+                <label for="address" class="form-control-label">العنوان</label>
+                <input type="text" class="form-control" name="address" id="address"
+                       value="{{ $borrower->address ?? '' }}" required>
+            </div>
 
-        <div class="form-group">
-            <label for="job" class="form-control-label">المهنة</label>
-            <input type="text" class="form-control" name="job" id="job"
-                   value="{{ $borrower->job ?? '' }}" required>
+            <div class="form-group col-6">
+                <label for="job" class="form-control-label">المهنة</label>
+                <input type="text" class="form-control" name="job" id="job"
+                       value="{{ $borrower->job ?? '' }}" required>
+            </div>
         </div>
 
         <!-- Guarantors Section -->
@@ -108,11 +110,11 @@
         <div class="row form-group">
             <div class="col-6">
                 <label>ملفات المقترض</label>
-                <input class="form-control" accept="image/*"  type="file"  name="borrowerMedia[]" multiple />
+                <input class="form-control dropify" accept="image/*"  type="file"  name="borrowerMedia[]" multiple />
             </div>
             <div class="col-6">
                 <label>ملفات الضامن</label>
-                <input class="form-control" accept="image/*" type="file" name="guarantorMedia[]" multiple />
+                <input class="form-control dropify" accept="image/*" type="file" name="guarantorMedia[]" multiple />
             </div>
         </div>
 
@@ -139,29 +141,31 @@
             <div class="guarantor-item border p-3 mb-2" id="guarantor_${guarantorIndex}">
                 <h5 class="text-secondary">كفيل ${guarantorIndex}</h5>
 
-                <div class="form-group">
-                    <label class="form-control-label">اسم الضامن</label>
-                    <input type="text" class="form-control" name="guarantors[${guarantorIndex}][name]" required>
-                </div>
+                <div class="row">
+                         <div class="form-group col-6">
+                            <label class="form-control-label">اسم الضامن</label>
+                            <input type="text" class="form-control" name="guarantors[${guarantorIndex}][name]" required>
+                        </div>
 
-                <div class="form-group">
-                    <label class="form-control-label">هاتف الضامن</label>
-                    <input type="text" class="form-control" name="guarantors[${guarantorIndex}][phone]" required>
-                </div>
+                        <div class="form-group col-6">
+                            <label class="form-control-label">هاتف الضامن</label>
+                            <input type="text" class="form-control" name="guarantors[${guarantorIndex}][phone]" required>
+                        </div>
 
-                <div class="form-group">
-                    <label class="form-control-label">الرقم القومي</label>
-                    <input type="text" class="form-control" name="guarantors[${guarantorIndex}][nationalID]" required>
-                </div>
+                        <div class="form-group col-6">
+                            <label class="form-control-label">الرقم القومي</label>
+                            <input type="text" class="form-control" name="guarantors[${guarantorIndex}][nationalID]" required>
+                        </div>
 
-                <div class="form-group">
-                    <label class="form-control-label">العنوان</label>
-                    <input type="text" class="form-control" name="guarantors[${guarantorIndex}][address]" required>
-                </div>
+                        <div class="form-group col-6">
+                            <label class="form-control-label">العنوان</label>
+                            <input type="text" class="form-control" name="guarantors[${guarantorIndex}][address]" required>
+                        </div>
 
-                <div class="form-group">
-                    <label class="form-control-label">المهنة</label>
-                    <input type="text" class="form-control" name="guarantors[${guarantorIndex}][job]" required>
+                        <div class="form-group col-6">
+                            <label class="form-control-label">المهنة</label>
+                            <input type="text" class="form-control" name="guarantors[${guarantorIndex}][job]" required>
+                        </div>
                 </div>
 
                 <button type="button" class="btn btn-danger removeGuarantor" data-id="${guarantorIndex}">حذف الضامن</button>
@@ -238,4 +242,8 @@
 </script>
 
 
+
+<script>
+    $('.dropify').dropify()
+</script>
 

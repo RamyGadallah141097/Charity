@@ -27,7 +27,11 @@ class RulesController extends Controller
                     return $role->name;
                 })
                 ->addColumn("permissions", function ($role) {
-                    $permissions = $role->permissions->pluck('name')->implode(" - ");
+                    $permissions = $role->permissions
+                        ->pluck('name')
+                        ->map(fn($permission) => __('permissions.' . $permission))
+                        ->implode(" - ");
+
 
 
                     return '<span style="

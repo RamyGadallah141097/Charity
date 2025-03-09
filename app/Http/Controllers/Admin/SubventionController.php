@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\subventionRequest;
+use App\Models\Asset;
 use App\Models\Donor;
 use App\Models\Subvention;
 use App\Models\User;
@@ -17,16 +19,38 @@ class SubventionController extends Controller
             $data = Subvention::latest()->get();
             return Datatables::of($data)
                 ->addColumn('action', function ($data) {
-                    return '
-                            <button type="button" data-id="' . $data->id . '" class="btn btn-pill btn-info-light editBtn"><i class="fa fa-edit"></i></button>
-                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
-                                    data-id="' . $data->id . '" data-title="' . $data->user->name . '">
-                                    <i class="fas fa-trash"></i>
+                    $editButton = '';
+                    $deleteButton = '';
+
+                    if (auth()->user()->can('subventions.edit')) {
+                        $editButton = '
+                            <button type="button" data-id="' . $data->id . '" class="btn btn-pill btn-info-light editBtn">
+                                <i class="fa fa-edit"></i>
                             </button>
-                       ';
+                        ';
+                    }
+
+                    if (auth()->user()->can('subventions.destroy')) {
+                        $deleteButton = '
+                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                                    data-id="' . $data->id . '" data-title="' . ($data->user->name ?? "غير معروف") . '">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        ';
+                    }
+
+                    return '<div class="d-flex">' . $editButton . $deleteButton . '</div>';
                 })
+
                 ->editColumn('user_id', function ($data) {
                     return ($data->user->husband_name) ?? 'تم حذفه';
+                })
+                ->editColumn('price', function ($data) {
+                    if ($data->price == 0){
+                        return ' عدد : ' . $data->asset_count . ' من ' . ($data->asset ? ($data->asset->name ?? '-') : '-');
+                    }else{
+                        return " مبلغ قدره : " . $data->price . " جنيه";
+                    }
                 })
                 ->editColumn('type', function ($data) {
                     if($data->type == 'once')
@@ -46,13 +70,18 @@ class SubventionController extends Controller
     public function create()
     {
         $users = User::where('status','accepted')->whereDoesntHave('subvention')->select('id','husband_name')->latest()->get();
-        return view('Admin/subventions/parts/create',compact('users'));
+        $assets = Asset::all();
+        return view('Admin/subventions/parts/create',compact('users' , "assets"));
+
     }
 
 
-    public function store(Request $request)
+    public function store(subventionRequest $request)
     {
-        if(Subvention::create($request->except('_token')))
+        $asset = Asset::find($request->asset_id);
+        $asset->counter -= $request->asset_count;
+        $asset->save();
+        if(Subvention::create($request->except('_token' , "sub_type")))
             return response()->json(['status'=>200]);
         else
             return response()->json(['status'=>405]);
@@ -77,13 +106,29 @@ class SubventionController extends Controller
             ->orWhere('id',$subvention->user_id)
             ->select('id','husband_name')
             ->latest()->get();
-        return view('Admin/subventions/parts/edit',compact('users','subvention'));
+        $assets = Asset::all();
+        return view('Admin/subventions/parts/edit',compact('users','subvention' , "assets"));
     }
 
 
     public function update(Request $request, $id)
     {
-        if(Subvention::find($id)->update($request->except('_token')))
+        $asset = Asset::find($request->asset_id);
+        $subvention = Subvention::find($id);
+        if (!$asset || !$subvention) {
+            abort(404, "البيانات غير موجودة");
+        }
+        $newCounter = $asset->counter + $subvention->asset_count;
+        if ($request->asset_count < $newCounter) {
+            $asset->counter = $newCounter - $request->asset_count;
+            $asset->save();
+        } else {
+            toastr()->error("غير كافي");
+            abort(405, "غير كافي");
+        }
+
+
+        if(Subvention::find($id)->update($request->except('_token' , "sub_type")))
             return response()->json(['status'=>200]);
         else
             return response()->json(['status'=>405]);
@@ -103,6 +148,10 @@ class SubventionController extends Controller
     public function delete(Request $request)
     {
         try {
+            $subvention = Subvention::where('id',$request->id)->first();
+            $asset = Asset::find($subvention->asset_id);
+            $asset->counter += Subvention::where('id',$request->id)->first()->asset_count;
+            $asset->save();
             Subvention::destroy($request->id);
             return redirect()->back();
 //            return response(['message'=>'تم الحذف بنجاح','status'=>200],200);
@@ -114,6 +163,10 @@ class SubventionController extends Controller
 
     public function showSubventions(){
         $subventions = Subvention::where('type','monthly')->latest()->get();
+        return view('Admin.print.subvention-print',compact('subventions'));
+    }
+    public function showOneSubvention(){
+        $subventions = Subvention::where('type','once')->latest()->get();
         return view('Admin.print.subvention-print',compact('subventions'));
     }
 }

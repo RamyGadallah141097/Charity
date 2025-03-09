@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Loan;
+use App\Models\Setting;
 use Illuminate\Foundation\Http\FormRequest;
 
 class LoanRequest extends FormRequest
@@ -26,8 +28,21 @@ class LoanRequest extends FormRequest
         return [
             'borrower_id' => 'required|exists:borrowers,id',
             'borrower_phone' => 'nullable',
-            'loan_amount' => 'required|numeric|max:100000',
+            'loan_amount' => [
+                'required', 'numeric', 'max:100000',
+                function ($attribute, $value, $fail) {
+                    $maxLoan = Setting::latest()->first()? Setting::latest()->first()->maxLoan ?? 0 : 0;
+                    $currentYear = now()->year;
+                    $totalLoansThisYear = Loan::where("borrower_id", request()->borrower_id)
+                        ->whereYear('created_at', $currentYear)
+                        ->sum("loan_amount");
+                    if (($totalLoansThisYear + $value) > $maxLoan) {
+                        $fail("المبلغ الإجمالي للقروض في هذه السنة يجب ألا يتجاوز $maxLoan.");
+                    }
+                }
+            ],
             'loan_date' => 'required|date',
+
         ];
     }
 
@@ -43,3 +58,4 @@ class LoanRequest extends FormRequest
         ];
     }
 }
+

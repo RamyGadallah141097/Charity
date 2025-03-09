@@ -24,7 +24,8 @@ class loansController extends Controller
                                     <i class="fas fa-money-check-alt"></i>
                             </a>
                        ';
-                })->editColumn('borrower_id', function ($loans) {
+                })
+                ->editColumn('borrower_id', function ($loans) {
                     return $loans->borrower->name;
                 })
                 ->editColumn('borrower_phone', function ($loans) {
@@ -63,6 +64,7 @@ class loansController extends Controller
 
     public function storeLoans(LoanRequest $request)
     {
+
 
 
         try {

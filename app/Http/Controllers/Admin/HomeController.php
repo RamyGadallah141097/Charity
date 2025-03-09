@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Borrower;
+use App\Models\Donation;
 use App\Models\Donor;
+use App\Models\Loan;
 use App\Models\Order;
 use App\Models\OrderOfferDetails;
 use App\Models\Product;
@@ -19,10 +22,31 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $total_donors    = Donor::all()->sum('price');
-        $donors_count    = Donor::all()->count();
+
+//        users
         $users_count     = User::all()->count();
+        $accepedUsers     = User::where("status", "accepted")->count();
+        $subUsers     = User::where("status", "new")->count();
+        $rejectedUsers     = User::where("status", "refused")->count();
+
+//        donors and donations
+        $donors_count    = Donor::all()->count();
+        $total_donors_money    = Donor::all()->sum('price');
+        $totalDonations    = Donation::all()->sum('donation_amount');
+
+//  loans
+        $totalLoans = Loan::count();
+        $totalLoanOut     = Loan::all()->sum('loan_amount');
+        $totalBorrowers     = Borrower::all()->count();
+        $totalLoansDonations = Donation::where('donation_type', 2)->sum('donation_amount');
+
+
+//        zaka
         $totalMonthlySubventions  = Subvention::where('type', 'monthly')->sum('price');
+        $totalZakat  = Donation::whereIn('donation_type', [0, 1])->sum('donation_amount');;
+
+
+
         $users_month          = User::whereMonth('created_at', '=', Carbon::now()->month)->count();
         $users_last_month     = User::whereMonth('created_at', '=', Carbon::now()->subMonth()->month)->count();
         if ($users_last_month != 0)
@@ -32,7 +56,8 @@ class HomeController extends Controller
 
         $donors      = Donor::take(5)->get();
         $subvention  = Subvention::orderBy('price','DESC')->first();
-        $subvention  = Subvention::orderBy('price', 'DESC')->first();
+        $totalSubventions  = Subvention::all()->sum('price');
+//        $subvention  = Subvention::orderBy('price', 'DESC')->first();
 
         $users       = User::latest()->take(5)->get();
 
@@ -53,6 +78,6 @@ class HomeController extends Controller
 
 
 
-        return view('Admin/index', compact('total_donors' , "progressData" , 'users', 'donors', 'donors_count', 'diff', 'users_count', 'subvention', 'users_month', 'users_last_month', 'totalMonthlySubventions'));
+        return view('Admin/index', compact('total_donors_money' , "totalDonations" , "donors_count" , "progressData" , 'users' , "accepedUsers" , "subUsers" , "rejectedUsers", 'donors', 'diff', 'users_count', 'subvention' , "totalSubventions", 'users_month', 'users_last_month', 'totalMonthlySubventions' , "totalZakat", "totalLoans" , "totalBorrowers" , "totalLoanOut" , "totalLoansDonations"));
     }
 }

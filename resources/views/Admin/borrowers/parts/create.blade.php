@@ -56,11 +56,11 @@
         <div class="row form-group">
             <div class="col-6">
                 <label>ملفات المقترض</label>
-                <input class="form-control" accept="image/*"  type="file"  name="borrowerMedia[]" multiple />
+                <input class="form-control dropify" accept="image/*"  type="file"  name="borrowerMedia[]" multiple />
             </div>
             <div class="col-6">
                 <label>ملفات الضامن</label>
-                <input class="form-control" accept="image/*" type="file" name="guarantorMedia[]" multiple />
+                <input class="form-control dropify" accept="image/*" type="file" name="guarantorMedia[]" multiple />
             </div>
         </div>
 
@@ -85,29 +85,31 @@
             <div class="guarantor-item border p-3 mb-2" id="guarantor_${guarantorIndex}">
                 <h5 class="text-secondary"> ${guarantorIndex} ضامن  ${guarantorIndex}</h5>
 
-                <div class="form-group">
-                    <label for="guarantors[${guarantorIndex}][name]" class="form-control-label">اسم الضامن</label>
-                    <input type="text" class="form-control" name="guarantors[${guarantorIndex}][name]" required>
-                </div>
+                <div class="row">
+                    <div class="form-group col-6">
+                        <label for="guarantors[${guarantorIndex}][name]" class="form-control-label">اسم الضامن</label>
+                        <input type="text" class="form-control" name="guarantors[${guarantorIndex}][name]" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="guarantors[${guarantorIndex}][phone]" class="form-control-label">هاتف الضامن</label>
-                    <input type="number" class="form-control" name="guarantors[${guarantorIndex}][phone]" required>
-                </div>
+                    <div class="form-group col-6">
+                        <label for="guarantors[${guarantorIndex}][phone]" class="form-control-label">هاتف الضامن</label>
+                        <input type="number" class="form-control" name="guarantors[${guarantorIndex}][phone]" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="guarantors[${guarantorIndex}][nationalID]" class="form-control-label">الرقم القومي</label>
-                    <input type="number" class="form-control" name="guarantors[${guarantorIndex}][nationalID]" required>
-                </div>
+                    <div class="form-group col-6">
+                        <label for="guarantors[${guarantorIndex}][nationalID]" class="form-control-label">الرقم القومي</label>
+                        <input type="number" class="form-control" name="guarantors[${guarantorIndex}][nationalID]" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="guarantors[${guarantorIndex}][address]" class="form-control-label">العنوان</label>
-                    <input type="text" class="form-control" name="guarantors[${guarantorIndex}][address]" required>
-                </div>
+                    <div class="form-group col-6">
+                        <label for="guarantors[${guarantorIndex}][address]" class="form-control-label">العنوان</label>
+                        <input type="text" class="form-control" name="guarantors[${guarantorIndex}][address]" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="guarantors[${guarantorIndex}][job]" class="form-control-label">المهنة</label>
-                    <input type="text" class="form-control" name="guarantors[${guarantorIndex}][job]" required>
+                    <div class="form-group col-6">
+                        <label for="guarantors[${guarantorIndex}][job]" class="form-control-label">المهنة</label>
+                        <input type="text" class="form-control" name="guarantors[${guarantorIndex}][job]" required>
+                    </div>
                 </div>
 
                 <button type="button" class="btn btn-danger removeGuarantor" data-id="${guarantorIndex}">حذف الضامن</button>
@@ -179,6 +181,10 @@
     });
 
 
+</script>
+
+<script>
+    $('.dropify').dropify()
 </script>
 
 

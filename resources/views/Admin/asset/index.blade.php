@@ -1,38 +1,16 @@
 @extends('Admin/layouts/master')
 
 @section('title')
-    {{($setting->title) ?? ''}} | الصلاحيات
+    {{($setting->title) ?? ''}} | انواع التبرعات
 @endsection
-@section('page_name') الصلاحيات @endsection
+@section('page_name') انواع التبرعات @endsection
 @section('content')
-
-
-
-    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
-
-    <style>
-        .small-text-hover {
-            font-size: 12px;
-            transition: font-size 0.3s ease-in-out;
-            display: inline-block;
-            max-width: 100px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .small-text-hover:hover {
-            font-size: 16px;
-            white-space: normal;
-            overflow: visible;
-        }
-    </style>
 
     <div class="row">
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"> المتبرعين الي {{($setting->title) ?? ''}}</h3>
+                    <h3 class="card-title">  انواع التبرعات {{($setting->title) ?? ''}}</h3>
                     <div class="">
                         <button class="btn btn-secondary btn-icon text-white addBtn">
 									<span>
@@ -49,7 +27,8 @@
                             <tr class="fw-bolder text-muted bg-light">
                                 <th class="min-w-25px">#</th>
                                 <th class="min-w-50px">الاسم</th>
-                                <th class="min-w-50px">الصلاحيات</th>
+                                <th class="min-w-125px">ملاحظات</th>
+                                <th class="min-w-125px"> الكميه</th>
                                 <th class="min-w-50px rounded-end">العمليات</th>
                             </tr>
                             </thead>
@@ -70,7 +49,7 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <form action="{{route("Role_delete")}}" method="post" >
+                    <form action="{{route("assetsDelete")}}" method="post" >
                         @csrf
                         @method("post")
                         <div class="modal-body">
@@ -114,20 +93,22 @@
         var columns = [
             {data: 'id', name: 'id'},
             {data: 'name', name: 'name'},
-            {data: 'permissions', name: 'permissions'},
+            {data: 'description', name: 'description'},
+            {data: 'counter', name: 'counter'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
-        showData('{{route('roles.index')}}', columns);
+        showData('{{route('assets.index')}}', columns);
         // Delete Using Ajax
-        deleteScript('{{route('Role_delete')}}');
+
+        deleteScript('{{route('assetsDelete')}}');
+
         // Add Using Ajax
-        showAddModal('{{route('roles.create')}}');
+        showAddModal('{{route('assets.create')}}');
         addScript();
         // Add Using Ajax
-        showEditModal('{{route('roles.edit',':id')}}');
+        showEditModal('{{route('assets.edit',':id')}}');
         editScript();
     </script>
-
 @endsection
 
 
