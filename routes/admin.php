@@ -38,6 +38,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
         Route::get('/search-donor', 'DonationController@searchDonor')->name('search.donor')->middleware('permission:search.donor');
     });
 
+    Route::get("lock/{lock}" , "DonationController@lock")->name("lock");
+
     #### Tasks ####
     Route::resource("tasks", "TaskController")->middleware('permission:tasks.index');
     Route::POST('delete_task', 'TaskController@delete')->name('delete_task')->middleware('permission:delete_task');
@@ -91,6 +93,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 
 
 
+    #### Roles ####
+    Route::resource("roles", "RulesController")->middleware('permission:roles.index');
+    Route::post("Role_delete", "RulesController@delete")->name("Role_delete")->middleware('permission:Role_delete');
+
 
 
 
@@ -112,9 +118,6 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('login', 'AuthController@index')->name('admin.login');
     Route::POST('login', 'AuthController@login')->name('admin.login');
 });
-#### Roles ####
-Route::resource("roles", "RulesController")->middleware('permission:roles.index');
-Route::post("Role_delete", "RulesController@delete")->name("Role_delete")->middleware('permission:Role_delete');
 
 Route::get('/clear', function () {
 

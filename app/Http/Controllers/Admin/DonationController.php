@@ -8,6 +8,7 @@ use App\Http\Requests\StoreDonate;
 use App\Models\Asset;
 use App\Models\Donation;
 use App\Models\Donor;
+use App\Models\Subvention;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -67,6 +68,16 @@ class DonationController extends Controller
 
                     return '<div class="d-flex">' . $editButton . $deleteButton . '</div>';
                 })
+                ->editColumn('donation_amount', function ($donation) {
+                    if ($donation->donation_type == 3 ){
+                        $asset = Asset::where("id", $donation->asset_id)->first();
+                         $asset ? $donation->donation_amount = $asset->name . " : " .  $asset->counter : "-";
+                    }else{
+                        $donation->donation_amount = $donation->donation_amount;
+                    }
+                    return $donation->donation_amount;
+                })
+
 
                 ->escapeColumns([])
                 ->make(true);
@@ -92,9 +103,6 @@ class DonationController extends Controller
             $asset = Asset::find($request->asset_id);
             $asset->counter += $request->asset_count;
             $asset->save();
-//            add the amount of assets to asset table
-
-//            create the donation
             Donation::create($request->except('_token'));
 
             return response()->json(['status' => 200]);
@@ -167,4 +175,35 @@ class DonationController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function lock(Request $request, $model = null)
+    {
+        if ($request->ajax()) {
+            $donations = Donation::where("donation_type", $model)->get();
+            return Datatables::of($donations)
+                ->addColumn('donor_name', function ($donation) {
+                    return $donation->donor->name ?? 'غير معروف';
+                })
+                ->editColumn('price', function ($donation) {
+                    if ($donation->donation_type == 3 ){
+                        $asset = Asset::where("id", $donation->asset_id)->first();
+                        $asset ? $donation->donation_amount = $asset->name . " : " .  $asset->counter : "-";
+                    }else{
+                        $donation->donation_amount = $donation->donation_amount;
+                    }
+                    return $donation->donation_amount;
+
+                })
+                ->editColumn('created_at', function ($donation) {
+                    return $donation->created_at ? $donation->created_at->format('d-m-y') : 'غير متوفر';
+                })
+                ->escapeColumns([])
+                ->make(true);
+        } else {
+            $title = $model ==  0  ?  "زكاة" :  ($model ==  1 ? "صدقات"  : ($model == 2 ? "قرض حسن " : "عينيات") );
+            return view('Admin/lock/stdPage', compact('model' , "title"));
+        }
+    }
+
+
 }
