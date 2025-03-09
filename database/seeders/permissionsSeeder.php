@@ -101,6 +101,41 @@ class permissionsSeeder extends Seeder
             'roles.update',
             'roles.destroy',
             'Role_delete',
+
+//            goodLoans
+            "goodLoans.index",
+            "goodLoans.create",
+            "goodLoans.store",
+            "goodLoans.edit",
+            "goodLoans.update",
+            "goodLoans.destroy",
+            "delete_goodLoans",
+//            borrower
+        "borrower.index",
+        "borrower.create",
+        "borrower.store",
+        "borrower.edit",
+        "borrower.update",
+        "borrower.destroy",
+        "delete_borrower",
+
+//            zakat
+            "zakat.index",
+            "zakat.create",
+            "zakat.store",
+            "zakat.edit",
+            "zakat.update",
+            "zakat.destroy",
+            "delete_zakat",
+//            assets
+            "assets.index",
+            "assets.create",
+            "assets.store",
+            "assets.edit",
+            "assets.update",
+            "assets.destroy",
+            "delete_assets",
+
         ];
 
         foreach ($permissions as $permission) {

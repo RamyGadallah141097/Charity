@@ -17,15 +17,29 @@ class DonorController extends Controller
             $donors = Donor::latest()->get();
             return Datatables::of($donors)
                 ->addColumn('action', function ($donors) {
-                    return '
-                            <button type="button" data-id="' . $donors->id . '" class="btn btn-pill btn-info-light editBtn"><i class="fa fa-edit"></i></button>
+                    $editButton = '';
+                    $deleteButton = '';
 
-                                <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
-                                        data-id="' . $donors->id . '" data-title="' . $donors->name . '">
-                                        <i class="fas fa-trash"></i>
-                                </button>
+                    if (auth()->user()->can('donors.edit')) {
+                        $editButton = '
+                            <button type="button" data-id="' . $donors->id . '" class="btn btn-pill btn-info-light editBtn">
+                                <i class="fa fa-edit"></i>
+                            </button>
                         ';
+                    }
+
+                    if (auth()->user()->can('donors.destroy')) {
+                        $deleteButton = '
+                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                                    data-id="' . $donors->id . '" data-title="' . $donors->name . '">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        ';
+                    }
+
+                    return '<div class="d-flex">' . $editButton . $deleteButton . '</div>';
                 })
+
                 ->editColumn('notes', function ($donors) {
                     return '<span class="small-text-hover">' . ($donors->notes ?? '-----') . '</span>';
                 })

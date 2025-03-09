@@ -22,21 +22,28 @@ class AdminController extends Controller
 
             return Datatables::of($admins)
                 ->addColumn('action', function ($admins) {
-                        return '
-                    <div class="d-flex">
-                        <!-- Edit Button -->
-                        <button type="button" data-id="' . $admins->id . '" class="btn btn-pill btn-info-light editBtn">
-                            <i class="fa fa-edit"></i>
-                        </button>
-                           <!-- Delete Button -->
-                        <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
-                                data-id="' . $admins->id . '" data-title="' . $admins->name . '">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                        ';
+                    $editButton = '';
+                    $deleteButton = '';
 
-                })
+                                if (auth()->user()->can('admins.edit')) {
+                                            $editButton = '
+                                            <button type="button" data-id="' . $admins->id . '" class="btn btn-pill btn-info-light editBtn">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                        ';
+                                }
+                                if (auth()->user()->can('admins.destroy')) {
+                                    $deleteButton = '
+                                        <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                                                data-id="' . $admins->id . '" data-title="' . $admins->name . '">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    ';
+                                }
+
+                        return '<div class="d-flex">' . $editButton . $deleteButton . '</div>';
+                    })
+
                 ->addColumn("select_role", function ($admin) {
                     return $admin->roles->pluck('name')->implode(', ') ?: 'No Role';
                 })

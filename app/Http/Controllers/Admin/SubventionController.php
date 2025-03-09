@@ -19,14 +19,29 @@ class SubventionController extends Controller
             $data = Subvention::latest()->get();
             return Datatables::of($data)
                 ->addColumn('action', function ($data) {
-                    return '
-                            <button type="button" data-id="' . $data->id . '" class="btn btn-pill btn-info-light editBtn"><i class="fa fa-edit"></i></button>
-                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
-                                    data-id="' . $data->id . '" data-title="' . $data->user->name . '">
-                                    <i class="fas fa-trash"></i>
+                    $editButton = '';
+                    $deleteButton = '';
+
+                    if (auth()->user()->can('subventions.edit')) {
+                        $editButton = '
+                            <button type="button" data-id="' . $data->id . '" class="btn btn-pill btn-info-light editBtn">
+                                <i class="fa fa-edit"></i>
                             </button>
-                       ';
+                        ';
+                    }
+
+                    if (auth()->user()->can('subventions.destroy')) {
+                        $deleteButton = '
+                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                                    data-id="' . $data->id . '" data-title="' . ($data->user->name ?? "غير معروف") . '">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        ';
+                    }
+
+                    return '<div class="d-flex">' . $editButton . $deleteButton . '</div>';
                 })
+
                 ->editColumn('user_id', function ($data) {
                     return ($data->user->husband_name) ?? 'تم حذفه';
                 })

@@ -45,17 +45,29 @@ class DonationController extends Controller
                     }
                 })
                 ->addColumn('action', function ($donation) {
-                        return '
-                        <button type="button" data-id="' . $donation->id . '" class="btn btn-pill btn-info-light editBtn">
-                            <i class="fa fa-edit"></i>
-                        </button>
-                        <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
-                                data-id="' . $donation->id . '">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    ';
+                    $editButton = '';
+                    $deleteButton = '';
 
+                    if (auth()->user()->can('Donations.edit')) {
+                        $editButton = '
+                            <button type="button" data-id="' . $donation->id . '" class="btn btn-pill btn-info-light editBtn">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                        ';
+                    }
+
+                    if (auth()->user()->can('Donations.destroy')) {
+                        $deleteButton = '
+                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                                    data-id="' . $donation->id . '">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        ';
+                    }
+
+                    return '<div class="d-flex">' . $editButton . $deleteButton . '</div>';
                 })
+
                 ->escapeColumns([])
                 ->make(true);
         } else {

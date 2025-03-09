@@ -25,20 +25,46 @@ class BorrowerController extends Controller
 
             return DataTables::of($borrowers)
                 ->addColumn('action', function ($borrower) {
-                    return '
-                    <button type="button" data-id="' . $borrower->id . '" class="btn btn-pill btn-info-light editBtn">
-                            <i class="fa fa-edit"></i>
-                    </button>
-                     <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
-                                data-id="' . $borrower->id . '">
-                            <i class="fas fa-trash"></i>
-                    </button>
-                    <button class="btn btn-pill view-guarantors btn-success-light" data-id="'.$borrower->id.'">  <i class="fa fa-eye"></i> </button>
-                    <button class="btn  btn-pill btn-primary-light viewMedia" data-id="'.$borrower->id.'">
-                        <i class="fa fa-photo-video"></i>
-                    </button>
-                ';
+                    $editButton = '';
+                    $deleteButton = '';
+                    $viewGuarantorsButton = '';
+                    $viewMediaButton = '';
+
+                    // التحقق من إذن التعديل
+                    if (auth()->user()->can('borrower.edit')) {
+                        $editButton = '
+                            <button type="button" data-id="' . $borrower->id . '" class="btn btn-pill btn-info-light editBtn">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                        ';
+                    }
+
+                    // التحقق من إذن الحذف
+                    if (auth()->user()->can('borrower.destroy')) {
+                        $deleteButton = '
+                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                                    data-id="' . $borrower->id . '">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        ';
+                    }
+
+                        $viewGuarantorsButton = '
+                            <button class="btn btn-pill view-guarantors btn-success-light" data-id="' . $borrower->id . '">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                        ';
+
+
+                        $viewMediaButton = '
+                            <button class="btn btn-pill btn-primary-light viewMedia" data-id="' . $borrower->id . '">
+                                <i class="fa fa-photo-video"></i>
+                            </button>
+                        ';
+
+                    return '<div class="d-flex">' . $editButton . $deleteButton . $viewGuarantorsButton . $viewMediaButton . '</div>';
                 })
+
                 ->rawColumns(['action'])
                 ->make(true);
         }

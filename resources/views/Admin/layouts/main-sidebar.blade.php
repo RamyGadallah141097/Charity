@@ -131,43 +131,47 @@
 
         {{--    القروض الحسنة   --}}
 
-        <p>
-            <a class="side-menu__item
+        @if(auth()->check() )
+       @if(auth()->user()->can('goodLoans.index') || auth()->user()->can('borrower.index'))
+            <p>
+                <a class="side-menu__item
             {{ request()->routeIs('indexLoansDonations') || request()->routeIs('borrowers.index') || request()->routeIs('index.Loans') ? 'active' : '' }}"
-               data-toggle="collapse"
-               href="#GoodLoansDropdown" role="button"
-               aria-expanded="{{ request()->routeIs('indexLoansDonations') || request()->routeIs('borrowers.index') || request()->routeIs('index.Loans') ? 'true' : 'false' }}"
-               aria-controls="GoodLoansDropdown">
-                <i class="fas fa-hand-holding-usd side-menu__icon"></i>
-                <span class="side-menu__label"> القروض الحسنة </span>
-            </a>
-        </p>
-
-        <ul class="collapse {{ request()->routeIs('indexLoansDonations') || request()->routeIs('borrowers.index') || request()->routeIs('index.Loans') ? 'show' : '' }}" id="GoodLoansDropdown">
-            <li>
-                <a class="dropdown-item-text side-menu__item {{ request()->routeIs('indexLoansDonations') ? 'active' : '' }}"
-                   href="{{ route('indexLoansDonations') }}">
-                    <i class="fas fa-hand-holding-heart" style="margin-left: 10px;"></i>
-                    <span class="side-menu__label"> التبرعات </span>
+                   data-toggle="collapse"
+                   href="#GoodLoansDropdown" role="button"
+                   aria-expanded="{{ request()->routeIs('indexLoansDonations') || request()->routeIs('borrowers.index') || request()->routeIs('index.Loans') ? 'true' : 'false' }}"
+                   aria-controls="GoodLoansDropdown">
+                    <i class="fas fa-hand-holding-usd side-menu__icon"></i>
+                    <span class="side-menu__label"> القروض الحسنة </span>
                 </a>
-            </li>
+            </p>
 
-            <li>
-                <a class="dropdown-item-text side-menu__item {{ request()->routeIs('borrowers.index') ? 'active' : '' }}"
-                   href="{{ route('borrowers.index') }}">
-                    <i class="fas fa-user" style="margin-left: 10px;"></i>
-                    <span class="side-menu__label"> المقترضين </span>
-                </a>
-            </li>
+            <ul class="collapse {{ request()->routeIs('indexLoansDonations') || request()->routeIs('borrowers.index') || request()->routeIs('index.Loans') ? 'show' : '' }}" id="GoodLoansDropdown">
+                <li>
+                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('indexLoansDonations') ? 'active' : '' }}"
+                       href="{{ route('indexLoansDonations') }}">
+                        <i class="fas fa-hand-holding-heart" style="margin-left: 10px;"></i>
+                        <span class="side-menu__label"> التبرعات </span>
+                    </a>
+                </li>
 
-            <li>
-                <a class="dropdown-item-text side-menu__item {{ request()->routeIs('index.Loans') ? 'active' : '' }}"
-                   href="{{ route('index.Loans') }}">
-                    <i class="fas fa-money-check-alt" style="margin-left: 10px;"></i>
-                    <span class="side-menu__label"> القروض </span>
-                </a>
-            </li>
-        </ul>
+                <li>
+                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('borrowers.index') ? 'active' : '' }}"
+                       href="{{ route('borrowers.index') }}">
+                        <i class="fas fa-user" style="margin-left: 10px;"></i>
+                        <span class="side-menu__label"> المقترضين </span>
+                    </a>
+                </li>
+
+                <li>
+                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('index.Loans') ? 'active' : '' }}"
+                       href="{{ route('index.Loans') }}">
+                        <i class="fas fa-money-check-alt" style="margin-left: 10px;"></i>
+                        <span class="side-menu__label"> القروض </span>
+                    </a>
+                </li>
+            </ul>
+       @endif
+       @endif
 
 
         {{--    القروض الحسنة   --}}
@@ -175,6 +179,7 @@
 
 
         {{--     الزكاة والصدقات   --}}
+        @if(auth()->check() && auth()->user()->can('zakat.index'))
         <p>
             <a class="side-menu__item
        {{ request()->routeIs('safer.CharityZakat') ? 'active' : '' }}"
@@ -197,9 +202,8 @@
             </li>
         </ul>
 
+        @endif
         {{--     الزكاة والصدقات   --}}
-
-
 
         {{--     التبرعات العينية    --}}
         {{--        <ul>--}}
