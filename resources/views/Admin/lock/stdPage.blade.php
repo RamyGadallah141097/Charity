@@ -8,9 +8,35 @@
 
     <div class="row">
         <div class="col-md-12 col-lg-12">
+            @if($total)
+                <div class="card-body w-100">
+                    <div class="row w-100"> <!-- Ensuring full width -->
+                        <div class="col-12"> <!-- Making it take full width -->
+                            <div class="card bg-secondary img-card box-secondary-shadow">
+                                <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
+                                    <span class="text-white fs-30"> خزنة {{$title}} </span>
+                                    <span class="text-white fs-30"> {{$total}} EGP</span>
+                                    <!-- Changed dollar icon to EGP -->
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="row text-white">
+                                        <div class="col-4 text-end"> <!-- Added text-end for right alignment -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- COL END -->
+                    </div><!-- ROW END -->
+                </div>
+            @endif
             <div class="card">
-                <div class="card-header">
+                <div class="card-header row">
                     <h3 class="card-title"> {{$title}} </h3>
+
+
+
+
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -19,8 +45,9 @@
                             <thead>
                             <tr class="fw-bolder text-muted bg-light">
                                 <th class="min-w-25px">#</th>
-                                <th class="min-w-50px">المتبرع</th>
+                                <th class="min-w-50px">الاسم</th>
                                 <th class="min-w-125px">القيمه</th>
+                                <th class="min-w-125px">ملاحظات</th>
                                 <th class="min-w-125px">التاريخ</th>
                             </tr>
                             </thead>
@@ -87,8 +114,9 @@
 
             var columns = [
             {data: 'id', name: 'id'},
-            {data: 'donor_name', name: 'donor_name'},
-            {data: 'price', name: 'price'},
+            {data: 'admin_id', name: 'admin_id'},
+            {data: 'amount', name: 'amount'},
+            {data: 'comment', name: 'comment'},
             {data: 'created_at', name: 'created_at'},
             ];
 

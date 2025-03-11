@@ -12,7 +12,7 @@
             </select>
         </div>
 
-        @if($subvention->price == 0)
+        @if($subvention->price == 0 )
             <div class="row mt-4 mb-4" id="subvention">
                 <label for="price" class="form-control-label">العينيه و قيمتها </label>
                 <div class="input-group">
@@ -28,9 +28,16 @@
             </div>
         @else
             <div class="form-group mt-4 mb-4" id="money">
-                <label for="price" class="form-control-label">المبلغ</label>
-                <input type="number" value="{{$subvention->price}}" class="form-control"  name="price" id="price">
+                <label for="price" class="form-control-label">العينيه و قيمتها </label>
+                <div class="input-group">
+                    <select  class="form-select bx-outline" name="moneyType" id="asset">
+                        <option value=0>زكاة مال</option>
+                        <option value=1>صدقه</option>
+                    </select>
+                    <input type="number" value="{{$subvention->price}}" class="form-control"  name="price" id="price">
+                </div>
             </div>
+            <p class="text bg-warning">تأكد من تحديد نوع التبرع</p>
         @endif
 
 
@@ -60,18 +67,11 @@
 </div>
 
 
-{{--<script>--}}
-{{--    $("document").ready(function(){--}}
-{{--        $("#subvention").hide();--}}
-{{--        $("select[id='sub_type']").on("change" , function(){--}}
-{{--            let type = $(this).val();--}}
-{{--            if(type == 1){--}}
-{{--                $("#money").hide();--}}
-{{--                $("#subvention").show();--}}
-{{--            }else{--}}
-{{--                $("#money").show();--}}
-{{--                $("#subvention").hide();--}}
-{{--            }--}}
-{{--        })--}}
-{{--    })--}}
-{{--</script>--}}
+<script>
+    $("document").ready(function(){
+        // $("#subvention").hide();
+        $("select[name='moneyType']").on("change" , function(){
+           $(".text").hide();
+        })
+    })
+</script>

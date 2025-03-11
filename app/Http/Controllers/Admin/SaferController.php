@@ -30,7 +30,7 @@ class SaferController extends Controller
                 ->escapeColumns([])
                 ->make(true);
         } else {
-            $Charity = Donation::where("donation_type", 0)->sum("donation_amount");
+            $Charity = Donation::whereIn("donation_type", [0,1])->sum("donation_amount");
             return view('Admin/safer/charity', ["Charity" => $Charity]);
         }
     }

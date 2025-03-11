@@ -38,7 +38,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
         Route::get('/search-donor', 'DonationController@searchDonor')->name('search.donor')->middleware('permission:search.donor');
     });
 
-    Route::get("lock/{lock}" , "DonationController@lock")->name("lock");
+    Route::get("lock/{lock}" , "LockerLogController@index")->name("lock");
 
     #### Tasks ####
     Route::resource("tasks", "TaskController")->middleware('permission:tasks.index');
