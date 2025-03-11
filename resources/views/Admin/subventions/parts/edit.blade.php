@@ -22,7 +22,7 @@
                             <option value="{{$item->id}}">{{$item->name}}</option>
                         @endforeach
                     </select>
-                    <input type="number" value="{{$subvention->asset_count}}" class="form-control" name="asset_count" id="asset_count" placeholder="العدد">
+                    <input type="number" min=1 value="{{$subvention->asset_count}}" class="form-control" name="asset_count" id="asset_count" placeholder="العدد">
                 </div>
 
             </div>
@@ -37,7 +37,7 @@
                             <option selected value="1">صدقه</option>
                         @endif
                     </select>
-                    <input type="number" value="{{$subvention->price}}" class="form-control"  name="price" id="price">
+                    <input type="number" min=1 value="{{$subvention->price}}" class="form-control"  name="price" id="price">
                 </div>
             </div>
         @endif
