@@ -31,13 +31,15 @@
                 <label for="price" class="form-control-label">العينيه و قيمتها </label>
                 <div class="input-group">
                     <select  class="form-select bx-outline" name="moneyType" id="asset">
-                        <option value=0>زكاة مال</option>
-                        <option value=1>صدقه</option>
+                        @if($Dtype == "zakat")
+                            <option selected value="0">زكاة مال</option>
+                        @else
+                            <option selected value="1">صدقه</option>
+                        @endif
                     </select>
                     <input type="number" value="{{$subvention->price}}" class="form-control"  name="price" id="price">
                 </div>
             </div>
-            <p class="text bg-warning">تأكد من تحديد نوع التبرع</p>
         @endif
 
 
@@ -65,13 +67,3 @@
         </div>
     </form>
 </div>
-
-
-<script>
-    $("document").ready(function(){
-        // $("#subvention").hide();
-        $("select[name='moneyType']").on("change" , function(){
-           $(".text").hide();
-        })
-    })
-</script>

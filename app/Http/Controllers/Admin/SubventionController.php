@@ -48,11 +48,35 @@ class SubventionController extends Controller
                     return ($data->user->husband_name) ?? 'تم حذفه';
                 })
                 ->editColumn('price', function ($data) {
-                    if ($data->price == 0){
-                        return ' عدد : ' . $data->asset_count . ' من ' . ($data->asset ? ($data->asset->name ?? '-') : '-');
-                    }else{
-                        return " مبلغ قدره : " . $data->price . " جنيه";
+
+
+
+                    if ($data->price == 0) {
+                        return ' عدد : ' . $data->asset_count . ' من ' .
+                            ($data->asset ? ($data->asset->name ?? '-') . ' '  : '-');
+                    } else {
+                        return " مبلغ قدره : " . $data->price . " جنيه " ;
                     }
+
+
+
+//                    $lockerLogs = LockerLog::where("amount" , $data->price)->where("created_at" , $data->created_at)->where("type" , LockerLog::TYPE_MINUS);
+//                    $Dtype = $lockerLogs->first()->moneyType;
+//                    if ($data->price == 0){
+//                        return ' عدد : ' . $data->asset_count . ' من ' . ($data->asset ? ($data->asset->name ?? '-')  . $Dtype: '-');
+//                    }else{
+//                        return " مبلغ قدره : " . $data->price . " جنيه" . $Dtype;
+//                    }
+                })
+                ->addColumn("Dtype", function ($data) {
+                    $lockerLogs = LockerLog::where("amount", $data->price)
+                        ->where("created_at", $data->created_at)
+                        ->where("type", LockerLog::TYPE_MINUS);
+
+                    $lockerLog = $lockerLogs->first();
+                    $Dtype = $lockerLog ? $lockerLog->moneyType : 'عينيه';
+
+                    return $Dtype  =="sadaka" ? "صدقه" : ($Dtype == "zakat" ? "زكاة" : "عينيه");
                 })
                 ->editColumn('type', function ($data) {
                     if($data->type == 'once')
@@ -155,19 +179,28 @@ class SubventionController extends Controller
 
     public function edit(Subvention $subvention)
     {
+        $lockerLogs = LockerLog::where("amount", $subvention->price)
+            ->where("created_at", $subvention->created_at)
+            ->where("type", LockerLog::TYPE_MINUS);
+
+        $lockerLog = $lockerLogs->first();
+        $Dtype = $lockerLog ? $lockerLog->moneyType : 'subvention';
+
+//        $Dtype = $Dtype  == "sadaka" ? "صدقه" : ($Dtype == "zakat" ? "زكاة" : "عينيه");
         $users = User::where('status','accepted')
             ->whereDoesntHave('subvention')
             ->orWhere('id',$subvention->user_id)
             ->select('id','husband_name')
             ->latest()->get();
         $assets = Asset::all();
-        return view('Admin/subventions/parts/edit',compact('users','subvention' , "assets"));
+
+        return view('Admin/subventions/parts/edit',compact('users','subvention' , "assets" , "Dtype"));
     }
 
 
     public function update(Request $request, $id)
     {
-
+//dd($request->all());
         try{
             $user = User::find($request->user_id);
             if ($request->sub_type == 0){
@@ -176,7 +209,6 @@ class SubventionController extends Controller
                         $subvention = Subvention::find($id);
                         Subvention::find($id)->update($request->except('_token' , "sub_type" , "moneyType"));
                         $suv = Subvention::find($id);
-
                         $lockerLogs = LockerLog::where("amount" , $subvention->price)->where("created_at" , $subvention->created_at)->where("type" , LockerLog::TYPE_MINUS);
                         $lockerLogs->update([
                             "amount" => $suv->price,

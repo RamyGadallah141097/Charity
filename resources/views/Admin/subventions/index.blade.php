@@ -37,6 +37,7 @@
                                 <th class="min-w-50px">المستفيد</th>
                                 <th class="min-w-125px">القيمه</th>
                                 <th class="min-w-125px">شهري/ مرة</th>
+                                <th class="min-w-125px">النوع</th>
                                 <th class="min-w-50px rounded-end">العمليات</th>
                             </tr>
                             </thead>
@@ -103,6 +104,7 @@
             {data: 'user_id', name: 'user_id'},
             {data: 'price', name: 'price'},
             {data: 'type', name: 'type'},
+            {data: 'Dtype', name: 'Dtype'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
         showData('{{route('subventions.index')}}', columns);
