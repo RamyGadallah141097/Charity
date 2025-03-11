@@ -77,7 +77,7 @@ class LockerLogController extends Controller
             $totalMinus = LockerLog::where("moneyType", $type)->where("type" , LockerLog::TYPE_MINUS)->sum("amount");
             $total = $totalPlus - $totalMinus;
 
-            return view('Admin/lock/stdPage', compact('model', "title" , "total"));
+            return view('Admin/lock/stdPage', compact('model', "title" , "total" , "totalMinus" , "totalPlus"));
         }
     }
 

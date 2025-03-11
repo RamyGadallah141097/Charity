@@ -20,7 +20,7 @@ class DonorController extends Controller
                     $editButton = '';
                     $deleteButton = '';
 
-                    if (auth()->user()->can('donors.edit')) {
+                    if (auth()->user()->can('donors.edit') && auth()->user()->can('donors.update')) {
                         $editButton = '
                             <button type="button" data-id="' . $donors->id . '" class="btn btn-pill btn-info-light editBtn">
                                 <i class="fa fa-edit"></i>
@@ -86,14 +86,15 @@ class DonorController extends Controller
     }
 
 
-
-    public function update(StoreDonate $request, $id)
+    public function update(Request $request, $id)
     {
-        if(Donor::find($id)->update($request->except('_token','id')))
-            return response()->json(['status'=>200]);
-        else
-            return response()->json(['status'=>405]);
+        $donor = Donor::findOrFail($id);
+
+        $donor->update($request->except('_token', '_method'));
+        toastr()->success("تم التحديث بنجاح");
+        return redirect()->route('donors.index');
     }
+
 
     /**
      * Remove the specified resource from storage.
