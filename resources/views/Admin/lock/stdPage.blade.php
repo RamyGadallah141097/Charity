@@ -19,12 +19,12 @@
                                     <!-- Changed dollar icon to EGP -->
                                 </div>
                                 <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
-                                    <span class="text-white fs-30"> كل الداخل </span>
+                                    <span class="text-white fs-30"> مجموع الداخل </span>
                                     <span class="text-white fs-30"> {{$totalPlus}} EGP <i class='fas fa-arrow-down' style='color: #63E6BE; font-size: 30px ;transform: rotate(45deg); margin-right: 20px;'></i></span>
                                     <!-- Changed dollar icon to EGP -->
                                 </div>
                                  <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
-                                    <span class="text-white fs-30"> كل الخارج </span>
+                                    <span class="text-white fs-30"> مجموع الخارج </span>
                                     <span class="text-white fs-30"> {{$totalMinus}} EGP <i class='fas fa-arrow-up' style='color: #e42f2f; font-size: 30px ; transform: rotate(45deg);margin-right: 20px;'></i></span>
                                     <!-- Changed dollar icon to EGP -->
                                 </div>

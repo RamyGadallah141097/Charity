@@ -6,6 +6,8 @@ use App\Http\Requests\BorrowerRequest;
 use App\Models\Borrower;
 use App\Http\Controllers\Controller;
 use App\Models\Guarantor;
+use App\Models\Loan;
+use App\Models\LockerLog;
 use App\Models\Media;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -336,6 +338,29 @@ class BorrowerController extends Controller
                 }
 
             }
+//            $borrower = Borrower::with('media')->findOrFail($request->id);
+//            $loan = Loan::where('borrower_id', $request->id)->first();
+//
+//            if ($loan) {
+//                LockerLog::where("amount", $loan->loan_amount)
+//                    ->whereDate("created_at", $loan->created_at) // Ensures date-only comparison
+//                    ->where("type", LockerLog::TYPE_MINUS)
+//                    ->where("moneyType", LockerLog::moneyTypeLoans)
+//                    ->delete();
+//            }
+                $borrower = Borrower::with('media')->findOrFail($request->id);
+                $loan = Loan::where('borrower_id', $request->id)->first();
+
+                if ($loan) {
+                        LockerLog::where("amount", $loan->loan_amount)
+                        ->where("created_at", $loan->created_at) // Matches exact timestamp
+                        ->where("type", LockerLog::TYPE_MINUS)
+                        ->where("moneyType", LockerLog::moneyTypeLoans)
+                        ->delete();
+
+                }
+
+
             $borrower->delete();
             toastr()->success("deleted successfully");
             return redirect()->back();

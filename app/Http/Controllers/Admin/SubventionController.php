@@ -108,38 +108,39 @@ class SubventionController extends Controller
 
         try{
             $user = User::find($request->user_id);
-            if ($request->sub_type == 0){
-                if ($request->moneyType == 0){
-                    if ($request->price <= $totalDonation = Donation::where("donation_type", 0)->sum("donation_amount")){
-                        Subvention::create($request->except('_token' , "sub_type" , "moneyType"));
-                        LockerLog::create([
-                            "moneyType" => LockerLog::moneyTypeZakat,
-                            "amount" => $request->price,
-                            "type" => LockerLog::TYPE_MINUS,
-                            "admin_id" => auth()->id(),
-                            "comment" => "  زكاة جديده الي" . ($user ? $user->husband_name : "مجهول") .
-                                " ورقم هاتفه " . ($user ? $user->nearest_phone : "غير متوفر"),
-                        ]);
+            if ($user){
+                if ($request->sub_type == 0){
+                    if ($request->moneyType == 0){
+                        if ($request->price <= $totalDonation = Donation::where("donation_type", 0)->sum("donation_amount")){
+                            Subvention::create($request->except('_token' , "sub_type" , "moneyType"));
+                            LockerLog::create([
+                                "moneyType" => LockerLog::moneyTypeZakat,
+                                "amount" => $request->price,
+                                "type" => LockerLog::TYPE_MINUS,
+                                "admin_id" => auth()->id(),
+                                "comment" => "  زكاة جديده الي" . ($user ? $user->husband_name : "مجهول") .
+                                    " ورقم هاتفه " . ($user ? $user->nearest_phone : "غير متوفر"),
+                            ]);
 
+                        }else{
+                            return response()->json(["status"=>500 , "message" => "لا توجد سيوله لهذه الاعانه"]);
+                        }
                     }else{
-                        return response()->json(["status"=>500 , "message" => "لا توجد سيوله لهذه الاعانه"]);
+                        if ($request->price <= $totalDonation = Donation::where("donation_type", 1)->sum("donation_amount")){
+                            Subvention::create($request->except('_token' , "sub_type" , "moneyType"));
+                            LockerLog::create([
+                                "moneyType" => LockerLog::moneyTypeSadaka,
+                                "amount" => $request->price,
+                                "type" => LockerLog::TYPE_MINUS,
+                                "admin_id" => auth()->id(),
+                                "comment" => "  صدقه جديده الي" . ($user ? $user->husband_name : "مجهول") .
+                                    " ورقم هاتفه " . ($user ? $user->nearest_phone : "غير متوفر"),
+                            ]);
+                        }else{
+                            return response()->json(["status"=>500 , "message" => "لا توجد سيوله لهذه الاعانه"]);
+                        }
                     }
                 }else{
-                    if ($request->price <= $totalDonation = Donation::where("donation_type", 1)->sum("donation_amount")){
-                        Subvention::create($request->except('_token' , "sub_type" , "moneyType"));
-                        LockerLog::create([
-                            "moneyType" => LockerLog::moneyTypeSadaka,
-                            "amount" => $request->price,
-                            "type" => LockerLog::TYPE_MINUS,
-                            "admin_id" => auth()->id(),
-                            "comment" => "  صدقه جديده الي" . ($user ? $user->husband_name : "مجهول") .
-                                " ورقم هاتفه " . ($user ? $user->nearest_phone : "غير متوفر"),
-                        ]);
-                    }else{
-                        return response()->json(["status"=>500 , "message" => "لا توجد سيوله لهذه الاعانه"]);
-                    }
-                }
-            }else{
 
 
                     $asset = Asset::find($request->asset_id);
@@ -164,18 +165,21 @@ class SubventionController extends Controller
                                     " ورقم هاتفه " . ($user ? $user->nearest_phone : "غير متوفر"),
                             ]);
 
-                }else{
+                        }else{
 
-                        return response()->json(["status"=>500 , "message" => "لا توجد سيوله لهذه الاعانه"]);
-                }
+                            return response()->json(["status"=>500 , "message" => "لا توجد سيوله لهذه الاعانه"]);
+                        }
 
-                }else{
+                    }else{
                         return response()->json(["status"=>500 ,  "message" => "لا توجد سيوله لهذه الاعانه"]);
+                    }
                 }
+
+                return response()->json(['status' => 200]);
+            }else{
+                return response()->json(["status"=>500 ,  "message" => "المستخدم غير موجود"]);
             }
 
-
-            return response()->json(['status' => 200]);
         }catch (\Exception $e){
             DB::rollBack();
             return response()->json(['status' => 500 , "message" => $e->getMessage()]);
@@ -220,24 +224,26 @@ class SubventionController extends Controller
     {
         try{
             $user = User::find($request->user_id);
-            if ($request->sub_type == 0 && $request->asset_count <= 0){
-                if ($request->moneyType == 0){
-                    if ($request->price <= $totalDonation = Donation::where("donation_type", 0)->sum("donation_amount")){
-                        $subvention = Subvention::find($id);
-                        Subvention::find($id)->update($request->except('_token' , "sub_type" , "moneyType"));
-                        $suv = Subvention::find($id);
-                        $lockerLogs = LockerLog::where("amount" , $subvention->price)->where("created_at" , $subvention->created_at)->where("type" , LockerLog::TYPE_MINUS);
-                        $lockerLogs->update([
-                            "amount" => $suv->price,
-                            "asset_id" =>$suv->asset_id,
-                            "asset_count" =>$suv->asset_count,
-                            "admin_id" => auth()->id(),
-                        ]);
+            if ($user){
+
+                if ($request->sub_type == 0 && $request->asset_count <= 0){
+                    if ($request->moneyType == 0){
+                        if ($request->price <= $totalDonation = Donation::where("donation_type", 0)->sum("donation_amount")){
+                            $subvention = Subvention::find($id);
+                            Subvention::find($id)->update($request->except('_token' , "sub_type" , "moneyType"));
+                            $suv = Subvention::find($id);
+                            $lockerLogs = LockerLog::where("amount" , $subvention->price)->where("created_at" , $subvention->created_at)->where("type" , LockerLog::TYPE_MINUS);
+                            $lockerLogs->update([
+                                "amount" => $suv->price,
+                                "asset_id" =>$suv->asset_id,
+                                "asset_count" =>$suv->asset_count,
+                                "admin_id" => auth()->id(),
+                            ]);
+                        }else{
+                            return response()->json(["status"=>500 , "message" => "لا توجد سيوله لهذه الاعانه"]);
+                        }
                     }else{
-                        return response()->json(["status"=>500 , "message" => "لا توجد سيوله لهذه الاعانه"]);
-                    }
-                }else{
-                    if ($request->price <= $totalDonation = Donation::where("donation_type", 1)->sum("donation_amount")){
+                        if ($request->price <= $totalDonation = Donation::where("donation_type", 1)->sum("donation_amount")){
                             $subvention = Subvention::find($id);
                             Subvention::find($id)->update($request->except('_token' , "sub_type" , "moneyType"));
                             $suv = Subvention::find($id);
@@ -249,42 +255,45 @@ class SubventionController extends Controller
                                 "asset_count" =>$suv->asset_count,
                                 "admin_id" => auth()->id(),
                             ]);
-                    }else{
-                        return response()->json(["status"=>500 , "message" => "لا توجد سيوله لهذه الاعانه"]);
+                        }else{
+                            return response()->json(["status"=>500 , "message" => "لا توجد سيوله لهذه الاعانه"]);
+                        }
                     }
-                }
-            }else{
-                $asset = Asset::find($request->asset_id);
-                $subvention = Subvention::find($id);
-                if (!$asset || !$subvention) {
-                    abort(404, "البيانات غير موجودة");
-                }
-                $newCounter = $asset->counter + $subvention->asset_count;
-                if ($request->asset_count <= $newCounter) {
-                    $asset->counter = $newCounter - $request->asset_count;
-                    $asset->save();
+                }else{
+                    $asset = Asset::find($request->asset_id);
+                    $subvention = Subvention::find($id);
+                    if (!$asset || !$subvention) {
+                        abort(404, "البيانات غير موجودة");
+                    }
+                    $newCounter = $asset->counter + $subvention->asset_count;
+                    if ($request->asset_count <= $newCounter) {
+                        $asset->counter = $newCounter - $request->asset_count;
+                        $asset->save();
 
 //                        Subvention::create($request->except('_token' , "sub_type" , "moneyType"));
                         $totalAssets = Asset::where("id" , $request->asset_id)->first();
 
 
-                            $subvention = Subvention::find($id);
-                            Subvention::find($id)->update($request->except('_token', "sub_type", "moneyType"));
-                            $suv = Subvention::find($id);
+                        $subvention = Subvention::find($id);
+                        Subvention::find($id)->update($request->except('_token', "sub_type", "moneyType"));
+                        $suv = Subvention::find($id);
 
-                            $lockerLogs = LockerLog::where("amount", $subvention->price)->where("created_at", $subvention->created_at)->where("type", LockerLog::TYPE_MINUS);
-                            $lockerLogs->update([
-                                "amount" => $suv->price,
-                                "asset_id" => $suv->asset_id,
-                                "asset_count" => $suv->asset_count,
-                                "admin_id" => auth()->id(),
-                            ]);
+                        $lockerLogs = LockerLog::where("amount", $subvention->price)->where("created_at", $subvention->created_at)->where("type", LockerLog::TYPE_MINUS);
+                        $lockerLogs->update([
+                            "amount" => $suv->price,
+                            "asset_id" => $suv->asset_id,
+                            "asset_count" => $suv->asset_count,
+                            "admin_id" => auth()->id(),
+                        ]);
                     }else {
                         return response()->json(["status"=>500 ,  "message" => "لا توجد سيوله لهذه الاعانه"]);
+                    }
                 }
-            }
 
-            return response()->json(['status' => 200]);
+                return response()->json(['status' => 200]);
+            }else{
+                return response()->json(["status"=>500 ,  "message" => "المستخدم غير موجود"]);
+            }
         }catch (\Exception $e){
             return response()->json(["status"=>500 ,  "message" => "لا توجد سيوله لهذه الاعانه"]);
         }
