@@ -14,6 +14,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::post('changeRole', 'AdminController@changeRole')->name('changeRole')->middleware('permission:admins.update');
     Route::post('showChangeRole', 'AdminController@showChangeRole')->name('showChangeRole')->middleware('permission:admins.index');
 
+    Route::resource("adminSubscription" , "AdminSubscriptionsController");
+//    route to get the subscription amount fom setting table
+    Route::get('/get-subscription-price', function (Request $request) {
+        $price = \App\Models\Setting::first()->adminSubscription ?? 0;
+        return response()->json(['success' => true, 'price' => $price]);
+    })->name('getSubscriptionPrice');
+
+    Route::resource("SubscriptionFee" , "SubscriptionFeeController");
+
     #### Users ####
     Route::get('users/{status}', 'UserController@index')->name('users.index')->middleware('permission:users.index');
     Route::get('users.create', 'UserController@create')->name('users.create')->middleware('permission:users.create');

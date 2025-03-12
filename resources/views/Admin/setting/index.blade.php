@@ -51,15 +51,20 @@
                                     </div>
                                 </div>
                             <div class="col-12 row">
-                                <div class="form-group col-6 ">
+                                <div class="form-group col-4 ">
                                     <label class="form-label">الحد الاقصي للاعانات السنويه </label>
                                     <input type="number" class="form-control" name="maxSubvention"
                                            placeholder="الحد الاقصي " value="{{($setting->maxSubvention) ?? ''}}">
                                 </div>
-                                <div class="form-group col-6 ">
-                                    <label class="form-label">الحد الاقصي للتبرعات السنويه </label>
+                                <div class="form-group col-4 ">
+                                    <label class="form-label">الحد الاقصي للقرض للفرد السنويه </label>
                                     <input type="number" class="form-control" name="maxLoan"
                                            placeholder="الحد الاقصي  " value="{{($setting->maxLoan) ?? ''}}">
+                                </div>
+                                <div class="form-group col-4 ">
+                                    <label class="form-label">قيمه الاشتراك الشهري للأعضاء </label>
+                                    <input type="number" class="form-control" name="adminSubscription"
+                                           placeholder="الحد الاقصي  " value="{{($setting->adminSubscription) ?? ''}}">
                                 </div>
                             </div>
                             </div>

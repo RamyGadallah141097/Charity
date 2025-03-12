@@ -19,6 +19,7 @@ class AddColumnsToSettingsTable extends Migration
             $table->string("branch")->nullable();
             $table->string("section")->nullable();
             $table->string("sub_address")->nullable();
+            $table->integer("adminSubscription")->nullable();
         });
     }
 
@@ -30,11 +31,12 @@ class AddColumnsToSettingsTable extends Migration
     public function down()
     {
         Schema::table('settings', function (Blueprint $table) {
-            $table->integer("maxSubvention")->nullable();
-            $table->integer("maxLoan")->nullable();
-            $table->string("branch")->nullable();
-            $table->string("section")->nullable();
-            $table->string("sub_address")->nullable();
+            $table->integer("maxSubvention");
+            $table->integer("maxLoan");
+            $table->string("branch");
+            $table->string("section");
+            $table->string("sub_address");
+            $table->integer("adminSubscription");
         });
     }
 }

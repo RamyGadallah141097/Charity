@@ -355,6 +355,38 @@
 
         @endif
 
+
+{{--        admin supscriptions--}}
+        <p>
+            <a class="side-menu__item {{ request()->routeIs('adminSubscription.*') || request()->routeIs('SubscriptionFee.*') ? 'active' : '' }}  "
+               data-toggle="collapse"
+               href="#adminSubscriptions" role="button"
+               aria-expanded="{{ request()->routeIs('adminSubscription.*') || request()->routeIs('SubscriptionFee.*') ? 'true' : 'false' }} {{request()->routeIs('adminSubscription.*') || request()->routeIs('SubscriptionFee.*') ? 'active' : '' }}"
+               aria-controls="adminSubscriptions">
+                <i class="fe fe-credit-card side-menu__icon"></i>
+                <span class="side-menu__label"> الاشتراكات الشهريه للاعضاء </span>
+            </a>
+        </p>
+
+
+        <ul class="collapse {{ request()->routeIs('adminSubscription.*') || request()->routeIs('SubscriptionFee.*') ? 'show' : '' }} " id="adminSubscriptions">
+            <li>
+                <a class="dropdown-item-text side-menu__item {{ request()->routeIs('adminSubscription.index') ? 'active' : '' }}"
+                   href="{{ route('adminSubscription.index') }}">
+                    <i class="fas fa-hand-holding-heart" style="margin-left: 10px;"></i>
+                    <span class="side-menu__label"> الاشتراكات الشهريه للاعضاء </span>
+                </a>
+            </li>
+
+            <li>
+                <a class="dropdown-item-text side-menu__item {{ request()->routeIs('SubscriptionFee.index') ? 'active' : '' }}"
+                   href="{{ route('SubscriptionFee.index') }}">
+                    <i class="fe fe-users" style="margin-left: 10px;"></i>
+                    <span class="side-menu__label"> مصروفات الاعضاء  </span>
+                </a>
+            </li>
+        </ul>
+{{--        admin supscriptions--}}
         {{-- الإعدادات --}}
         @if(auth()->check() && auth()->user()->can('setting.index'))
             <li class="slide">

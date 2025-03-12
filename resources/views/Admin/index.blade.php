@@ -9,6 +9,7 @@
     <link href="{{ asset('assets/admin') }}/assets/plugins/morris/morris.css" rel="stylesheet" />
 
 
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;" class="bg-white-light mt-5 mb-9 p-5 card   ">
     <div style="display: flex; gap: 20px; flex-wrap: wrap;" class="bg-white mt-5 mb-9 p-5 card   ">
 
         <div class="card-header" >
@@ -132,7 +133,9 @@
                             <h2 class="mb-0 number-font"> {{ $subUsers }} </h2>
                             <p class="text-white mb-0">  المتسفيدين المعلقين</p>
                         </div>
-                        <div class="mr-auto"><i class="fe fe-dollar-sign text-white fs-30 ml-2 mt-2"></i></div>
+                        <div class="mr-auto">
+                            <span class="text-white fs-30 ml-2 mt-2">£L</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -166,7 +169,9 @@
                             <h2 class="mb-0 number-font">{{ $donors_count }}</h2>
                             <p class="text-white mb-0">اجمالي المتبرعين</p>
                         </div>
-                        <div class="mr-auto"><i class="fe fe-shopping-bag text-white fs-30 ml-2 mt-2"></i></div>
+                        <div class="mr-auto">
+                            <i class="fe fe-shopping-bag text-white fs-30 ml-2 mt-2"></i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -180,7 +185,9 @@
                             <h2 class="mb-0 number-font"> {{ $totalDonations }} </h2>
                             <p class="text-white mb-0">إجمالي التبرعات</p>
                         </div>
-                        <div class="mr-auto"><i class="fe fe-dollar-sign text-white fs-30 ml-2 mt-2"></i></div>
+                        <div class="mr-auto">
+                            <span class="text-white fs-30 ml-2 mt-2">£L</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -193,7 +200,9 @@
                             <h2 class="mb-0 number-font"> {{ $totalMonthlySubventions }} </h2>
                             <p class="text-white mb-0">إجمالي الاعانات الشهرية</p>
                         </div>
-                        <div class="mr-auto"><i class="fe fe-dollar-sign text-white fs-30 ml-2 mt-2"></i></div>
+                        <div class="mr-auto">
+                            <span class="text-white fs-30 ml-2 mt-2">£L</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -231,7 +240,9 @@
                             <h2 class="mb-0 number-font"> {{ $totalMonthlySubventions }} </h2>
                             <p class="text-white mb-0">إجمالي الاعانات الشهرية</p>
                         </div>
-                        <div class="mr-auto"><i class="fe fe-dollar-sign text-white fs-30 ml-2 mt-2"></i></div>
+                        <div class="mr-auto">
+                            <span class="text-white fs-30 ml-2 mt-2">£L</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -281,7 +292,9 @@
                                 <h2 class="mb-0 number-font"> {{ $totalLoansDonations }} </h2>
                                 <p class="text-white mb-0">إجمالي  التبرعات </p>
                             </div>
-                            <div class="mr-auto"><i class="fe fe-dollar-sign text-white fs-30 ml-2 mt-2"></i></div>
+                            <div class="mr-auto">
+                                <span class="text-white fs-30 ml-2 mt-2">£L</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -306,7 +319,7 @@
 
 
 
-
+</div>
 
 @endsection
 @section('js')
