@@ -90,30 +90,30 @@
         @endif
 
 
-        {{--     الزكاة والصدقات   --}}
-        <p>
-            <a class="side-menu__item
-       {{ request()->routeIs('safer.CharityZakat') ? 'active' : '' }}"
-               data-toggle="collapse"
-               href="#CharityZakatDropdown" role="button"
-               aria-expanded="{{ request()->routeIs('safer.CharityZakat') ? 'true' : 'false' }}"
-               aria-controls="CharityZakatDropdown">
-                <i class="fas fa-hand-holding-heart side-menu__icon"></i>
-                <span class="side-menu__label"> الزكاة والصدقات </span>
-            </a>
-        </p>
+{{--        --}}{{--     الزكاة والصدقات   --}}
+{{--        <p>--}}
+{{--            <a class="side-menu__item--}}
+{{--       {{ request()->routeIs('safer.CharityZakat') ? 'active' : '' }}"--}}
+{{--               data-toggle="collapse"--}}
+{{--               href="#CharityZakatDropdown" role="button"--}}
+{{--               aria-expanded="{{ request()->routeIs('safer.CharityZakat') ? 'true' : 'false' }}"--}}
+{{--               aria-controls="CharityZakatDropdown">--}}
+{{--                <i class="fas fa-hand-holding-heart side-menu__icon"></i>--}}
+{{--                <span class="side-menu__label"> الزكاة والصدقات </span>--}}
+{{--            </a>--}}
+{{--        </p>--}}
 
-        <ul class="collapse {{ request()->routeIs('safer.CharityZakat') ? 'show' : '' }}" id="CharityZakatDropdown">
-            <li>
-                <a class="dropdown-item-text side-menu__item {{ request()->routeIs('safer.CharityZakat') ? 'active' : '' }}"
-                   href="{{ route('safer.CharityZakat') }}">
-                    <i class="fas fa-donate" style="margin-left: 10px;"></i>
-                    <span class="side-menu__label"> التبرعات </span>
-                </a>
-            </li>
-        </ul>
+{{--        <ul class="collapse {{ request()->routeIs('safer.CharityZakat') ? 'show' : '' }}" id="CharityZakatDropdown">--}}
+{{--            <li>--}}
+{{--                <a class="dropdown-item-text side-menu__item {{ request()->routeIs('safer.CharityZakat') ? 'active' : '' }}"--}}
+{{--                   href="{{ route('safer.CharityZakat') }}">--}}
+{{--                    <i class="fas fa-donate" style="margin-left: 10px;"></i>--}}
+{{--                    <span class="side-menu__label"> التبرعات </span>--}}
+{{--                </a>--}}
+{{--            </li>--}}
+{{--        </ul>--}}
 
-        {{--     الزكاة والصدقات   --}}
+{{--        --}}{{--     الزكاة والصدقات   --}}
 
 
 
@@ -164,7 +164,7 @@
 {{--        الخزنه     --}}
         <p>
             <a class="side-menu__item
-                        {{request()->routeIs('donation.lock') ? 'active' : '' }}"
+                        {{ request()->segment(2) == 'lock' ? 'show active' : '' }} "
                data-toggle="collapse"
                href="#lockDropdown" role="button"
                aria-expanded="{{ request()->routeIs('donation.lock') ? 'true' : 'false' }}"
