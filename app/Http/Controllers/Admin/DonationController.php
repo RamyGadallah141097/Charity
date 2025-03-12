@@ -8,6 +8,7 @@ use App\Http\Requests\StoreDonate;
 use App\Models\Asset;
 use App\Models\Donation;
 use App\Models\Donor;
+use App\Models\LockerLog;
 use App\Models\Subvention;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -98,7 +99,38 @@ class DonationController extends Controller
 
     public function store(DonationsRequest $request)
     {
+
         try {
+            if ($request->donation_type != 3){
+                $donor = Donor::find($request->donor_id);
+                LockerLog::create([
+                    "moneyType" => $request->donation_type == 0 ? LockerLog::moneyTypeZakat :
+                        ($request->donation_type == 1 ? LockerLog::moneyTypeSadaka :
+                            ($request->donation_type == 2 ? LockerLog::moneyTypeLoans : "subvention")),
+                    "amount" => $request->donation_amount,
+//                    "asset_id" =>0,
+//                    "asset_count" =>0,
+                    "type" => LockerLog::TYPE_PLUS,
+                    "admin_id" => auth()->id(),
+                    "comment" => "تبرع جديد من " . ($donor ? $donor->name : "مجهول") .
+                        " ورقم هاتفه " . ($donor ? $donor->phone : "غير متوفر"),
+                ]);
+            }else{
+                $donor = Donor::find($request->donor_id);
+                LockerLog::create([
+                    "moneyType" => $request->donation_type == 0 ? LockerLog::moneyTypeZakat :
+                        ($request->donation_type == 1 ? LockerLog::moneyTypeSadaka :
+                            ($request->donation_type == 2 ? LockerLog::moneyTypeLoans : "subvention")),
+                    "amount" =>0,
+                    "asset_id" =>$request->asset_id,
+                    "asset_count" =>$request->asset_count,
+                    "type" => LockerLog::TYPE_PLUS,
+                    "admin_id" => auth()->id(),
+                    "comment" => "تبرع جديد من " . ($donor ? $donor->name : "مجهول") .
+                        " ورقم هاتفه " . ($donor ? $donor->phone : "غير متوفر"),
+                ]);
+            }
+
 
             $asset = Asset::find($request->asset_id);
             $asset->counter += $request->asset_count;
@@ -108,7 +140,7 @@ class DonationController extends Controller
             return response()->json(['status' => 200]);
 
         }catch (\Exception $e){
-            return response()->json(["status" => 500]);
+            return response()->json(["status" => 500 , "message"=>$e->getMessage()]);
         }
 
     }
@@ -176,34 +208,7 @@ class DonationController extends Controller
         }
     }
 
-    public function lock(Request $request, $model = null)
-    {
-        if ($request->ajax()) {
-            $donations = Donation::where("donation_type", $model)->get();
-            return Datatables::of($donations)
-                ->addColumn('donor_name', function ($donation) {
-                    return $donation->donor->name ?? 'غير معروف';
-                })
-                ->editColumn('price', function ($donation) {
-                    if ($donation->donation_type == 3 ){
-                        $asset = Asset::where("id", $donation->asset_id)->first();
-                        $asset ? $donation->donation_amount = $asset->name . " : " .  $asset->counter : "-";
-                    }else{
-                        $donation->donation_amount = $donation->donation_amount;
-                    }
-                    return $donation->donation_amount;
 
-                })
-                ->editColumn('created_at', function ($donation) {
-                    return $donation->created_at ? $donation->created_at->format('d-m-y') : 'غير متوفر';
-                })
-                ->escapeColumns([])
-                ->make(true);
-        } else {
-            $title = $model ==  0  ?  "زكاة" :  ($model ==  1 ? "صدقات"  : ($model == 2 ? "قرض حسن " : "عينيات") );
-            return view('Admin/lock/stdPage', compact('model' , "title"));
-        }
-    }
 
 
 }

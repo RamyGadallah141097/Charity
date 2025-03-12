@@ -25,7 +25,7 @@ class BorrowerRequest extends FormRequest
     {
         $rules = [
             'name' => 'required|string|max:255',
-            'phone' => 'required',
+            'phone' => '',
             'nationalID' => 'required',
             'address' => 'required|string|max:255',
             'job' => 'required|string|max:255',
@@ -37,7 +37,7 @@ class BorrowerRequest extends FormRequest
         ];
 
         if (request()->isMethod('post')) {
-            $rules['phone'] .= '|unique:borrowers,phone';
+//            $rules['phone'] .= '|unique:borrowers,phone';
             $rules['nationalID'] .= '|unique:borrowers,nationalID';
         }
 

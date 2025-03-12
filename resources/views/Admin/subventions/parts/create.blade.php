@@ -23,9 +23,17 @@
 
 
         <div class="form-group mt-4 mb-4" id="money">
-            <label for="price" class="form-control-label">المبلغ</label>
-            <input type="number" value=0 class="form-control"  name="price" id="price">
+                <label for="price" class="form-control-label">العينيه و قيمتها </label>
+                <div class="input-group">
+                    <select  class="form-select bx-outline" name="moneyType" id="asset">
+                            <option value=0>زكاة مال</option>
+                            <option value=1>صدقه</option>
+                    </select>
+                    <input type="number" value=0 class="form-control"  name="price" id="price">
+                </div>
         </div>
+
+
 
 
 

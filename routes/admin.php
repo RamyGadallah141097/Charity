@@ -31,6 +31,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     #### Donors ####
     Route::middleware(['permission:donors.index'])->group(function () {
         Route::resource('donors', 'DonorController');
+        Route::put('donors/{id}', [DonorController::class, 'update'])->name('updateDonor');
         Route::POST('delete_donors', 'DonorController@delete')->name('delete_donors')->middleware('permission:delete_donors');
         Route::POST('Donations_donors', 'DonationController@delete')->name('donations_delete')->middleware('permission:donations_delete');
         Route::resource('Donations', "DonationController");
@@ -38,7 +39,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
         Route::get('/search-donor', 'DonationController@searchDonor')->name('search.donor')->middleware('permission:search.donor');
     });
 
-    Route::get("lock/{lock}" , "DonationController@lock")->name("lock");
+    Route::get("lock/{lock}" , "LockerLogController@index")->name("lock");
 
     #### Tasks ####
     Route::resource("tasks", "TaskController")->middleware('permission:tasks.index');

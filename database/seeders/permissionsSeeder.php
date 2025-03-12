@@ -137,6 +137,7 @@ class permissionsSeeder extends Seeder
             "assets.destroy",
             "delete_assets",
 
+
         ];
 
         foreach ($permissions as $permission) {

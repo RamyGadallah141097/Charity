@@ -89,6 +89,34 @@
             </ul>
         @endif
 
+
+        {{--     الزكاة والصدقات   --}}
+        <p>
+            <a class="side-menu__item
+       {{ request()->routeIs('safer.CharityZakat') ? 'active' : '' }}"
+               data-toggle="collapse"
+               href="#CharityZakatDropdown" role="button"
+               aria-expanded="{{ request()->routeIs('safer.CharityZakat') ? 'true' : 'false' }}"
+               aria-controls="CharityZakatDropdown">
+                <i class="fas fa-hand-holding-heart side-menu__icon"></i>
+                <span class="side-menu__label"> الزكاة والصدقات </span>
+            </a>
+        </p>
+
+        <ul class="collapse {{ request()->routeIs('safer.CharityZakat') ? 'show' : '' }}" id="CharityZakatDropdown">
+            <li>
+                <a class="dropdown-item-text side-menu__item {{ request()->routeIs('safer.CharityZakat') ? 'active' : '' }}"
+                   href="{{ route('safer.CharityZakat') }}">
+                    <i class="fas fa-donate" style="margin-left: 10px;"></i>
+                    <span class="side-menu__label"> التبرعات </span>
+                </a>
+            </li>
+        </ul>
+
+        {{--     الزكاة والصدقات   --}}
+
+
+
         {{-- التبرعات والمتبرعين --}}
         @if(auth()->check() )
         @if( auth()->user()->can('donors.index') || auth()->user()->can('Donations.index'))
@@ -151,7 +179,7 @@
                     <a class="dropdown-item-text side-menu__item {{ request()->routeIs('lock/0') ? 'active' : '' }}"
                        href="{{ route('lock' , 0) }}">
 
-                        <i class="fas fa-user-friends" style="margin-left: 10px;"></i>
+                        <i class="fas fa-money-bill-wave" style="margin-left: 10px;"></i>
                         <span class="side-menu__label"> خزنة الزكاة  </span>
                     </a>
                 </li>
@@ -160,7 +188,8 @@
                     <a class="dropdown-item-text side-menu__item {{ request()->routeIs('lock/1') ? 'active' : '' }}"
                        href="{{ route('lock' , 1) }}">
 
-                        <i class="fas fa-user-friends" style="margin-left: 10px;"></i>
+                        <i class="fas fa-coins" style="margin-left: 10px;"></i>
+
                         <span class="side-menu__label"> خزنة الصدقات  </span>
                     </a>
                 </li>
@@ -168,7 +197,8 @@
                     <a class="dropdown-item-text side-menu__item {{ request()->routeIs('lock/2') ? 'active' : '' }}"
                        href="{{ route('lock' , 2) }}">
 
-                        <i class="fas fa-user-friends" style="margin-left: 10px;"></i>
+                        <i class="fas fa-piggy-bank" style="margin-left: 10px;"></i>
+
                         <span class="side-menu__label"> خزنة القروض الحسنه  </span>
                     </a>
                 </li>
@@ -176,10 +206,11 @@
                     <a class="dropdown-item-text side-menu__item {{ request()->routeIs('lock/3') ? 'active' : '' }}"
                        href="{{ route('lock' , 3) }}">
 
-                        <i class="fas fa-user-friends" style="margin-left: 10px;"></i>
+                        <i class="fas fa-hand-holding-usd" style="margin-left: 10px;"></i>
                         <span class="side-menu__label"> خزنة العينيات  </span>
                     </a>
                 </li>
+
         </ul>
 
 
@@ -308,7 +339,7 @@
                 <li>
                     <a class="dropdown-item-text side-menu__item {{ request()->routeIs('subventions.index') ? 'active' : '' }}"
                        href="{{ route('subventions.index') }}">
-                        <i class="fe fe-users" style="margin-left: 10px;"></i>
+                        <i class="fas fa-hand-holding-heart" style="margin-left: 10px;"></i>
                         <span class="side-menu__label"> الإعانات الشهرية للمستفيدين </span>
                     </a>
                 </li>

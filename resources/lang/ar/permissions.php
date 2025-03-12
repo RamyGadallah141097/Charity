@@ -85,4 +85,40 @@ return [
     'roles.update' => 'تحديث دور',
     'roles.destroy' => 'حذف دور',
     'Role_delete' => 'حذف الأدوار',
+
+
+    "goodLoans.index" => "عرض القروض الحسنة",
+    "goodLoans.create" => "إضافة قرض حسن",
+    "goodLoans.store" => "حفظ قرض حسن",
+    "goodLoans.edit" => "تعديل قرض حسن",
+    "goodLoans.update" => "تحديث قرض حسن",
+    "goodLoans.destroy" => "حذف قرض حسن",
+    "delete_goodLoans" => "حذف القرض الحسن نهائياً",
+
+    // المقترضون
+    "borrower.index" => "عرض المقترضين",
+    "borrower.create" => "إضافة مقترض",
+    "borrower.store" => "حفظ مقترض",
+    "borrower.edit" => "تعديل مقترض",
+    "borrower.update" => "تحديث بيانات المقترض",
+    "borrower.destroy" => "حذف مقترض",
+    "delete_borrower" => "حذف المقترض نهائياً",
+
+    // الزكاة
+    "zakat.index" => "عرض الزكاة",
+    "zakat.create" => "إضافة زكاة",
+    "zakat.store" => "حفظ الزكاة",
+    "zakat.edit" => "تعديل الزكاة",
+    "zakat.update" => "تحديث الزكاة",
+    "zakat.destroy" => "حذف الزكاة",
+    "delete_zakat" => "حذف الزكاة نهائياً",
+
+    // الأصول
+    "assets.index" => "عرض الأصول",
+    "assets.create" => "إضافة أصل",
+    "assets.store" => "حفظ أصل",
+    "assets.edit" => "تعديل أصل",
+    "assets.update" => "تحديث أصل",
+    "assets.destroy" => "حذف أصل",
+    "delete_assets" => "حذف الأصل نهائياً",
 ];
