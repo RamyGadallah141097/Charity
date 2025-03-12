@@ -12,7 +12,7 @@
             </select>
         </div>
 
-        @if($subvention->price == 0)
+        @if($subvention->price == 0 )
             <div class="row mt-4 mb-4" id="subvention">
                 <label for="price" class="form-control-label">العينيه و قيمتها </label>
                 <div class="input-group">
@@ -22,14 +22,23 @@
                             <option value="{{$item->id}}">{{$item->name}}</option>
                         @endforeach
                     </select>
-                    <input type="number" value="{{$subvention->asset_count}}" class="form-control" name="asset_count" id="asset_count" placeholder="العدد">
+                    <input type="number" min=1 value="{{$subvention->asset_count}}" class="form-control" name="asset_count" id="asset_count" placeholder="العدد">
                 </div>
 
             </div>
         @else
             <div class="form-group mt-4 mb-4" id="money">
-                <label for="price" class="form-control-label">المبلغ</label>
-                <input type="number" value="{{$subvention->price}}" class="form-control"  name="price" id="price">
+                <label for="price" class="form-control-label">العينيه و قيمتها </label>
+                <div class="input-group">
+                    <select  class="form-select bx-outline" name="moneyType" id="asset">
+                        @if($Dtype == "zakat")
+                            <option selected value="0">زكاة مال</option>
+                        @else
+                            <option selected value="1">صدقه</option>
+                        @endif
+                    </select>
+                    <input type="number" min=1 value="{{$subvention->price}}" class="form-control"  name="price" id="price">
+                </div>
             </div>
         @endif
 
@@ -58,20 +67,3 @@
         </div>
     </form>
 </div>
-
-
-{{--<script>--}}
-{{--    $("document").ready(function(){--}}
-{{--        $("#subvention").hide();--}}
-{{--        $("select[id='sub_type']").on("change" , function(){--}}
-{{--            let type = $(this).val();--}}
-{{--            if(type == 1){--}}
-{{--                $("#money").hide();--}}
-{{--                $("#subvention").show();--}}
-{{--            }else{--}}
-{{--                $("#money").show();--}}
-{{--                $("#subvention").hide();--}}
-{{--            }--}}
-{{--        })--}}
-{{--    })--}}
-{{--</script>--}}

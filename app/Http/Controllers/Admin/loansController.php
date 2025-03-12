@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoanRequest;
+use App\Models\Donor;
+use App\Models\LockerLog;
 use Yajra\DataTables\DataTables;
 use App\Models\Borrower;
 use App\Models\Loan;
@@ -64,6 +66,18 @@ class loansController extends Controller
 
     public function storeLoans(LoanRequest $request)
     {
+
+
+//        dd($request->all());
+        $borrower = Borrower::find($request->borrower_id);
+        LockerLog::create([
+            "moneyType" => LockerLog::moneyTypeLoans,
+            "amount" => $request->loan_amount,
+            "type" => LockerLog::TYPE_MINUS,
+            "admin_id" => auth()->id(),
+            "comment" => "قرض جديد الي " . ($borrower ? $borrower->name : "مجهول") .
+                " ورقم هاتفه " . ($borrower ? $borrower->phone : "غير متوفر"),
+        ]);
 
 
 

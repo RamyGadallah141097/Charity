@@ -17,17 +17,20 @@
             <br>
 
             <div class="row">
-                    @foreach($permissions as $permission)
-                        <div class="col-4 align-content-end">
-                            <label for="permission_{{$permission->id}}">{{$permission->name}}</label>
-                            <input type="checkbox"
-                                   class="permission-checkbox"
-                                   id="permission_{{$permission->id}}"
-                                   name="permissions[]"
-                                   value="{{$permission->id}}" />
-                        </div>
-                        <br>
-                    @endforeach
+                @foreach($permissions as $permission)
+                    <div class="col-4 align-content-end">
+                        <label for="permission_{{$permission->id}}">
+                            {{ __('permissions.' . $permission->name) }}
+                        </label>
+                        <input type="checkbox"
+                               class="permission-checkbox"
+                               id="permission_{{$permission->id}}"
+                               name="permissions[]"
+                               value="{{$permission->id}}" />
+                    </div>
+                    <br>
+                @endforeach
+
             </div>
 
             </div>

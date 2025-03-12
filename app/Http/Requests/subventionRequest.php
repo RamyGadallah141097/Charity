@@ -33,7 +33,7 @@ class subventionRequest extends FormRequest
                     "user_id" => "required|exists:users,id",
                     "asset_id" => "required|exists:assets,id",
                     "asset_count" => [
-                        "numeric",
+                        "numeric" , "min:1",
                         function ($attribute, $value, $fail) {
                             $asset = Asset::find(request()->input('asset_id'));
 
@@ -44,7 +44,7 @@ class subventionRequest extends FormRequest
 
                             // Validate asset count
                             if ($value > $asset->counter) {
-                                $fail("The asset count must be less than or equal to the available asset counter.");
+                                $fail("عدد العينيه غير كافيه");
                             }
                         },
                     ],
@@ -54,7 +54,7 @@ class subventionRequest extends FormRequest
                 return [
 
                     "user_id" => "required|exists:users,id",
-                    "price" => [
+                    "price" => [ "min:1" ,
                         function ($attribute, $value, $fail) {
                             $maxLoan = Setting::latest()->first()? Setting::latest()->first()->maxSubvention ?? 0 : 0;
                             $currentYear = now()->year;
