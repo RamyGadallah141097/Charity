@@ -130,4 +130,25 @@
 
         );
     });
+
+    $('#borrower_id').on('change', function() {
+        let selectedBorrowerId = $(this).val();
+
+        $.ajax({
+            url: "{{ route('search.BorrowerPhone') }}",
+            method:'get',
+            data: {
+                borrower_id: selectedBorrowerId
+            },
+            success: function(response) {
+                if (response.length > 0) {
+                    let borrower = response[0];
+                    $("input[id='borrower_phone']").val(borrower.phone);
+                } else {
+                    $("input[id='borrower_phone']").val('');
+                }
+            }
+        });
+    });
+    });
 </script>

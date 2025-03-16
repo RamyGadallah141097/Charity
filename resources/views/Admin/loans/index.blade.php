@@ -154,7 +154,7 @@
             <body>
 
             <div class="text-center" style="margin-top:100px ">
-                        <h4 class="mt-4 mb-1">بيان باسماء حالات  الاعانه الشهريه / {{$setting->title}}</h4>
+{{--                        <h4 class="mt-4 mb-1">بيان باسماء حالات  الاعانه الشهريه / {{$setting->title}}</h4>--}}
                         <hr style="width: 40%" class="mt-0 mb-1 text-dark"></hr>
                         <h4 class="mt-4 mb-2"></h4>
             </div>

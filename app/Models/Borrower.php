@@ -22,6 +22,6 @@ class Borrower extends Model
 
     public function loans()
     {
-        return $this->hasMany(Loan::class, "borrower_id");
+        return $this->hasOne(Loan::class, "borrower_id");
     }
 }

@@ -12,7 +12,6 @@ use App\Models\OrderOfferDetails;
 use App\Models\Product;
 use App\Models\Provider;
 use App\Models\Reviews;
-use App\Models\Setting;
 use App\Models\Subvention;
 use App\Models\Task;
 use App\Models\User;

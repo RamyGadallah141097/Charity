@@ -26,11 +26,14 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
 
+<<<<<<< HEAD
+//        View::share('setting',Setting::first());
+
+=======
         \view()->composer('*', function ($view) {
             $view->with('setting', Setting::all());
         });
-//        View::share('setting',Setting::first());
-
+>>>>>>> 863c75fde7b5e71e9cca99f2476a3121d87e271f
 
     }
 }

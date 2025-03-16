@@ -154,7 +154,7 @@ class loansController extends Controller
         $total = PersonalLoan::where('borrower_id', $id)->sum('amount');
         $totalIn = PersonalLoan::where('borrower_id', $id)->where('status', 1)->sum('amount');
         $totalOut = PersonalLoan::where('borrower_id', $id)->where('status', 0)->sum('amount');
-        $pay = Loan::where('borrower_id', $id)->value('isStarted');
+        $pay = Loan::where('borrower_id', $id)->value('is');
 
         return view('admin.loans.indexloan', compact('id' , "totalIn" , "totalOut" , "total" , "pay"));
     }
