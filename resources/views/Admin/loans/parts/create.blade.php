@@ -44,6 +44,15 @@
                 value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
         </div>
 
+        <div>
+            <label for="type">نوع القرض</label>
+            <select class="form-control" name="type" id="type">
+                <option value="0" selected>قرض عادي</option>
+                <option value="1">قرض جمعيه</option>
+            </select>
+        </div>
+
+
 
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>

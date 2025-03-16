@@ -78,7 +78,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::post('storeLoans', 'loansController@storeLoans')->name('store.loans');
     Route::get('personLoans/{id}', 'loansController@personLoans')->name('person.loans');
     Route::get('person-loans/{id}', 'loansController@personLoans')->name('person.loans');
-    Route::delete('loans/{id}', 'loansController@deleteLoan')->name('loan.delete');
+    Route::get('loans/{id}', 'loansController@checkout')->name('loan.checkout');
     Route::post('loans/pay/{id}', 'loansController@payLoan')->name('loan.pay');
 
     //الزكاة والصدقات

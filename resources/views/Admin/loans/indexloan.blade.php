@@ -2,7 +2,7 @@
 @extends('Admin.layouts.master')
 
 @section('title')
-    {{ $setting->title ?? '' }} | القروض الشخصية
+    {{ isset($setting) ?  $setting->title : '' }} | القروض الشخصية
 @endsection
 @section('page_name')
     القروض الشخصية
@@ -11,9 +11,43 @@
 @section('content')
     <div class="row">
         <div class="col-md-12 col-lg-12">
+                <div class="card-body w-100">
+                    <div class="row w-100"> <!-- Ensuring full width -->
+                        <div class="col-12"> <!-- Making it take full width -->
+                            <div class="card bg-secondary img-card box-secondary-shadow">
+                                <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
+                                    <span class="text-white fs-30">قيمه القرض   </span>
+                                    <span class="text-white fs-30"> {{$total}} EGP</span>
+                                    <!-- Changed dollar icon to EGP -->
+                                </div>
+                                <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
+                                    <span class="text-white fs-30"> المدفوع </span>
+                                    <span class="text-white fs-30"> {{$totalIn}} EGP <i class='fas fa-arrow-down' style='color: #63E6BE; font-size: 30px ;transform: rotate(45deg); margin-right: 20px;'></i></span>
+                                    <!-- Changed dollar icon to EGP -->
+                                </div>
+                                <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
+                                    <span class="text-white fs-30"> المتبقي </span>
+                                    <span class="text-white fs-30"> {{$totalOut}} EGP <i class='fas fa-arrow-up' style='color: #e42f2f; font-size: 30px ; transform: rotate(45deg);margin-right: 20px;'></i></span>
+                                    <!-- Changed dollar icon to EGP -->
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="row text-white">
+                                        <div class="col-4 text-end"> <!-- Added text-end for right alignment -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- COL END -->
+                    </div><!-- ROW END -->
+                </div>
+        <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title"> القروض الشخصية </h3>
+                    @if(!$pay)
+                        <button class="btn btn-success btn-icon text-white loan-btn" data-id="{{$id}}" >  صرف القرض </button>
+                    @endif
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -59,13 +93,13 @@
                 ]
             });
 
-            $(document).on('click', '.delete-btn', function () {
+            $(document).on('click', '.loan-btn', function () {
                 let loanId = $(this).data('id');
 
-                if (confirm("هل أنت متأكد من حذف هذا القرض؟")) {
+                if (confirm("هل أنت متأكد من صرف هذا القرض؟")) {
                     $.ajax({
-                        url: "{{ route('loan.delete', ':id') }}".replace(':id', loanId),
-                        type: 'DELETE',
+                        url: "{{ route('loan.checkout', ':id') }}".replace(':id', loanId),
+                        type: 'get',
                         data: { _token: '{{ csrf_token() }}' },
                         success: function(response) {
                             alert(response.message);
