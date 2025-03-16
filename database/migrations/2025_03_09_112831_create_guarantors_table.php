@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateGuarantorsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -14,13 +14,13 @@ class CreateGuarantorsTable extends Migration
     public function up()
     {
         Schema::create('guarantors', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId("borrower_id")->nullable()->constrained('borrowers')->cascadeOnDelete();
-            $table->string("name");
-            $table->integer("phone");
-            $table->integer("nationalID");
-            $table->string("address");
-            $table->string("job");
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('borrower_id')->nullable()->index('guarantors_borrower_id_foreign');
+            $table->string('name');
+            $table->integer('phone');
+            $table->integer('nationalID');
+            $table->string('address');
+            $table->string('job');
             $table->timestamps();
         });
     }
@@ -34,4 +34,4 @@ class CreateGuarantorsTable extends Migration
     {
         Schema::dropIfExists('guarantors');
     }
-}
+};
