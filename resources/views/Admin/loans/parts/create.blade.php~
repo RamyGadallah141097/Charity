@@ -98,7 +98,7 @@
             let selectedBorrowerId = $(this).val();
 
             $.ajax({
-               url: "{{ route('search.BorrowerPhone') }}",
+               url: "{{ route('search.Borrowers') }}",
                 method:'get',
                 data: {
                     borrower_id: selectedBorrowerId

@@ -78,6 +78,7 @@
                 }
             });
 
+            // ✅ Pay Loan (Update Status)
             $(document).on('click', '.pay-btn', function () {
                 let loanId = $(this).data('id');
 

@@ -122,6 +122,7 @@ class loansController extends Controller
 
     public function personLoans(Request $request, $id)
     {
+        dd(now()->addMonths(1)->format("Y-m"));
         if ($request->ajax()) {
             $loans = PersonalLoan::where('borrower_id', $id)->get();
 
