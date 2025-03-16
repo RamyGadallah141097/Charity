@@ -1,7 +1,7 @@
 @extends('Admin/layouts/master')
 
 @section('title')
-    {{($setting->title) ?? ''}} | المشرفين
+    {{ isset($setting) ? isset($setting->title) : '' }} | المشرفين
 @endsection
 @section('page_name') المشرفين @endsection
 @section('content')
@@ -10,7 +10,7 @@
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"> مشرفين {{($setting->title) ?? ''}}</h3>
+                    <h3 class="card-title">{{ isset($setting) ? isset($setting->title) : '' }}</h3>
                     @can("admins.create")
                         <div class="">
                             <button class="btn btn-secondary btn-icon text-white addBtn">

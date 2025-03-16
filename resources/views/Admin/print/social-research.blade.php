@@ -1,12 +1,12 @@
 @extends('Admin/layouts/master')
-@section('title') {{$setting->title}} | بحث اجتماعي @endsection
+@section('title') {{ isset($setting) ? isset($setting->title) : '' }} | بحث اجتماعي @endsection
 @section('page_name') بحث اجتماعي @endsection
 @section('content')
         <div class="row">
             <div class="col-md-12" id="printDiv">
                 <div class="card">
-                    <p class="text-right mt-4 mr-3" style="font-weight: bold">{{$setting->title}}</p>
-                    <p class="text-right mt-1 mr-3" style="font-weight: bold">المشهرة برقم {{$setting->vat_number}}</p>
+                    <p class="text-right mt-4 mr-3" style="font-weight: bold">{{isset($setting->title)}}</p>
+                    <p class="text-right mt-1 mr-3" style="font-weight: bold">المشهرة برقم {{isset($setting->vat_number)}}</p>
                     <h1 class="text-center mt-4" style="font-weight: bold">بحث اجتماعي</h1>
                     <div class="card-header mt-4 mb-2" style="justify-content:space-between">
                         <div class="fw-bold" style="font-size: 1.125rem">

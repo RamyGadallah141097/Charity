@@ -1,7 +1,7 @@
 @extends('Admin/layouts/master')
 
 @section('title')
-    {{ $setting->title ?? '' }} | المستفيدين
+    {{ isset($setting) ? isset($setting->title) : '' }} | المستفيدين
 @endsection
 @section('page_name')
     المستفيدين
@@ -12,7 +12,7 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">
-                        قائمة بالمستفدين من {{ $setting->title ?? '' }}
+                        قائمة بالمستفدين من {{ isset($setting) ? isset($setting->title) : '' }}
                     </h3>
                     <div class="">
                         <a href="{{ route('users.create') }}" class="btn btn-secondary btn-icon text-white">
