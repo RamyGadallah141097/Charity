@@ -102,10 +102,12 @@
                         type: 'get',
                         data: { _token: '{{ csrf_token() }}' },
                         success: function(response) {
+                            window.location.reload();
                             alert(response.message);
                             table.ajax.reload();
                         },
                         error: function(response) {
+                            alert(response.message);
                             alert(response.responseJSON.error);
                         }
                     });
@@ -121,6 +123,7 @@
                         type: 'POST',
                         data: { _token: '{{ csrf_token() }}' },
                         success: function(response) {
+                            window.location.reload();
                             alert(response.message);
                             table.ajax.reload();
                         },

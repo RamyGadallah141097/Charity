@@ -154,7 +154,7 @@ class loansController extends Controller
         $total = PersonalLoan::where('borrower_id', $id)->sum('amount');
         $totalIn = PersonalLoan::where('borrower_id', $id)->where('status', 1)->sum('amount');
         $totalOut = PersonalLoan::where('borrower_id', $id)->where('status', 0)->sum('amount');
-        $pay = Loan::where('borrower_id', $id)->value('is');
+        $pay = Loan::where('borrower_id', $id)->value('isStarted');
 
         return view('admin.loans.indexloan', compact('id' , "totalIn" , "totalOut" , "total" , "pay"));
     }
@@ -163,19 +163,21 @@ class loansController extends Controller
     {
         try {
             $loan = Borrower::find($id)->loans()->first();
-            $borrower = Borrower::find($id);
-            LockerLog::create([
-                "moneyType" => LockerLog::moneyTypeLoans,
-                "amount" => $loan->loan_amount,
-                "type" => LockerLog::TYPE_MINUS,
-                "admin_id" => auth()->id(),
-                "comment" => "قرض جديد الي " . ($borrower ? $borrower->name : "مجهول") .
-                    " ورقم هاتفه " . ($borrower ? $borrower->phone : "غير متوفر"),
-            ]);
-            $loan->isStarted = now()->format('Y-m-d');
-            $loan->type = 1;
-            $loan->save();
-            return response()->json(['status' => 200 , "message" => "تم بنجاح"]);
+            if (LockerLog::where("moneyType" , LockerLog::moneyTypeLoans)->sum("amount") >= $loan->loan_amount){
+                $borrower = Borrower::find($id);
+                LockerLog::create([
+                    "moneyType" => LockerLog::moneyTypeLoans,
+                    "amount" => $loan->loan_amount,
+                    "type" => LockerLog::TYPE_MINUS,
+                    "admin_id" => auth()->id(),
+                    "comment" => "قرض جديد الي " . ($borrower ? $borrower->name : "مجهول") .
+                        " ورقم هاتفه " . ($borrower ? $borrower->phone : "غير متوفر"),
+                ]);
+                $loan->isStarted = now()->format('Y-m-d');
+                $loan->type = 1;
+                $loan->save();
+                return response()->json(['status' => 200 , "message" => "تم بنجاح"]);
+            }
         }catch (\Exception $e){
             return response()->json(['error' => $e->getMessage()], 500);
         }
