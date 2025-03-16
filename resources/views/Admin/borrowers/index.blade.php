@@ -1,7 +1,7 @@
 @extends('Admin/layouts/master')
 
 @section('title')
-    {{ $setting->title ?? '' }} | القروض الحسنة
+    {{ isset($setting) ? isset($setting->title) : '' }} | القروض الحسنة
 @endsection
 @section('page_name')
     القروض الحسنة
@@ -33,7 +33,7 @@
                 <div class="p-3">
 
                     <div class="card-header">
-                        <h3 class="card-title">المقترضين من  القروض الحسنة  {{ $setting->title ?? '' }}</h3>
+                        <h3 class="card-title">المقترضين من  القروض الحسنة  {{ isset($setting) ? isset($setting->title) : '' }}</h3>
                         @can("borrower.create")
                             <div class="">
                                 <button class="btn btn-secondary btn-icon text-white addBtn">

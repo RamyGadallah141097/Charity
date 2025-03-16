@@ -84,7 +84,6 @@ class loansController extends Controller
 
        if (LockerLog::where("moneyType" , LockerLog::moneyTypeLoans)->sum("amount") >= $request->loan_amount){
            try {
-//               $request->isStarted = $request->type == 0 ? now()->format("Y-m") : null;
                $request->isStarted = ((int) $request->type === 0) ? now()->format("Y-m") : null;
 
                if ($request->type == 0) {
@@ -163,19 +162,21 @@ class loansController extends Controller
     {
         try {
             $loan = Borrower::find($id)->loans()->first();
-            $borrower = Borrower::find($id);
-            LockerLog::create([
-                "moneyType" => LockerLog::moneyTypeLoans,
-                "amount" => $loan->loan_amount,
-                "type" => LockerLog::TYPE_MINUS,
-                "admin_id" => auth()->id(),
-                "comment" => "قرض جديد الي " . ($borrower ? $borrower->name : "مجهول") .
-                    " ورقم هاتفه " . ($borrower ? $borrower->phone : "غير متوفر"),
-            ]);
-            $loan->isStarted = now()->format('Y-m-d');
-            $loan->type = 1;
-            $loan->save();
-            return response()->json(['status' => 200 , "message" => "تم بنجاح"]);
+            if (LockerLog::where("moneyType" , LockerLog::moneyTypeLoans)->sum("amount") >= $loan->loan_amount){
+                $borrower = Borrower::find($id);
+                LockerLog::create([
+                    "moneyType" => LockerLog::moneyTypeLoans,
+                    "amount" => $loan->loan_amount,
+                    "type" => LockerLog::TYPE_MINUS,
+                    "admin_id" => auth()->id(),
+                    "comment" => "قرض جديد الي " . ($borrower ? $borrower->name : "مجهول") .
+                        " ورقم هاتفه " . ($borrower ? $borrower->phone : "غير متوفر"),
+                ]);
+                $loan->isStarted = now()->format('Y-m-d');
+                $loan->type = 1;
+                $loan->save();
+                return response()->json(['status' => 200 , "message" => "تم بنجاح"]);
+            }
         }catch (\Exception $e){
             return response()->json(['error' => $e->getMessage()], 500);
         }

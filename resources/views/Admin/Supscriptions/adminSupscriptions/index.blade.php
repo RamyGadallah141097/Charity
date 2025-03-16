@@ -1,7 +1,7 @@
 @extends('Admin/layouts/master')
 
 @section('title')
-    {{($setting->title) ?? ''}} | اشتراكات المشرفين
+    {{ isset($setting) ? isset($setting->title) : '' }} | اشتراكات المشرفين
 @endsection
 @section('page_name') اشتراكات المشرفين @endsection
 @section('content')
@@ -30,7 +30,7 @@
                     </div><!-- ROW END -->
                 </div>
                 <div class="card-header">
-                    <h3 class="card-title">  انواع التبرعات {{($setting->title) ?? ''}}</h3>
+                    <h3 class="card-title">  انواع التبرعات {{ isset($setting) ? isset($setting->title) : '' }}</h3>
                     @can("assets.create")
                         <div class="">
                             <button class="btn btn-secondary btn-icon text-white addBtn">

@@ -1,5 +1,5 @@
 @extends('Admin/layouts/master')
-@section('title') {{$setting->title}} | الإعانات @endsection
+@section('title'){{ isset($setting) ? isset($setting->title) : '' }} | الإعانات @endsection
 @section('page_name') الإعانات @endsection
 <style>
     .td, th {
@@ -13,13 +13,13 @@
             <div class="card" id="printDiv">
                 <div id="printDiv">
                     <div class="text-center">
-{{--                        <h4 class="mb-0 mt-5">{{$setting->section}} ({{$setting->branch}})</h4>--}}
+                        <h4 class="mb-0 mt-5">{{isset($setting->section)}} ({{isset($setting->branch)}})</h4>
                     </div>
                     <div class="text-center" style="margin-top:100px ">
-                        <h4 class="mt-4 mb-1">بيان باسماء حالات  الاعانه الشهريه / {{$setting->title}}</h4>
+                        <h4 class="mt-4 mb-1">بيان باسماء حالات  الاعانه الشهريه / {{isset($setting->title)}}</h4>
                         <hr style="width: 40%" class="mt-0 mb-1 text-dark"></hr>
                         <h4 class="mt-4 mb-2"></h4>
-{{--                        <h4 class="mt-4 mb-2">{{$setting->address}}</h4>--}}
+                        <h4 class="mt-4 mb-2">{{isset($setting->address)}}</h4>
                     </div>
                     <div class="card-header mt-4 mb-2" style="justify-content:space-between">
                         <div class="fw-bold" style="font-size: 1.125rem">

@@ -1,5 +1,5 @@
 <title>
-    {{ $setting->title ?? 'لوحة التحكم' }} | تسجيل الدخول
+    {{ isset($setting) ? isset($setting->title) : '' }} | تسجيل الدخول
 </title>
 <link rel="shortcut icon" type="image/x-icon" href="#">
 <style>

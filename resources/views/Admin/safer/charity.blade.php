@@ -1,7 +1,7 @@
 @extends('Admin/layouts/master')
 
 @section('title')
-    {{ $setting->title ?? '' }} |  الصدقات و الذكاة
+    {{ isset($setting) ? isset($setting->title) : '' }} |  الصدقات و الذكاة
 @endsection
 @section('page_name')
     الصدقات و الذكاة
@@ -11,7 +11,7 @@
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="p-3">
-                    <h3 class="card-title"> اجمالي الصدقات و الذكاة {{ $setting->title ?? '' }}</h3>
+                    <h3 class="card-title">{{ isset($setting) ? isset($setting->title) : '' }}</h3>
 
                     <div class="card-body w-100">
                         <div class="row w-100"> <!-- Ensuring full width -->
