@@ -45,7 +45,7 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title"> القروض الشخصية </h3>
-                    @if(!$pay)
+                    @if($pay == null )
                         <button class="btn btn-success btn-icon text-white loan-btn" data-id="{{$id}}" >  صرف القرض </button>
                     @endif
                 </div>
@@ -102,7 +102,7 @@
                         type: 'get',
                         data: { _token: '{{ csrf_token() }}' },
                         success: function(response) {
-                            document.location.reload();
+                            window.location.reload();
                             alert(response.message);
                             table.ajax.reload();
                         },

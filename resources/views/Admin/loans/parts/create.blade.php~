@@ -38,19 +38,22 @@
             <input type="text" class="form-control" name="loan_amount" id="loan_amount">
         </div>
 
+        <input type="hidden" value="null">
+
         <div class="form-group">
             <label for="loan_date" class="form-control-label">تاريخ القرض </label>
             <input type="date" class="form-control" name="loan_date" id="loan_date"
                 value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
         </div>
 
-        <div >
-            <label for="type">نوع القرض </label>
-            <select class="form-control" name="type">
-                <option value="0" selected>  قرض عادي</option>
+        <div>
+            <label for="type">نوع القرض</label>
+            <select class="form-control" name="type" id="type">
+                <option value="0" selected>قرض عادي</option>
                 <option value="1">قرض جمعيه</option>
             </select>
         </div>
+
 
 
         <div class="modal-footer">

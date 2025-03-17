@@ -14,7 +14,7 @@ class AddColumnToTableLoans extends Migration
     public function up()
     {
         Schema::table('loans', function (Blueprint $table) {
-            $table->string('isStarted')->nullable();
+            $table->date('isStarted')->nullable();
             $table->integer('type')->default(0)->nullable();
         });
     }
