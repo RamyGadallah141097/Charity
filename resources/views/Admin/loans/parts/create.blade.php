@@ -38,6 +38,8 @@
             <input type="text" class="form-control" name="loan_amount" id="loan_amount">
         </div>
 
+        <input type="hidden" value="null" name="isStarted">
+
         <div class="form-group">
             <label for="loan_date" class="form-control-label">تاريخ القرض </label>
             <input type="date" class="form-control" name="loan_date" id="loan_date"
