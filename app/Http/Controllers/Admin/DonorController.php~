@@ -127,7 +127,7 @@ class DonorController extends Controller
     {
         return view('charts.dashboard');
     }
-
+    
     public function getChartData()
     {
         $data = Donor::selectRaw('COUNT(id) as count, DATE(created_at) as date')

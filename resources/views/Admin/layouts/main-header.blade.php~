@@ -36,7 +36,7 @@
 {{--                    </a>--}}
 {{--                </div>--}}
 {{--            </form>--}}
-                <form id="searchForm" action="{{route("userDetails" , 0)}}" class="form-inline">
+                <form id="searchForm" action="{{route("userDetails")}}" class="form-inline">
                     @csrf
                     <div class="search-element">
                         <input type="search" name="searchNID" class="form-control header-search"

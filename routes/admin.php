@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 
@@ -29,8 +31,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::POST('users.store', 'UserController@store')->name('users.store')->middleware('permission:users.store');
     Route::POST('delete_users', 'UserController@delete')->name('delete_users')->middleware('permission:delete_users');
     Route::POST('updateUserStatus', 'UserController@updateUserStatus')->name('updateUserStatus')->middleware('permission:updateUserStatus');
-    Route::get('userDetails/{id}', 'UserController@userDetails')->name('userDetails')->middleware('permission:userDetails');
+    Route::get('userDetails/{id?}', 'UserController@userDetails')->name('userDetails')->middleware('permission:userDetails');
     Route::get('DonationDetails/{id}', 'UserController@DonationDetails')->name('DonationDetails')->middleware('permission:DonationDetails');
+
     //    الراوتس الخاصه بالمقترض
     Route::resource("borrowers", "BorrowerController");
     Route::get('getGuarantor', 'BorrowerController@getGuarantor')->name('getGuarantor');
@@ -142,3 +145,11 @@ Route::get('/clear', function () {
     Artisan::call('optimize:clear');
     return response()->json(['status' => 'success', 'code' => 1000000000]);
 });
+
+
+//the arrow charts routes
+Route::get('/chart-data', 'UserController@getChartData');
+Route::get('/dashboard', 'UserController@CartIndex');
+
+Route::get('donors/chart-data', 'DonorController@getChartData');
+Route::get('donors/dashboard', 'DonorController@CartIndex');

@@ -6,12 +6,26 @@
 @section('page_name')
     الرئـيسية
 @endsection
+
 @section('content')
     <link href="{{ asset('assets/admin') }}/assets/plugins/morris/morris.css" rel="stylesheet" />
 
 
-    <div style="display: flex; gap: 20px; flex-wrap: wrap;" class="bg-white-light mt-5 mb-9 p-5 card   ">
-    <div style="display: flex; gap: 20px; flex-wrap: wrap;" class="bg-white mt-5 mb-9 p-5 card   ">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <div class="row">
+        <div class="col-6">
+            <h2>مخطط عدد المستفيدين</h2>
+            <div id="UsersChart"></div>
+        </div>
+        <div class="col-6">
+            <h2>مخطط عدد المتبرعين</h2>
+            <div id="DonorsChart"></div>
+        </div>
+    </div>
+
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;" class="bg-white-light  mb-9 p-5 card   ">
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;" class="bg-white  mb-9 p-5 card   ">
 
         <div class="card-header" >
             <h2 class="card-title">لوحة تقدم الافكار</h2>
@@ -512,3 +526,113 @@
     });
 </script>
 
+
+<script>
+    var ctx = document.getElementById('arrowChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'line', // أو 'bar' حسب الحاجة
+        data: {
+            labels: ['يناير', 'فبراير', 'مارس', 'أبريل'],
+            datasets: [{
+                label: 'نسبة الأرباح',
+                data: [10, 15, 7, 20],
+                borderColor: 'blue',
+                backgroundColor: 'rgba(0, 0, 255, 0.2)',
+                fill: true
+            }]
+        }
+    });
+</script>
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch("/chart-data")
+            .then(response => response.json())
+            .then(data => {
+                let dates = data.map(item => item.date);
+                let counts = data.map(item => item.count);
+
+                let options = {
+                    chart: {
+                        type: 'line',
+                        height: 350
+                    },
+                    series: [{
+                        name: 'عدد المستخدمين',
+                        data: counts
+                    }],
+                    xaxis: {
+                        categories: dates
+                    },
+                    stroke: {
+                        curve: 'smooth',
+                        width: 3,
+                        colors: ['#ff9800'],
+                    },
+                    markers: {
+                        size: 5,
+                        colors: ['#ff9800'],
+                        strokeWidth: 2
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val + " مستخدم";
+                            }
+                        }
+                    }
+                };
+
+                let chart = new ApexCharts(document.querySelector("#UsersChart"), options);
+                chart.render();
+            });
+    });
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch("donors/chart-data")
+            .then(response => response.json())
+            .then(data => {
+                let dates = data.map(item => item.date);
+                let counts = data.map(item => item.count);
+
+                let options = {
+                    chart: {
+                        type: 'line',
+                        height: 350
+                    },
+                    series: [{
+                        name: 'عدد المتبرعين',
+                        data: counts
+                    }],
+                    xaxis: {
+                        categories: dates
+                    },
+                    stroke: {
+                        curve: 'smooth',
+                        width: 3,
+                        colors: ['#ff9800'],
+                    },
+                    markers: {
+                        size: 5,
+                        colors: ['#ff9800'],
+                        strokeWidth: 2
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val + " متبرع";
+                            }
+                        }
+                    }
+                };
+
+                let chart = new ApexCharts(document.querySelector("#DonorsChart"), options);
+                chart.render();
+            });
+    });
+</script>

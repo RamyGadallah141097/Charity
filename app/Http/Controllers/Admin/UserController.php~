@@ -29,7 +29,7 @@ class UserController extends Controller
             }
 
             if ($request->filled('standard_living')) {
-                $query->where('standard_living',"<", $request->standard_living);
+                $query->where('standard_living',, $request->standard_living);
             }
 
             if ($request->filled('family_number')) {
