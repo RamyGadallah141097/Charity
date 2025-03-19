@@ -54,7 +54,7 @@ table, td, th{
         <div style="display: flex; justify-content: space-between;">
           <p>شبين الكوم - محافظة المنوفية</p>
             <p>بتاريخ {{\Carbon\Carbon::now()->format("Y-m-d")}}</p>
-            
+
 
         </div>
         <div class="scroll">

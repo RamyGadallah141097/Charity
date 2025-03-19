@@ -13,8 +13,7 @@ class SettingController extends Controller
 {
     use WebpTrait;
     public function index(){
-        $setting = Setting::latest->first();
-        dd($setting->title);
+        $setting = Setting::latest()->first();
         return view('Admin.setting.index' , compact("setting"));
     }
 
@@ -26,7 +25,7 @@ class SettingController extends Controller
 //        }
         if ($request->hasFile('logo')) {
             $path = $request->file('logo')->store('uploads', 'public');
-            $input['logo'] = $path;
+            $input['logo'] = "uploads" . $request->file("logo")->getClientOriginalName();
         }
 
 

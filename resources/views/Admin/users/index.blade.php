@@ -1,7 +1,8 @@
 @extends('Admin/layouts/master')
 
 @section('title')
-    {{ isset($setting) ? isset($setting->title) : '' }} | المستفيدين
+    {{ isset($setting) ? $setting->title : '' }}
+ | المستفيدين
 @endsection
 
 @section('page_name')
@@ -15,7 +16,8 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">
-                        قائمة بالمستفدين من {{ isset($setting) ? isset($setting->title) : '' }}
+                        قائمة بالمستفدين من {{ isset($setting) ? $setting->title : '' }}
+
                     </h3>
                     <div class="row">
                         <div class="col-3 m-3">

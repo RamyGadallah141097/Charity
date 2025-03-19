@@ -1,7 +1,8 @@
 @extends('Admin/layouts/master')
 
 @section('title')
-    {{ isset($setting) ? isset($setting->title) : '' }} | الخزنة
+    {{ isset($setting) ? $setting->title : '' }}
+ | الخزنة
 @endsection
 @section('page_name') الخزنة @endsection
 @section('content')

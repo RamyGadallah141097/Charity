@@ -1,7 +1,8 @@
 @extends('Admin/layouts/master')
 
 @section('title')
-    {{ isset($setting) ? isset($setting->title) : '' }} | القروض
+    {{ isset($setting) ? $setting->title : '' }}
+ | القروض
 @endsection
 @section('page_name')
     التبرعات
@@ -158,7 +159,8 @@
 {{--            <body>--}}
 
 {{--            <div class="text-center" style="margin-top:100px ">--}}
-{{--                        <h4 class="mt-4 mb-1">بيان باسماء حالات  الاعانه الشهريه / {{ isset($setting) ? isset($setting->title) : '' }}</h4>--}}
+{{--                        <h4 class="mt-4 mb-1">بيان باسماء حالات  الاعانه الشهريه / {{ isset($setting) ? $setting->title : '' }}
+</h4>--}}
 {{--                        <hr style="width: 40%" class="mt-0 mb-1 text-dark"></hr>--}}
 {{--                        <h4 class="mt-4 mb-2"></h4>--}}
 {{--            </div>--}}

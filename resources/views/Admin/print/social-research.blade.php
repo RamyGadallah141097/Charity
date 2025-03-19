@@ -1,5 +1,6 @@
 @extends('Admin/layouts/master')
-@section('title') {{ isset($setting) ? isset($setting->title) : '' }} | بحث اجتماعي @endsection
+@section('title') {{ isset($setting) ? $setting->title : '' }}
+ | بحث اجتماعي @endsection
 @section('page_name') بحث اجتماعي @endsection
 @section('content')
         <div class="row">

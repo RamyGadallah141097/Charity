@@ -76,7 +76,6 @@ table, td, th{
                           <td class="text-sm font-weight-600">{{$loan->borrower->nationalID}}</td>
                           <td>{{$loan->loan_amount}}</td>
                           {{$total = $total + $loan->loan_amount}}
-                          {{--                                        <td>{{($subvention->type == 'once') ? 'مرة واحدة' : 'شهرية'}}</td>--}}
                           <td></td>
                       </tr>
                   @endforeach

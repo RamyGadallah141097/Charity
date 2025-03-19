@@ -1,6 +1,7 @@
 @extends('Admin/layouts/master')
 @section('title')
-    {{ isset($setting) ? isset($setting->title) : '' }} | الصفحة الرئيسية
+    {{ isset($setting) ? $setting->title : '' }}
+ | الصفحة الرئيسية
 
 @endsection
 @section('page_name')

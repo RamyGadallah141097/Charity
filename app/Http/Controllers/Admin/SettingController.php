@@ -25,7 +25,7 @@ class SettingController extends Controller
 //        }
         if ($request->hasFile('logo')) {
             $path = $request->file('logo')->store('uploads', 'public');
-            $input['logo'] = $path;
+            $input['logo'] = "uploads/" . $request->file("logo")->getClientOriginalName();
         }
 
 
