@@ -49,7 +49,8 @@ table, td, th{
       <!-- content -->
         <h4 class="text-center mt-1 mb-3">قطاع التكافل / الادارة العامة للزكاة(فرع شبين الكوم)</h4>
         <h4 class="text-center mt-1 mb-3">بيان باسماء الحالات المطلوبة تقرير / صرف / زكاة لهم</h4>
-        <h5 class="text-center mt-1 mb-3"> بيان باسماء حالات  الاعانه الشهريه / {{isset($setting->title)}}</h5>
+        <h5 class="text-center mt-1 mb-3"> بيان باسماء حالات  الاعانه الشهريه / {{ isset($setting) ? $setting->title : '' }}
+        </h5>
         <h5 class="text-center mt-1 mb-3"> وعنوانها كفر طنبدى -شارع البحر بعد صيدلية ناصف بجوار الاستاذ على داود المحامى</h5>
         <div style="display: flex; justify-content: space-between;">
           <p>شبين الكوم - محافظة المنوفية</p>
@@ -74,10 +75,10 @@ table, td, th{
                   @foreach($subventions as $subvention)
                       <tr>
                           <td>{{$loop->iteration}}</td>
-                          <td class="text-sm font-weight-600">{{$subvention->user->husband_name}}</td>
-                          <td class="text-sm font-weight-600">{{$subvention->user->husband_national_id}}</td>
-                          <td>{{$subvention->price}}</td>
-                          {{$total = $total + $subvention->price}}
+                          <td class="text-sm font-weight-600">{{optional($subvention->user)->husband_name}}</td>
+                          <td class="text-sm font-weight-600">{{optional($subvention->user)->husband_national_id}}</td>
+                          <td>{{optional($subvention->price)}}</td>
+                          {{$total = $total + optional($subvention->price)}}
                           {{--                                        <td>{{($subvention->type == 'once') ? 'مرة واحدة' : 'شهرية'}}</td>--}}
                           <td></td>
                       </tr>

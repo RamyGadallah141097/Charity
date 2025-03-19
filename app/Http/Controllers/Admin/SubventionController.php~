@@ -94,7 +94,9 @@ class SubventionController extends Controller
                 ->escapeColumns([])
                 ->make(true);
         }else{
-            return view('Admin/subventions/index');
+            $totoaSadaka = LockerLog::where("type", LockerLog::TYPE_MINUS)->where("moneyType" , LockerLog::moneyTypeSadaka)->sum("amount");
+            $totalZakat = LockerLog::where("type", LockerLog::TYPE_MINUS)->where("moneyType" , LockerLog::moneyTypeZakat)->sum("amount");
+            return view('Admin/subventions/index' , compact("totalZakat"));
         }
     }
 
@@ -377,7 +379,6 @@ class SubventionController extends Controller
     }
     public function showOneSubvention($id){
         $subventions = Subvention::where('type','once')->where('id' , $id)->latest()->first();
-        dd($subventions);
         return view('Admin.print.invoices2',compact('subventions'));
     }
 }

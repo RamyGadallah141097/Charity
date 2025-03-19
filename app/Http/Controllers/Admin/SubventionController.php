@@ -94,7 +94,9 @@ class SubventionController extends Controller
                 ->escapeColumns([])
                 ->make(true);
         }else{
-            return view('Admin/subventions/index');
+            $totoaSadaka = LockerLog::where("type", LockerLog::TYPE_MINUS)->where("moneyType" , LockerLog::moneyTypeSadaka)->sum("amount");
+            $totalZakat = LockerLog::where("type", LockerLog::TYPE_MINUS)->where("moneyType" , LockerLog::moneyTypeZakat)->sum("amount");
+            return view('Admin/subventions/index' , compact("totalZakat" , "totoaSadaka"));
         }
     }
 

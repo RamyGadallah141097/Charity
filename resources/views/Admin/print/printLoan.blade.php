@@ -72,10 +72,10 @@ table, td, th{
                   @foreach($loans as $loan)
                       <tr>
                           <td>{{$loop->iteration}}</td>
-                          <td class="text-sm font-weight-600">{{$loan->borrower->name}}</td>
-                          <td class="text-sm font-weight-600">{{$loan->borrower->nationalID}}</td>
-                          <td>{{$loan->loan_amount}}</td>
-                          {{$total = $total + $loan->loan_amount}}
+                          <td class="text-sm font-weight-600">{{$loan?->borrower->name}}</td>
+                          <td class="text-sm font-weight-600">{{$loan?->borrower->nationalID}}</td>
+                          <td>{{$loan?->loan_amount}}</td>
+                          {{$total = $total + $loan?->loan_amount}}
                           <td></td>
                       </tr>
                   @endforeach

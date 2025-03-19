@@ -10,6 +10,32 @@
     <div class="row">
 
         <div class="col-md-12 col-lg-12">
+            <div class="card-body w-100">
+                <div class="row w-100"> <!-- Ensuring full width -->
+                    <div class="col-12"> <!-- Making it take full width -->
+                        <div class="card bg-secondary img-card box-secondary-shadow">
+                            <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
+                                <span class="text-white fs-30">  الزكاة   </span>
+                                <span class="text-white fs-30"> {{$totalZakat}} EGP</span>
+                                <!-- Changed dollar icon to EGP -->
+                            </div>
+                            <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
+                                <span class="text-white fs-30">  الصدقات </span>
+                                <span class="text-white fs-30"> {{$totoaSadaka}} EGP </span>
+                                <!-- Changed dollar icon to EGP -->
+                            </div>
+
+
+                            <div class="card-body">
+                                <div class="row text-white">
+                                    <div class="col-4 text-end"> <!-- Added text-end for right alignment -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- COL END -->
+                </div><!-- ROW END -->
+            </div>
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title"> تخصيص الاعانات للمستفيدين المقبولين </h3>
