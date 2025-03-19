@@ -127,7 +127,7 @@ class loansController extends Controller
 
     public function storeLoans(LoanRequest $request)
     {
-        if (LockerLog::where("moneyType", LockerLog::moneyTypeLoans)->sum("amount") >= $request->loan_amount) {
+        if (LockerLog::where("moneyType", LockerLog::moneyTypeLoans)->where("type" , LockerLog::TYPE_PLUS)->sum("amount") - LockerLog::where("moneyType", LockerLog::moneyTypeLoans)->where("type" , LockerLog::TYPE_MINUS)->sum("amount") >= $request->loan_amount ) {
             try {
                 $data = $request->all();
 
@@ -167,7 +167,7 @@ class loansController extends Controller
                 return response()->json(['error' => $e->getMessage()], 500);
             }
         } else {
-            return response()->json(['error' => 'لا يوجد رصيد كافي'], 500);
+            return response()->json(['message' => 'لا يوجد رصيد كافي'], 500);
         }
     }
 
@@ -242,5 +242,11 @@ class loansController extends Controller
         $loan->save();
 
         return response()->json(['message' => 'تم دفع القرض بنجاح']);
+    }
+
+    public function printLoan()
+    {
+        $loans = Loan::all();
+        return view('Admin.print.printLoan',compact('loans'));
     }
 }

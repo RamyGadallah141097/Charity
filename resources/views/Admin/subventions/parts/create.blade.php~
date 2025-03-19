@@ -67,7 +67,7 @@
                 </div>
             </div>
 
-            <div>
+            <div class="form-control">
                 <label > سبب الاعانه</label>
                 <input class="form-control" name="comment">
             </div>

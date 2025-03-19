@@ -65,7 +65,7 @@ class subventionRequest extends FormRequest
 //                        }
 //                    ],
 //                    "type" => [],
-                ];
+//                ];
             }
 
             return []; // Ensure the function always returns an array

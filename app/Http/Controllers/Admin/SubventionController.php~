@@ -377,6 +377,7 @@ class SubventionController extends Controller
     }
     public function showOneSubvention($id){
         $subventions = Subvention::where('type','once')->where('id' , $id)->latest()->first();
+        dd($subventions);
         return view('Admin.print.invoices2',compact('subventions'));
     }
 }

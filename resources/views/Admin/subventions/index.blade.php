@@ -17,10 +17,7 @@
                              طباعة
                             <i class="fa fa-print"></i>
                         </a>
-                        <a href="{{route('showOneSubvention')}}" title="طباعة" class="btn btn-success btn-icon text-white">
-                             طباعة الاعانه مره واحده
-                            <i class="fa fa-print"></i>
-                        </a>
+
                         <button class="btn btn-secondary btn-icon text-white addBtn">
 									<span>
 										<i class="fe fe-plus"></i>
@@ -39,6 +36,7 @@
                                 <th class="min-w-125px">القيمه</th>
                                 <th class="min-w-125px">شهري/ مرة</th>
                                 <th class="min-w-125px">النوع</th>
+                                <th class="min-w-125px">السبب</th>
                                 <th class="min-w-50px rounded-end">العمليات</th>
                             </tr>
                             </thead>
@@ -106,6 +104,7 @@
             {data: 'price', name: 'price'},
             {data: 'type', name: 'type'},
             {data: 'Dtype', name: 'Dtype'},
+            {data: 'comment', name: 'comment'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
         showData('{{route('subventions.index')}}', columns);

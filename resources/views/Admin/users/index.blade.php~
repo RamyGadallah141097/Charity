@@ -124,5 +124,40 @@
             });
         });
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const dropdownButton = document.getElementById("dropdownButton");
+            const dropdownContent = document.getElementById("dropdownContent");
+            const confirmButton = document.getElementById("confirmSelection");
+            const selectedValuesDisplay = document.getElementById("selectedValues");
+
+            // Toggle dropdown display
+            dropdownButton.addEventListener("click", function() {
+                dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener("click", function(event) {
+                if (!dropdownButton.contains(event.target) && !dropdownContent.contains(event.target)) {
+                    dropdownContent.style.display = "none";
+                }
+            });
+
+            // Confirm selection and display result
+            confirmButton.addEventListener("click", function() {
+                const selectedSocial = document.querySelector("input[name='social_status']:checked");
+                const selectedLiving = document.querySelector("input[name='living_level']:checked");
+                const selectedChildren = document.querySelector("input[name='children_number']:checked");
+
+                let selectedText = "القيم المختارة: ";
+                selectedText += selectedSocial ? `الحالة الاجتماعية: ${selectedSocial.nextSibling.textContent.trim()} ، ` : "";
+                selectedText += selectedLiving ? `مستوى المعيشة: ${selectedLiving.nextSibling.textContent.trim()} ، ` : "";
+                selectedText += selectedChildren ? `عدد الأطفال: ${selectedChildren.nextSibling.textContent.trim()}` : "";
+
+                selectedValuesDisplay.textContent = selectedText;
+                dropdownContent.style.display = "none"; // Hide dropdown after selection
+            });
+        });
+    </script>
 
 @endsection

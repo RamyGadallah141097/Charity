@@ -83,6 +83,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('person-loans/{id}', 'loansController@personLoans')->name('person.loans');
     Route::get('loans/{id}', 'loansController@checkout')->name('loan.checkout');
     Route::post('loans/pay/{id}', 'loansController@payLoan')->name('loan.pay');
+    Route::get("loan/print"  , "loansController@printLoan" )->name("printLoan");
 
     //الزكاة والصدقات
     Route::get("safer/CharityZakat", "SaferController@indexCharityZakat")->name("safer.CharityZakat"); //تبرعات الزكاة والصدقات
@@ -91,7 +92,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     #### Subventions ####
     Route::resource('subventions', 'SubventionController');
     Route::get('showSubventions', 'SubventionController@showSubventions')->name('showSubventions');
-    Route::get('showOneSubvention', 'SubventionController@showOneSubvention')->name('showOneSubvention');
+    Route::get('showOneSubvention/{id}', 'SubventionController@showOneSubvention')->name('showOneSubvention');
     Route::POST('delete_subventions', 'SubventionController@delete')->name('delete_subventions');
 
 

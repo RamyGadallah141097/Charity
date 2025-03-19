@@ -63,7 +63,7 @@
 
             <div >
                 <label > سبب الاعانه</label>
-                <input value="{{$subvention->comment}}" class="form-control" name="comment">
+                <input value="{{$subvention}}" class="form-control" name="comment">
             </div>
         </div>
         <div class="modal-footer">
