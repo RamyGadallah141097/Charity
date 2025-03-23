@@ -66,6 +66,11 @@
                     </label>
                 </div>
             </div>
+
+            <div>
+                <label > سبب الاعانه</label>
+                <input class="form-control" name="comment">
+            </div>
             </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>

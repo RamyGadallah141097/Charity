@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDonate;
 use App\Models\Donor;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -119,4 +120,23 @@ class DonorController extends Controller
         }
 
     }
+
+
+//    funciton to the arrow charts
+    public function CartIndex()
+    {
+        return view('charts.dashboard');
+    }
+
+    public function getChartData()
+    {
+        $data = Donor::selectRaw('COUNT(id) as count, DATE(created_at) as date')
+            ->whereNotNull('created_at') // Ignore NULL values
+            ->groupBy('date')
+            ->orderBy('date', 'ASC') // Order by oldest to newest
+            ->get();
+
+        return response()->json($data);
+    }
+
 }

@@ -1,7 +1,8 @@
 @extends('Admin/layouts/master')
 
 @section('title')
-    {{ isset($setting) ? isset($setting->title) : '' }} | الاعانات
+    {{ isset($setting) ? $setting->title : '' }}
+ | الاعانات
 @endsection
 @section('page_name') الاعانات @endsection
 @section('content')
@@ -9,6 +10,32 @@
     <div class="row">
 
         <div class="col-md-12 col-lg-12">
+            <div class="card-body w-100">
+                <div class="row w-100"> <!-- Ensuring full width -->
+                    <div class="col-12"> <!-- Making it take full width -->
+                        <div class="card bg-secondary img-card box-secondary-shadow">
+                            <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
+                                <span class="text-white fs-30">  الزكاة   </span>
+                                <span class="text-white fs-30"> {{$totalZakat}} EGP</span>
+                                <!-- Changed dollar icon to EGP -->
+                            </div>
+                            <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
+                                <span class="text-white fs-30">  الصدقات </span>
+                                <span class="text-white fs-30"> {{$totoaSadaka}} EGP </span>
+                                <!-- Changed dollar icon to EGP -->
+                            </div>
+
+
+                            <div class="card-body">
+                                <div class="row text-white">
+                                    <div class="col-4 text-end"> <!-- Added text-end for right alignment -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- COL END -->
+                </div><!-- ROW END -->
+            </div>
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title"> تخصيص الاعانات للمستفيدين المقبولين </h3>
@@ -17,10 +44,7 @@
                              طباعة
                             <i class="fa fa-print"></i>
                         </a>
-                        <a href="{{route('showOneSubvention')}}" title="طباعة" class="btn btn-success btn-icon text-white">
-                             طباعة الاعانه مره واحده
-                            <i class="fa fa-print"></i>
-                        </a>
+
                         <button class="btn btn-secondary btn-icon text-white addBtn">
 									<span>
 										<i class="fe fe-plus"></i>
@@ -39,6 +63,7 @@
                                 <th class="min-w-125px">القيمه</th>
                                 <th class="min-w-125px">شهري/ مرة</th>
                                 <th class="min-w-125px">النوع</th>
+                                <th class="min-w-125px">السبب</th>
                                 <th class="min-w-50px rounded-end">العمليات</th>
                             </tr>
                             </thead>
@@ -106,6 +131,7 @@
             {data: 'price', name: 'price'},
             {data: 'type', name: 'type'},
             {data: 'Dtype', name: 'Dtype'},
+            {data: 'comment', name: 'comment'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
         showData('{{route('subventions.index')}}', columns);

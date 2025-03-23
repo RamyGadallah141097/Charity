@@ -33,8 +33,10 @@
                     <select  class="form-select bx-outline" name="moneyType" id="asset">
                         @if($Dtype == "zakat")
                             <option selected value="0">زكاة مال</option>
+                            <option  value="1">صدقه</option>
                         @else
                             <option selected value="1">صدقه</option>
+                            <option value="0">زكاة مال</option>
                         @endif
                     </select>
                     <input type="number" min=1 value="{{$subvention->price}}" class="form-control"  name="price" id="price">
@@ -59,6 +61,11 @@
                         <span class="custom-control-label">شهري</span>
                     </label>
                 </div>
+            </div>
+
+            <div >
+                <label > سبب الاعانه</label>
+                <input value="{{$subvention->comment}}" class="form-control" name="comment">
             </div>
         </div>
         <div class="modal-footer">

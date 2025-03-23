@@ -27,19 +27,19 @@
                         <!--begin::Table-->
                         <table class="table table-striped table-bordered text-nowrap w-100" id="dataTable">
                             <thead>
-                                <tr class="fw-bolder text-muted bg-light">
-                                    <th class="min-w-25px">#</th>
-                                    <th class="min-w-50px">اسم الزوج</th>
-                                    <th class="min-w-50px">اسم الزوجة</th>
-                                    <th class="min-w-50px">الحالة الاجتماعية</th>
-                                    <th class="min-w-50px">الهاتف</th>
-                                    <th class="min-w-50px">اجمالي الدخل</th>
-                                    <th class="min-w-50px">اجمالي المصاريف</th>
-                                    <th class="min-w-50px">مستوى المعيشة</th>
-                                    <th class="min-w-50px">الحالة </th>
-                                    <th class="min-w-50px"> تحديث</th>
-                                    <th class="min-w-50px rounded-end">العمليات</th>
-                                </tr>
+                            <tr class="fw-bolder text-muted bg-light">
+                                <th class="min-w-25px">#</th>
+                                <th class="min-w-50px">اسم الزوج</th>
+                                <th class="min-w-50px">اسم الزوجة</th>
+                                <th class="min-w-50px">الحالة الاجتماعية</th>
+                                <th class="min-w-50px">الهاتف</th>
+                                <th class="min-w-50px">اجمالي الدخل</th>
+                                <th class="min-w-50px">اجمالي المصاريف</th>
+                                <th class="min-w-50px">مستوى المعيشة</th>
+                                <th class="min-w-50px">الحالة </th>
+                                <th class="min-w-50px"> تحديث</th>
+                                <th class="min-w-50px rounded-end">العمليات</th>
+                            </tr>
                             </thead>
                         </table>
                     </div>
@@ -49,7 +49,7 @@
 
         <!--Delete MODAL -->
         <div class="modal fade" id="delete_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
+             aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -76,7 +76,7 @@
 
         <!-- Edit MODAL -->
         <div class="modal fade bd-example-modal-lg" id="editOrCreate" data-backdrop="static" tabindex="-1" role="dialog"
-            aria-hidden="true">
+             aria-hidden="true">
             <div class="modal-dialog modal-" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -102,9 +102,9 @@
     <script>
         {{-- alert("{{Request::segment(3)}}") --}}
         var columns = [{
-                data: 'id',
-                name: 'id'
-            },
+            data: 'id',
+            name: 'id'
+        },
             {
                 data: 'husband_name',
                 name: 'husband_name'

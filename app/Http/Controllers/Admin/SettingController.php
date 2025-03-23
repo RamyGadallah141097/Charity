@@ -13,15 +13,21 @@ class SettingController extends Controller
 {
     use WebpTrait;
     public function index(){
-        $setting = Setting::first();
-            return view('Admin.setting.index' , compact("setting"));
+        $setting = Setting::latest()->first();
+        return view('Admin.setting.index' , compact("setting"));
     }
 
     public function update(UpdateSetting $request){
         $input = $request->except('_token');
 
-        if($request->has('logo'))
-            $input['logo'] = $this->saveImage($request->logo,'assets/uploads','file');
+//        if($request->has('logo')) {
+//            $input['logo'] = $this->saveImage($request->logo, 'assets/uploads', 'file');
+//        }
+        if ($request->hasFile('logo')) {
+            $path = $request->file('logo')->store('uploads', 'public');
+            $input['logo'] = "uploads/" . $request->file("logo")->getClientOriginalName();
+        }
+
 
         Setting::first()->update($input);
         toastr()->success('تم تحديث البيانات بنجاح');
