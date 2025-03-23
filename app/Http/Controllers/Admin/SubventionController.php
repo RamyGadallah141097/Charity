@@ -54,6 +54,9 @@ class SubventionController extends Controller
                 ->editColumn('user_id', function ($data) {
                     return ($data->user->husband_name) ?? 'تم حذفه';
                 })
+                ->editColumn('created_at', function ($data) {
+                    return $data->created_at->format('F d Y');
+                })
                 ->editColumn('price', function ($data) {
 
 
@@ -131,6 +134,7 @@ class SubventionController extends Controller
                             ]);
 
                         }else{
+                            toastr()->error("لا توجد سيوله لهذه الاعانه");
                             return response()->json(["status"=>500 , "message" => "لا توجد سيوله لهذه الاعانه"]);
                         }
                     }else{
@@ -145,6 +149,7 @@ class SubventionController extends Controller
                                     " ورقم هاتفه " . ($user ? $user->nearest_phone : "غير متوفر"),
                             ]);
                         }else{
+                            toastr()->error("لا توجد سيوله لهذه الاعانه");
                             return response()->json(["status"=>500 , "message" => "لا توجد سيوله لهذه الاعانه"]);
                         }
                     }
@@ -174,17 +179,19 @@ class SubventionController extends Controller
                             ]);
 
                         }else{
-
+                            toastr()->error("لا توجد سيوله لهذه الاعانه");
                             return response()->json(["status"=>500 , "message" => "لا توجد سيوله لهذه الاعانه"]);
                         }
 
                     }else{
+                        toastr()->error("لا توجد سيوله لهذه الاعانه");
                         return response()->json(["status"=>500 ,  "message" => "لا توجد سيوله لهذه الاعانه"]);
                     }
                 }
 
                 return response()->json(['status' => 200]);
             }else{
+                toastr()->error("المستخدم غير موجود");
                 return response()->json(["status"=>500 ,  "message" => "المستخدم غير موجود"]);
             }
 
@@ -248,6 +255,7 @@ class SubventionController extends Controller
                                 "admin_id" => auth()->id(),
                             ]);
                         }else{
+                            toastr()->error("لا توجد سيوله لهذه الاعانه");
                             return response()->json(["status"=>500 , "message" => "لا توجد سيوله لهذه الاعانه"]);
                         }
                     }else{
@@ -264,6 +272,7 @@ class SubventionController extends Controller
                                 "admin_id" => auth()->id(),
                             ]);
                         }else{
+                            toastr()->error("لا توجد سيوله لهذه الاعانه");
                             return response()->json(["status"=>500 , "message" => "لا توجد سيوله لهذه الاعانه"]);
                         }
                     }
@@ -294,15 +303,18 @@ class SubventionController extends Controller
                             "admin_id" => auth()->id(),
                         ]);
                     }else {
+                        toastr()->error("لا توجد سيوله لهذه الاعانه");
                         return response()->json(["status"=>500 ,  "message" => "لا توجد سيوله لهذه الاعانه"]);
                     }
                 }
 
                 return response()->json(['status' => 200]);
             }else{
+                toastr()->error("المستخدم غير موجود");
                 return response()->json(["status"=>500 ,  "message" => "المستخدم غير موجود"]);
             }
         }catch (\Exception $e){
+            toastr()->error("لا توجد سيوله لهذه الاعانه");
             return response()->json(["status"=>500 ,  "message" => "لا توجد سيوله لهذه الاعانه"]);
         }
 //
@@ -360,8 +372,10 @@ class SubventionController extends Controller
             $lockerLogs = LockerLog::where("amount" , $subvention->price)->where("created_at" , $subvention->created_at)->where("type" , LockerLog::TYPE_MINUS);
             $lockerLogs->delete();
             $asset = Asset::find($subvention->asset_id);
-            $asset->counter += Subvention::where('id',$request->id)->first()->asset_count;
-            $asset->save();
+           if ($asset) {
+               $asset->counter += Subvention::where('id',$request->id)->first()->asset_count;
+               $asset->save();
+           }
             Subvention::destroy($request->id);
             return redirect()->back();
 //            return response(['message'=>'تم الحذف بنجاح','status'=>200],200);

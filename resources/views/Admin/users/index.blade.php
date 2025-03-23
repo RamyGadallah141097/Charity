@@ -10,10 +10,45 @@
     <div class="row">
         <div class="col-md-12 col-lg-12">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header w-100">
                     <h3 class="card-title">
                         قائمة بالمستفدين من {{ isset($setting) ? isset($setting->title) : '' }}
                     </h3>
+                    <div class="row mb-3 w-100">
+                        <div class="col-3">
+                            <label for="social_status">الحاله الشخصيه</label>
+                            <select id="social_status" class="form-control">
+                                <option value="">Select</option>
+                                <option value="0">اعزب</option>
+                                <option value="1">متزوج</option>
+                                <option value="2">ارمل</option>
+                            </select>
+                        </div>
+
+                        <div class="col-3">
+                            <label for="standard_living">الحالة المعيشيه</label>
+                            <select id="standard_living" class="form-control">
+                                <option value="">Select</option>
+                                <option value="1000">1000</option>
+                                <option value="4000">4000</option>
+                                <option value="10000">10000</option>
+                            </select>
+                        </div>
+
+                        <div class="col-3">
+                            <label for="family_number">عدد الاطفال</label>
+                            <select id="family_number" class="form-control">
+                                <option value="">Select</option>
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4+</option>
+                            </select>
+                        </div>
+                    </div>
+
+
                     <div class="">
                         <a href="{{ route('users.create') }}" class="btn btn-secondary btn-icon text-white">
                             <span>
@@ -192,4 +227,47 @@
             });
         });
     </script>
+
+<script>
+    $(document).ready(function () {
+        function showData(url, columns) {
+            $('#dataTable').DataTable({
+                processing: true,
+                serverSide: true,
+                destroy: true, // Ensure reloading
+                ajax: {
+                    url: url,
+                    data: function (d) {
+                        d.social_status = $('#social_status').val();
+                        d.standard_living = $('#standard_living').val();
+                        d.family_number = $('#family_number').val();
+                    }
+                },
+                columns: columns
+            });
+        }
+
+        var columns = [
+            { data: 'id', name: 'id' },
+            { data: 'husband_name', name: 'husband_name' },
+            { data: 'wife_name', name: 'wife_name' },
+            { data: 'social_status', name: 'social_status' },
+            { data: 'nearest_phone', name: 'nearest_phone' },
+            { data: 'gross_income', name: 'gross_income' },
+            { data: 'gross_expenses', name: 'gross_expenses' },
+            { data: 'standard_living', name: 'standard_living' },
+            { data: 'status', name: 'status' },
+            { data: 'statusChange', name: 'statusChange' },
+            { data: 'action', name: 'action', orderable: false, searchable: false }
+        ];
+
+        var tableUrl = "{{ route('users.index', request()->segment(3)) }}";
+        showData(tableUrl, columns);
+
+        $('#social_status, #standard_living, #family_number').change(function () {
+            showData(tableUrl, columns);
+        });
+    });
+
+</script>
 @endsection

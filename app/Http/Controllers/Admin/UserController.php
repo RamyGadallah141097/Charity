@@ -21,7 +21,6 @@ class UserController extends Controller
         if ($request->ajax()) {
 
 
-
             $query = User::where('status', $status);
 
             if ($request->filled('social_status')) {
@@ -29,16 +28,21 @@ class UserController extends Controller
             }
 
             if ($request->filled('standard_living')) {
-                $query->where('standard_living',"<", $request->standard_living);
+                $query->where('standard_living', "<", $request->standard_living);
             }
 
             if ($request->filled('family_number')) {
-                $query->whereHas('childrens', function ($q) use ($request) {
-                    $q->select('user_id', DB::raw('COUNT(id) as children_count'))
-                        ->groupBy('user_id')
-                        ->having('children_count', '=', $request->family_number);
-                });
+                if ($request->has('family_number') && (int)$request->family_number >= 1) {
+                    $query->whereHas('childrens', function ($q) use ($request) {
+                        $q->groupBy('user_id')
+                            ->havingRaw('COUNT(id) = ?', [$request->family_number]);
+                    });
+                } else {
+                    $query->whereDoesntHave('childrens');
+                }
+
             }
+
             $users = $query->get();
             return Datatables::of($users)
                 ->addColumn('action', function ($users) {

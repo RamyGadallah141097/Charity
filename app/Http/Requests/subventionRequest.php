@@ -44,6 +44,7 @@ class subventionRequest extends FormRequest
 
                             // Validate asset count
                             if ($value > $asset->counter) {
+                                toastr()->error("عدد العينيه غير كافيه");
                                 $fail("عدد العينيه غير كافيه");
                             }
                         },
