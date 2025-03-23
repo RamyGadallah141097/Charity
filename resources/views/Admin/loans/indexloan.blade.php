@@ -46,7 +46,7 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title"> القروض الشخصية </h3>
-                    @if($pay == "null")
+                    @if($pay == 1)
                         <button class="btn btn-success btn-icon text-white loan-btn" data-id="{{$id}}" >  صرف القرض </button>
                     @endif
                 </div>

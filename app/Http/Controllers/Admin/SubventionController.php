@@ -58,18 +58,12 @@ class SubventionController extends Controller
                     return $data->created_at->format('F d Y');
                 })
                 ->editColumn('price', function ($data) {
-
-
-
                     if ($data->price == 0) {
                         return ' عدد : ' . $data->asset_count . ' من ' .
                             ($data->asset ? ($data->asset->name ?? '-') . ' '  : '-');
                     } else {
                         return " مبلغ قدره : " . $data->price . " جنيه " ;
                     }
-
-
-
 //                    $lockerLogs = LockerLog::where("amount" , $data->price)->where("created_at" , $data->created_at)->where("type" , LockerLog::TYPE_MINUS);
 //                    $Dtype = $lockerLogs->first()->moneyType;
 //                    if ($data->price == 0){
@@ -117,6 +111,7 @@ class SubventionController extends Controller
     public function store(subventionRequest $request)
     {
 
+        DB::beginTransaction();
         try{
             $user = User::find($request->user_id);
             if ($user){
@@ -195,6 +190,7 @@ class SubventionController extends Controller
                 return response()->json(["status"=>500 ,  "message" => "المستخدم غير موجود"]);
             }
 
+            DB::commit();
         }catch (\Exception $e){
             DB::rollBack();
             return response()->json(['status' => 500 , "message" => $e->getMessage()]);

@@ -271,4 +271,31 @@
     });
 
 </script>
+    // Change Status Using Ajax
+    <script>
+    $(document).on('click', '.statusBtn', function(event) {
+    event.preventDefault()
+    var id = $(this).data("id"),
+    status = $(this).data("status")
+    $.ajax({
+    type: 'POST',
+    url: "{{ route('updateUserStatus') }}",
+    data: {
+    '_token': "{{ csrf_token() }}",
+    'id': id,
+    'status': status,
+    },
+    success: function(data) {
+    if (data.status === true) {
+    $('#dataTable').DataTable().ajax.reload();
+    toastr.success(data.message)
+    } else
+    toastr.error('هناك خطأ ما يرجي اعادة المحاولة')
+    },
+    error: function(data) {
+    toastr.error(data.message)
+    }
+    });
+    });
+    </script>
 @endsection

@@ -26,7 +26,7 @@ class AssetsRequest extends FormRequest
         return [
             "name" => "required",
             "description" => "required",
-            "counter" => "required|numeric",
+//            "counter" => "required|numeric",
         ];
     }
 }

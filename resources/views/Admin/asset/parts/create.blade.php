@@ -9,10 +9,10 @@
             <label for="description" class="form-control-label">الوصف</label>
             <textarea rows="3" class="form-control" name="description" id="description"></textarea>
         </div>
-        <div class="form-group">
-            <label for="counter" class="form-control-label">العدد</label>
-            <input type="number" min="0" class="form-control" name="counter" id="counter" required>
-        </div>
+{{--        <div class="form-group">--}}
+{{--            <label for="counter" class="form-control-label">العدد</label>--}}
+{{--            <input type="number" min="0" class="form-control" name="counter" id="counter" required>--}}
+{{--        </div>--}}
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">إغلاق</button>
             <button type="submit" class="btn btn-primary" id="addButton">إضافة</button>

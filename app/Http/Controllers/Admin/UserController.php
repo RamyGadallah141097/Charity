@@ -79,19 +79,8 @@ class UserController extends Controller
                 })->addColumn('statusChange', function ($users) {
                     if ($users->status == 'new') {
                         $available_actions = '
-                                <form action="'. route('updateUserStatus') .'" method="POST">
-                                    '. csrf_field() .'
-                                    <input type="hidden" name="user_id" value="'. $users->id .'">
-                                    <input type="hidden" name="status" value="accepted">
-                                    <button class="btn btn-outline-success">قبول</button>
-                                </form>
-
-                                <form action="'. route('updateUserStatus') .'" method="POST">
-                                    '. csrf_field() .'
-                                    <input type="hidden" name="user_id" value="'. $users->id .'">
-                                    <input type="hidden" name="status" value="refused">
-                                    <button class="btn btn-outline-danger">رفض</button>
-                                </form>
+                                <li><a data-id="' . $users->id . '" data-status="accepted" href="#" class="statusBtn ">قبول</a></li>
+                               <li><a data-id="' . $users->id . '" data-status="refused" href="#" class="statusBtn ">رفض </a></li>
                             ';
 
                     } elseif ($users->status == 'accepted') {
@@ -182,24 +171,37 @@ class UserController extends Controller
         }
     }
 
+
     public function updateUserStatus(Request $request)
     {
         try {
-            $user = User::where("id" , $request->user_id)->first();
-           if ($user){
-               $user->status = $request->status;
-               $user->save();
-           }else{
-               toastr()->error("المستخدم غير موجود");
-               return redirect("admin/users/new");
-           }
-            toastr()->success("success");
-            return redirect("admin/users/new");
+            $user = User::find($request->id);
+            $user->update(['status' => $request->status]);
+            return response(['message' => 'تم تحديث حالة المستفيد بنجاح', 'status' => true], 200);
         } catch (\Exception $ex) {
-            toastr()->error($ex->getMessage());
-            return redirect("admin/users/new");
+            return response(['message' => $ex->getMessage(), 'status' => false], 200);
         }
     }
+
+//
+//    public function updateUserStatus(Request $request)
+//    {
+//        try {
+//            $user = User::where("id" , $request->user_id)->first();
+//           if ($user){
+//               $user->status = $request->status;
+//               $user->save();
+//           }else{
+//               toastr()->error("المستخدم غير موجود");
+//               return redirect("admin/users/new");
+//           }
+//            toastr()->success("success");
+//            return redirect("admin/users/new");
+//        } catch (\Exception $ex) {
+//            toastr()->error($ex->getMessage());
+//            return redirect("admin/users/new");
+//        }
+//    }
 
     public function create()
     {
@@ -315,9 +317,26 @@ class UserController extends Controller
         $data = User::selectRaw('COUNT(id) as count, DATE(created_at) as date')
             ->whereNotNull('created_at') // Avoid NULL values
             ->groupBy('date')
-            ->orderBy('date', 'DESC') // Newest first
+            ->orderBy('date', 'ASC') // Newest first
             ->get();
 
         return response()->json($data);
     }
 }
+
+
+
+//the form of change the status
+//<form action="'. route('updateUserStatus') .'" method="POST">
+//'. csrf_field() .'
+//<input type="hidden" name="user_id" value="'. $users->id .'">
+//<input type="hidden" name="status" value="accepted">
+//<button class="btn btn-outline-success">قبول</button>
+//</form>
+//
+//<form action="'. route('updateUserStatus') .'" method="POST">
+//'. csrf_field() .'
+//<input type="hidden" name="user_id" value="'. $users->id .'">
+//<input type="hidden" name="status" value="refused">
+//<button class="btn btn-outline-danger">رفض</button>
+//</form>
