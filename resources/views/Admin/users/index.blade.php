@@ -21,7 +21,8 @@
                                 <option value="">Select</option>
                                 <option value="0">اعزب</option>
                                 <option value="1">متزوج</option>
-                                <option value="2">ارمل</option>
+                                <option value="2">مطلق</option>
+                                <option value="3">ارمل</option>
                             </select>
                         </div>
 
@@ -29,9 +30,9 @@
                             <label for="standard_living">الحالة المعيشيه</label>
                             <select id="standard_living" class="form-control">
                                 <option value="">Select</option>
-                                <option value="1000">1000</option>
-                                <option value="4000">4000</option>
-                                <option value="10000">10000</option>
+                                <option value="1001">1000</option>
+                                <option value="5001">5000</option>
+                                <option value="10001">10000</option>
                             </select>
                         </div>
 
