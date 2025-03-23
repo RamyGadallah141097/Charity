@@ -8,7 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 class LockerLog extends Model
 {
     use HasFactory;
-    protected $fillable =["moneyType" , "type","admin_id","comment" , "amount" , "asset_id" , "asset_count"];
+    protected $fillable = [
+        "moneyType",
+        "type",
+        "admin_id",
+        "donation_id", // إزالة أي مسافة زائدة هنا
+        "subvention_id",
+        "loan_id",
+        "comment",
+        "amount",
+        "asset_id",
+        "asset_count",
+    ];
+
+//    protected $fillable =["moneyType" , "type","admin_id", "donation_id" , "subvention_id" , "loan_id","comment" , "amount" , "asset_id" , "asset_count"];
 
     const TYPE_PLUS = 'plus';
     const TYPE_MINUS = 'minus';

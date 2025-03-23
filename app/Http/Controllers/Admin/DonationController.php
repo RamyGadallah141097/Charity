@@ -11,6 +11,7 @@ use App\Models\Donor;
 use App\Models\LockerLog;
 use App\Models\Subvention;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
 class DonationController extends Controller
@@ -100,10 +101,12 @@ class DonationController extends Controller
     public function store(DonationsRequest $request)
     {
 
+        DB::beginTransaction();
         try {
+            $donation = Donation::create($request->except('_token'));
             if ($request->donation_type != 3){
                 $donor = Donor::find($request->donor_id);
-                LockerLog::create([
+                $loek = LockerLog::create([
                     "moneyType" => $request->donation_type == 0 ? LockerLog::moneyTypeZakat :
                         ($request->donation_type == 1 ? LockerLog::moneyTypeSadaka :
                             ($request->donation_type == 2 ? LockerLog::moneyTypeLoans : "subvention")),
@@ -111,6 +114,9 @@ class DonationController extends Controller
 //                    "asset_id" =>0,
 //                    "asset_count" =>0,
                     "type" => LockerLog::TYPE_PLUS,
+                    "donation_id" => trim($donation->id),
+                    "subvention_id" => null,
+                    "loan_id" => null,
                     "admin_id" => auth()->id(),
                     "comment" => "تبرع جديد من " . ($donor ? $donor->name : "مجهول") .
                         " ورقم هاتفه " . ($donor ? $donor->phone : "غير متوفر"),
@@ -125,21 +131,23 @@ class DonationController extends Controller
                     "asset_id" =>$request->asset_id,
                     "asset_count" =>$request->asset_count,
                     "type" => LockerLog::TYPE_PLUS,
+                    "donation_id" => trim($donation->id),
+                    "subvention_id" => null,
+                    "loan_id" => null,
                     "admin_id" => auth()->id(),
                     "comment" => "تبرع جديد من " . ($donor ? $donor->name : "مجهول") .
                         " ورقم هاتفه " . ($donor ? $donor->phone : "غير متوفر"),
                 ]);
+
             }
 
 
-            $asset = Asset::find($request->asset_id);
-            $asset->counter += $request->asset_count;
-            $asset->save();
-            Donation::create($request->except('_token'));
+
 
             return response()->json(['status' => 200]);
 
         }catch (\Exception $e){
+            DB::rollBack();
             return response()->json(["status" => 500 , "message"=>$e->getMessage()]);
         }
 
@@ -162,6 +170,9 @@ class DonationController extends Controller
     public function update(DonationsRequest $request, $id)
     {
         $donation = Donation::find($id);
+        $lock = LockerLog::find($donation->id)->first()->update([
+            "amount"=>$request->donation_amount
+        ]);
         if ($donation->update($request->except('_token', '_method'))) {
             return response()->json(['status' => 200]);
         } else {
@@ -179,7 +190,9 @@ class DonationController extends Controller
     public function delete(Request $request)
     {
         try {
-            Donation::destroy($request->id);
+            $donation = Donation::find($request->id);
+            LockerLog::destroy($donation->id);
+            $donation->delete();
             return redirect()->back();
             return response(['message' => 'تم الحذف بنجاح', 'status' => 200], 200);
         } catch (\Exception $ex) {

@@ -30,16 +30,16 @@ class LoanRequest extends FormRequest
             'borrower_phone' => 'nullable',
             'loan_amount' => [
                 'required', 'numeric', 'max:100000',
-                function ($attribute, $value, $fail) {
-                    $maxLoan = Setting::latest()->first()? Setting::latest()->first()->maxLoan ?? 0 : 0;
-                    $currentYear = now()->year;
-                    $totalLoansThisYear = Loan::where("borrower_id", request()->borrower_id)
-                        ->whereYear('created_at', $currentYear)
-                        ->sum("loan_amount");
-                    if (($totalLoansThisYear + $value) > $maxLoan) {
-                        $fail("المبلغ الإجمالي للقروض في هذه السنة يجب ألا يتجاوز $maxLoan.");
-                    }
-                }
+//                function ($attribute, $value, $fail) {
+//                    $maxLoan = Setting::latest()->first()? Setting::latest()->first()->maxLoan ?? 0 : 0;
+//                    $currentYear = now()->year;
+//                    $totalLoansThisYear = Loan::where("borrower_id", request()->borrower_id)
+//                        ->whereYear('created_at', $currentYear)
+//                        ->sum("loan_amount");
+//                    if (($totalLoansThisYear + $value) > $maxLoan) {
+//                        $fail("المبلغ الإجمالي للقروض في هذه السنة يجب ألا يتجاوز $maxLoan.");
+//                    }
+//                }
             ],
             'loan_date' => 'required|date',
 

@@ -133,23 +133,22 @@ class loansController extends Controller
 
                 if ($request->type == 0) {
                     $data['isStarted'] = now()->format("Y-m"); // Ensure isStarted is set
-
+                    $loan = Loan::create($data);
                     $borrower = Borrower::find($request->borrower_id);
                     LockerLog::create([
                         "moneyType" => LockerLog::moneyTypeLoans,
                         "amount" => $request->loan_amount,
                         "type" => LockerLog::TYPE_MINUS,
                         "admin_id" => auth()->id(),
+                        "donation_id " => null,
+                        "subvention_id" => null,
+                        "loan_id" => $loan->id,
                         "comment" => "قرض جديد الي " . ($borrower ? $borrower->name : "مجهول") .
                             " ورقم هاتفه " . ($borrower ? $borrower->phone : "غير متوفر"),
                     ]);
-
-//                    dd($data);
                 }
-//                dd($data);
 
 
-                $loan = Loan::create($data);
                 $amount = $request->loan_amount / 10;
 
                 for ($i = 0; $i < 10; $i++) {
@@ -220,6 +219,9 @@ class loansController extends Controller
                     "amount" => $loan->loan_amount,
                     "type" => LockerLog::TYPE_MINUS,
                     "admin_id" => auth()->id(),
+                    "donation_id" => null,
+                    "subvention_id" => null,
+                    "loan_id" => $loan->id,
                     "comment" => "قرض جديد الي " . ($borrower ? $borrower->name : "مجهول") .
                         " ورقم هاتفه " . ($borrower ? $borrower->phone : "غير متوفر"),
                 ]);

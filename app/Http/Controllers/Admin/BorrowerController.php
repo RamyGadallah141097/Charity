@@ -352,11 +352,13 @@ class BorrowerController extends Controller
                 $loan = Loan::where('borrower_id', $request->id)->first();
 
                 if ($loan) {
-                        LockerLog::where("amount", $loan->loan_amount)
-                        ->where("created_at", $loan->created_at) // Matches exact timestamp
-                        ->where("type", LockerLog::TYPE_MINUS)
-                        ->where("moneyType", LockerLog::moneyTypeLoans)
-                        ->delete();
+//                        LockerLog::where("amount", $loan->loan_amount)
+//                        ->where("created_at", $loan->created_at) // Matches exact timestamp
+//                        ->where("type", LockerLog::TYPE_MINUS)
+//                        ->where("moneyType", LockerLog::moneyTypeLoans)
+//                        ->delete();
+                          LockerLog::where("loan_id", $loan->id)->delete();
+
 
                 }
 
