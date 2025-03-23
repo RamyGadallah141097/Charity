@@ -127,4 +127,35 @@
         });
     </script>
 
+
+    <script>
+        $(document).ready(function () {
+            $(".statusBtn").on("click", function (e) {
+                // e.preventDefault();
+
+                console.log("asd")
+                let userId = $(this).data("id");
+                let status = $(this).data("status");
+                let url = "{{ route('updateUserStatus') }}";
+
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'), // جلب CSRF Token
+                        id: userId,
+                        status: status
+                    },
+                    success: function (response) {
+                        alert("تم تحديث الحالة بنجاح!");
+                        location.reload();
+                    },
+                    error: function (xhr) {
+                        alert("حدث خطأ، الرجاء المحاولة مرة أخرى.");
+                    }
+                });
+            });
+        });
+    </script>
+
 @endsection

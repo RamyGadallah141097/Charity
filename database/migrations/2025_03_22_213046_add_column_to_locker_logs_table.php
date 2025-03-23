@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnToSettingTable extends Migration
+class AddColumnToLockerLogsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddColumnToSettingTable extends Migration
      */
     public function up()
     {
-        Schema::table('settings', function (Blueprint $table) {
-            $table->integer("adminSubscription")->nullable();
+        Schema::table('locker_logs', function (Blueprint $table) {
+//            $table->foreignId()
         });
     }
 
@@ -25,7 +25,7 @@ class AddColumnToSettingTable extends Migration
      */
     public function down()
     {
-        Schema::table('settings', function (Blueprint $table) {
+        Schema::table('locker_logs', function (Blueprint $table) {
             //
         });
     }

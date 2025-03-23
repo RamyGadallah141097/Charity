@@ -75,13 +75,29 @@ class UserController extends Controller
                 })->addColumn('statusChange', function ($users) {
                     if ($users->status == 'new') {
                         $available_actions = '
-                               <li><a data-id="' . $users->id . '" data-status="accepted" href="#" class="statusBtn ">قبول</a></li>
-                               <li><a data-id="' . $users->id . '" data-status="refused" href="#" class="statusBtn ">رفض </a></li>
-                    ';
+                                <form action="'. route('updateUserStatus') .'" method="POST">
+                                    '. csrf_field() .'
+                                    <input type="hidden" name="user_id" value="'. $users->id .'">
+                                    <input type="hidden" name="status" value="accepted">
+                                    <button class="btn btn-outline-success">قبول</button>
+                                </form>
+
+                                <form action="'. route('updateUserStatus') .'" method="POST">
+                                    '. csrf_field() .'
+                                    <input type="hidden" name="user_id" value="'. $users->id .'">
+                                    <input type="hidden" name="status" value="refused">
+                                    <button class="btn btn-outline-danger">رفض</button>
+                                </form>
+                            ';
+
                     } elseif ($users->status == 'accepted') {
                         $available_actions = '
-                               <li><a data-id="' . $users->id . '" data-status="preparing" href="#" class="statusBtn ">قيد التنفيذ</a></li>
-                               <li><a data-id="' . $users->id . '" data-status="refused" href="#" class="statusBtn "> رفض</a></li>
+                            <li>
+                                <a data-id="{{ $users->id }}" data-status="preparing" href="#" class="statusBtn">قيد التنفيذ</a>
+                            </li>
+                            <li>
+                                <a data-id="{{ $users->id }}" data-status="refused" href="#" class="statusBtn">رفض</a>
+                            </li>
                     ';
                     } elseif ($users->status == 'preparing') {
                         $available_actions = '
@@ -165,11 +181,19 @@ class UserController extends Controller
     public function updateUserStatus(Request $request)
     {
         try {
-            $user = User::find($request->id);
-            $user->update(['status' => $request->status]);
-            return response(['message' => 'تم تحديث حالة المستفيد بنجاح', 'status' => true], 200);
+            $user = User::where("id" , $request->user_id)->first();
+           if ($user){
+               $user->status = $request->status;
+               $user->save();
+           }else{
+               toastr()->error("المستخدم غير موجود");
+               return redirect("admin/users/new");
+           }
+            toastr()->success("success");
+            return redirect("admin/users/new");
         } catch (\Exception $ex) {
-            return response(['message' => $ex->getMessage(), 'status' => false], 200);
+            toastr()->error($ex->getMessage());
+            return redirect("admin/users/new");
         }
     }
 

@@ -114,7 +114,6 @@ class SubventionController extends Controller
     public function store(subventionRequest $request)
     {
 
-//        dd("Asdf");
         try{
             $user = User::find($request->user_id);
             if ($user){

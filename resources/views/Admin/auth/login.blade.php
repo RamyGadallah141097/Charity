@@ -28,7 +28,7 @@
     </main>
     <div class="welcome-container">
         <h3 class="heading-secondary">مرحبا بعودتك <span class="lg">{{ isset($setting) ? $setting->title : '' }}</span></h3>
-        <img src="{{asset("$setting->logo")}}" alt="login" style="max-height: 400px;mix-blend-mode: multiply;">
+{{--        <img src="{{asset($setting) ? $setting->logo : "-"}}" alt="login" style="max-height: 400px;mix-blend-mode: multiply;">--}}
 
     </div>
 </div>
