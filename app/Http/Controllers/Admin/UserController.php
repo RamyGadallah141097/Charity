@@ -15,6 +15,7 @@ use Yajra\DataTables\DataTables;
 
 class UserController extends Controller
 {
+
     public function index(Request $request, $status)
     {
 
@@ -75,29 +76,13 @@ class UserController extends Controller
                 })->addColumn('statusChange', function ($users) {
                     if ($users->status == 'new') {
                         $available_actions = '
-                                <form action="'. route('updateUserStatus') .'" method="POST">
-                                    '. csrf_field() .'
-                                    <input type="hidden" name="user_id" value="'. $users->id .'">
-                                    <input type="hidden" name="status" value="accepted">
-                                    <button class="btn btn-outline-success">قبول</button>
-                                </form>
-
-                                <form action="'. route('updateUserStatus') .'" method="POST">
-                                    '. csrf_field() .'
-                                    <input type="hidden" name="user_id" value="'. $users->id .'">
-                                    <input type="hidden" name="status" value="refused">
-                                    <button class="btn btn-outline-danger">رفض</button>
-                                </form>
-                            ';
-
+                               <li><a data-id="' . $users->id . '" data-status="accepted" href="#" class="statusBtn ">قبول</a></li>
+                               <li><a data-id="' . $users->id . '" data-status="refused" href="#" class="statusBtn ">رفض </a></li>
+                    ';
                     } elseif ($users->status == 'accepted') {
                         $available_actions = '
-                            <li>
-                                <a data-id="{{ $users->id }}" data-status="preparing" href="#" class="statusBtn">قيد التنفيذ</a>
-                            </li>
-                            <li>
-                                <a data-id="{{ $users->id }}" data-status="refused" href="#" class="statusBtn">رفض</a>
-                            </li>
+                               <li><a data-id="' . $users->id . '" data-status="preparing" href="#" class="statusBtn ">قيد التنفيذ</a></li>
+                               <li><a data-id="' . $users->id . '" data-status="refused" href="#" class="statusBtn "> رفض</a></li>
                     ';
                     } elseif ($users->status == 'preparing') {
                         $available_actions = '
