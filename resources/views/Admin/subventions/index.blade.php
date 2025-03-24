@@ -146,6 +146,9 @@
         showEditModal('{{route('subventions.edit',':id')}}');
         editScript();
     </script>
+
+
+
 @endsection
 
 

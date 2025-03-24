@@ -4,7 +4,7 @@ return [
     'admin.home' => 'الرئيسية',
 
     // المسؤولون
-    'admins.index' => 'عرض المسؤولين',
+    'admins.index' => 'عرض المشرفين',
     'admins.create' => 'إضافة مسؤول جديد',
     'admins.store' => 'حفظ مسؤول',
     'admins.edit' => 'تعديل مسؤول',
@@ -14,7 +14,7 @@ return [
     'myProfile' => 'ملفي الشخصي',
 
     // المستخدمون
-    'users.index' => 'عرض المستخدمين',
+    'users.index' => 'عرض المستفيدين',
     'users.create' => 'إضافة مستخدم جديد',
     'users.store' => 'حفظ مستخدم',
     'delete_users' => 'حذف المستخدمين',
@@ -41,7 +41,7 @@ return [
     'search.donor' => 'البحث عن متبرع',
 
     // المهام
-    'tasks.index' => 'عرض المهام',
+    'tasks.index' => 'عرض الافكار',
     'tasks.create' => 'إضافة مهمة جديدة',
     'tasks.store' => 'حفظ مهمة',
     'tasks.edit' => 'تعديل مهمة',
@@ -50,9 +50,9 @@ return [
     'delete_task' => 'حذف المهام',
 
     // الصندوق
-    'safer.index' => 'عرض الصندوق',
-    'safer.loans' => 'إدارة القروض',
-    'safer.InKindDonations' => 'التبرعات العينية',
+//    'safer.index' => 'عرض الصندوق',
+//    'safer.loans' => 'إدارة القروض',
+//    'safer.InKindDonations' => 'التبرعات العينية',
 
     // الإعانات
     'subventions.index' => 'عرض الإعانات',
@@ -78,7 +78,7 @@ return [
     'admin.login' => 'تسجيل الدخول',
 
     // الأدوار والصلاحيات
-    'roles.index' => 'عرض الأدوار',
+    'roles.index' => 'عرض الصلاحيات',
     'roles.create' => 'إضافة دور جديد',
     'roles.store' => 'حفظ دور',
     'roles.edit' => 'تعديل دور',
@@ -112,8 +112,10 @@ return [
     "zakat.update" => "تحديث الزكاة",
     "zakat.destroy" => "حذف الزكاة",
     "delete_zakat" => "حذف الزكاة نهائياً",
-
     // الأصول
+    "lock.index" => "عرض الخزنه",
+    "subscription.index" => "عرض الاشتراكات",
+
     "assets.index" => "عرض الأصول",
     "assets.create" => "إضافة أصل",
     "assets.store" => "حفظ أصل",

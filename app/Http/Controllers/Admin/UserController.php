@@ -28,7 +28,7 @@ class UserController extends Controller
             }
 
             if ($request->filled('standard_living')) {
-                $query->where('standard_living', "<", $request->standard_living);
+                $query->where('standard_living', "<=", $request->standard_living);
             }
 
             if ($request->filled('family_number')) {
@@ -135,6 +135,29 @@ class UserController extends Controller
         }
     }
 
+    public function searchNID(Request $request)
+    {
+        if (is_numeric($request->searchNID)){
+            $searchNID = $request->searchNID;
+
+            $user = User::where("husband_national_id", $searchNID)
+                ->orWhere("wife_national_id", $searchNID)
+                ->first();
+
+            if (!$user) {
+                toastr()->error("لا يوجد مستفيد لهذا الرقم القومي");
+                return redirect()->route("adminHome");
+            }
+
+            $patients = Patient::where('user_id', $user->id)->get();
+
+            return view('Admin.users.parts.details', compact('user', 'patients'));
+
+        }else{
+            toastr()->error("الرقم االومي يجب ان يكون رقم ");
+            return redirect()->back();
+        }
+    }
     public function userDetails($id, Request $request)
     {
         if ($request->has('searchNID')) {

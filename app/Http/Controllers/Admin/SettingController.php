@@ -23,10 +23,17 @@ class SettingController extends Controller
 //        if($request->has('logo')) {
 //            $input['logo'] = $this->saveImage($request->logo, 'assets/uploads', 'file');
 //        }
+//        if ($request->hasFile('logo')) {
+//            $path = $request->file('logo')->store('uploads', 'public');
+//            $input['logo'] = "uploads/" . $request->file("logo")->getClientOriginalName();
+//        }
+
         if ($request->hasFile('logo')) {
-            $path = $request->file('logo')->store('uploads', 'public');
-            $input['logo'] = "uploads/" . $request->file("logo")->getClientOriginalName();
+            $file = $request->file('logo');
+            $path = $file->store('uploads', 'public');
+            $input['logo'] = $path;
         }
+
 
 
         Setting::first()->update($input);

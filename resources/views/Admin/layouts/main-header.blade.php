@@ -12,31 +12,8 @@
                     <path d="M21 11.01L3 11v2h18zM3 16h12v2H3zM21 6H3v2.01L21 8z" /></svg>
             </a><!-- sidebar-toggle-->
             <div class="header-search d-none d-md-flex">
-{{--                <form class="form-inline" action="{{route("DonationDetails" , 0)}}">--}}
-{{--                    @csrf--}}
-{{--                    <div class="search-element">--}}
-{{--                        <input type="search" name="searchNID" class="form-control header-search" placeholder=" ابحث بالرقم القومي للمستفيد ..." aria-label="Search" tabindex="1">--}}
-{{--                        <button class="btn btn-primary-color" type="submit">--}}
-{{--                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">--}}
-{{--                                <path d="M0 0h24v24H0V0z" fill="none" />--}}
-{{--                                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" /></svg>--}}
-{{--                        </button>--}}
-{{--                    </div>--}}
-{{--                </form>--}}
 
-
-{{--            <form class="form-inline" action="{{route("userDetails" , 0)}}">--}}
-{{--                @csrf--}}
-{{--                <div class="search-element">--}}
-{{--                    <input type="search" name="searchNID" class="form-control header-search" placeholder=" ابحث بالرقم القومي للمستفيد ..." aria-label="Search" tabindex="1">--}}
-{{--                    <a  href="admin/userDetails" class="btn btn-pill btn-default SearchBTN">--}}
-{{--                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">--}}
-{{--                            <path d="M0 0h24v24H0V0z" fill="none" />--}}
-{{--                            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" /></svg>--}}
-{{--                    </a>--}}
-{{--                </div>--}}
-{{--            </form>--}}
-                <form id="searchForm" action="{{route("userDetails" , 0)}}" class="form-inline">
+                <form id="searchForm" action="{{route("user.searchNID" , 0)}}" class="form-inline">
                     @csrf
                     <div class="search-element">
                         <input type="search" name="searchNID" class="form-control header-search"
@@ -82,10 +59,10 @@
                         <a class="dropdown-item" href="{{route('myProfile')}}">
                             <i class="dropdown-icon mdi mdi-account-outline"></i> الحساب
                         </a>
-                        <a class="dropdown-item" href="{{route('admins.index')}}">
+                        <a class="dropdown-item" href="{{route('admins.setting')}}">
                             <i class="dropdown-icon  mdi mdi-settings"></i> اعدادات الحساب
                         </a>
-                        <a class="dropdown-item" href="http://motaweron.com/contact-us.html" target="_blank">
+                        <a class="dropdown-item" href="https://topbuziness.com/" target="_blank">
                             <i class="dropdown-icon mdi mdi-compass-outline"></i> تحتاج مساعدة ؟
                         </a>
                         <a class="dropdown-item" href="{{route('admin.logout')}}">
@@ -135,37 +112,3 @@
         </div>
     </div>
 </div>
-<!-- End responsive-navbar -->
-
-{{--<script>--}}
-{{--    // Show Details Modal--}}
-{{--    $(document).on('click', '.SearchBTN', function() {--}}
-{{--        var NID = $(".searchNID").val();--}}
-{{--        var url = "{{ route('userDetails', ':NID') }}";--}}
-{{--        url = url.replace(':NID', NID)--}}
-{{--        $('#modal-body').html(loader)--}}
-{{--        $('#editOrCreate').modal('show')--}}
-{{--        setTimeout(function() {--}}
-{{--            $('#modal-body').load(url)--}}
-{{--        }, 500)--}}
-{{--    })--}}
-{{--</script>--}}
-
-{{--<script>--}}
-{{--    $(document).ready(function() {--}}
-{{--        $('#searchForm').submit(function(e) {--}}
-{{--            e.preventDefault();--}}
-{{--            var NID = $("input[name='searchNID']").val();--}}
-
-{{--            if (NID.trim() === "") {--}}
-{{--                alert("الرجاء إدخال الرقم القومي");--}}
-{{--                return;--}}
-{{--            }--}}
-
-{{--            var url = "{{ route('userDetails', ':NID') }}".replace(':NID', NID);--}}
-{{--            setTimeout(function() {--}}
-{{--                $('#modal-body').load(url);--}}
-{{--            }, 500);--}}
-{{--        });--}}
-{{--    });--}}
-{{--</script>--}}

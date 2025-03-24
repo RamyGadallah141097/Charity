@@ -162,17 +162,19 @@
 
 
 {{--        الخزنه     --}}
-        <p>
-            <a class="side-menu__item
+        @if( auth()->check() && auth()->user()->can('lock.index'))
+            <p>
+                <a class="side-menu__item
                         {{ request()->segment(2) == 'lock' ? 'show active' : '' }} "
-               data-toggle="collapse"
-               href="#lockDropdown" role="button"
-               aria-expanded="{{ request()->routeIs('donation.lock') ? 'true' : 'false' }}"
-               aria-controls="lockDropdown">
-                <i class="fas fa-hand-holding-heart" style="margin-left: 10px;"></i>
-                <span class="side-menu__label">  الخزنه </span>
-            </a>
-        </p>
+                   data-toggle="collapse"
+                   href="#lockDropdown" role="button"
+                   aria-expanded="{{ request()->routeIs('donation.lock') ? 'true' : 'false' }}"
+                   aria-controls="lockDropdown">
+                    <i class="fas fa-hand-holding-heart" style="margin-left: 10px;"></i>
+                    <span class="side-menu__label">  الخزنه </span>
+                </a>
+            </p>
+
 
         <ul class="collapse mb-4 {{ request()->segment(2) == 'lock' ? 'show' : '' }}" id="lockDropdown">
                 <li>
@@ -212,7 +214,7 @@
                 </li>
 
         </ul>
-
+        @endif
 
 
 
@@ -358,6 +360,7 @@
         @endif
 
 {{--        admin supscriptions--}}
+        @if( auth()->check() && auth()->user()->can('subscription.index'))
         <p>
             <a class="side-menu__item {{ request()->routeIs('adminSubscription.*') || request()->routeIs('SubscriptionFee.*') ? 'active' : '' }}  "
                data-toggle="collapse"
@@ -387,6 +390,7 @@
                 </a>
             </li>
         </ul>
+        @endif
 {{--        admin supscriptions--}}
         {{-- الإعدادات --}}
         @if(auth()->check() && auth()->user()->can('setting.index'))
@@ -422,14 +426,14 @@
 
 
         {{-- تسجيل الخروج --}}
-        @if(auth()->check() && auth()->user()->can('admin.logout'))
+{{--        @if(auth()->check() && auth()->user()->can('admin.logout'))--}}
             <li class="slide">
                 <a class="side-menu__item" href="{{ route('admin.logout') }}">
                     <i class="icon icon-lock side-menu__icon"></i>
                     <span class="side-menu__label">تسجيل الخروج</span>
                 </a>
             </li>
-        @endif
+{{--        @endif--}}
     </ul>
 
 </aside>

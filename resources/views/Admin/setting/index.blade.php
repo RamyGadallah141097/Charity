@@ -61,17 +61,17 @@
 
                             <!-- Additional Fields -->
                             <div class="col-12 row">
-                                <div class="form-group col-6">
+                                <div class="form-group col-4">
                                     <label class="form-label">الحد الاقصي للاعانات السنويه </label>
                                     <input type="number" class="form-control" name="maxSubvention"
                                            placeholder="الحد الاقصي" value="{{ $setting->maxSubvention ?? '' }}">
                                 </div>
-{{--                                <div class="form-group col-4">--}}
-{{--                                    <label class="form-label">الحد الاقصي للقرض للفرد السنويه </label>--}}
-{{--                                    <input type="number" class="form-control" name="maxLoan"--}}
-{{--                                           placeholder="الحد الاقصي" value="{{ $setting->maxLoan ?? '' }}">--}}
-{{--                                </div>--}}
-                                <div class="form-group col-6">
+                                <div class="form-group col-4">
+                                    <label class="form-label">الحد الاقصي للقرض للفرد في السنه </label>
+                                    <input type="number" class="form-control" name="maxLoan"
+                                           placeholder="الحد الاقصي للقرض" value="{{ $setting->maxLoan ?? '' }}">
+                                </div>
+                                <div class="form-group col-4">
                                     <label class="form-label">قيمه الاشتراك الشهري للأعضاء </label>
                                     <input type="number" class="form-control" name="adminSubscription"
                                            placeholder="قيمة الاشتراك" value="{{ $setting->adminSubscription ?? '' }}">
