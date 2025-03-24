@@ -24,22 +24,18 @@ class AdminController extends Controller
                 ->addColumn('action', function ($admins) {
                     $editButton = '';
                     $deleteButton = '';
-
-                                if (auth()->user()->can('admins.edit')) {
-                                            $editButton = '
+                                        $editButton = '
                                             <button type="button" data-id="' . $admins->id . '" class="btn btn-pill btn-info-light editBtn">
                                                 <i class="fa fa-edit"></i>
                                             </button>
                                         ';
-                                }
-                                if (auth()->user()->can('admins.destroy')) {
                                     $deleteButton = '
                                         <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
                                                 data-id="' . $admins->id . '" data-title="' . $admins->name . '">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     ';
-                                }
+
 
                         return '<div class="d-flex">' . $editButton . $deleteButton . '</div>';
                     })
@@ -129,33 +125,69 @@ class AdminController extends Controller
         return view('Admin/admin/parts/setting',compact('admin' , "roles"));
     }
 
-    public function update(request $request,$id)
+//    public function update(request $request,$id)
+//    {
+//        $inputs = $request->validate([
+//            'email'    => 'required|unique:admins,email,'.$id,
+//            'name'     => 'required',
+//            'image'    => 'nullable',
+//            'password' => 'nullable|min:6',
+//        ]);
+//        if ($request->has('image')) {
+//            $file_name = $this->saveImage($request->image, 'assets/uploads/admins');
+//            $inputs['image'] = 'assets/uploads/admins/' . $file_name;
+//        }
+//        if ($request->has('password') && $request->password != null)
+//            $inputs['password'] = Hash::make($request->password);
+//        else
+//            unset($inputs['password']);
+//        $admin = Admin::findOrFail($id);
+////        $admin->syncRoles($request->adminRole);
+////        $admin->assignRole($request->adminRole);
+//            $admin->syncRoles($request->adminRole);
+//        if ($admin->update($inputs)) {
+//            toastr()->success("تم التحديث بنجاح");
+//        } else {
+//            toastr()->error("فشل التحديث، يرجى المحاولة مرة أخرى");
+//        }
+//
+//        return redirect()->route('admins.index');
+//    }
+
+    public function update(Request $request, $id)
     {
         $inputs = $request->validate([
-            'email'    => 'required|unique:admins,email,'.$id,
-            'name'     => 'required',
-            'image'    => 'nullable',
+            'email'    => 'required|email|unique:admins,email,' . $id . ',id',
+            'name'     => 'required|string|max:255',
+            'image'    => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'password' => 'nullable|min:6',
         ]);
-        if ($request->has('image')) {
-            $file_name = $this->saveImage($request->image, 'assets/uploads/admins');
-            $inputs['image'] = 'assets/uploads/admins/' . $file_name;
+
+        if ($request->hasFile('image')) {
+            $file_name = $this->saveImage($request->file('image'), 'assets/uploads/admins');
+            $inputs['image'] = $file_name;
         }
-        if ($request->has('password') && $request->password != null)
+
+        if (!empty($request->password)) {
             $inputs['password'] = Hash::make($request->password);
-        else
+        } else {
             unset($inputs['password']);
+        }
+
         $admin = Admin::findOrFail($id);
-//        $admin->syncRoles($request->adminRole);
-//        $admin->assignRole($request->adminRole);
+
+        if ($request->has('adminRole')) {
             $admin->syncRoles($request->adminRole);
+        }
+
         if ($admin->update($inputs)) {
             toastr()->success("تم التحديث بنجاح");
+            return response()->json(['status'=>200]);
         } else {
             toastr()->error("فشل التحديث، يرجى المحاولة مرة أخرى");
         }
 
-        return redirect()->route('admin.index');
+        return redirect()->route('admins.index');
     }
 
 //    public function showChangeRole(Request $request){

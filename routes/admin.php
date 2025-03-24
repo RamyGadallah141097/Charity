@@ -18,7 +18,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::post('showChangeRole', 'AdminController@showChangeRole')->name('showChangeRole');
 
     Route::resource("adminSubscription" , "AdminSubscriptionsController");
-//    route to get the subscription amount fom setting table
     Route::get('/get-subscription-price', function (Request $request) {
         $price = \App\Models\Setting::first()->adminSubscription ?? 0;
         return response()->json(['success' => true, 'price' => $price]);
