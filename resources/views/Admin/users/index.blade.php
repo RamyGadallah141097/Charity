@@ -10,68 +10,46 @@
     <div class="row">
         <div class="col-md-12 col-lg-12">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header w-100">
                     <h3 class="card-title">
                         قائمة بالمستفدين من {{ isset($setting) ? isset($setting->title) : '' }}
                     </h3>
-                    <div class="row">
-                        <div class="col-3 m-3">
-                            <select class="form-control" id="filterNStatus">
-                                <option value="">الحاله الاجتماعيه</option>
-                                <option value="0">أعزب</option>
+                    <div class="row mb-3 w-100">
+                        <div class="col-3">
+                            <label for="social_status">الحاله الشخصيه</label>
+                            <select id="social_status" class="form-control">
+                                <option value="">Select</option>
+                                <option value="0">اعزب</option>
                                 <option value="1">متزوج</option>
                                 <option value="2">مطلق</option>
-                                <option value="3">أرمل</option>
+                                <option value="3">ارمل</option>
                             </select>
                         </div>
 
-                        <div class="col-3 m-3">
-                            <select class="form-control" id="filterLifeLevel">
-                                <option value="">مستوي المعيشه</option>
-                                <option value="500">500</option>
-                                <option value="1000">1000</option>
-                                <option value="2000">2000</option>
-                                <option value="3000">3000</option>
-                                <option value="4000">4000</option>
-                                <option value="5000">5000</option>
-                                <option value="6000">6000</option>
+                        <div class="col-3">
+                            <label for="standard_living">الحالة المعيشيه</label>
+                            <select id="standard_living" class="form-control">
+                                <option value="">Select</option>
+                                <option value="1001">1000</option>
+                                <option value="5001">5000</option>
+                                <option value="10001">10000</option>
                             </select>
                         </div>
 
-                        <div class="col-3 m-3">
-                            <select class="form-control" id="filterFamilyNumber">
-                                <option value="">عدد الاطفال</option>
-                                @for($i = 1; $i <= 10; $i++)
-                                    <option value="{{ $i }}">{{ $i }}</option>
-                                @endfor
+                        <div class="col-3">
+                            <label for="family_number">عدد الاطفال</label>
+                            <select id="family_number" class="form-control">
+                                <option value="">Select</option>
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4+</option>
                             </select>
                         </div>
                     </div>
 
-                    <a href="{{ route('users.create') }}" class="btn btn-secondary btn-icon text-white">
-                        <span><i class="fe fe-plus"></i></span> اضافة مستفيد
-                    </a>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered text-nowrap w-100" id="dataTable">
-                            <thead>
-                            <tr class="fw-bolder text-muted bg-light">
-                                <th>#</th>
-                                <th>اسم الزوج</th>
-                                <th>اسم الزوجة</th>
-                                <th>الحالة الاجتماعية</th>
-                                <th>الهاتف</th>
-                                <th>اجمالي الدخل</th>
-                                <th>اجمالي المصاريف</th>
-                                <th>مستوى المعيشة</th>
-                                <th>الحالة</th>
-                                <th>تحديث</th>
-                                <th>العمليات</th>
-                            </tr>
-                            </thead>
-                        </table>
-                    </div>
+
                     <div class="">
                         <a href="{{ route('users.create') }}" class="btn btn-secondary btn-icon text-white">
                             <span>
@@ -250,45 +228,74 @@
             });
         });
     </script>
-    <script>
-        $(document).ready(function () {
-            var status = "{{ request()->segment(3) }}";
 
-            var table = $('#dataTable').DataTable({
+<script>
+    $(document).ready(function () {
+        function showData(url, columns) {
+            $('#dataTable').DataTable({
                 processing: true,
                 serverSide: true,
+                destroy: true, // Ensure reloading
                 ajax: {
-                    url: "{{ route('users.index', ':status') }}".replace(':status', status),
-                    type: "GET",  // Make sure request type matches your route
+                    url: url,
                     data: function (d) {
-                        d.social_status = $('#filterNStatus').val() || null;
-                        d.standard_living = $('#filterLifeLevel').val() || null;
-                        d.family_number = $('#filterFamilyNumber').val() || null;
-                    },
-                    error: function(xhr) {
-                        console.log("Error:", xhr.responseText); // Debugging
+                        d.social_status = $('#social_status').val();
+                        d.standard_living = $('#standard_living').val();
+                        d.family_number = $('#family_number').val();
                     }
                 },
-
-                columns: [
-                    { data: 'id', name: 'id' },
-                    { data: 'husband_name', name: 'husband_name' },
-                    { data: 'wife_name', name: 'wife_name' },
-                    { data: 'social_status', name: 'social_status' },
-                    { data: 'nearest_phone', name: 'nearest_phone' },
-                    { data: 'gross_income', name: 'gross_income' },
-                    { data: 'gross_expenses', name: 'gross_expenses' },
-                    { data: 'standard_living', name: 'standard_living' },
-                    { data: 'status', name: 'status' },
-                    { data: 'statusChange', name: 'statusChange' },
-                    { data: 'action', name: 'action', orderable: false, searchable: false },
-                ]
+                columns: columns
             });
+        }
 
-            $('#filterNStatus, #filterLifeLevel, #filterFamilyNumber').on('change', function () {
-                table.ajax.reload(null, false);
-            });
+        var columns = [
+            { data: 'id', name: 'id' },
+            { data: 'husband_name', name: 'husband_name' },
+            { data: 'wife_name', name: 'wife_name' },
+            { data: 'social_status', name: 'social_status' },
+            { data: 'nearest_phone', name: 'nearest_phone' },
+            { data: 'gross_income', name: 'gross_income' },
+            { data: 'gross_expenses', name: 'gross_expenses' },
+            { data: 'standard_living', name: 'standard_living' },
+            { data: 'status', name: 'status' },
+            { data: 'statusChange', name: 'statusChange' },
+            { data: 'action', name: 'action', orderable: false, searchable: false }
+        ];
+
+        var tableUrl = "{{ route('users.index', request()->segment(3)) }}";
+        showData(tableUrl, columns);
+
+        $('#social_status, #standard_living, #family_number').change(function () {
+            showData(tableUrl, columns);
         });
-    </script>
+    });
 
+</script>
+    // Change Status Using Ajax
+    <script>
+    $(document).on('click', '.statusBtn', function(event) {
+    event.preventDefault()
+    var id = $(this).data("id"),
+    status = $(this).data("status")
+    $.ajax({
+    type: 'POST',
+    url: "{{ route('updateUserStatus') }}",
+    data: {
+    '_token': "{{ csrf_token() }}",
+    'id': id,
+    'status': status,
+    },
+    success: function(data) {
+    if (data.status === true) {
+    $('#dataTable').DataTable().ajax.reload();
+    toastr.success(data.message)
+    } else
+    toastr.error('هناك خطأ ما يرجي اعادة المحاولة')
+    },
+    error: function(data) {
+    toastr.error(data.message)
+    }
+    });
+    });
+    </script>
 @endsection

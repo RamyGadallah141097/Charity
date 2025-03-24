@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Asset extends Model
 {
     use HasFactory;
-    protected $fillable = ["name" , "description" , "counter"];
+    protected $fillable = ["name" , "description" ];
 }

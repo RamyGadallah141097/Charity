@@ -15,12 +15,10 @@ use Yajra\DataTables\DataTables;
 
 class UserController extends Controller
 {
-
     public function index(Request $request, $status)
     {
 
         if ($request->ajax()) {
-
 
 
             $query = User::where('status', $status);
@@ -30,16 +28,21 @@ class UserController extends Controller
             }
 
             if ($request->filled('standard_living')) {
-                $query->where('standard_living',"<", $request->standard_living);
+                $query->where('standard_living', "<", $request->standard_living);
             }
 
             if ($request->filled('family_number')) {
-                $query->whereHas('childrens', function ($q) use ($request) {
-                    $q->select('user_id', DB::raw('COUNT(id) as children_count'))
-                        ->groupBy('user_id')
-                        ->having('children_count', '=', $request->family_number);
-                });
+                if ($request->has('family_number') && (int)$request->family_number >= 1) {
+                    $query->whereHas('childrens', function ($q) use ($request) {
+                        $q->groupBy('user_id')
+                            ->havingRaw('COUNT(id) = ?', [$request->family_number]);
+                    });
+                } else {
+                    $query->whereDoesntHave('childrens');
+                }
+
             }
+
             $users = $query->get();
             return Datatables::of($users)
                 ->addColumn('action', function ($users) {
@@ -76,13 +79,18 @@ class UserController extends Controller
                 })->addColumn('statusChange', function ($users) {
                     if ($users->status == 'new') {
                         $available_actions = '
-                               <li><a data-id="' . $users->id . '" data-status="accepted" href="#" class="statusBtn ">قبول</a></li>
+                                <li><a data-id="' . $users->id . '" data-status="accepted" href="#" class="statusBtn ">قبول</a></li>
                                <li><a data-id="' . $users->id . '" data-status="refused" href="#" class="statusBtn ">رفض </a></li>
-                    ';
+                            ';
+
                     } elseif ($users->status == 'accepted') {
                         $available_actions = '
-                               <li><a data-id="' . $users->id . '" data-status="preparing" href="#" class="statusBtn ">قيد التنفيذ</a></li>
-                               <li><a data-id="' . $users->id . '" data-status="refused" href="#" class="statusBtn "> رفض</a></li>
+                            <li>
+                                <a data-id="{{ $users->id }}" data-status="preparing" href="#" class="statusBtn">قيد التنفيذ</a>
+                            </li>
+                            <li>
+                                <a data-id="{{ $users->id }}" data-status="refused" href="#" class="statusBtn">رفض</a>
+                            </li>
                     ';
                     } elseif ($users->status == 'preparing') {
                         $available_actions = '
@@ -163,24 +171,37 @@ class UserController extends Controller
         }
     }
 
+
     public function updateUserStatus(Request $request)
     {
         try {
-            $user = User::where("id" , $request->user_id)->first();
-           if ($user){
-               $user->status = $request->status;
-               $user->save();
-           }else{
-               toastr()->error("المستخدم غير موجود");
-               return redirect("admin/users/new");
-           }
-            toastr()->success("success");
-            return redirect("admin/users/new");
+            $user = User::find($request->id);
+            $user->update(['status' => $request->status]);
+            return response(['message' => 'تم تحديث حالة المستفيد بنجاح', 'status' => true], 200);
         } catch (\Exception $ex) {
-            toastr()->error($ex->getMessage());
-            return redirect("admin/users/new");
+            return response(['message' => $ex->getMessage(), 'status' => false], 200);
         }
     }
+
+//
+//    public function updateUserStatus(Request $request)
+//    {
+//        try {
+//            $user = User::where("id" , $request->user_id)->first();
+//           if ($user){
+//               $user->status = $request->status;
+//               $user->save();
+//           }else{
+//               toastr()->error("المستخدم غير موجود");
+//               return redirect("admin/users/new");
+//           }
+//            toastr()->success("success");
+//            return redirect("admin/users/new");
+//        } catch (\Exception $ex) {
+//            toastr()->error($ex->getMessage());
+//            return redirect("admin/users/new");
+//        }
+//    }
 
     public function create()
     {
@@ -296,9 +317,26 @@ class UserController extends Controller
         $data = User::selectRaw('COUNT(id) as count, DATE(created_at) as date')
             ->whereNotNull('created_at') // Avoid NULL values
             ->groupBy('date')
-            ->orderBy('date', 'DESC') // Newest first
+            ->orderBy('date', 'ASC') // Newest first
             ->get();
 
         return response()->json($data);
     }
 }
+
+
+
+//the form of change the status
+//<form action="'. route('updateUserStatus') .'" method="POST">
+//'. csrf_field() .'
+//<input type="hidden" name="user_id" value="'. $users->id .'">
+//<input type="hidden" name="status" value="accepted">
+//<button class="btn btn-outline-success">قبول</button>
+//</form>
+//
+//<form action="'. route('updateUserStatus') .'" method="POST">
+//'. csrf_field() .'
+//<input type="hidden" name="user_id" value="'. $users->id .'">
+//<input type="hidden" name="status" value="refused">
+//<button class="btn btn-outline-danger">رفض</button>
+//</form>

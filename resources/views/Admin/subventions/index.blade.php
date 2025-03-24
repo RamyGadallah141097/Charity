@@ -63,6 +63,7 @@
                                 <th class="min-w-125px">القيمه</th>
                                 <th class="min-w-125px">شهري/ مرة</th>
                                 <th class="min-w-125px">النوع</th>
+                                <th class="min-w-125px">التاريخ</th>
                                 <th class="min-w-125px">السبب</th>
                                 <th class="min-w-50px rounded-end">العمليات</th>
                             </tr>
@@ -131,6 +132,7 @@
             {data: 'price', name: 'price'},
             {data: 'type', name: 'type'},
             {data: 'Dtype', name: 'Dtype'},
+            {data: 'created_at', name: 'created_at'},
             {data: 'comment', name: 'comment'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]

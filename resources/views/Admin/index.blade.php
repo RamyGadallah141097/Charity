@@ -29,6 +29,16 @@
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-6">
+                <h2>مخطط عدد المستفيدين</h2>
+                <div id="UsersChart"></div>
+            </div>
+            <div class="col-6">
+                <h2>مخطط عدد المتبرعين</h2>
+                <div id="DonorsChart"></div>
+            </div>
+        </div>
         <div class="card-header" >
             <h2 class="card-title">لوحة تقدم الافكار</h2>
         </div>

@@ -349,7 +349,7 @@
 
                         <div class="card-header">
                             <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">
-                                تقييم المستفيد</h2>
+                                ممتلكات المستفيد</h2>
                         </div>
 
                         <textarea rows="5" class="form-control" name="Case_evaluation" id="Case_evaluation"></textarea>

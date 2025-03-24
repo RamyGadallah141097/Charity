@@ -56,7 +56,7 @@
                                 <th class="min-w-125px">عدد الشهور</th>
                                 <th class="min-w-125px"> القيمه</th>
                                 <th class="min-w-125px"> التاريخ</th>
-{{--                                <th class="min-w-50px rounded-end">العمليات</th>--}}
+                                {{--                                <th class="min-w-50px rounded-end">العمليات</th>--}}
                             </tr>
                             </thead>
                         </table>

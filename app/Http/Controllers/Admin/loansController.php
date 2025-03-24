@@ -127,12 +127,13 @@ class loansController extends Controller
 
     public function storeLoans(LoanRequest $request)
     {
-        if (LockerLog::where("moneyType", LockerLog::moneyTypeLoans)->where("type" , LockerLog::TYPE_PLUS)->sum("amount") - LockerLog::where("moneyType", LockerLog::moneyTypeLoans)->where("type" , LockerLog::TYPE_MINUS)->sum("amount") >= $request->loan_amount ) {
+        if ((LockerLog::where("moneyType", LockerLog::moneyTypeLoans)->where("type" , LockerLog::TYPE_PLUS)->sum("amount")) - (LockerLog::where("moneyType", LockerLog::moneyTypeLoans)->where("type" , LockerLog::TYPE_MINUS)->sum("amount")) >= $request->loan_amount ) {
             try {
                 $data = $request->all();
 
+
                 if ($request->type == 0) {
-                    $data['isStarted'] = now()->format("Y-m"); // Ensure isStarted is set
+                    $data['isStarted'] = now()->format("Y-m");
                     $loan = Loan::create($data);
                     $borrower = Borrower::find($request->borrower_id);
                     LockerLog::create([
@@ -150,7 +151,7 @@ class loansController extends Controller
 
 
                 $amount = $request->loan_amount / 10;
-
+                $loan = Loan::create($data);
                 for ($i = 0; $i < 10; $i++) {
                     PersonalLoan::create([
                         "amount" => $amount,
@@ -166,6 +167,7 @@ class loansController extends Controller
                 return response()->json(['error' => $e->getMessage()], 500);
             }
         } else {
+            toastr()->error("لا يوجد رصيد كافي");
             return response()->json(['message' => 'لا يوجد رصيد كافي'], 500);
         }
     }
@@ -203,7 +205,7 @@ class loansController extends Controller
         $total = PersonalLoan::where('borrower_id', $id)->sum('amount');
         $totalIn = PersonalLoan::where('borrower_id', $id)->where('status', 1)->sum('amount');
         $totalOut = PersonalLoan::where('borrower_id', $id)->where('status', 0)->sum('amount');
-        $pay = Loan::where('borrower_id', $id)->value('isStarted');
+        $pay = Loan::where('borrower_id', $id)->value('type');
 
         return view('admin.loans.indexloan', compact('id' , "totalIn" , "totalOut" , "total" , "pay"));
     }
@@ -226,7 +228,7 @@ class loansController extends Controller
                         " ورقم هاتفه " . ($borrower ? $borrower->phone : "غير متوفر"),
                 ]);
                 $loan->isStarted = now()->format('Y-m-d');
-                $loan->type = 1;
+                $loan->type = 0;
                 $loan->save();
                 return response()->json(['status' => 200 , "message" => "تم بنجاح"]);
             }
