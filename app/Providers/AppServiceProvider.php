@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
     {
 
         view()->composer('*', function ($view) {
-            $view->with('setting', Setting::all());
+            $view->with('setting', Setting::first());
         });
 //        View::share('setting',Setting::first());
 
