@@ -28,7 +28,7 @@
     </main>
     <div class="welcome-container">
         <h3 class="heading-secondary">مرحبا بعودتك <span class="lg">{{ isset($setting) ? $setting->title : '' }}</span></h3>
-        <img src="{{ $setting && $setting->logo ? asset('storage/' . $setting->logo) : '-' }}" alt="logo" style="max-height: 400px; mix-blend-mode: multiply;">
+        <img src="ebharbook.com/storage/uploads/nW8gtUzg4Xi7WAKsSsqXDV9Wc0pl5AEf65drHmDw.jpg" alt="logo" style="max-height: 400px; mix-blend-mode: multiply;">
 
 
     </div>
