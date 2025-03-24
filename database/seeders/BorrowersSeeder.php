@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Borrower;
 use Illuminate\Database\Seeder;
 
-class borrowersSeeder extends Seeder
+class BorrowersSeeder extends Seeder
 {
     /**
      * Run the database seeds.
