@@ -19,11 +19,12 @@ class SettingController extends Controller
 
     public function update(UpdateSetting $request){
         $input = $request->except('_token');
-        
-        if ($request->hasFile('logo')) {
-            $file = $request->file('logo');
-            $path = $file->store('uploads', 'public');
-            $input['logo'] = $path;
+
+
+
+        if($request->has('logo')){
+            $file_name = $this->saveImage($request->logo,'assets/uploads');
+            $input['logo'] = 'assets/uploads/'.$file_name;
         }
 
 
