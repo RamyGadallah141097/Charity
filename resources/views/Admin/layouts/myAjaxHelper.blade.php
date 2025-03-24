@@ -12,7 +12,7 @@
                 ajax: routeOfShow,
                 columns: columns,
                 order: [
-                    [0, "DESC"]
+                    [0, "ASC"]
                 ],
                 "language": {
                     "sProcessing": "جاري التحميل ..",
