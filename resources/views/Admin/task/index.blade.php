@@ -1,7 +1,8 @@
 @extends('Admin/layouts/master')
 
 @section('title')
-   {{ isset($setting) ? isset($setting->title) : '' }} | التبرعات
+   {{ isset($setting) ? $setting->title : '' }}
+ | التبرعات
 @endsection
 @section('page_name') بنك الافكار @endsection
 @section('content')
@@ -10,7 +11,8 @@
     <div class="col-md-12 col-lg-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title"> بنك الافكار{{ isset($setting) ? isset($setting->title) : '' }}</h3>
+                <h3 class="card-title"> بنك الافكار{{ isset($setting) ? $setting->title : '' }}
+</h3>
                 <div class="">
                     <button class="btn btn-secondary btn-icon text-white addBtn">
 									<span>

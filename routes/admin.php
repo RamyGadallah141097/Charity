@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 
@@ -29,8 +31,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::POST('users.store', 'UserController@store')->name('users.store')->middleware('permission:users.store');
     Route::POST('delete_users', 'UserController@delete')->name('delete_users')->middleware('permission:delete_users');
     Route::POST('updateUserStatus', 'UserController@updateUserStatus')->name('updateUserStatus')->middleware('permission:updateUserStatus');
-    Route::get('userDetails/{id}', 'UserController@userDetails')->name('userDetails')->middleware('permission:userDetails');
+    Route::get('userDetails/{id?}', 'UserController@userDetails')->name('userDetails')->middleware('permission:userDetails');
     Route::get('DonationDetails/{id}', 'UserController@DonationDetails')->name('DonationDetails')->middleware('permission:DonationDetails');
+
     //    الراوتس الخاصه بالمقترض
     Route::resource("borrowers", "BorrowerController");
     Route::get('getGuarantor', 'BorrowerController@getGuarantor')->name('getGuarantor');
@@ -80,6 +83,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('person-loans/{id}', 'loansController@personLoans')->name('person.loans');
     Route::get('loans/{id}', 'loansController@checkout')->name('loan.checkout');
     Route::post('loans/pay/{id}', 'loansController@payLoan')->name('loan.pay');
+    Route::get("loan/print"  , "loansController@printLoan" )->name("printLoan");
 
     //الزكاة والصدقات
     Route::get("safer/CharityZakat", "SaferController@indexCharityZakat")->name("safer.CharityZakat"); //تبرعات الزكاة والصدقات
@@ -88,7 +92,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     #### Subventions ####
     Route::resource('subventions', 'SubventionController');
     Route::get('showSubventions', 'SubventionController@showSubventions')->name('showSubventions');
-    Route::get('showOneSubvention', 'SubventionController@showOneSubvention')->name('showOneSubvention');
+    Route::get('showOneSubvention/{id}', 'SubventionController@showOneSubvention')->name('showOneSubvention');
     Route::POST('delete_subventions', 'SubventionController@delete')->name('delete_subventions');
 
 
@@ -142,3 +146,11 @@ Route::get('/clear', function () {
     Artisan::call('optimize:clear');
     return response()->json(['status' => 'success', 'code' => 1000000000]);
 });
+
+
+//the arrow charts routes
+Route::get('/chart-data', 'UserController@getChartData');
+Route::get('/dashboard', 'UserController@CartIndex');
+
+Route::get('donors/chart-data', 'DonorController@getChartData');
+Route::get('donors/dashboard', 'DonorController@CartIndex');

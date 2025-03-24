@@ -30,6 +30,10 @@ class SubventionController extends Controller
                             <button type="button" data-id="' . $data->id . '" class="btn btn-pill btn-info-light editBtn">
                                 <i class="fa fa-edit"></i>
                             </button>
+                            <a href="' . route('showOneSubvention', $data->id) . '" title="طباعة" class="btn btn-success btn-icon btn-pill btn-success-light">
+                                    <i class="fa fa-print"></i>
+                               </a>
+
                         ';
                     }
 
@@ -42,7 +46,9 @@ class SubventionController extends Controller
                         ';
                     }
 
-                    return '<div class="d-flex">' . $editButton . $deleteButton . '</div>';
+
+
+                    return '<div class="d-flex">' . $editButton . $deleteButton  . '</div>';
                 })
 
                 ->editColumn('user_id', function ($data) {
@@ -88,7 +94,9 @@ class SubventionController extends Controller
                 ->escapeColumns([])
                 ->make(true);
         }else{
-            return view('Admin/subventions/index');
+            $totoaSadaka = LockerLog::where("type", LockerLog::TYPE_MINUS)->where("moneyType" , LockerLog::moneyTypeSadaka)->sum("amount");
+            $totalZakat = LockerLog::where("type", LockerLog::TYPE_MINUS)->where("moneyType" , LockerLog::moneyTypeZakat)->sum("amount");
+            return view('Admin/subventions/index' , compact("totalZakat" , "totoaSadaka"));
         }
     }
 
@@ -365,10 +373,11 @@ class SubventionController extends Controller
 
     public function showSubventions(){
         $subventions = Subvention::where('type','monthly')->latest()->get();
-        return view('Admin.print.subvention-print',compact('subventions'));
+//        return view('Admin.print.subvention-print',compact('subventions'));
+        return view('Admin.print.invoice',compact('subventions'));
     }
-    public function showOneSubvention(){
-        $subventions = Subvention::where('type','once')->latest()->get();
-        return view('Admin.print.subvention-print',compact('subventions'));
+    public function showOneSubvention($id){
+        $subventions = Subvention::where('type','once')->where('id' , $id)->latest()->first();
+        return view('Admin.print.invoices2',compact('subventions'));
     }
 }

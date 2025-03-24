@@ -127,29 +127,28 @@ class loansController extends Controller
 
     public function storeLoans(LoanRequest $request)
     {
-        if (LockerLog::where("moneyType", LockerLog::moneyTypeLoans)->sum("amount") >= $request->loan_amount) {
+        if (LockerLog::where("moneyType", LockerLog::moneyTypeLoans)->where("type" , LockerLog::TYPE_PLUS)->sum("amount") - LockerLog::where("moneyType", LockerLog::moneyTypeLoans)->where("type" , LockerLog::TYPE_MINUS)->sum("amount") >= $request->loan_amount ) {
             try {
                 $data = $request->all();
 
                 if ($request->type == 0) {
                     $data['isStarted'] = now()->format("Y-m"); // Ensure isStarted is set
-
+                    $loan = Loan::create($data);
                     $borrower = Borrower::find($request->borrower_id);
                     LockerLog::create([
                         "moneyType" => LockerLog::moneyTypeLoans,
                         "amount" => $request->loan_amount,
                         "type" => LockerLog::TYPE_MINUS,
                         "admin_id" => auth()->id(),
+                        "donation_id " => null,
+                        "subvention_id" => null,
+                        "loan_id" => $loan->id,
                         "comment" => "قرض جديد الي " . ($borrower ? $borrower->name : "مجهول") .
                             " ورقم هاتفه " . ($borrower ? $borrower->phone : "غير متوفر"),
                     ]);
-
-//                    dd($data);
                 }
-//                dd($data);
 
 
-                $loan = Loan::create($data);
                 $amount = $request->loan_amount / 10;
 
                 for ($i = 0; $i < 10; $i++) {
@@ -167,7 +166,7 @@ class loansController extends Controller
                 return response()->json(['error' => $e->getMessage()], 500);
             }
         } else {
-            return response()->json(['error' => 'لا يوجد رصيد كافي'], 500);
+            return response()->json(['message' => 'لا يوجد رصيد كافي'], 500);
         }
     }
 
@@ -220,6 +219,9 @@ class loansController extends Controller
                     "amount" => $loan->loan_amount,
                     "type" => LockerLog::TYPE_MINUS,
                     "admin_id" => auth()->id(),
+                    "donation_id" => null,
+                    "subvention_id" => null,
+                    "loan_id" => $loan->id,
                     "comment" => "قرض جديد الي " . ($borrower ? $borrower->name : "مجهول") .
                         " ورقم هاتفه " . ($borrower ? $borrower->phone : "غير متوفر"),
                 ]);
@@ -242,5 +244,11 @@ class loansController extends Controller
         $loan->save();
 
         return response()->json(['message' => 'تم دفع القرض بنجاح']);
+    }
+
+    public function printLoan()
+    {
+        $loans = Loan::all();
+        return view('Admin.print.printLoan',compact('loans'));
     }
 }

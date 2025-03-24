@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Setting;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 
@@ -25,12 +26,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
         view()->composer('*', function ($view) {
             $view->with('setting', Setting::first());
         });
-//        View::share('setting',Setting::first());
-
-
     }
 }

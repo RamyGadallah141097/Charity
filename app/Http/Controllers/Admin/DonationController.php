@@ -133,8 +133,10 @@ class DonationController extends Controller
 
 
             $asset = Asset::find($request->asset_id);
-            $asset->counter += $request->asset_count;
-            $asset->save();
+            if (isset($asset)) {
+                $asset->counter += $request->asset_count;
+                $asset->save();
+            }
             Donation::create($request->except('_token'));
 
             return response()->json(['status' => 200]);

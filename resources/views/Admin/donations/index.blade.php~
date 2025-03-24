@@ -1,7 +1,7 @@
 @extends('Admin/layouts/master')
 
 @section('title')
-    {{(isset($setting) ? $setting->title : ''}} | التبرعات
+    {{ isset($setting) ? isset($setting->title) : '' }} | التبرعات
 @endsection
 @section('page_name')
     التبرعات

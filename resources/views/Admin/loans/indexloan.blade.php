@@ -2,7 +2,8 @@
 @extends('Admin.layouts.master')
 
 @section('title')
-    {{ isset($setting) ? isset($setting->title) : '' }} | القروض الشخصية
+    {{ isset($setting) ? $setting->title : '' }}
+ | القروض الشخصية
 @endsection
 @section('page_name')
     القروض الشخصية

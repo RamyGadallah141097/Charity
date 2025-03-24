@@ -1,6 +1,11 @@
 @extends('Admin/layouts/master')
-@section('title') {{ isset($setting) ? isset($setting->title) : '' }} | بيانات المؤسسة @endsection
+
+@section('title')
+    {{ $setting->title ?? '' }} | بيانات المؤسسة
+@endsection
+
 @section('page_name') بيانات المؤسسة @endsection
+
 @section('content')
     @if(count($errors) > 0 )
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -14,97 +19,107 @@
             </ul>
         </div>
     @endif
+
     <div class="row">
         <div class="col-md-12">
-            <form action="{{route('settingUpdate')}}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('settingUpdate') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="mb-0 card-title"> بيانات {{ isset($setting) ? isset($setting->title) : '' }}</h3>
+                        <h3 class="mb-0 card-title"> بيانات {{ $setting->title ?? '' }}</h3>
                     </div>
                     <div class="card-body">
                         <div class="row">
+                            <!-- Left Column -->
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">اسم المؤسسة</label>
                                     <input type="text" class="form-control" name="title"
-                                           placeholder="اسم الشركة" value="{{ isset($setting) ? isset($setting->title) : '' }}">
+                                           placeholder="اسم الشركة" value="{{ $setting->title ?? '' }}">
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">اسم الفرع</label>
                                     <input type="text" class="form-control" name="branch"
-                                           placeholder="اسم الفرع" value="{{ isset($setting->branch)}}">
+                                           placeholder="اسم الفرع" value="{{ $setting->branch ?? '' }}">
                                 </div>
                             </div>
 
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="form-label">المشهرة برقم</label>
-                                        <input type="text" class="form-control" name="vat_number"
-                                               placeholder=""
-                                               value="{{  isset($setting->vat_number)}}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">اسم القطاع</label>
-                                        <input type="text" class="form-control" name="section"
-                                               placeholder="اسم القطاع مثلا : قطاع التكافل" value="{{ isset($setting->section)  }}">
-                                    </div>
+                            <!-- Right Column -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">المشهرة برقم</label>
+                                    <input type="text" class="form-control" name="vat_number"
+                                           placeholder="" value="{{ $setting->vat_number ?? '' }}">
                                 </div>
+                                <div class="form-group">
+                                    <label class="form-label">اسم القطاع</label>
+                                    <input type="text" class="form-control" name="section"
+                                           placeholder="اسم القطاع مثلا : قطاع التكافل"
+                                           value="{{ $setting->section ?? '' }}">
+                                </div>
+                            </div>
+
+                            <!-- Additional Fields -->
                             <div class="col-12 row">
-                                <div class="form-group col-4 ">
+                                <div class="form-group col-4">
                                     <label class="form-label">الحد الاقصي للاعانات السنويه </label>
                                     <input type="number" class="form-control" name="maxSubvention"
-                                           placeholder="الحد الاقصي " value="{{  isset($setting->maxSubvention)}}">
+                                           placeholder="الحد الاقصي" value="{{ $setting->maxSubvention ?? '' }}">
                                 </div>
-                                <div class="form-group col-4 ">
+                                <div class="form-group col-4">
                                     <label class="form-label">الحد الاقصي للقرض للفرد السنويه </label>
                                     <input type="number" class="form-control" name="maxLoan"
-                                           placeholder="الحد الاقصي  " value="{{isset($setting->maxLoan)}}">
+                                           placeholder="الحد الاقصي" value="{{ $setting->maxLoan ?? '' }}">
                                 </div>
-                                <div class="form-group col-4 ">
+                                <div class="form-group col-4">
                                     <label class="form-label">قيمه الاشتراك الشهري للأعضاء </label>
                                     <input type="number" class="form-control" name="adminSubscription"
-                                           placeholder="الحد الاقصي  " value="{{ isset($setting->adminSubscription)}}">
+                                           placeholder="الحد الاقصي" value="{{ $setting->adminSubscription ?? '' }}">
                                 </div>
                             </div>
-                            </div>
+
+                            <!-- Address Fields -->
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="form-label">العنوان</label>
                                     <input type="text" class="form-control" name="address"
-                                           placeholder="عنوان ومكان الشركة" value="{{isset($setting->address)}}">
+                                           placeholder="عنوان ومكان الشركة" value="{{ $setting->address ?? '' }}">
                                 </div>
                             </div>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="form-label">العنوان الفرعي</label>
-                                <input type="text" class="form-control" name="sub_address"
-                                       placeholder="عنوان ومكان الشركة" value="{{isset($setting->sub_address)}}">
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="form-label">العنوان الفرعي</label>
+                                    <input type="text" class="form-control" name="sub_address"
+                                           placeholder="عنوان ومكان الشركة" value="{{ $setting->sub_address ?? '' }}">
+                                </div>
                             </div>
-                        </div>
-                            <div class="col-md-12 ">
+
+                            <!-- Logo Upload -->
+                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="form-label">اللوجو</label>
                                     <input type="file" class="dropify" name="logo"
-                                           data-default-file="{{asset(isset($setting->logo))}}"
-                                           accept="image/png, image/gif, image/jpeg,image/jpg"/>
+                                           data-default-file="{{ asset($setting->logo ?? '') }}"
+                                           accept="image/png, image/gif, image/jpeg, image/jpg"/>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <div class="card-footer text-left">
                         <button type="submit" class="btn btn-primary">تحديث</button>
                     </div>
-
+                </div>
             </form>
         </div>
     </div>
-
-
-
-
 @endsection
 
-<script>
-    $('.dropify').dropify()
-</script>
+@section('scripts')
+    <script>
+        $(document).ready(function () {
+            $('.dropify').dropify();
+        });
+    </script>
+@endsection

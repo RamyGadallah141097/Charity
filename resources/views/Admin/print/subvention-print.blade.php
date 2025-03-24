@@ -1,5 +1,6 @@
 @extends('Admin/layouts/master')
-@section('title'){{ isset($setting) ? isset($setting->title) : '' }} | الإعانات @endsection
+@section('title'){{ isset($setting) ? $setting->title : '' }}
+ | الإعانات @endsection
 @section('page_name') الإعانات @endsection
 <style>
     .td, th {
