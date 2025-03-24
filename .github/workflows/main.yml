@@ -53,4 +53,5 @@ jobs:
           script: |
             cd domains/topbusiness.ebharbook.com/public_html/zakat
             php artisan optimize:clear
+            php artisan storage:link
             # php artisan mi:f --seed
