@@ -54,4 +54,5 @@ jobs:
             cd domains/topbusiness.ebharbook.com/public_html/zakat
             php artisan optimize:clear
             php artisan storage:link
-            php artisan db:seed --class=AdminsTableSeeder
+            php artisan db:seed --class=PermissionsSeeder
+            
