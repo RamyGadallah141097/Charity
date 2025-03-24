@@ -18,6 +18,16 @@
 
     <div style="display: flex; gap: 20px; flex-wrap: wrap;" class="bg-white-light  mb-9 p-5 card   ">
     <div style="display: flex; gap: 20px; flex-wrap: wrap;" class="bg-white  mb-9 p-5 card   ">
+        <div class="row">
+            <div class="col-6">
+                <h2>مخطط عدد المستفيدين</h2>
+                <div id="UsersChart"></div>
+            </div>
+            <div class="col-6">
+                <h2>مخطط عدد المتبرعين</h2>
+                <div id="DonorsChart"></div>
+            </div>
+        </div>
 
         <div class="row">
             <div class="col-6">
