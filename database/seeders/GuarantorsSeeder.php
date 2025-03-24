@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Guarantor;
 use Illuminate\Database\Seeder;
 
-class guarantorsSeeder extends Seeder
+class GuarantorsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
