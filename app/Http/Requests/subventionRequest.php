@@ -54,18 +54,19 @@ class subventionRequest extends FormRequest
             }else{
                 return [
 
-//                    "user_id" => "required|exists:users,id",
-//                    "price" => [ "min:1" ,
-//                        function ($attribute, $value, $fail) {
-//                            $maxLoan = Setting::latest()->first()? Setting::latest()->first()->maxSubvention ?? 0 : 0;
-//                            $currentYear = now()->year;
-//                            $totalSubvention = $value + Subvention::where("user_id", request()->input('user_id'))->whereYear('created_at', $currentYear)->sum("price");
-//                            if ($totalSubvention > $maxLoan) {
-//                                $fail("مبلغ القرض يجب ألا يتجاوز $maxLoan.");
-//                            }
-//                        }
-//                    ],
-//                    "type" => [],
+                    "user_id" => "required|exists:users,id",
+                    "price" => [ "min:1" ,
+                        function ($attribute, $value, $fail) {
+                            $maxLoan = Setting::latest()->first()? Setting::latest()->first()->maxSubvention ?? 0 : 0;
+                            $currentYear = now()->year;
+                            $totalSubvention = $value + Subvention::where("user_id", request()->input('user_id'))->whereYear('created_at', $currentYear)->sum("price");
+                            if ($totalSubvention > $maxLoan) {
+                                toastr()->error("مبلغ الاعانه يجب ألا يتجاوز في السنه $maxLoan.");
+                                $fail("مبلغ الاعانه يجب ألا يتجاوز في السنه $maxLoan.");
+                            }
+                        }
+                    ],
+                    "type" => [],
                 ];
             }
 

@@ -20,33 +20,26 @@
                     </label>
                 </div>
 
-{{--                @foreach($permissions as $permission)--}}
-{{--                    <div class="col-4 align-content-end">--}}
-{{--                        <label for="permission_{{$permission->id}}">{{$permission->name}}</label>--}}
-{{--                        <input type="checkbox"--}}
-{{--                               {{$role->hasPermissionTo($permission) ? "checked" : ""}}--}}
-{{--                               class="permission-checkbox"--}}
-{{--                               id="permission_{{$permission->id}}"--}}
-{{--                               name="permissions[]"--}}
-{{--                               value="{{$permission->id}}" />--}}
-{{--                    </div>--}}
-{{--                    <br>--}}
-{{--                @endforeach--}}
+                <div class="row">
+                    @foreach($permissions as $permission)
+                        <div class="col-md-6 mb-3">
+                            <div class="p-3 border rounded d-flex align-items-center">
+                                <input type="checkbox" style="cursor: pointer"
+                                       class="form-check-input"
+                                       id="permission_{{$permission->id}}"
+                                       name="permissions[]"
+                                       value="{{$permission->id}}"
+                                    {{$role->hasPermissionTo($permission) ? "checked" : ""}} />
 
-                @foreach($permissions as $permission)
-                    <div class="col-4 align-content-end">
-                        <label for="permission_{{$permission->id}}">
-                            {{ __('permissions.' . $permission->name) }}
-                        </label>
-                        <input type="checkbox"
-                               {{$role->hasPermissionTo($permission) ? "checked" : ""}}
-                               class="permission-checkbox"
-                               id="permission_{{$permission->id}}"
-                               name="permissions[]"
-                               value="{{$permission->id}}" />
-                    </div>
-                    <br>
-                @endforeach
+                                <label for="permission_{{$permission->id}}" class="form-check-label me-3"
+                                       style="margin-right: 16px; cursor: pointer;">
+                                    {{ __('permissions.' . $permission->name) }}
+                                </label>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
 
 
 

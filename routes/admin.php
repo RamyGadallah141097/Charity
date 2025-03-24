@@ -11,10 +11,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('/', 'HomeController@index')->name('adminHome');
     #### Admins ####
     Route::resource('admins', 'AdminController')->middleware('permission:admins.index');
-    Route::POST('delete_admin', 'AdminController@delete')->name('delete_admin')->middleware('permission:delete_admin');
-    Route::get('my_profile', 'AdminController@myProfile')->name('myProfile')->middleware('permission:myProfile');
-    Route::post('changeRole', 'AdminController@changeRole')->name('changeRole')->middleware('permission:admins.update');
-    Route::post('showChangeRole', 'AdminController@showChangeRole')->name('showChangeRole')->middleware('permission:admins.index');
+    Route::get('admins/setting', 'AdminController@show')->name("admins.setting");
+    Route::POST('delete_admin', 'AdminController@delete')->name('delete_admin');
+    Route::get('my_profile', 'AdminController@myProfile')->name('myProfile');
+    Route::post('changeRole', 'AdminController@changeRole')->name('changeRole');
+    Route::post('showChangeRole', 'AdminController@showChangeRole')->name('showChangeRole');
 
     Route::resource("adminSubscription" , "AdminSubscriptionsController");
 //    route to get the subscription amount fom setting table
@@ -27,12 +28,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 
     #### Users ####
     Route::get('users/{status}', 'UserController@index')->name('users.index')->middleware('permission:users.index');
-    Route::get('users.create', 'UserController@create')->name('users.create')->middleware('permission:users.create');
-    Route::POST('users.store', 'UserController@store')->name('users.store')->middleware('permission:users.store');
-    Route::POST('delete_users', 'UserController@delete')->name('delete_users')->middleware('permission:delete_users');
-    Route::POST('updateUserStatus', 'UserController@updateUserStatus')->name('updateUserStatus')->middleware('permission:updateUserStatus');
-    Route::get('userDetails/{id?}', 'UserController@userDetails')->name('userDetails')->middleware('permission:userDetails');
-    Route::get('DonationDetails/{id}', 'UserController@DonationDetails')->name('DonationDetails')->middleware('permission:DonationDetails');
+    Route::get('users.create', 'UserController@create')->name('users.create');
+    Route::POST('users.store', 'UserController@store')->name('users.store');
+    Route::POST('delete_users', 'UserController@delete')->name('delete_users');
+    Route::POST('updateUserStatus', 'UserController@updateUserStatus')->name('updateUserStatus');
+    Route::get('userDetails/{id?}', 'UserController@userDetails')->name('userDetails');
+    Route::get('searchNID/{id?}', 'UserController@searchNID')->name('user.searchNID');
+    Route::get('DonationDetails/{id}', 'UserController@DonationDetails')->name('DonationDetails');
 
     //    الراوتس الخاصه بالمقترض
     Route::resource("borrowers", "BorrowerController");
@@ -52,18 +54,18 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::middleware(['permission:donors.index'])->group(function () {
         Route::resource('donors', 'DonorController');
         Route::put('donors/{id}', [DonorController::class, 'update'])->name('updateDonor');
-        Route::POST('delete_donors', 'DonorController@delete')->name('delete_donors')->middleware('permission:delete_donors');
-        Route::POST('Donations_donors', 'DonationController@delete')->name('donations_delete')->middleware('permission:donations_delete');
+        Route::POST('delete_donors', 'DonorController@delete')->name('delete_donors');
+        Route::POST('Donations_donors', 'DonationController@delete')->name('donations_delete');
         Route::resource('Donations', "DonationController");
-        Route::get('/get_donor_phone/{id}', 'DonationController@get_donor_phone')->name("get_donor_phone")->middleware('permission:get_donor_phone');
-        Route::get('/search-donor', 'DonationController@searchDonor')->name('search.donor')->middleware('permission:search.donor');
+        Route::get('/get_donor_phone/{id}', 'DonationController@get_donor_phone')->name("get_donor_phone");
+        Route::get('/search-donor', 'DonationController@searchDonor')->name('search.donor');
     });
 
     Route::get("lock/{lock}" , "LockerLogController@index")->name("lock");
 
     #### Tasks ####
     Route::resource("tasks", "TaskController")->middleware('permission:tasks.index');
-    Route::POST('delete_task', 'TaskController@delete')->name('delete_task')->middleware('permission:delete_task');
+    Route::POST('delete_task', 'TaskController@delete')->name('delete_task');
     //    the route of the task s
     Route::resource("tasks", "TaskController");
     Route::POST('delete_task', 'TaskController@delete')->name('delete_task');
@@ -107,29 +109,29 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 //    Route::POST('delete_subventions', 'SubventionController@delete')->name('delete_subventions')->middleware('permission:delete_subventions');
 //    assets
     Route::resource("assets" , "AssetController");
-    Route::get('assetsShow', 'AssetController@show')->name('assetsShow')->middleware('permission:showSubventions');
-    Route::POST('assetsDelete', 'AssetController@delete')->name('assetsDelete')->middleware('permission:delete_subventions');
+    Route::get('assetsShow', 'AssetController@show')->name('assetsShow')->middleware('permission:subventions.index');
+    Route::POST('assetsDelete', 'AssetController@delete')->name('assetsDelete');
 
 
 
     #### Roles ####
     Route::resource("roles", "RulesController")->middleware('permission:roles.index');
-    Route::post("Role_delete", "RulesController@delete")->name("Role_delete")->middleware('permission:Role_delete');
+    Route::post("Role_delete", "RulesController@delete")->name("Role_delete");
 
 
 
 
     #### Research ####
     Route::get('research', 'ResearchController@index')->name('research.index')->middleware('permission:research.index');
-    Route::get('social_research/{user_id}', 'ResearchController@social_research')->name('social_research')->middleware('permission:social_research');
-    Route::get('researchReceive', 'ResearchController@researchReceive')->name('research.receive')->middleware('permission:research.receive');
+    Route::get('social_research/{user_id}', 'ResearchController@social_research')->name('social_research');
+    Route::get('researchReceive', 'ResearchController@researchReceive')->name('research.receive');
 
     #### Setting ####
     Route::get('setting', 'SettingController@index')->name('setting.index')->middleware(['permission:setting.index', 'admin']);
-    Route::post('settingUpdate', 'SettingController@update')->name('settingUpdate')->middleware('permission:settingUpdate');
+    Route::post('settingUpdate', 'SettingController@update')->name('settingUpdate');
 
     #### Auth ####
-    Route::get('logout', 'AuthController@logout')->name('admin.logout')->middleware('permission:admin.logout');
+    Route::get('logout', 'AuthController@logout')->name('admin.logout');
 });
 
 #### Login Actions ####

@@ -117,6 +117,18 @@ class AdminController extends Controller
         return view('Admin/admin.parts.edit',compact('admin' , "roles"));
     }
 
+    public function setting(){
+        $admin = auth()->guard('admin')->user();
+        return view('Admin/admin/setting',compact('admin'));
+    }
+
+    public function show()
+    {
+        $admin = auth()->guard('admin')->user();
+        $roles = Role::all();
+        return view('Admin/admin/parts/setting',compact('admin' , "roles"));
+    }
+
     public function update(request $request,$id)
     {
         $inputs = $request->validate([
@@ -137,10 +149,13 @@ class AdminController extends Controller
 //        $admin->syncRoles($request->adminRole);
 //        $admin->assignRole($request->adminRole);
             $admin->syncRoles($request->adminRole);
-        if ($admin->update($inputs))
-            return response()->json(['status' => 200]);
-        else
-            return response()->json(['status' => 405]);
+        if ($admin->update($inputs)) {
+            toastr()->success("تم التحديث بنجاح");
+        } else {
+            toastr()->error("فشل التحديث، يرجى المحاولة مرة أخرى");
+        }
+
+        return redirect()->route('admin.index');
     }
 
 //    public function showChangeRole(Request $request){

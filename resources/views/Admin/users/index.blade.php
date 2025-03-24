@@ -16,9 +16,9 @@
                     </h3>
                     <div class="row mb-3 w-100">
                         <div class="col-3">
-                            <label for="social_status">الحاله الشخصيه</label>
+{{--                            <label for="social_status">الحاله الشخصيه</label>--}}
                             <select id="social_status" class="form-control">
-                                <option value="">Select</option>
+                                <option value="">اختيار الحاله الشخصيه</option>
                                 <option value="0">اعزب</option>
                                 <option value="1">متزوج</option>
                                 <option value="2">مطلق</option>
@@ -27,25 +27,24 @@
                         </div>
 
                         <div class="col-3">
-                            <label for="standard_living">الحالة المعيشيه</label>
-                            <select id="standard_living" class="form-control">
-                                <option value="">Select</option>
-                                <option value="1001">1000</option>
-                                <option value="5001">5000</option>
-                                <option value="10001">10000</option>
-                            </select>
+{{--                            <label for="standard_living">الحالة المعيشيه</label>--}}
+                                <input id="standard_living" class="form-control" placeholder="اختيار الحالة المعيشيه" name="standard_living">
                         </div>
 
+{{--                        <div class="col-3">--}}
+{{--                            <label for="family_number">عدد الاطفال</label>--}}
+{{--                            <select id="family_number" class="form-control">--}}
+{{--                                <option value="">اختيار عدد الاطفال</option>--}}
+{{--                                <option value="0">0</option>--}}
+{{--                                <option value="1">1</option>--}}
+{{--                                <option value="2">2</option>--}}
+{{--                                <option value="3">3</option>--}}
+{{--                                <option value="4">4+</option>--}}
+{{--                            </select>--}}
+{{--                        </div>--}}
                         <div class="col-3">
-                            <label for="family_number">عدد الاطفال</label>
-                            <select id="family_number" class="form-control">
-                                <option value="">Select</option>
-                                <option value="0">0</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4+</option>
-                            </select>
+{{--                            <label for="family_number">عدد الاطفال</label>--}}
+                            <input id="family_number" class="form-control" name="family_number" placeholder="عدد الاطفال">
                         </div>
                     </div>
 
@@ -298,4 +297,5 @@
     });
     });
     </script>
+
 @endsection
