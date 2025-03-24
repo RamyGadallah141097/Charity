@@ -4,7 +4,9 @@
 
 
         <a class="header-brand1">
-            <img src="{{ get_file(isset($setting->logo)) }}" class="header-brand-img light-logo1" alt="logo">
+            <img src="{{ $setting && $setting->logo ? asset('storage/' . $setting->logo) : asset('images/default-logo.png') }}"
+                 alt="logo"
+                 style="max-height: 50px; mix-blend-mode: multiply;">
             <a class="header-brand1" href="{{ route('adminHome') }}">
 
                 <a class="header-brand1">
