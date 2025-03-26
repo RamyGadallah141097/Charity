@@ -28,7 +28,7 @@
     </main>
     <div class="welcome-container">
         <h3 class="heading-secondary">مرحبا بعودتك <span class="lg">{{ isset($setting) ? $setting->title : '' }}</span></h3>
-        <img src="{{ $setting && $setting->logo ? asset('storage/' . $setting->logo) : asset('images/default-logo.png') }}"
+        <img src="{{ $setting && $setting->logo ? asset($setting->logo) : asset('images/default-logo.png') }}"
              alt="logo"
              style="max-height: 400px; mix-blend-mode: multiply;">
 
