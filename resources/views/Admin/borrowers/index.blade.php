@@ -36,7 +36,6 @@
                     <div class="card-header">
                         <h3 class="card-title">المقترضين من  القروض الحسنة  {{ isset($setting) ? $setting->title : '' }}
 </h3>
-                        @can("borrower.create")
                             <div class="">
                                 <button class="btn btn-secondary btn-icon text-white addBtn">
                                         <span>
@@ -44,7 +43,6 @@
                                         </span> اضافة جديد
                                 </button>
                             </div>
-                        @endcan
                     </div>
 
                 </div>
@@ -299,6 +297,7 @@
                 url: `/admin/borrowers/${borrowerId}/media`,
                 type: "GET",
                 success: function (response) {
+                    console.log(response);
                     $("#borrowerMedia").empty();
                     $("#guarantorMedia").empty();
                     let borrowerHtml = "";

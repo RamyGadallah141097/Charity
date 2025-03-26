@@ -33,7 +33,6 @@
                 <div class="card-header">
                     <h3 class="card-title">  مصروفات المشرفين  {{ isset($setting) ? $setting->title : '' }}
 </h3>
-                    @can("assets.create")
                         <div class="">
                             <button class="btn btn-secondary btn-icon text-white addBtn">
                                         <span>
@@ -41,7 +40,6 @@
                                         </span> اضافة مصروف
                             </button>
                         </div>
-                    @endcan
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

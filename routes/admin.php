@@ -47,7 +47,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 //    Route::resource("borrowers", "BorrowerController");
 //    Route::get('getGuarantor', 'BorrowerController@getGuarantor')->name('getGuarantor');
 //    Route::POST('delete_borrowers', 'BorrowerController@delete')->name('delete_borrowers');
-//    Route::get('/borrowers/{id}/media', 'BorrowerController@getMedia');
+    Route::get('/borrowers/{id}/media', 'BorrowerController@getMedia');
 
     #### Donors ####
     Route::middleware(['permission:donors.index'])->group(function () {
