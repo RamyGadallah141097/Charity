@@ -25,7 +25,6 @@ class SubventionController extends Controller
                     $editButton = '';
                     $deleteButton = '';
 
-                    if (auth()->user()->can('subventions.edit')) {
                         $editButton = '
                             <button type="button" data-id="' . $data->id . '" class="btn btn-pill btn-info-light editBtn">
                                 <i class="fa fa-edit"></i>
@@ -35,16 +34,13 @@ class SubventionController extends Controller
                                </a>
 
                         ';
-                    }
 
-                    if (auth()->user()->can('subventions.destroy')) {
                         $deleteButton = '
                             <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
                                     data-id="' . $data->id . '" data-title="' . ($data->user->name ?? "غير معروف") . '">
                                 <i class="fas fa-trash"></i>
                             </button>
                         ';
-                    }
 
 
 

@@ -35,7 +35,6 @@
                         انواع التبرعات
                         {{ isset($setting) ? $setting->title : '' }}
                     </h3>
-                    @can("assets.create")
                         <div class="">
                             <button class="btn btn-secondary btn-icon text-white addBtn">
                                         <span>
@@ -43,7 +42,6 @@
                                         </span> اضافة اشتراك
                             </button>
                         </div>
-                    @endcan
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

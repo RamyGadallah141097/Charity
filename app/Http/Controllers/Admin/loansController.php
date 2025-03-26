@@ -79,51 +79,6 @@ class loansController extends Controller
     }
 
 
-//    public function storeLoans(LoanRequest $request)
-//    {
-//
-//       if (LockerLog::where("moneyType" , LockerLog::moneyTypeLoans)->sum("amount") >= $request->loan_amount){
-//           try {
-//
-//               $data = $request->all();
-//
-//
-//               if ($request->type == 0) {
-//                   $data['isStarted'] = ($request->type == 0) ? now()->format("Y-m") : null;
-//
-//                   $borrower = Borrower::find($request->borrower_id);
-//                   LockerLog::create([
-//                       "moneyType" => LockerLog::moneyTypeLoans,
-//                       "amount" => $request->loan_amount,
-//                       "type" => LockerLog::TYPE_MINUS,
-//                       "admin_id" => auth()->id(),
-//                       "comment" => "قرض جديد الي " . ($borrower ? $borrower->name : "مجهول") .
-//                           " ورقم هاتفه " . ($borrower ? $borrower->phone : "غير متوفر"),
-//                   ]);
-//                   dd($request->all());
-//               }
-//               $loan = Loan::create($data);
-//               $amount = $request->loan_amount / 10;
-//
-//               for ($i = 0; $i < 10; $i++) {
-//                    PersonalLoan::create([
-//                        "amount" => $amount,
-//                        "loan_id" => $loan->id,
-//                        "borrower_id" => $request->borrower_id,
-//                        "month" => now()->addMonths($i)->format("Y-m"),
-//                        "status"=>0
-//                    ]);
-//               }
-//
-//               return response()->json(['status' => 200]);
-//           } catch (\Exception $e) {
-//               return response()->json(['error' => $e->getMessage()], 500);
-//           }
-//
-//       }else{
-//           return response()->json(['error' => 'لا يوجد رصيد كافي'], 500);
-//       }
-//    }
 
     public function storeLoans(LoanRequest $request)
     {
@@ -132,9 +87,20 @@ class loansController extends Controller
                 $data = $request->all();
 
 
+
                 if ($request->type == 0) {
                     $data['isStarted'] = now()->format("Y-m");
+                    $amount = $request->loan_amount / 10;
                     $loan = Loan::create($data);
+                    for ($i = 0; $i < 10; $i++) {
+                        PersonalLoan::create([
+                            "amount" => $amount,
+                            "loan_id" => $loan->id,
+                            "borrower_id" => $request->borrower_id,
+                            "month" => now()->addMonths($i)->format("Y-m-d"),
+                            "status" => 0
+                        ]);
+                    }
                     $borrower = Borrower::find($request->borrower_id);
                     LockerLog::create([
                         "moneyType" => LockerLog::moneyTypeLoans,
@@ -147,20 +113,22 @@ class loansController extends Controller
                         "comment" => "قرض جديد الي " . ($borrower ? $borrower->name : "مجهول") .
                             " ورقم هاتفه " . ($borrower ? $borrower->phone : "غير متوفر"),
                     ]);
+                }else{
+                    $amount = $request->loan_amount / 10;
+                    $loan = Loan::create($data);
+                    for ($i = 0; $i < 10; $i++) {
+                        PersonalLoan::create([
+                            "amount" => $amount,
+                            "loan_id" => $loan->id,
+                            "borrower_id" => $request->borrower_id,
+                            "month" => now()->addMonths($i)->format("Y-m-d"),
+                            "status" => 0
+                        ]);
+                    }
                 }
 
 
-                $amount = $request->loan_amount / 10;
-                $loan = Loan::create($data);
-                for ($i = 0; $i < 10; $i++) {
-                    PersonalLoan::create([
-                        "amount" => $amount,
-                        "loan_id" => $loan->id,
-                        "borrower_id" => $request->borrower_id,
-                        "month" => now()->addMonths($i)->format("Y-m-d"),
-                        "status" => 0
-                    ]);
-                }
+
 
                 return response()->json(['status' => 200]);
             } catch (\Exception $e) {
@@ -242,6 +210,17 @@ class loansController extends Controller
         if (!$loan) {
             return response()->json(['error' => 'القرض غير موجود'], 404);
         }
+        LockerLog::create([
+            "moneyType" => LockerLog::moneyTypeLoans,
+            "amount" => $loan->amount,
+            "type" => LockerLog::TYPE_PLUS,
+            "admin_id" => auth()->id(),
+            "donation_id" => null,
+            "subvention_id" => null,
+            "loan_id" => $loan->id,
+            "comment" => "  دفع قرض من  " . ($loan->borrower_id ??  "مجهول") .
+                " ورقم هاتفه " . ($loan->borrower->phone   ?? "غير متوفر"),
+        ]);
         $loan->status = 1;
         $loan->save();
 

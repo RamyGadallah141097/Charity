@@ -23,22 +23,18 @@ class AssetController extends Controller
                     $editButton = '';
                     $deleteButton = '';
 
-                    if (auth()->user()->can('assets.edit')) {
                         $editButton = '
                             <button type="button" data-id="' . $asset->id . '" class="btn btn-pill btn-info-light editBtn">
                                 <i class="fa fa-edit"></i>
                             </button>
                         ';
-                    }
 
-                    if (auth()->user()->can('assets.destroy')) {
                         $deleteButton = '
                             <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
                                     data-id="' . $asset->id . '">
                                 <i class="fas fa-trash"></i>
                             </button>
                         ';
-                    }
 
                     return '<div class="d-flex">' . $editButton . $deleteButton . '</div>';
                 })

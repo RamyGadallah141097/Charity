@@ -135,6 +135,7 @@
                     {
                         $('#dataTable').DataTable().ajax.reload();
                         toastr.success('تم الاضافة بنجاح');
+                        window.location.reload();
                         $('#editOrCreate').modal('hide')
 
 
