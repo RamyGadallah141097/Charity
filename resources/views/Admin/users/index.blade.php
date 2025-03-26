@@ -93,16 +93,20 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <div class="modal-body">
-                        <input id="delete_id" name="id" type="hidden">
-                        <p>هل انت متأكد من حذف البيانات التالية <span id="title" class="text-danger"></span>؟</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" id="dismiss_delete_modal">
-                            اغلاق
-                        </button>
-                        <button type="button" class="btn btn-danger" id="delete_btn">حذف !</button>
-                    </div>
+                    <form id="delete_form" action="{{ route('delete_users') }}" method="POST">
+                        @csrf
+                        @method("DELETE")
+                        <div class="modal-body">
+                            <input id="delete_id" name="id" type="hidden">
+                            <p>هل انت متأكد من حذف البيانات التالية <span id="title" class="text-danger"></span>؟</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id="dismiss_delete_modal">
+                                اغلاق
+                            </button>
+                            <button type="button" class="btn btn-danger" id="delete_btn">حذف !</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -296,6 +300,25 @@
     }
     });
     });
+    </script>
+    <script>
+        $(document).ready(function () {
+            // عند الضغط على أيقونة الحذف داخل الجدول
+            $(".delete_button").on("click", function () {
+                let id = $(this).data("id");
+                let title = $(this).data("title");
+
+                $("#delete_id").val(id); // تعيين ID للحذف
+                $("#title").text(title); // عرض اسم العنصر في المودال
+                $("#delete_modal").modal("show"); // عرض المودال
+            });
+
+            // عند الضغط على زر "حذف" داخل المودال
+            $("#delete_btn").on("click", function () {
+                $("#delete_form").submit(); // إرسال النموذج
+            });
+        });
+
     </script>
 
 @endsection

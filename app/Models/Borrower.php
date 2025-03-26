@@ -17,7 +17,7 @@ class Borrower extends Model
     }
     public function media()
     {
-        return $this->hasMany(media::class, "borrower_id");
+        return $this->hasMany(Media::class, "borrower_id");
     }
 
     public function loans()
