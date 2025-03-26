@@ -5,7 +5,7 @@
         margin: auto;
     }
 </style>
-
+{{--create file --}}
 <div class="modal-body ">
     <h4 class="text-primary">معلومات المقترض</h4>
     <form id="addBorrowerForm" class="addForm" method="POST" enctype="multipart/form-data" action="{{ route('borrowers.store') }}">
