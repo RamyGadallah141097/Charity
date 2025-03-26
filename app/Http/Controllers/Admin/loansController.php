@@ -30,7 +30,7 @@ class loansController extends Controller
                        ';
                 })
                 ->editColumn('borrower_id', function ($loans) {
-                    return $loans->borrower->name;
+                    return $loans->borrower ? $loans->borrower->name : "-";
                 })
                 ->editColumn('borrower_phone', function ($loans) {
                     $phone = $loans->borrower_phone;

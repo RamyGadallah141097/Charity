@@ -238,13 +238,13 @@
             </p>
 
             <ul class="collapse {{ request()->routeIs('indexLoansDonations') || request()->routeIs('borrowers.index') || request()->routeIs('index.Loans') ? 'show' : '' }}" id="GoodLoansDropdown">
-                <li>
-                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('indexLoansDonations') ? 'active' : '' }}"
-                       href="{{ route('indexLoansDonations') }}">
-                        <i class="fas fa-hand-holding-heart" style="margin-left: 10px;"></i>
-                        <span class="side-menu__label"> التبرعات </span>
-                    </a>
-                </li>
+{{--                <li>--}}
+{{--                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('indexLoansDonations') ? 'active' : '' }}"--}}
+{{--                       href="{{ route('indexLoansDonations') }}">--}}
+{{--                        <i class="fas fa-hand-holding-heart" style="margin-left: 10px;"></i>--}}
+{{--                        <span class="side-menu__label"> التبرعات </span>--}}
+{{--                    </a>--}}
+{{--                </li>--}}
 
                 <li>
                     <a class="dropdown-item-text side-menu__item {{ request()->routeIs('borrowers.index') ? 'active' : '' }}"
