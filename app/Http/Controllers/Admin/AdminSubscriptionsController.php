@@ -28,7 +28,7 @@ class AdminSubscriptionsController extends Controller
                     return $data->created_at ? $data->created_at->format("Y-m-d") : "-";
                 })
                 ->editColumn("admin_id", function ($data) {
-                    return optional($data->admin)->name ?? "-";
+                    return $data->admin ? $data->admin->name  : "-";
                 })
                 ->editColumn("months_count" , function($data){
                     $monthNames = [
