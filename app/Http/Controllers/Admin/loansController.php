@@ -40,7 +40,7 @@ class loansController extends Controller
                 ->make(true);
         } else {
             $setting = Setting::first();
-            return view('admin.loans.index' , compact("setting"));
+            return view('Admin.loans.index' , compact("setting"));
         }
     }
 

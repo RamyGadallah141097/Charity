@@ -415,11 +415,15 @@ class UserController extends Controller
 
 
 
-    public function delete(Request $request)
+
+    public function destroy(Request $request)
     {
-        User::find($request->id)->delete();
-        return response(['message' => 'تم الحذف بنجاح', 'status' => 200], 200);
+        $user = User::findOrFail($request->id);
+        $user->delete();
+
+        return redirect()->back()->with('success', 'تم الحذف بنجاح!');
     }
+
 
 
 //    funciton to the arrow charts

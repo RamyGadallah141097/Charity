@@ -30,6 +30,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('users.create', 'UserController@create')->name('users.create');
     Route::POST('users.store', 'UserController@store')->name('users.store');
     Route::POST('delete_users', 'UserController@delete')->name('delete_users');
+    Route::delete('/users/delete', [UserController::class, 'destroy'])->name('delete_users');
+
     Route::POST('updateUserStatus', 'UserController@updateUserStatus')->name('updateUserStatus');
     Route::get('userDetails/{id?}', 'UserController@userDetails')->name('userDetails');
     Route::get('searchNID/{id?}', 'UserController@searchNID')->name('user.searchNID');
