@@ -218,51 +218,107 @@
                                     </h4>
                                 </div>
 
-                                <div class="col-3">
-                                    <div class="form-group">
-                                        <label for="name" class="form-control-label"> الاسم </label>
-                                        <input type="text" class="form-control"  value="{{old("child_names[]")}}" name="child_names[]">
-                                    </div>
-                                </div>
-
-                                <div class="col-3">
-                                    <div class="form-group">
-                                        <label for="children_national_id" class="form-control-label"> الرقم القومى
-                                        </label>
-                                        <input type="nubmer" class="form-control"  value="{{old("children_national_id[]")}}" name="children_national_id[]">
-                                    </div>
-                                </div>
-
-                                <div class="col-3">
-                                    <div class="form-group">
-                                        <label for="schools" class="form-control-label"> السن </label>
-                                        <input type="text" class="form-control"  value="{{old("age[]")}}" name="age[]" readonly>
-                                    </div>
-                                </div>
-
-                                <div class="col-2">
-                                    <div class="form-group">
-                                        <label for="schools" class="form-control-label"> المدرسة </label>
-                                        <input type="text" class="form-control"  value="{{old("schools[]")}}" name="schools[]">
-                                    </div>
-                                </div>
+{{--                                @if(old('child_names'))--}}
+{{--                                    @foreach(old('child_names') as $child_name)--}}
+{{--                                        <input type="text" class="form-control" value="{{ $child_name }}" name="child_names[]">--}}
+{{--                                    @endforeach--}}
+{{--                                @else--}}
+{{--                                    <input type="text" class="form-control" name="child_names[]">--}}
+{{--                                @endif--}}
 
 
-                                <div class="col-2">
-                                    <div class="form-group">
-                                        <label for="monthly_cost" class="form-control-label"> التكلفة الشهرية </label>
-                                        <input type="text" class="form-control"  value="{{old("monthly_cost[]")}}" name="monthly_cost[]">
-                                    </div>
-                                </div>
 
-                                <div class="col-4">
-                                    <div class="form-group">
-                                        <label for="notes" class="form-control-label"> ملاحظات </label>
-                                        <input type="text" class="form-control"  value="{{old("notes[]")}}" name="notes[]">
+
+
+                                @if(old('child_names'))
+                                    @foreach(old('child_names') as $index => $child_name)
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label for="child_names" class="form-control-label"> اسم الطفل </label>
+                                                <input type="text" class="form-control" value="{{ $child_name }}" name="child_names[]">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label for="children_national_id" class="form-control-label"> الرقم القومي </label>
+                                                <input type="number" class="form-control" value="{{ old('children_national_id')[$index] ?? '' }}" name="children_national_id[]">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label for="age" class="form-control-label"> السن </label>
+                                                <input type="text" class="form-control" value="{{ old('age')[$index] ?? '' }}" name="age[]" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-2">
+                                            <div class="form-group">
+                                                <label for="schools" class="form-control-label"> المدرسة </label>
+                                                <input type="text" class="form-control" value="{{ old('schools')[$index] ?? '' }}" name="schools[]">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-2">
+                                            <div class="form-group">
+                                                <label for="monthly_cost" class="form-control-label"> التكلفة الشهرية </label>
+                                                <input type="text" class="form-control" value="{{ old('monthly_cost')[$index] ?? '' }}" name="monthly_cost[]">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label for="notes" class="form-control-label"> ملاحظات </label>
+                                                <input type="text" class="form-control" value="{{ old('notes')[$index] ?? '' }}" name="notes[]">
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <label for="child_names" class="form-control-label"> اسم الطفل </label>
+                                            <input type="text" class="form-control" name="child_names[]">
+                                        </div>
                                     </div>
-                                </div>
+
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <label for="children_national_id" class="form-control-label"> الرقم القومي </label>
+                                            <input type="number" class="form-control" name="children_national_id[]">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <label for="age" class="form-control-label"> السن </label>
+                                            <input type="text" class="form-control" name="age[]" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <label for="schools" class="form-control-label"> المدرسة </label>
+                                            <input type="text" class="form-control" name="schools[]">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <label for="monthly_cost" class="form-control-label"> التكلفة الشهرية </label>
+                                            <input type="text" class="form-control" name="monthly_cost[]">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <label for="notes" class="form-control-label"> ملاحظات </label>
+                                            <input type="text" class="form-control" name="notes[]">
+                                        </div>
+                                    </div>
+                                @endif
+
                             </div>
-                        </div>
                         {{-- ______________________________________________________________________________________________________________________________ --}}
                         <hr>
 
@@ -289,86 +345,139 @@
 
                         </div>
 
-                        <div id="patient_container">
-                            <div class="patient-row row ">
-                                <!-- Patient Name and Treatment Pay By in one row -->
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="form-label">اسم المريض</label>
-                                        <input type="text" class="form-control"  value="{{old("patient_name[]")}}" name="patient_name[]" placeholder="">
-                                    </div>
-                                </div>
+                            <div id="patient_container">
+                                @if(old('patient_name'))
+                                    @foreach(old('patient_name') as $index => $patient)
+                                        <div class="patient-row row">
+                                            <!-- Patient Name and Treatment Pay By -->
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label">اسم المريض</label>
+                                                    <input type="text" class="form-control" value="{{ $patient }}" name="patient_name[]" placeholder="">
+                                                </div>
+                                            </div>
 
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="form-label">وسيلة صرف العلاج</label>
-                                        <input type="text" class="form-control"  value="{{old("treatment_pay_by[]")}}" name="treatment_pay_by[]"
-                                            placeholder="">
-                                    </div>
-                                </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label">وسيلة صرف العلاج</label>
+                                                    <input type="text" class="form-control" value="{{ old('treatment_pay_by')[$index] ?? '' }}" name="treatment_pay_by[]" placeholder="">
+                                                </div>
+                                            </div>
 
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="form-label">الدواء</label>
-                                        <input type="text" class="form-control"  value="{{old("treatment[]")}}" name="treatment[]" placeholder="">
-                                    </div>
-                                </div>
-                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="form-label">الدواء</label>
+                                                    <input type="text" class="form-control" value="{{ old('treatment')[$index] ?? '' }}" name="treatment[]" placeholder="">
+                                                </div>
+                                            </div>
+                                        </div>
 
-                            <div class="row">
-                                <!-- Patient Type, Attending Doctor, and Medication in one row with specified column widths -->
-                                <div class="col-md-4 col-12">
-                                    <div class="form-group">
-                                        <label class="form-label">نوع المريض</label>
-                                        <select class="form-control select2"  value="{{old("type[]")}}" name="type[]"
-                                            data-placeholder="اختيار نوع المريض">
-                                            <option value="1">ذكر</option>
-                                            <option value="0">أنثي</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-12">
-                                    <div class="form-group">
-                                        <label class="form-label">الطبيب المعالج</label>
-                                        <input type="text" class="form-control"  value="{{old("doctor_name[]")}}" name="doctor_name[]" placeholder="">
-                                    </div>
-                                </div>
+                                        <div class="row">
+                                            <!-- Patient Type, Attending Doctor, and Insurance -->
+                                            <div class="col-md-4 col-12">
+                                                <div class="form-group">
+                                                    <label class="form-label">نوع المريض</label>
+                                                    <select class="form-control select2" name="type[]" data-placeholder="اختيار نوع المريض">
+                                                        <option value="1" {{ old('type')[$index] == '1' ? 'selected' : '' }}>ذكر</option>
+                                                        <option value="0" {{ old('type')[$index] == '0' ? 'selected' : '' }}>أنثي</option>
+                                                    </select>
+                                                </div>
+                                            </div>
 
-                                <div class="col-md-4 col-12">
-                                    <div class="form-group">
-                                        <label class="form-label mb-4">هل له تأمين</label>
-                                        <div class="material-switch pull-left mb-5">
-                                            <input id="is_insurance"  value="{{old("is_insurance[]")}}" name="is_insurance[]" type="checkbox">
-                                            <label for="is_insurance" class="label-success"></label>
+                                            <div class="col-md-4 col-12">
+                                                <div class="form-group">
+                                                    <label class="form-label">الطبيب المعالج</label>
+                                                    <input type="text" class="form-control" value="{{ old('doctor_name')[$index] ?? '' }}" name="doctor_name[]" placeholder="">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4 col-12">
+                                                <div class="form-group">
+                                                    <label class="form-label mb-4">هل له تأمين</label>
+                                                    <div class="material-switch pull-left mb-5">
+                                                        <input id="is_insurance_{{ $index }}" type="checkbox" name="is_insurance[]" value="1"
+                                                            {{ is_array(old('is_insurance')) && isset(old('is_insurance')[$index]) && old('is_insurance')[$index] == '1' ? 'checked' : '' }}>
+                                                        <label for="is_insurance_{{ $index }}" class="label-success"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <!-- Default empty input for new form -->
+                                    <div class="patient-row row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label">اسم المريض</label>
+                                                <input type="text" class="form-control" name="patient_name[]" placeholder="">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label">وسيلة صرف العلاج</label>
+                                                <input type="text" class="form-control" name="treatment_pay_by[]" placeholder="">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="form-label">الدواء</label>
+                                                <input type="text" class="form-control" name="treatment[]" placeholder="">
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <hr>
+
+                                    <div class="row">
+                                        <div class="col-md-4 col-12">
+                                            <div class="form-group">
+                                                <label class="form-label">نوع المريض</label>
+                                                <select class="form-control select2" name="type[]" data-placeholder="اختيار نوع المريض">
+                                                    <option value="1">ذكر</option>
+                                                    <option value="0">أنثي</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 col-12">
+                                            <div class="form-group">
+                                                <label class="form-label">الطبيب المعالج</label>
+                                                <input type="text" class="form-control" name="doctor_name[]" placeholder="">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 col-12">
+                                            <div class="form-group">
+                                                <label class="form-label mb-4">هل له تأمين</label>
+                                                <div class="material-switch pull-left mb-5">
+                                                    <input id="is_insurance_new" type="checkbox" name="is_insurance[]" value="1">
+                                                    <label for="is_insurance_new" class="label-success"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                    </div>
+                                @endif
                             </div>
-                        </div>
-                        <hr>
+
+                            <hr>
 
                         <div class="card-header">
                             <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">
                                 ممتلكات المستفيد</h2>
                         </div>
 
-                        <textarea rows="5" class="form-control"  value="{{old("Case_evaluation")}}" name="Case_evaluation" id="Case_evaluation"></textarea>
+                        <textarea rows="5" class="form-control"   name="Case_evaluation" id="Case_evaluation">{{old("Case_evaluation")}}</textarea>
 
                         <div class="card-header">
                             <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">
                                 المرفقات </h2>
                         </div>
 
-{{--                        <div class="row mt-5">--}}
-{{--                            <div class="col-md-12">--}}
-{{--                                <div class="form-group">--}}
-{{--                                    <input type="file" class="form-control"  value="{{old("attachments)}}" name="attachments[]" multiple>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
                     </div>
-                    <input type="file" class="dropify"  value=""{{old("attachments")}}" name="attachments[]"  accept="image/png, image/gif, image/jpeg,image/jpg"/>
+{{--                    <input type="file" class="dropify"  value=""{{old("attachments")}}" name="attachments[]"  accept="image/png, image/gif, image/jpeg,image/jpg"/>--}}
+                        <input type="file" class="dropify" name="attachments[]" accept="image/png, image/gif, image/jpeg, image/jpg">
 
                     <div class="col-12 text-center">
                         <button class="btn btn-lg btn-outline-primary mt-2 mb-2">حفظ البيانات</button>
@@ -733,4 +842,6 @@
             });
         });
     </script>
+
+
 @endsection

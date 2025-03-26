@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
-use App\Models\adminSubscription;
+use App\Models\AdminSubscription;
 use App\Models\Asset;
 use App\Models\Setting;
 use App\Models\subscriptionFee;
