@@ -24,7 +24,7 @@ class SettingController extends Controller
 
         if($request->has('logo')){
             $file_name = $this->saveImage($request->logo,'assets/uploads');
-            $input['logo'] = 'assets/uploads/'.$file_name;
+            $input['logo'] = $file_name;
         }
 
 
