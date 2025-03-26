@@ -74,7 +74,7 @@ class BorrowerController extends Controller
 
     public function create()
     {
-        return view('Admin\borrowers\parts\create');
+        return view('Admin.borrowers.parts.create');
     }
 
     /**
@@ -177,7 +177,7 @@ class BorrowerController extends Controller
     {
 //        $media1 = Media::where("borrower_id" , $borrower->id)->where("type" , null);
 //        $media2 = Media::where("borrower_id" , $borrower->id)->where("type" , 1);
-        return view('Admin\borrowers\parts\edit', compact('borrower'));
+        return view('Admin.borrowers.parts.edit', compact('borrower'));
     }
 
     /**
@@ -311,14 +311,14 @@ class BorrowerController extends Controller
         try {
             $borrower = Borrower::find($request->id);
 
-            if ($borrower->media()->count() > 0){
-                foreach ($borrower->media()->get() as $media){
-                    if (File::exists(public_path($media->path))){
-                        File::delete(public_path($media->path));
-                    }
-                }
+//            if ($borrower->media()->count() > 0){
+//                foreach ($borrower->media()->get() as $media){
+//                    if (File::exists(public_path($media->path))){
+//                        File::delete(public_path($media->path));
+//                    }
+//                }
 
-            }
+//            }
 //            $borrower = Borrower::with('media')->findOrFail($request->id);
 //            $loan = Loan::where('borrower_id', $request->id)->first();
 //
