@@ -85,7 +85,7 @@ class AdminController extends Controller
 
     public function create(){
         $roles = Role::all();
-        return view('Admin/admin.parts.create' , ["roles" => $roles]);
+        return view('Admin/admin/parts/create' , ["roles" => $roles]);
     }
 
     public function store(request $request): \Illuminate\Http\JsonResponse
@@ -110,7 +110,7 @@ class AdminController extends Controller
 
     public function edit(Admin $admin){
         $roles = Role::all();
-        return view('Admin/admin.parts.edit',compact('admin' , "roles"));
+        return view('Admin/admin/parts/edit',compact('admin' , "roles"));
     }
 
     public function setting(){

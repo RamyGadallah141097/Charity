@@ -380,10 +380,10 @@ class SubventionController extends Controller
     public function showSubventions(){
         $subventions = Subvention::where('type','monthly')->latest()->get();
 //        return view('Admin.print.subvention-print',compact('subventions'));
-        return view('Admin.print.invoice',compact('subventions'));
+        return view('Admin/print/invoice',compact('subventions'));
     }
     public function showOneSubvention($id){
         $subventions = Subvention::where('type','once')->where('id' , $id)->latest()->first();
-        return view('Admin.print.invoices2',compact('subventions'));
+        return view('Admin/print/invoices2',compact('subventions'));
     }
 }
