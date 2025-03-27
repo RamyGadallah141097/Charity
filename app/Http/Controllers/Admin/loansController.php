@@ -176,7 +176,8 @@ class loansController extends Controller
         $totalOut = PersonalLoan::where('borrower_id', $id)->where('status', 0)->sum('amount');
         $pay = Loan::where('borrower_id', $id)->value('type');
 
-        return view('admin/loans/indexloan', compact('id' , "totalIn" , "totalOut" , "total" , "pay"));
+        return view('Admin/loans/indexloan', compact('id' , "totalIn" , "totalOut" , "total" , "pay"));
+//        solve the path .
     }
 
     public function checkout($id)
