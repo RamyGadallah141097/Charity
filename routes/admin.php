@@ -23,6 +23,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
         return response()->json(['success' => true, 'price' => $price]);
     })->name('getSubscriptionPrice');
 
+
     Route::resource("SubscriptionFee" , "SubscriptionFeeController");
 
     #### Users ####
