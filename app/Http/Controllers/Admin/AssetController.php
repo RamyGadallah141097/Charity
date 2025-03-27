@@ -43,7 +43,7 @@ class AssetController extends Controller
                 ->make(true);
         }
 
-        return view('Admin.asset.index');
+        return view('Admin/asset/index');
     }
 
     /**
@@ -55,7 +55,7 @@ class AssetController extends Controller
      */
     public function create()
     {
-        return view("Admin.asset.parts.create");
+        return view("Admin/asset/parts/create");
     }
 
     /**
@@ -76,7 +76,7 @@ class AssetController extends Controller
      */
     public function edit(Asset $asset)
     {
-        return view('Admin.asset.parts.edit', compact('asset'));
+        return view('Admin/asset/parts/edit', compact('asset'));
     }
 
     /**

@@ -40,7 +40,7 @@ class loansController extends Controller
                 ->make(true);
         } else {
             $setting = Setting::first();
-            return view('Admin.loans.index' , compact("setting"));
+            return view('Admin/loans/index' , compact("setting"));
         }
     }
 
@@ -54,8 +54,9 @@ class loansController extends Controller
 //                $borrowers = $borrowers->except($borrower->id);
 //            }
 //        }
+//        solve error
         $borrowers = Borrower::doesntHave('loans')->get();
-        return view('Admin.loans.parts.create', ["borrowers" => $borrowers]);
+        return view('Admin/loans/parts/create', ["borrowers" => $borrowers]);
     }
 
     public function searchBorrowers(Request $request)
@@ -175,7 +176,7 @@ class loansController extends Controller
         $totalOut = PersonalLoan::where('borrower_id', $id)->where('status', 0)->sum('amount');
         $pay = Loan::where('borrower_id', $id)->value('type');
 
-        return view('admin.loans.indexloan', compact('id' , "totalIn" , "totalOut" , "total" , "pay"));
+        return view('admin/loans/indexloan', compact('id' , "totalIn" , "totalOut" , "total" , "pay"));
     }
 
     public function checkout($id)
@@ -230,6 +231,6 @@ class loansController extends Controller
     public function printLoan()
     {
         $loans = Loan::all();
-        return view('Admin.print.printLoan',compact('loans'));
+        return view('Admin/print/printLoan',compact('loans'));
     }
 }

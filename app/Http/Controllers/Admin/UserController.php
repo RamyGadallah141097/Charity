@@ -151,7 +151,7 @@ class UserController extends Controller
 
             $patients = Patient::where('user_id', $user->id)->get();
 
-            return view('Admin.users.parts.details', compact('user', 'patients'));
+            return view('Admin/users/parts/details', compact('user', 'patients'));
 
         }else{
             toastr()->error("الرقم االومي يجب ان يكون رقم ");
@@ -172,7 +172,7 @@ class UserController extends Controller
         }
         $patients = $user ? Patient::where('user_id', $user->id)->get() : [];
 
-        return view('Admin.users.parts.details', compact('user', 'patients'));
+        return view('Admin/users/parts/details', compact('user', 'patients'));
     }
 
     public function DonationDetails($id, Request $request)
@@ -190,7 +190,7 @@ class UserController extends Controller
                 ->escapeColumns([])
                 ->make(true);
         } else {
-            return view('Admin.users.parts.DonationDetails', ['id' => $id]);
+            return view('Admin/users/parts/DonationDetails', ['id' => $id]);
         }
     }
 

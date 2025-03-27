@@ -14,7 +14,7 @@ class SettingController extends Controller
     use WebpTrait;
     public function index(){
         $setting = Setting::latest()->first();
-        return view('Admin.setting.index' , compact("setting"));
+        return view('Admin/setting/index' , compact("setting"));
     }
 
     public function update(UpdateSetting $request){
