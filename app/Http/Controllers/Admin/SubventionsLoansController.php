@@ -37,7 +37,7 @@ class SubventionsLoansController extends Controller
                 ->escapeColumns([])
                 ->make(true);
         } else {
-            return view('Admin/SubventionsLoans/index');
+            return view('admin/SubventionsLoans/index');
         }
     }
 
@@ -46,7 +46,7 @@ class SubventionsLoansController extends Controller
     public function create()
     {
         $users = User::where('status', 'accepted')->whereDoesntHave('subvention')->select('id', 'husband_name')->latest()->get();
-        return view('Admin/subventions/parts/create', compact('users'));
+        return view('admin/subventions/parts/create', compact('users'));
     }
 
 
@@ -77,7 +77,7 @@ class SubventionsLoansController extends Controller
             ->orWhere('id', $subvention->user_id)
             ->select('id', 'husband_name')
             ->latest()->get();
-        return view('Admin/subventions/parts/edit', compact('users', 'subvention'));
+        return view('admin/subventions/parts/edit', compact('users', 'subvention'));
     }
 
 
@@ -114,6 +114,6 @@ class SubventionsLoansController extends Controller
     public function showSubventions()
     {
         $subventions = Subvention::where('type', 'monthly')->latest()->get();
-        return view('Admin/print/subvention-print', compact('subventions'));
+        return view('admin/print/subvention-print', compact('subventions'));
     }
 }

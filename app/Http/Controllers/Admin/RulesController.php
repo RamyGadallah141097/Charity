@@ -69,7 +69,7 @@ class RulesController extends Controller
                 ->escapeColumns([])
                 ->make(true);
         } else {
-            return view('Admin/Roles/Roles');
+            return view('admin/Roles/Roles');
         }
 
     }
@@ -82,7 +82,7 @@ class RulesController extends Controller
     public function create()
     {
         $permissions = Permission::all();
-        return view('Admin/Roles/parts/create' , ["permissions" =>$permissions]) ;
+        return view('admin/Roles/parts/create' , ["permissions" =>$permissions]) ;
     }
 
     /**
@@ -140,7 +140,7 @@ class RulesController extends Controller
     {
 //        $role = Role::with("permission")->where("id" , $id)->find($id);
         $permissions = Permission::all();
-        return view('Admin/Roles/parts/edit' , ["permissions" =>$permissions , "role" =>$role]) ;
+        return view('admin/Roles/parts/edit' , ["permissions" =>$permissions , "role" =>$role]) ;
     }
 
     /**

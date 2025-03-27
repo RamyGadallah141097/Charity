@@ -54,7 +54,7 @@ class GoodloansController extends Controller
                 ->make(true);
         } else {
             $loans = Donation::where("donation_type", 2)->sum("donation_amount");
-            return view('Admin/safer/loans', ["loans" => $loans]);
+            return view('admin/safer/loans', ["loans" => $loans]);
         }
     }
     // {- التبرعات والمتبرعين-}

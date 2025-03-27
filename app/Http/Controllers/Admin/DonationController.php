@@ -79,7 +79,7 @@ class DonationController extends Controller
                 ->escapeColumns([])
                 ->make(true);
         } else {
-            return view('Admin/donations/index' );
+            return view('admin/donations/index' );
         }
     }
 
@@ -89,7 +89,7 @@ class DonationController extends Controller
         $donors = Donor::all();
         $assets = Asset::all();
 
-        return view('Admin/donations/parts/create', ["donors" => $donors ,  "assets" => $assets]);
+        return view('admin/donations/parts/create', ["donors" => $donors ,  "assets" => $assets]);
     }
 
 
@@ -153,7 +153,7 @@ class DonationController extends Controller
     public function edit($id)
     {
         $donation = Donation::find($id);
-        return view('Admin/donations/parts/edit', ["donation" => $donation, "donors" => Donor::all()]);
+        return view('admin/donations/parts/edit', ["donation" => $donation, "donors" => Donor::all()]);
     }
 
 

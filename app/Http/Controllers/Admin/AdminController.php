@@ -55,7 +55,7 @@ class AdminController extends Controller
                 ->escapeColumns([])
                 ->make(true);
         }else{
-            return view('Admin/admin/index');
+            return view('admin/admin/index');
         }
     }
 
@@ -78,14 +78,14 @@ class AdminController extends Controller
     public function myProfile()
     {
         $admin = auth()->guard('admin')->user();
-        return view('Admin/admin/profile',compact('admin'));
+        return view('admin/admin/profile',compact('admin'));
     }//end fun
 
 
 
     public function create(){
         $roles = Role::all();
-        return view('Admin/admin/parts/create' , ["roles" => $roles]);
+        return view('admin/admin/parts/create' , ["roles" => $roles]);
     }
 
     public function store(request $request): \Illuminate\Http\JsonResponse
@@ -110,19 +110,20 @@ class AdminController extends Controller
 
     public function edit(Admin $admin){
         $roles = Role::all();
-        return view('Admin/admin/parts/edit',compact('admin' , "roles"));
+        return view('admin/admin/parts/edit',compact('admin' , "roles"));
     }
+
 
     public function setting(){
         $admin = auth()->guard('admin')->user();
-        return view('Admin/admin/setting',compact('admin'));
+        return view('admin/admin/setting',compact('admin'));
     }
 
     public function show()
     {
         $admin = auth()->guard('admin')->user();
         $roles = Role::all();
-        return view('Admin/admin/parts/setting',compact('admin' , "roles"));
+        return view('admin/admin/parts/setting',compact('admin' , "roles"));
     }
 
 //    public function update(request $request,$id)
@@ -141,7 +142,7 @@ class AdminController extends Controller
 //            $inputs['password'] = Hash::make($request->password);
 //        else
 //            unset($inputs['password']);
-//        $admin = Admin::findOrFail($id);
+//        $admin = admin::findOrFail($id);
 ////        $admin->syncRoles($request->adminRole);
 ////        $admin->assignRole($request->adminRole);
 //            $admin->syncRoles($request->adminRole);
@@ -191,13 +192,13 @@ class AdminController extends Controller
     }
 
 //    public function showChangeRole(Request $request){
-//            $admin = Admin::find($request->admin_id);
+//            $admin = admin::find($request->admin_id);
 //            $roles = Role::all();
 //            if (!$admin) {
-//                return redirect()->back()->with('error', 'Admin not found');
+//                return redirect()->back()->with('error', 'admin not found');
 //            }
 //
-//            return view('Admin.admin.parts.changeRole', compact('admin' , "roles"));
+//            return view('admin.admin.parts.changeRole', compact('admin' , "roles"));
 //
 //    }
 //
@@ -206,7 +207,7 @@ class AdminController extends Controller
 //
 ////        dd($request->id);
 ////        dd($request->id);
-//        $admin = Admin::find($request->adminId);
+//        $admin = admin::find($request->adminId);
 //
 //
 //

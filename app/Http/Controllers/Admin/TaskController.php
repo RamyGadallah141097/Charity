@@ -91,7 +91,7 @@ class TaskController extends Controller
                 ->escapeColumns([])
                 ->make(true);
         } else {
-            return view('Admin/task/index');
+            return view('admin/task/index');
         }
     }
 
@@ -102,7 +102,7 @@ class TaskController extends Controller
      */
     public function create()
     {
-        return view("Admin/task/parts/create");
+        return view("admin/task/parts/create");
     }
 
     /**
@@ -146,7 +146,7 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        return view("Admin/task/parts/edit", ["task" => $task]);
+        return view("admin/task/parts/edit", ["task" => $task]);
     }
 
     /**

@@ -1,4 +1,4 @@
-@extends('Admin.layouts.master')
+@extends('admin.layouts.master')
 
 @section('title')
     {{ $setting->title ?? '' }} | المستفيدين
@@ -24,7 +24,7 @@
                             <tr class="fw-bolder text-muted bg-light">
                                 <th class="min-w-25px">#</th>
                                 <th class="min-w-50px">اسم المستفيد</th>
-                                 <th class="min-w-50px">اجمالي الصدقات</th>
+                                <th class="min-w-50px">اجمالي الصدقات</th>
 
                             </tr>
                             </thead>
@@ -35,16 +35,16 @@
         </div>
     </div>
 
-    @include('Admin.layouts.myAjaxHelper')
+    @include('admin.layouts.myAjaxHelper')
 @endsection
 
 @section('ajaxCalls')
     <script>
         var columns = [
-            { data: 'id', name: 'id' },
-            { data: 'name', name: 'name' },
+            {data: 'id', name: 'id'},
+            {data: 'name', name: 'name'},
             // Uncomment if required
-            { data: 'zakahTotal', name: 'zakahTotal' },
+            {data: 'zakahTotal', name: 'zakahTotal'},
 
         ];
 
@@ -55,14 +55,14 @@
         // deleteScript('{{ route('delete_users') }}');
 
         // Show Details Modal
-        $(document).on('click', '.detailsBtn', function() {
+        $(document).on('click', '.detailsBtn', function () {
             var id = $(this).data('id');
             var url = "{{ route('userDetails', ':id') }}".replace(':id', id);
 
             $('#modal-body').html(loader);
             $('#editOrCreate').modal('show');
 
-            setTimeout(function() {
+            setTimeout(function () {
                 $('#modal-body').load(url);
             }, 500);
         });

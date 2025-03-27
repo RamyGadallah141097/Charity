@@ -28,7 +28,7 @@ class SubscriptionFeeController extends Controller
                 ->make(true);
         }
         $total = subscriptionFee::sum("amount");
-        return view('Admin/Supscriptions/supscriptionFees/index' , compact("total"));
+        return view('admin/Supscriptions/supscriptionFees/index' , compact("total"));
 
     }
 
@@ -39,7 +39,7 @@ class SubscriptionFeeController extends Controller
      */
     public function create()
     {
-        return view("Admin/Supscriptions/supscriptionFees/parts/create");
+        return view("admin/Supscriptions/supscriptionFees/parts/create");
     }
 
     /**

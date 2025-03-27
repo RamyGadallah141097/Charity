@@ -3,7 +3,7 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @include('Admin.auth.css')
+    @include('admin.auth.css')
 </head>
 
 <div class="container">
@@ -27,16 +27,16 @@
         </form>
     </main>
     <div class="welcome-container">
-        <h3 class="heading-secondary">مرحبا بعودتك <span class="lg">{{ isset($setting) ? $setting->title : '' }}</span></h3>
-        <img src="{{ $setting && $setting->logo ? asset('storage/' . $setting->logo) : asset('images/default-logo.png') }}"
-             alt="logo"
-             style="max-height: 400px; mix-blend-mode: multiply;">
-
-
+        <h3 class="heading-secondary">مرحبا بعودتك <span class="lg">{{ isset($setting) ? $setting->title : '' }}</span>
+        </h3>
+        <img
+            src="{{ $setting && $setting->logo ? asset('storage/' . $setting->logo) : asset('images/default-logo.png') }}"
+            alt="logo"
+            style="max-height: 400px; mix-blend-mode: multiply;">
 
 
     </div>
 </div>
 
-@include('Admin.auth.js')
+@include('admin.auth.js')
 </html>
