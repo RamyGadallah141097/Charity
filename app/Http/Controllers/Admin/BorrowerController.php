@@ -79,7 +79,7 @@ class BorrowerController extends Controller
      */
     public function create()
     {
-        return view('Admin\borrowers\parts\create');
+        return view('Admin.borrowers.parts.create');
     }
 
     /**
@@ -192,7 +192,7 @@ class BorrowerController extends Controller
     {
 //        $media1 = Media::where("borrower_id" , $borrower->id)->where("type" , null);
 //        $media2 = Media::where("borrower_id" , $borrower->id)->where("type" , 1);
-        return view('Admin\borrowers\parts\edit', compact('borrower'));
+        return view('Admin.borrowers.parts.edit', compact('borrower'));
     }
 
     /**
