@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -57,10 +58,10 @@ table, td, th{
           <h5 class="text-center mt-1 mb-3"> وعنوانها كفر طنبدى -شارع البحر بعد صيدلية ناصف بجوار الاستاذ على داود المحامى</h5>
           <h5 class="text-center mt-1 mb-3"> شبين الكوم - محافظة المنوفية</h5>
           <div>
-            <h5 class="text-center mt-1 mb-3"> اقر انا / {{$subventions?->user->wife_name }}</h5>
+            <h5 class="text-center mt-1 mb-3"> اقر انا / {{$subventions ? $subventions->user->wife_name : "---" }}</h5>
           </div>
           <h5 class="text-center mt-1 mb-3"> المقيم / المنوفية - قرية طنبدى</h5>
-            <p> الرقم القومى / <span>{{$subventions?->user->wife_name}}</span></p>
+            <p> الرقم القومى / <span>{{$subventions ? $subventions->user->wife_national_id : "---"}}</span></p>
             <p> رقم الموبايل / <span>{{$subventions?->user->nearest_phone}}</span></p>
             <p> باننى استلمت من لجنة الزكاة بكفر طنبدى مبلغ  <span> {{$subventions?->price}} </span> جنيها فقط لاغير وذلك / <span> {{$subventions?->comment}}</span></p>
             <div class="d-flex justify-content-end">
