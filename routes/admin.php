@@ -29,7 +29,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     #### Users ####
     Route::get('users/{status}', 'UserController@index')->name('users.index')->middleware('permission:users.index');
     Route::get('users.create', 'UserController@create')->name('users.create');
+    Route::get('users/{id}/edit', 'UserController@edit')->name('users.edit');
     Route::POST('users.store', 'UserController@store')->name('users.store');
+    Route::put('/users/{id}/update', 'UserController@update')->name('users.update');
     Route::POST('delete_users', 'UserController@delete')->name('delete_users');
     Route::delete('/users/delete', [UserController::class, 'destroy'])->name('delete_users');
 
