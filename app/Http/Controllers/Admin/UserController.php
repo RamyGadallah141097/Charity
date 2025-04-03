@@ -345,7 +345,6 @@ class UserController extends Controller
 
     public function store(StoreUser $request)
     {
-//        dd($request->all());
         try {
             $userData = $request->except('_token', 'attachments', 'child_names',  'children_national_id',  'age', 'schools', 'monthly_cost', 'notes', 'patient_name',  'treatment_pay_by', 'type', 'doctor_name', 'treatment');
 
@@ -380,6 +379,8 @@ class UserController extends Controller
                 'standard_living' => $request->standard_living,
                 'Case_evaluation' => $request->Case_evaluation,
             ]);
+
+//            dd(User::latest()->first());
 
             // التحقق من الأطفال وإضافتهم
             if (isset($request->child_names)) {
