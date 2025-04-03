@@ -1,3 +1,5 @@
+{{--solve uplaodin --}}
+
 @extends('Admin/layouts/master')
 @section('title')
     {{ isset($setting->title) ? $setting->title : '' }} | تعديل مستفيد
