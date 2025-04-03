@@ -345,97 +345,98 @@ class UserController extends Controller
 
     public function store(StoreUser $request)
     {
+        DB::beginTransaction();
         try {
-            $userData = $request->except('_token', 'attachments', 'child_names',  'children_national_id',  'age', 'schools', 'monthly_cost', 'notes', 'patient_name',  'treatment_pay_by', 'type', 'doctor_name', 'treatment');
+        // إنشاء المستخدم
+        $userData = $request->except('_token', 'attachments', 'child_names',  'children_national_id',  'age', 'schools', 'monthly_cost', 'notes', 'patient_name',  'treatment_pay_by', 'type', 'doctor_name', 'treatment');
 
-            $user = User::create([
-                'husband_name' => $request->husband_name,
-                'wife_name' => $request->wife_name,
-                'husband_national_id' => $request->husband_national_id,
-                'wife_national_id' => $request->wife_national_id,
-                'age_husband' => $request->age_husband,
-                'address' => $request->address,
-                'age_wife' => $request->age_wife,
-                'social_status' => $request->social_status,
-                'work_type' => $request->work_type,
-                'nearest_phone' => $request->nearest_phone,
-                'salary' => $request->salary,
-                'pension' => $request->pension,
-                'insurance' => $request->insurance,
-                'dignity' => $request->dignity,
-                'trade' => $request->trade,
-                'pillows' => $request->pillows,
-                'other' => $request->other,
-                'gross_income' => $request->gross_income,
-                'rent' => $request->rent,
-                'gas' => $request->gas,
-                'debt' => $request->debt,
-                'water' => $request->water,
-                'electricity' => $request->electricity,
-                'association' => $request->association,
-                'food' => $request->food,
-                'study' => $request->study,
-                'gross_expenses' => $request->gross_expenses,
-                'standard_living' => $request->standard_living,
-                'Case_evaluation' => $request->Case_evaluation,
-            ]);
+        $user = User::create([
+            'husband_name' => $request->husband_name,
+            'wife_name' => $request->wife_name,
+            'husband_national_id' => $request->husband_national_id,
+            'wife_national_id' => $request->wife_national_id,
+            'age_husband' => $request->age_husband,
+            'address' => $request->address,
+            'age_wife' => $request->age_wife,
+            'social_status' => $request->social_status,
+            'work_type' => $request->work_type,
+            'nearest_phone' => $request->nearest_phone,
+            'salary' => $request->salary,
+            'pension' => $request->pension,
+            'insurance' => $request->insurance,
+            'dignity' => $request->dignity,
+            'trade' => $request->trade,
+            'pillows' => $request->pillows,
+            'other' => $request->other,
+            'gross_income' => $request->gross_income,
+            'rent' => $request->rent,
+            'gas' => $request->gas,
+            'debt' => $request->debt,
+            'water' => $request->water,
+            'electricity' => $request->electricity,
+            'association' => $request->association,
+            'food' => $request->food,
+            'study' => $request->study,
+            'gross_expenses' => $request->gross_expenses,
+            'standard_living' => $request->standard_living,
+            'Case_evaluation' => $request->Case_evaluation,
+        ]);
 
-//            dd(User::latest()->first());
 
-            // التحقق من الأطفال وإضافتهم
-            if (isset($request->child_names)) {
-                for ($i = 0; $i < count($request->child_names); $i++) {
+
+
+
+            // إضافة الأطفال
+            if ($request->filled('child_names')) {
+                foreach ($request->child_names as $index => $childName) {
                     Children::create([
                         'user_id' => $user->id,
-                        'child_name' => $request->child_names[$i] ?? null,
-                        'children_national_id' => $request->children_national_id[$i] ?? null,
-                        'age' => $request->age[$i] ?? null,
-                        'school' => $request->schools[$i] ?? null,
-                        'monthly_cost' => $request->monthly_cost[$i] ?? null,
-                        'notes' => $request->notes[$i] ?? null,
+                        'child_name' => $childName,
+                        'children_national_id' => $request->children_national_id[$index] ?? null,
+                        'age' => $request->age[$index] ?? null,
+                        'school' => $request->schools[$index] ?? null,
+                        'monthly_cost' => $request->monthly_cost[$index] ?? null,
+                        'notes' => $request->notes[$index] ?? null,
                     ]);
                 }
             }
 
-            $patientData = $request->only('patient_name',  'treatment', 'treatment_pay_by', 'type', 'doctor_name', 'is_insurance', 'notes');
-
-            if ($request->has('is_insurance') && $request->is_insurance == 'on')
-                $patientData['is_insurance'] = '1';
-            else
-                $patientData['is_insurance'] = '0';
-
-            $patientData['user_id'] = $user->id;
-
-            if (isset($patientData['patient_name']))
-                for ($i = 0; $i < count($patientData['patient_name']); $i++) {
+            // إضافة بيانات المرضى
+            if ($request->filled('patient_name')) {
+                foreach ($request->patient_name as $index => $patientName) {
                     Patient::create([
-                        'user_id' => $patientData['user_id'],
-                        'patient_name' => $patientData['patient_name'][$i],
-                        'treatment' => $patientData['treatment'][$i],
-                        'treatment_pay_by' => $patientData['treatment_pay_by'][$i],
-                        'type' => $patientData['type'][$i],
-                        'doctor_name' => $patientData['doctor_name'][$i],
-                        'is_insurance' => $patientData['is_insurance'],
-                        'notes' => $patientData['notes'][$i],
+                        'user_id' => $user->id,
+                        'patient_name' => $patientName,
+                        'treatment' => $request->treatment[$index] ?? null,
+                        'treatment_pay_by' => $request->treatment_pay_by[$index] ?? null,
+                        'type' => $request->type[$index] ?? null,
+                        'doctor_name' => $request->doctor_name[$index] ?? null,
+                        'is_insurance' => $request->has('is_insurance') ? '1' : '0',
+                        'notes' => $request->notes[$index] ?? null,
                     ]);
                 }
-
-            if ($request->has('attachments')) {
-                $attachmentsName = [];
-                foreach ($request->attachments as $attachment) {
-                    $attachmentsName[] = $attachment->store('attachments', 'public');
-                    $user->attachments = $attachmentsName;
-                    $user->save();
-                }
             }
+
+            // حفظ المرفقات
+            if ($request->hasFile('attachments')) {
+                $attachments = [];
+                foreach ($request->file('attachments') as $attachment) {
+                    $attachments[] = $attachment->store('attachments', 'public');
+                }
+                $user->update(['attachments' => $attachments]);
+            }
+
+            DB::commit();
 
             toastr('تم اضافة مستفيد جديد', 'success');
             return redirect(route('users.index', 'new'));
 
         } catch (\Exception $e) {
+            DB::rollBack();
             return redirect()->back()->withInput()->with('error', 'حدث خطأ أثناء حفظ البيانات.');
         }
     }
+
     public function edit($id)
     {
 

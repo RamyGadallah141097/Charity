@@ -17,8 +17,8 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('husband_name');
             $table->string('wife_name')->nullable();
-            $table->integer('husband_national_id');
-            $table->integer('wife_national_id')->nullable();
+            $table->bigInteger('husband_national_id');
+            $table->bigInteger('wife_national_id')->nullable();
             $table->integer('age_husband')->nullable();
             $table->text('address')->nullable();
             $table->integer('age_wife')->nullable();
