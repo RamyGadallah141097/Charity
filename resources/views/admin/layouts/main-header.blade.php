@@ -3,8 +3,8 @@
     <div class="container-fluid">
         <div class="d-flex">
             <a class="header-brand d-md-none" href="#">
-                <img src="{{asset('fav.png')}}" class="header-brand-img mobile-icon" alt="logo">
-                <img src="{{asset('fav.png')}}" class="header-brand-img desktop-logo mobile-logo" alt="logo">
+{{--                <img src="{{asset('fav.png')}}" class="header-brand-img mobile-icon" alt="logo">--}}
+{{--                <img src="{{asset('fav.png')}}" class="header-brand-img desktop-logo mobile-logo" alt="logo">--}}
             </a>
             <a aria-label="Hide Sidebar" class="app-sidebar__toggle" data-toggle="sidebar" href="#">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
@@ -12,7 +12,6 @@
                     <path d="M21 11.01L3 11v2h18zM3 16h12v2H3zM21 6H3v2.01L21 8z" /></svg>
             </a><!-- sidebar-toggle-->
             <div class="header-search d-none d-md-flex">
-
                 <form id="searchForm" action="{{route("user.searchNID" , 0)}}" class="form-inline">
                     @csrf
                     <div class="search-element">

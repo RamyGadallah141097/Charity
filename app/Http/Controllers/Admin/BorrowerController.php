@@ -72,11 +72,6 @@ class BorrowerController extends Controller
 
 
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view('admin/borrowers/parts/create');
@@ -171,23 +166,13 @@ class BorrowerController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Borrower  $borrower
-     * @return \Illuminate\Http\Response
-     */
+
     public function show(Borrower $borrower)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Borrower  $borrower
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit(Borrower $borrower)
     {
 //        $media1 = Media::where("borrower_id" , $borrower->id)->where("type" , null);
@@ -326,14 +311,14 @@ class BorrowerController extends Controller
         try {
             $borrower = Borrower::find($request->id);
 
-            if ($borrower->media()->count() > 0){
-                foreach ($borrower->media()->get() as $media){
-                    if (File::exists(public_path($media->path))){
-                        File::delete(public_path($media->path));
-                    }
-                }
+//            if ($borrower->media()->count() > 0){
+//                foreach ($borrower->media()->get() as $media){
+//                    if (File::exists(public_path($media->path))){
+//                        File::delete(public_path($media->path));
+//                    }
+//                }
 
-            }
+//            }
 //            $borrower = Borrower::with('media')->findOrFail($request->id);
 //            $loan = Loan::where('borrower_id', $request->id)->first();
 //

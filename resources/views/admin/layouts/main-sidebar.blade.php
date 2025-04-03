@@ -1,10 +1,8 @@
 <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
 <aside class="app-sidebar">
     <div class="side-header">
-
-
         <a class="header-brand1">
-            <img src="{{ $setting && $setting->logo ? asset('storage/' . $setting->logo) : asset('images/default-logo.png') }}"
+            <img src="{{ $setting && $setting->logo ? asset($setting->logo) : asset('images/default-logo.png') }}"
                  alt="logo"
                  style="max-height: 50px; mix-blend-mode: multiply;">
             <a class="header-brand1" href="{{ route('adminHome') }}">
