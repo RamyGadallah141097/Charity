@@ -478,48 +478,50 @@
         });
     </script>
 
-    <script>
-        // Calculate age for children from national ID
-        function calculateAgeForChildren(nationalIdField, ageFieldName) {
-            const nationalId = nationalIdField.value;
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        function calculateAgeFromNationalId(nationalId) {
+            if (nationalId.length !== 14) return '';
+
             const currentDate = new Date();
             const currentYear = currentDate.getFullYear();
             const currentMonth = currentDate.getMonth() + 1;
 
-            if (nationalId.length === 14) {
-                const yearPrefix = nationalId.charAt(0) === '2' ? 1900 : 2000;
-                const birthYear = yearPrefix + parseInt(nationalId.substring(1, 3), 10);
-                const birthMonth = parseInt(nationalId.substring(3, 5), 10);
+            const yearPrefix = nationalId.charAt(0) === '2' ? 1900 : 2000;
+            const birthYear = yearPrefix + parseInt(nationalId.substring(1, 3), 10);
+            const birthMonth = parseInt(nationalId.substring(3, 5), 10);
 
-                let ageYears = currentYear - birthYear;
-                let ageMonths = currentMonth - birthMonth;
+            let ageYears = currentYear - birthYear;
+            let ageMonths = currentMonth - birthMonth;
 
-                if (ageMonths < 0) {
-                    ageYears -= 1;
-                    ageMonths += 12;
-                }
+            if (ageMonths < 0) {
+                ageYears -= 1;
+                ageMonths += 12;
+            }
 
-                const ageField = document.querySelector(`[name="${ageFieldName}"]`);
-                if (ageField) {
-                    ageField.value = ageYears;
-                }
+            return ageYears;
+        }
+
+        function updateAgeField(event) {
+            const nationalIdField = event.target;
+            const ageField = nationalIdField.closest('tr')?.querySelector('[name="age[]"]');
+
+            if (ageField) {
+                ageField.value = calculateAgeFromNationalId(nationalIdField.value);
             }
         }
 
-        function onInputChange(event) {
-            calculateAgeForChildren(event.target, 'age[]');
-        }
-
-        function addAgeCalculationListener() {
+        function addEventListeners() {
             document.querySelectorAll('[name="children_national_id[]"]').forEach(input => {
-                input.removeEventListener('input', onInputChange);
-                input.addEventListener('input', onInputChange);
+                input.removeEventListener('input', updateAgeField);
+                input.addEventListener('input', updateAgeField);
             });
         }
 
-        // Initialize children age calculation
-        document.addEventListener('DOMContentLoaded', addAgeCalculationListener);
-    </script>
+        addEventListeners();
+    });
+
+</script>
 
     <script>
         // Children management
