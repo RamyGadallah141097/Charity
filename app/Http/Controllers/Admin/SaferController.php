@@ -31,7 +31,7 @@ class SaferController extends Controller
                 ->make(true);
         } else {
             $Charity = Donation::whereIn("donation_type", [0,1])->sum("donation_amount");
-            return view('Admin/safer/charity', ["Charity" => $Charity]);
+            return view('admin/safer/charity', ["Charity" => $Charity]);
         }
     }
 
@@ -54,7 +54,7 @@ class SaferController extends Controller
                 ->escapeColumns([])
                 ->make(true);
         } else {
-            return view('Admin/safer/InKindDonations');
+            return view('admin/safer/InKindDonations');
         }
     }
 
@@ -72,7 +72,7 @@ class SaferController extends Controller
                 ->escapeColumns([])
                 ->make(true);
         } else {
-            return view('Admin/safer/loansDonors');
+            return view('admin/safer/loansDonors');
         }
     }
 

@@ -46,13 +46,13 @@ class DonorController extends Controller
                 ->escapeColumns([])
                 ->make(true);
         }else{
-            return view('Admin/donors/index');
+            return view('admin/donors/index');
         }
     }
 
     public function create()
     {
-        return view('Admin/donors/parts/create');
+        return view('admin/donors/parts/create');
     }
 
 
@@ -79,7 +79,7 @@ class DonorController extends Controller
 
     public function edit(Donor $donor)
     {
-        return view('Admin/donors/parts/edit',compact('donor'));
+        return view('admin/donors/parts/edit',compact('donor'));
     }
 
 

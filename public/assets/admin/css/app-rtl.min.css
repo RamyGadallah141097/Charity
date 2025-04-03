@@ -1,5 +1,5 @@
 /*
-Template Name: Skote - Admin & Dashboard Template
+Template Name: Skote - admin & Dashboard Template
 Author: Themesbrand
 Version: 3.3.0.
 Website: https://themesbrand.com/
@@ -874,10 +874,10 @@ body[data-layout="horizontal"][data-layout-size="boxed"] .container-fluid, body[
 
 /*!
  * Waves v0.7.6
- * http://fian.my.id/Waves 
- * 
- * Copyright 2014-2018 Alfiana E. Sibuea and other contributors 
- * Released under the MIT license 
+ * http://fian.my.id/Waves
+ *
+ * Copyright 2014-2018 Alfiana E. Sibuea and other contributors
+ * Released under the MIT license
  * https://github.com/fians/Waves/blob/master/LICENSE */
 .waves-effect {
   position: relative;
@@ -2842,7 +2842,7 @@ input[switch="dark"]:checked + label {
     .wizard.vertical-wizard .content > .body {
       padding: 0; }
 
-/* 
+/*
 Datatable
 */
 div.dataTables_wrapper div.dataTables_filter {

@@ -2,7 +2,7 @@
     <form id="addForm" class="addForm" method="POST" enctype="multipart/form-data" action="{{ route('adminSubscription.store') }}">
         @csrf
 
-        <!-- Admin Selection (Assuming Admins Table Exists) -->
+        <!-- admin Selection (Assuming Admins Table Exists) -->
         <div class="form-group">
             <label for="admin_id" class="form-control-label">المسؤول</label>
             <select class="form-control" name="admin_id" id="admin_id" required>

@@ -89,7 +89,7 @@ class SubventionController extends Controller
         }else{
             $totoaSadaka = LockerLog::where("type", LockerLog::TYPE_MINUS)->where("moneyType" , LockerLog::moneyTypeSadaka)->sum("amount");
             $totalZakat = LockerLog::where("type", LockerLog::TYPE_MINUS)->where("moneyType" , LockerLog::moneyTypeZakat)->sum("amount");
-            return view('Admin/subventions/index' , compact("totalZakat" , "totoaSadaka"));
+            return view('admin/subventions/index' , compact("totalZakat" , "totoaSadaka"));
         }
     }
 
@@ -99,7 +99,7 @@ class SubventionController extends Controller
     {
         $users = User::where('status','accepted')->whereDoesntHave('subvention')->select('id','husband_name')->latest()->get();
         $assets = Asset::all();
-        return view('Admin/subventions/parts/create',compact('users' , "assets"));
+        return view('admin/subventions/parts/create',compact('users' , "assets"));
 
     }
 
@@ -223,7 +223,7 @@ class SubventionController extends Controller
             ->latest()->get();
         $assets = Asset::all();
 
-        return view('Admin/subventions/parts/edit',compact('users','subvention' , "assets" , "Dtype"));
+        return view('admin/subventions/parts/edit',compact('users','subvention' , "assets" , "Dtype"));
     }
 
 
@@ -379,11 +379,11 @@ class SubventionController extends Controller
 
     public function showSubventions(){
         $subventions = Subvention::where('type','monthly')->latest()->get();
-//        return view('Admin.print.subvention-print',compact('subventions'));
-        return view('Admin/print/invoice',compact('subventions'));
+//        return view('admin.print.subvention-print',compact('subventions'));
+        return view('admin/print/invoice',compact('subventions'));
     }
     public function showOneSubvention($id){
         $subventions = Subvention::where('type','once')->where('id' , $id)->latest()->first();
-        return view('Admin/print/invoices2',compact('subventions'));
+        return view('admin/print/invoices2',compact('subventions'));
     }
 }

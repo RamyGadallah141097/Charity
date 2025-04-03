@@ -55,16 +55,16 @@ class ResearchController extends Controller
                 ->escapeColumns([])
                 ->make(true);
         }else{
-            return view('Admin/users/research');
+            return view('admin/users/research');
         }
     }
 
     public function social_research($user_id){
         $user = User::findOrFail($user_id);
-        return view('Admin/print/social-research',compact('user'));
+        return view('admin/print/social-research',compact('user'));
     }
 
     public function researchReceive(){
-        return view('Admin/print/research-receive');
+        return view('admin/print/research-receive');
     }
 }

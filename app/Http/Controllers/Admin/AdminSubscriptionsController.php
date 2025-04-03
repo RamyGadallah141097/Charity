@@ -44,7 +44,7 @@ class AdminSubscriptionsController extends Controller
                 ->make(true);
         }
         $total = AdminSubscription::sum("amount") - subscriptionFee::sum("amount");
-        return view('Admin/Supscriptions/adminSupscriptions/index' , compact("total"));
+        return view('admin/Supscriptions/adminSupscriptions/index' , compact("total"));
     }
 
     /**
@@ -55,7 +55,7 @@ class AdminSubscriptionsController extends Controller
     public function create()
     {
         $admins = Admin::all();
-        return view("Admin/Supscriptions/adminSupscriptions/parts/create" , compact('admins'));
+        return view("admin/Supscriptions/adminSupscriptions/parts/create" , compact('admins'));
     }
 
     /**

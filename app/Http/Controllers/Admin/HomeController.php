@@ -80,6 +80,6 @@ class HomeController extends Controller
         $setting = Setting::first();
 
 
-        return view('Admin/index', compact('total_donors_money' , "totalDonations" , "donors_count" , "progressData" , 'users' , "accepedUsers" , "subUsers" , "rejectedUsers", 'donors', 'diff', 'users_count', 'subvention' , "totalSubventions", 'users_month', 'users_last_month', 'totalMonthlySubventions' , "totalZakat", "totalLoans" , "totalBorrowers" , "totalLoanOut" , "totalLoansDonations" , "setting"));
+        return view('admin/index', compact('total_donors_money' , "totalDonations" , "donors_count" , "progressData" , 'users' , "accepedUsers" , "subUsers" , "rejectedUsers", 'donors', 'diff', 'users_count', 'subvention' , "totalSubventions", 'users_month', 'users_last_month', 'totalMonthlySubventions' , "totalZakat", "totalLoans" , "totalBorrowers" , "totalLoanOut" , "totalLoansDonations" , "setting"));
     }
 }

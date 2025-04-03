@@ -593,55 +593,54 @@
     </script>
 
     <script>
-        // دالة لحساب العمر بناءً على السنة فقط من الرقم القومي للأطفال
         function calculateAgeForChildren(nationalIdField, ageFieldName) {
             const nationalId = nationalIdField.value;
-            const currentYear = new Date().getFullYear();
+            const currentDate = new Date();
+            const currentYear = currentDate.getFullYear();
+            const currentMonth = currentDate.getMonth() + 1; // Months are zero-based in JavaScript
 
             if (nationalId.length === 14) {
-                // استخراج السنة من الرقم القومي
+
                 const yearPrefix = nationalId.charAt(0) === '2' ? 1900 : 2000;
-                const year = yearPrefix + parseInt(nationalId.substring(1, 3)); // السنة فقط
+                const birthYear = yearPrefix + parseInt(nationalId.substring(1, 3), 10);
+                const birthMonth = parseInt(nationalId.substring(3, 5), 10);
 
-                // حساب العمر بناءً على السنة
-                let age = currentYear - year;
+                let ageYears = currentYear - birthYear;
+                let ageMonths = currentMonth - birthMonth;
 
-                // تعيين العمر في حقل العمر
-                // نحصل على الحقل الذي يحمل نفس الاسم
+                if (ageMonths < 0) {
+                    ageYears -= 1;
+                    ageMonths += 12;
+                }
+
                 const ageField = document.querySelector(`[name="${ageFieldName}"]`);
                 if (ageField) {
-                    ageField.value = age; // تعيين العمر في الحقل
+                    ageField.value = ageYears ;
                 }
             }
         }
 
         function onInputChange(event) {
-            calculateAgeForChildren(event.target, 'age[]'); // حساب العمر بناءً على الرقم القومي
+            calculateAgeForChildren(event.target, 'age[]');
         }
 
         function addAgeCalculationListener() {
             document.querySelectorAll('[name="children_national_id[]"]').forEach(input => {
-                input.removeEventListener('input', onInputChange); // Remove previous listeners to avoid duplicates
-                input.addEventListener('input', onInputChange); // Add the listener to the new field
+                input.removeEventListener('input', onInputChange);
+                input.addEventListener('input', onInputChange);
             });
         }
 
-        // إضافة مستمعات الأحداث لكل حقل رقم قومي للأطفال
-        document.querySelectorAll('[name="children_national_id[]"]').forEach(input => {
-            input.addEventListener('input', function() {
-                calculateAgeForChildren(this, 'age[]'); // حساب العمر بناءً على الرقم القومي
-            });
-        });
-
-        // Call the function to add event listeners initially and after adding new children.
-        addAgeCalculationListener();
+        // إضافة مستمع للأحداث عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', addAgeCalculationListener);
     </script>
 
 
 
 
+
     <script>
-        // ✅ حساب الدخل والمصروفات ومستوى المعيشة
+        //  حساب الدخل والمصروفات ومستوى المعيشة
         function calculateIncome() {
             let total = 0;
             document.querySelectorAll('.income-input').forEach(input => {
@@ -668,7 +667,7 @@
                 .toFixed(1);
         }
 
-        // ✅ تشغيل الأحداث عند الإدخال
+        //  تشغيل الأحداث عند الإدخال
         document.querySelectorAll('.income-input').forEach(input => {
             input.addEventListener('input', () => {
                 calculateIncome();
@@ -684,7 +683,7 @@
         });
 
 
-        // ✅ إضافة الأطفال
+        //  إضافة الأطفال
         let childNumber = 1;
         $('#add').on('click', function() {
             childNumber++;
@@ -750,7 +749,7 @@
             $('#child_container').append(newRow);
         });
 
-        // ✅ حذف الطفل
+        //  حذف الطفل
         $('#child_container').on('click', '.removeColor', function() {
             $(this).closest('.child-row').remove();
             $('.child_number').each(function(index) {
@@ -761,7 +760,7 @@
         addAgeCalculationListener();
 
 
-        // ✅ إضافة الحالات المرضية
+        //  إضافة الحالات المرضية
         let patientNumber = 1;
         $('#add_patient').on('click', function() {
             patientNumber++;
@@ -834,7 +833,6 @@
             $('#patient_container').append(newRowPatient);
         });
 
-        // ✅ حذف الحالة المرضية
         $('#patient_container').on('click', '.removepatient', function() {
             $(this).closest('.patient-row').remove();
             $('.patient_number').each(function(index) {

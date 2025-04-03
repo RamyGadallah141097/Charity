@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUser;
+use App\Models\Borrower;
 use App\Models\Children;
 use App\Models\Donation;
 use App\Models\Patient;
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -47,12 +49,33 @@ class UserController extends Controller
             return Datatables::of($users)
                 ->addColumn('action', function ($users) {
                     return '
-                     <a href="' . route('userDetails', $users->id) . '" data-id="' . $users->id . '" class="btn btn-pill btn-default "> عرض</a>
-                     <a href="' . route('DonationDetails', $users->id) . '" data-id="' . $users->id . '" class="btn btn-pill btn-default "> عرض التبرعات</a>
-                     <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
-                             data-id="' . $users->id . '" data-title="' . $users->husband_name . '">
-                             <i class="fas fa-trash"></i>
-                     </button>';
+                     <div class="dropdown">
+                      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        actions
+                      </button>
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                        <p class="dropdown-item text-center" href="#">
+                            <a href="' . route('DonationDetails', $users->id) . '" data-id="' . $users->id . '" > عرض التبرعات</a>
+                        </p>
+                        <p class="dropdown-item  text-center" href="#">
+                            <a class="btn btn-pill btn-success-light" href="' . route('userDetails', $users->id) . '" data-id="' . $users->id . '" > <i class="fas fa-eye"></i></a>
+                        </p>
+                         <p class="dropdown-item text-center" href="#">
+                                <a href="'. route("users.edit" , $users->id ) .'" class="btn btn-pill btn-primary-light ">
+                                    <i class="fas fa-edit"> </i>
+                                </a>
+                        </p>
+                        <p class="dropdown-item text-center" href="#">
+                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                                 data-id="' . $users->id . '" data-title="' . $users->husband_name . '">
+                                 <i class="fas fa-trash"></i>
+                            </button>
+                        </p>
+
+                      </div>
+                    </div>
+                        ';
                 })
                 ->editColumn('work_type', function ($users) {
                     return '<span title="' . e($users->work_type) . '">' . Str::limit($users->work_type, 20, '...') . '</span>';
@@ -131,7 +154,7 @@ class UserController extends Controller
                 ->escapeColumns([])
                 ->make(true);
         } else {
-            return view('Admin/users/index');
+            return view('admin/users/index');
         }
     }
 
@@ -151,7 +174,7 @@ class UserController extends Controller
 
             $patients = Patient::where('user_id', $user->id)->get();
 
-            return view('Admin/users/parts/details', compact('user', 'patients'));
+            return view('admin/users/parts/details', compact('user', 'patients'));
 
         }else{
             toastr()->error("الرقم االومي يجب ان يكون رقم ");
@@ -172,7 +195,7 @@ class UserController extends Controller
         }
         $patients = $user ? Patient::where('user_id', $user->id)->get() : [];
 
-        return view('Admin/users/parts/details', compact('user', 'patients'));
+        return view('admin/users/parts/details', compact('user', 'patients'));
     }
 
     public function DonationDetails($id, Request $request)
@@ -190,7 +213,7 @@ class UserController extends Controller
                 ->escapeColumns([])
                 ->make(true);
         } else {
-            return view('Admin/users/parts/DonationDetails', ['id' => $id]);
+            return view('admin/users/parts/DonationDetails', ['id' => $id]);
         }
     }
 
@@ -228,7 +251,7 @@ class UserController extends Controller
 
     public function create()
     {
-        return view('Admin/users/parts/create');
+        return view('admin/users/parts/create');
     }
 
 
@@ -322,6 +345,7 @@ class UserController extends Controller
 
     public function store(StoreUser $request)
     {
+//        dd($request->all());
         try {
             $userData = $request->except('_token', 'attachments', 'child_names',  'children_national_id',  'age', 'schools', 'monthly_cost', 'notes', 'patient_name',  'treatment_pay_by', 'type', 'doctor_name', 'treatment');
 
@@ -411,10 +435,121 @@ class UserController extends Controller
             return redirect()->back()->withInput()->with('error', 'حدث خطأ أثناء حفظ البيانات.');
         }
     }
+    public function edit($id)
+    {
+
+        $user = User::with(['childrens', 'patient'])->findOrFail($id);
+        $patients = Patient::where("user_id" , $id)->get();
+//        dd($patients , $user);
+        return view('admin/users/parts/edit', [
+            'user' => $user,
+            "patients" => $patients,
+            'setting' => Setting::first()
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+//        dd($request->all());
+
+        DB::beginTransaction();
+
+        try {
+
+            $user = User::findOrFail($id);
+            $user->update([
+                'husband_name' => $request['husband_name'],
+                'wife_name' => $request['wife_name'],
+                'husband_national_id' => $request['husband_national_id'],
+                'wife_national_id' => $request['wife_national_id'],
+                'age_husband' => $request->age_husband,
+                'age_wife' => $request->age_wife,
+                'address' => $request['address'],
+                'social_status' => $request['social_status'],
+                'work_type' => $request['work_type'],
+                'nearest_phone' => $request['nearest_phone'],
+                'salary' => $request['salary'] ?? 0,
+                'pension' => $request['pension'] ?? 0,
+                'insurance' => $request['insurance'] ?? 0,
+                'dignity' => $request['dignity'] ?? 0,
+                'trade' => $request['trade'] ?? 0,
+                'pillows' => $request['pillows'] ?? 0,
+                'other' => $request['other'] ?? 0,
+                'gross_income' => $request->gross_income ?? 0,
+                'rent' => $request['rent'] ?? 0,
+                'gas' => $request['gas'] ?? 0,
+                'debt' => $request['debt'] ?? 0,
+                'water' => $request['water'] ?? 0,
+                'electricity' => $request['electricity'] ?? 0,
+                'association' => $request['association'] ?? 0,
+                'food' => $request['food'] ?? 0,
+                'study' => $request['study'] ?? 0,
+                'gross_expenses' => $request->gross_expenses ?? 0,
+                'standard_living' => $request->standard_living ?? 0,
+                'Case_evaluation' => $request['Case_evaluation'] ?? null
+            ]);
+
+
+            // Update Children
+            $user->childrens()->delete();
+            if (!empty($request['child_names'])) {
+                foreach ($request['child_names'] as $index => $childName) {
+                    if (!empty($childName)) {
+                        $user->childrens()->create([
+                            'child_name' => $childName,
+                            'children_national_id' => $request['children_national_id'][$index] ?? null,
+                            'age' => $request->age[$index] ?? null,
+                            'school' => $request['schools'][$index] ?? null,
+                            'monthly_cost' => $request['monthly_cost'][$index] ?? null,
+                            'notes' => $request['notes'][$index] ?? null
+                        ]);
+                    }
+                }
+            }
+
+
+
+            $user->patient()->delete();
+            if (!empty($request['patient_name'])) {
+                foreach ($request['patient_name'] as $index => $patientName) {
+                    if (!empty($patientName)) {
+                        $user->patient()->create([
+                            'patient_name' => $patientName,
+                            'treatment_pay_by' => $request['treatment_pay_by'][$index] ?? null,
+                            'treatment' => $request['treatment'][$index] ?? null,
+                            'type' => $request['type'][$index] ?? 1,
+                            'doctor_name' => $request['doctor_name'][$index] ?? null,
+                            'is_insurance' => isset($request['is_insurance'][$index]) ? 1 : 0
+                        ]);
+                    }
+                }
+            }
+
+
+
+            if ($request->hasFile('attachments')) {
+                foreach ($request->attachments as $attachment) {
+                    $attachmentsName[] = $attachment->store('attachments', 'public');
+                    $user->attachments = $attachmentsName;
+                    $user->save();
+                }
+            }
 
 
 
 
+            DB::commit();
+
+
+            return redirect("admin/users/new")->with('success', 'تم تحديث بيانات المستفيد بنجاح');
+
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
+
+        }
+    }
 
     public function destroy(Request $request)
     {

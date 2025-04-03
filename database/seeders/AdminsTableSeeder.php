@@ -18,7 +18,7 @@ class AdminsTableSeeder extends Seeder
     public function run()
     {
          DB::table('admins')->insert([
-            'name' => 'Admin',
+            'name' => 'admin',
             'email' => 'admin@admin.com',
             'password' => Hash::make('123456'),
             'image' => null,
@@ -29,7 +29,7 @@ class AdminsTableSeeder extends Seeder
         $admin = Admin::first();
 
         if (!$admin) {
-            die("Admin user not found!");
+            die("admin user not found!");
         }
 
         $role = Role::where('name', 'super_admin')->first();
@@ -55,7 +55,7 @@ class AdminsTableSeeder extends Seeder
         $admin = Admin::where('email', 'admin2@admin.com')->first();
 
         if (!$admin) {
-            die("Admin user not found!");
+            die("admin user not found!");
         }
 
         $role = Role::where('name', 'super_admin')->first();

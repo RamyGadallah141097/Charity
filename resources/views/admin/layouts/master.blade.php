@@ -8,7 +8,7 @@
 <body class="app sidebar-mini">
 
 <!-- Start Switcher -->
-{{--@include('Admin/layouts/switcher')--}}
+{{--@include('admin/layouts/switcher')--}}
 <!-- End Switcher -->
 
 <!-- GLOBAL-LOADER -->
