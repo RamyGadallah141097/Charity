@@ -1,4 +1,8 @@
 {{--solve uplaodin --}}
+{{--solve uplaodin --}}
+{{--solve uplaodin --}}
+{{--solve uplaodin --}}
+{{--solve uplaodin --}}
 
 @extends('Admin/layouts/master')
 @section('title')
