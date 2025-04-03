@@ -25,7 +25,7 @@ class SubventionController extends Controller
                     $editButton = '';
                     $deleteButton = '';
 
-                        $editButton = '
+                    $editButton = '
                             <button type="button" data-id="' . $data->id . '" class="btn btn-pill btn-info-light editBtn">
                                 <i class="fa fa-edit"></i>
                             </button>
@@ -35,7 +35,7 @@ class SubventionController extends Controller
 
                         ';
 
-                        $deleteButton = '
+                    $deleteButton = '
                             <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
                                     data-id="' . $data->id . '" data-title="' . ($data->user->name ?? "غير معروف") . '">
                                 <i class="fas fa-trash"></i>
@@ -364,10 +364,10 @@ class SubventionController extends Controller
             $lockerLogs = LockerLog::where("amount" , $subvention->price)->where("created_at" , $subvention->created_at)->where("type" , LockerLog::TYPE_MINUS);
             $lockerLogs->delete();
             $asset = Asset::find($subvention->asset_id);
-           if ($asset) {
-               $asset->counter += Subvention::where('id',$request->id)->first()->asset_count;
-               $asset->save();
-           }
+            if ($asset) {
+                $asset->counter += Subvention::where('id',$request->id)->first()->asset_count;
+                $asset->save();
+            }
             Subvention::destroy($request->id);
             return redirect()->back();
 //            return response(['message'=>'تم الحذف بنجاح','status'=>200],200);

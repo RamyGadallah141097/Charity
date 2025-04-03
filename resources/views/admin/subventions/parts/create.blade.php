@@ -7,7 +7,7 @@
             <select name="user_id" class="form-control select2" required
                     data-placeholder="اختيارالمستفيد">
                 @foreach($users as $user)
-                    <option value="{{$user->id}}">{{$user->husband_name}}</option>
+                    <option value="{{$user->id}}">{{$user->wife_name}}</option>
                 @endforeach
             </select>
         </div>

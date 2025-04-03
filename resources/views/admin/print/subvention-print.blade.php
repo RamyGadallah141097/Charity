@@ -48,7 +48,7 @@
                                 @foreach($subventions as $subvention)
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
-                                        <td class="text-sm font-weight-600">{{$subvention->user->husband_name}}</td>
+                                        <td class="text-sm font-weight-600">{{$subvention->user->wife_name}}</td>
                                         <td>{{$subvention->price}}</td>
 {{--                                        <td>{{($subvention->type == 'once') ? 'مرة واحدة' : 'شهرية'}}</td>--}}
                                         <td></td>
