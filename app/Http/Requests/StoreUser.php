@@ -30,7 +30,7 @@ class StoreUser extends FormRequest
             'wife_national_id' => 'required|numeric|unique:users,wife_national_id',
             'social_status'    => 'required|in:0,1,2,3',
             'work_type'        => 'required',
-            'nearest_phone'    => 'required|string|max:11|unique:users,nearest_phone',
+            'nearest_phone'    => 'required|string|unique:users,nearest_phone',
             'salary'           => 'nullable|numeric',
             'pension'          => 'nullable|numeric',
             'insurance'        => 'nullable|numeric',
