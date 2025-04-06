@@ -77,8 +77,8 @@
                 @foreach($subventions as $subvention)
                     <tr>
                         <td>{{$loop->iteration}}</td>
-                        <td class="text-sm font-weight-600">{{ optional($subvention->user)->wife_name ?? '---' }}</td>
-                        <td class="text-sm font-weight-600">{{ optional($subventions->user)->wife_national_id ?? "---"}}</td>
+                        <td class="text-sm font-weight-600">{{ optional($subvention)->user->wife_name ?? '---' }}</td>
+                        <td class="text-sm font-weight-600">{{ optional($subvention)->user->wife_national_id ?? "---"}}</td>
                         <td>{{optional($subvention)->price}}</td>
                         {{$total += optional($subvention)->price}}
                         <td></td>
