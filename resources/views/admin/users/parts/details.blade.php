@@ -19,7 +19,6 @@
                 opacity: 0.7;
             }
 
-            /* The Modal (background) */
             .modal {
                 display: none;
                 position: fixed;
@@ -33,16 +32,17 @@
                 background-color: rgba(0,0,0,0.9);
             }
 
-            /* Modal Content (image) */
+
             .modal-content {
                 margin: auto;
                 display: block;
                 max-width: 50%;
                 max-height: 50%;
                 top: 40%;
+            /*    // make image in semi center */
             }
 
-            /* Close Button */
+
             .close {
                 position: absolute;
                 top: 15px;
@@ -274,7 +274,6 @@
                 @endforeach
             </div>
 
-            <!-- The Modal -->
             <div id="imageModal" class="modal">
                 <span class="close" onclick="closeModal()">&times;</span>
                 <img class="modal-content" id="modalImage">
@@ -399,5 +398,4 @@
             }
             }
         </script>
-
 </div>
