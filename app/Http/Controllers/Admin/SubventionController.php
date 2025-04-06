@@ -378,12 +378,18 @@ class SubventionController extends Controller
     }
 
     public function showSubventions(){
-        $subventions = Subvention::where('type','monthly')->latest()->get();
+//        $subventions = Subvention::where('type','monthly')->latest()->get();
+        $subventions = Subvention::where('type', 'monthly')
+            ->with('user')  // Correct: uses parentheses () instead of square brackets []
+            ->latest()
+            ->get();
 //        return view('admin.print.subvention-print',compact('subventions'));
         return view('admin/print/invoice',compact('subventions'));
     }
+
     public function showOneSubvention($id){
-        $subventions = Subvention::where('type','once')->where('id' , $id)->latest()->first();
+        // where('type','once')->
+        $subventions = Subvention::where('id' , $id)->latest()->first();
         return view('admin/print/invoices2',compact('subventions'));
     }
 }
