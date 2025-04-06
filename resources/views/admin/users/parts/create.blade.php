@@ -477,7 +477,7 @@
 
                     </div>
 {{--                    <input type="file" class="dropify"  value=""{{old("attachments")}}" name="attachments[]"  accept="image/png, image/gif, image/jpeg,image/jpg"/>--}}
-                        <input type="file" class="dropify" name="attachments[]" accept="image/png, image/gif, image/jpeg, image/jpg">
+                        <input type="file" class="dropify" name="attachments[]" accept="image/png, image/gif, image/jpeg, image/jpg" multiple>
 
                     <div class="col-12 text-center">
                         <button class="btn btn-lg btn-outline-primary mt-2 mb-2">حفظ البيانات</button>
