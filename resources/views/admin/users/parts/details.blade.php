@@ -39,6 +39,7 @@
                 display: block;
                 max-width: 50%;
                 max-height: 50%;
+                top: 40%;
             }
 
             /* Close Button */
