@@ -13,7 +13,7 @@
         </div>
         <div class="form-group">
             <label for="price" class="form-control-label">المبلغ</label>
-            <input type="number" min="0" class="form-control" required name="price" id="price" value="{{$subvention->price}}">
+            <input type="number" min="1" class="form-control" required name="price" id="price" value="{{$subvention->price}}">
         </div>
         <div>
             <div class="form-group form-elements">
