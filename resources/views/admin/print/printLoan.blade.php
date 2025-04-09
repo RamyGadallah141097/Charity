@@ -68,14 +68,14 @@ table, td, th{
             </thead>
             <tbody>
               <tr>
-              {{$total = 0}}
+              @php $total = 0 @endphp
                   @foreach($loans as $loan)
                       <tr>
                           <td>{{$loop->iteration}}</td>
-                          <td class="text-sm font-weight-600">{{$loan?->borrower->name}}</td>
-                          <td class="text-sm font-weight-600">{{$loan?->borrower->nationalID}}</td>
+                          <td class="text-sm font-weight-600">{{optional($loan->borrower)->name}}</td>
+                          <td class="text-sm font-weight-600">{{optional($loan->borrower)->nationalID}}</td>
                           <td>{{$loan?->loan_amount}}</td>
-                          {{$total = $total + $loan?->loan_amount}}
+                           @php $total = $total + $loan?->loan_amount @endphp
                           <td></td>
                       </tr>
                   @endforeach
@@ -109,6 +109,9 @@ table, td, th{
   function myfunction(){
     window.print();
   }
+  window.addEventListener('DOMContentLoaded', (event) => {
+      myfunction();
+  });
 </script>
 </body>
 </html>

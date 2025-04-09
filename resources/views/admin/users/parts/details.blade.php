@@ -100,7 +100,7 @@
 {{--                    <td>{{ $user->wife_birthday }}</td>--}}
                     <td>{{ $user->age_husband }}</td>
                     <td>{{ $user->age_wife }}</td>
-                    <td>{{ $user->social_status }}</td>
+                    <td>{{ $user->social_status == 0 ? "اعزب" : ($user->social_status == 1 ? "متزوج" : ($user->social_status == 2 ? "مطلق" : "ارمل")) }}</td>
                     <td>{{ $user->nearest_phone }}</td>
                     <td>{{ $user->work_type }}</td>
                     <td>{{ $user->address }}</td>
@@ -341,45 +341,12 @@
                     </tbody>
                 </table>
             </div>
-            @endif
+        @endif
 
-
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <li class="list-group-item"> هل فيه املاك
-                            <div class="material-switch pull-left mt-4">
-                                <input id="has_property" disabled readonly name="has_property" type="checkbox"
-                                    {{ $user->has_property == 1 ? 'checked' : '' }}>
-                                <label for="has_property" class="label-success mt-2"></label>
-                            </div>
-                        </li>
-                    </div>
-                    <div class="col-md-6">
-                        <li class="list-group-item"> هل فيه دفتر توفير
-                            <div class="material-switch pull-left mt-4">
-                                <input id="has_savings_book" disabled readonly name="has_savings_book" type="checkbox"
-                                    {{ $user->has_savings_book == 1 ? 'checked' : '' }}>
-                                <label for="has_savings_book" class="label-success mt-2"></label>
-                            </div>
-                        </li>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
-        </div>
-
-
-
-    @stop
-    </tbody>
+        </tbody>
     </table>
-</div>
+@stop
+    </div>
             <script>
                 function openModal(imageSrc) {
                 document.getElementById('modalImage').src = imageSrc;

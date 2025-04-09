@@ -92,6 +92,9 @@ table, td, th{
   function myfunction(){
     window.print();
   }
+  window.addEventListener('DOMContentLoaded', (event) => {
+      myfunction();
+  });
 </script>
 </body>
 </html>
