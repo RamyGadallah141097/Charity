@@ -273,6 +273,9 @@
                                                 <input type="text" class="form-control" value="{{ old('notes')[$index] ?? '' }}" name="notes[]">
                                             </div>
                                         </div>
+                                        <div id="child_containerN">
+
+                                        </div>
                                     @endforeach
                                 @else
                                     <div class="col-3">
@@ -316,9 +319,13 @@
                                             <input type="text" class="form-control" name="notes[]">
                                         </div>
                                     </div>
+                                    <div id="child_containerN">
+
+                                    </div>
                                 @endif
 
                             </div>
+                        </div>
                         {{-- ______________________________________________________________________________________________________________________________ --}}
                         <hr>
 
@@ -690,67 +697,66 @@
 
             let newRow = `
         <div class="child-row row">
-            <div class="col-12">
-                <h4 class="bg-danger text-white" style="width: max-content; padding: 8px 15px; border-radius: 5px;">
-                    الطفل <span class="child_number">${childNumber}</span>
-                </h4>
-            </div>
+        <div class="col-12">
+            <h4 class="bg-danger text-white" style="width: max-content; padding: 8px 15px; border-radius: 5px;">
+                الطفل <span class="child_number">${childNumber}</span>
+            </h4>
+        </div>
 
-            <div class="col-3">
-                <div class="form-group">
-                    <label for="name" class="form-control-label">الاسم</label>
-                    <input type="text" class="form-control" name="child_names[]" >
-                </div>
-            </div>
-
-            <div class="col-3">
-                <div class="form-group">
-                    <label for="children_national_id" class="form-control-label">الرقم القومي</label>
-                    <input type="text" class="form-control" name="children_national_id[]" >
-                </div>
-            </div>
-
-            <div class="col-3">
-                <div class="form-group">
-                    <label for="age" class="form-control-label">السن</label>
-                    <input type="text" class="form-control" name="age[]" >
-                </div>
-            </div>
-
-            <div class="col-2">
-                <div class="form-group">
-                    <label for="schools" class="form-control-label">المدرسة</label>
-                    <input type="text" class="form-control" name="schools[]" >
-                </div>
-            </div>
-
-            <div class="col-2">
-                <div class="form-group">
-                    <label for="monthly_cost" class="form-control-label">التكلفة الشهرية</label>
-                    <input type="text" class="form-control" name="monthly_cost[]" >
-                </div>
-            </div>
-
-            <div class="col-3">
-                <div class="form-group">
-                    <label for="notes" class="form-control-label">ملاحظات</label>
-                    <input type="text" class="form-control" name="notes[]" >
-                </div>
-            </div>
-
-            <div class="col-1">
-                <button type="button" class="btn btn-danger mt-5 removeColor">
-                    <i class="fe fe-trash"></i>
-                </button>
+        <div class="col-3">
+            <div class="form-group">
+                <label for="name" class="form-control-label">الاسم</label>
+                <input type="text" class="form-control" name="child_names[]">
             </div>
         </div>
-    `;
 
-            $('#child_container').append(newRow);
+        <div class="col-3">
+            <div class="form-group">
+                <label for="children_national_id" class="form-control-label"> الرقم القومي </label>
+                <input type="number" class="form-control" name="children_national_id[]">
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="form-group">
+                <label for="age" class="form-control-label"> السن </label>
+                <input type="text" class="form-control" name="age[]" readonly>
+            </div>
+        </div>
+
+        <div class="col-2">
+            <div class="form-group">
+                <label for="schools" class="form-control-label">المدرسة</label>
+                <input type="text" class="form-control" name="schools[]">
+            </div>
+        </div>
+
+        <div class="col-2">
+            <div class="form-group">
+                <label for="monthly_cost" class="form-control-label">التكلفة الشهرية</label>
+                <input type="text" class="form-control" name="monthly_cost[]">
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="form-group">
+                <label for="notes" class="form-control-label">ملاحظات</label>
+                <input type="text" class="form-control" name="notes[]">
+            </div>
+        </div>
+
+        <div class="col-1">
+            <button type="button" class="btn btn-danger mt-5 removeColor">
+                <i class="fe fe-trash"></i>
+            </button>
+        </div>
+    </div>`;
+
+            $('#child_containerN').append(newRow);
         });
 
         //  حذف الطفل
-        $('#child_container').on('click', '.removeColor', function() {
+        $('#child_containerN').on('click', '.removeColor', function() {
             $(this).closest('.child-row').remove();
             $('.child_number').each(function(index) {
                 $(this).text(index + 1);
@@ -842,4 +848,56 @@
     </script>
 
 
+
+    <script>
+        // Function to calculate age from national ID
+        function calculateAgeFromNationalId(nationalId) {
+            if (!nationalId || nationalId.length !== 14) return null;
+
+            const currentDate = new Date();
+            const currentYear = currentDate.getFullYear();
+            const currentMonth = currentDate.getMonth() + 1;
+
+            const yearPrefix = nationalId.charAt(0) === '2' ? 1900 : 2000;
+            const birthYear = yearPrefix + parseInt(nationalId.substring(1, 3), 10);
+            const birthMonth = parseInt(nationalId.substring(3, 5), 10);
+
+            let ageYears = currentYear - birthYear;
+            let ageMonths = currentMonth - birthMonth;
+
+            if (ageMonths < 0) {
+                ageYears -= 1;
+                ageMonths += 12;
+            }
+
+            return ageYears;
+        }
+
+        // Function to handle national ID input changes
+        function handleNationalIdInput(event) {
+            const nationalIdInput = event.target;
+            const row = nationalIdInput.closest('.child-row');
+            if (!row) return;
+
+            const ageInput = row.querySelector('[name="age[]"]');
+            if (ageInput) {
+                const age = calculateAgeFromNationalId(nationalIdInput.value);
+                ageInput.value = age || '';
+            }
+        }
+
+        // Add event delegation for dynamically added children
+        document.getElementById('child_container').addEventListener('input', function(e) {
+            if (e.target.matches('[name="children_national_id[]"]')) {
+                handleNationalIdInput(e);
+            }
+        });
+
+        // Initialize existing inputs on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('[name="children_national_id[]"]').forEach(input => {
+                input.addEventListener('input', handleNationalIdInput);
+            });
+        });
+    </script>
 @endsection
