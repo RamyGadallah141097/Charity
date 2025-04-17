@@ -12,7 +12,7 @@
             <div class="card">
                 <div class="card-header w-100">
                     <h3 class="card-title">
-                        قائمة بالمستفدين من {{ isset($setting) ? isset($setting->title) : '' }}
+                        قائمة بالمستفدين  {{ isset($setting) ? isset($setting->title) : '' }}
                     </h3>
                     <div class="row mb-3 w-100">
                         <div class="col-3">

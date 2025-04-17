@@ -36,9 +36,9 @@
             .modal-content {
                 margin: auto;
                 display: block;
-                max-width: 50%;
-                max-height: 50%;
-                top: 40%;
+                max-width: 100%;
+                max-height: 100%;
+                top: 20%;
             /*    // make image in semi center */
             }
 
@@ -190,10 +190,11 @@
         </table>
 
 
-        <h3>الابناء </h3>
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered w-100">
-                <thead>
+        @if($user->childrens)
+            <h3>الابناء </h3>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered w-100">
+                    <thead>
                     <tr class="fw-bolder text-muted bg-light">
                     <tr class="fw-bolder text-muted bg-light">
                         <th class="min-w-25px"> #</th>
@@ -204,8 +205,8 @@
                         <th class="min-w-25px"> التكلفة الشهرية</th>
                         <th class="min-w-25px">ملاحظات</th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     @foreach ($user->childrens as $boy)
                         <tr>
                             <td>{{ $boy->id }}</td>
@@ -217,15 +218,17 @@
                             <td>{{ $boy->notes }}</td>
                         </tr>
                     @endforeach
-                </tbody>
-            </table>
-        </div>
+                    </tbody>
+                </table>
+            </div>
+        @endif
 
-        <h3>الحالة الصحية</h3>
-        <div class="table-responsive">
-            <!--begin::Table-->
-            <table class="table table-striped table-bordered w-100">
-                <thead>
+        @if($patients)
+            <h3>الحالة الصحية</h3>
+            <div class="table-responsive">
+                <!--begin::Table-->
+                <table class="table table-striped table-bordered w-100">
+                    <thead>
                     <tr class="fw-bolder text-muted bg-light">
                         <th class="min-w-25px"> #</th>
                         <th class="min-w-25px">اسم المريض</th>
@@ -235,8 +238,8 @@
                         <th class="min-w-20px">هل تأمين ؟</th>
                         <th class="min-w-20px">الدواء</th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     @foreach ($patients as $patient)
                         <tr>
                             <td>{{ $patient->id }}</td>
@@ -249,9 +252,10 @@
                             <td>{{ Str::limit($patient->treatment, 40) }}</td>
                         </tr>
                     @endforeach
-                </tbody>
-            </table>
-        </div>
+                    </tbody>
+                </table>
+            </div>
+        @endif
 
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
@@ -276,12 +280,12 @@
 
             <div id="imageModal" class="modal">
                 <span class="close" onclick="closeModal()">&times;</span>
-                <img class="modal-content" id="modalImage">
+                <img class="modal-content" style="width: 1500px" id="modalImage">
             </div>
         @endif
 
 
-        @if (count($user->childrens))
+        @if ($user->childrens)
             <h3>الاولاد</h3>
             <div class="table-responsive">
                 <table class="table table-striped table-bordered w-100">

@@ -147,22 +147,30 @@
         <!-- Modal for view all donations of the donor !!!!!! -->
         <!-- Media Modal -->
         <div class="modal fade" id="mediaModal" tabindex="-1" role="dialog" aria-labelledby="mediaModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">صور المقترض والضامن</h5>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body ">
                         <!-- Borrower Images -->
                         <h5 class="text-primary">صور المقترض</h5>
-                        <div class="row" id="borrowerMedia"></div>
+                        <div class=" modal-dialog modal-xl" style="width: 100%"  >
+                            <div class="row" id="borrowerMedia">
+
+                            </div>
+                        </div>
 
                         <hr>
 
                         <!-- Guarantor Images -->
                         <h5 class="text-secondary">صور الضامن</h5>
-                        <div class="row" id="guarantorMedia"></div>
+                        <div class=" modal-dialog modal-xl" style="width: 100%" id="guarantorMedia">
+                            <div class="row" id="borrowerMedia">
+
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -306,8 +314,8 @@
                     response.media.forEach((media) => {
                         let imageUrl = basePath + media.path;
                         let mediaHtml = `
-                        <div class="col-md-3 mb-3">
-                            <img src="${imageUrl}" class="img-fluid img-thumbnail">
+                        <div class=" col-lg-4 col-md-6 col-12 mb-3 " style="width: 850px">
+                            <img src="${imageUrl}" style="height: 300px !important;" class="img-fluid img-thumbnail">
                         </div>
                 `;
                         if (media.type == 1) {

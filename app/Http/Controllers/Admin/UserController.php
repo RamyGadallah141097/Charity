@@ -7,6 +7,7 @@ use App\Http\Requests\StoreUser;
 use App\Models\Borrower;
 use App\Models\Children;
 use App\Models\Donation;
+use App\Models\Guarantor;
 use App\Models\Patient;
 use App\Models\Setting;
 use App\Models\User;
@@ -158,29 +159,105 @@ class UserController extends Controller
         }
     }
 
+//    public function searchNID(Request $request)
+//    {
+//        if (is_numeric($request->searchNID)){
+//            $searchNID = $request->searchNID;
+//
+//            $user = User::where("husband_national_id", $searchNID)
+//                ->orWhere("wife_national_id", $searchNID)
+//                ->first()
+//                ?? Borrower::where("nationalID", $searchNID)->first()
+//                ?? Guarantor::where("nationalID", $searchNID)->first()
+//                ?? Children::where("children_national_id", $searchNID)->first();
+//
+//
+//
+//            if (!$user) {
+//                toastr()->error("لا يوجد مستفيد لهذا الرقم القومي");
+//                return redirect()->route("adminHome");
+//            }
+//
+//            $patients = Patient::where('user_id', $user->id)->get();
+//            if ($patients->isEmpty()) {
+//                $patients = null;
+//            }
+//
+//            return view('admin/search', compact('user', 'patients'));
+//        }else{
+//            toastr()->error("الرقم االومي يجب ان يكون رقم ");
+//            return redirect()->back();
+//        }
+//    }
+
+//    public function searchNID(Request $request)
+//    {
+//        if (!is_numeric($request->searchNID)) {
+//            toastr()->error("الرقم القومي يجب أن يكون رقماً");
+//            return redirect()->back();
+//        }
+//
+//        $searchNID = $request->searchNID;
+//
+//        $user = null;
+//        $borrower = null;
+//        $guarantor = null;
+//        $child = null;
+//
+//        if ($found = User::where("husband_national_id", $searchNID)
+//            ->orWhere("wife_national_id", $searchNID)
+//            ->first()) {
+//            $user = $found;
+//        } elseif ($found = Borrower::where("nationalID", $searchNID)->first()) {
+//            $borrower = $found;
+//        } elseif ($found = Guarantor::where("nationalID", $searchNID)->first()) {
+//            $guarantor = $found;
+//        } elseif ($found = Children::where("children_national_id", $searchNID)->first()) {
+//            $child = $found;
+//        } else {
+//            toastr()->error("لا يوجد مستفيد لهذا الرقم القومي");
+//            return redirect()->route("adminHome");
+//        }
+//
+//        $patients = $user ? Patient::where('user_id', $user->id)->get() : null;
+//
+//        return view('admin/search', compact('user', 'borrower', 'guarantor', 'child', 'patients'));
+//    }
     public function searchNID(Request $request)
     {
-        if (is_numeric($request->searchNID)){
-            $searchNID = $request->searchNID;
-
-            $user = User::where("husband_national_id", $searchNID)
-                ->orWhere("wife_national_id", $searchNID)
-                ->first();
-
-            if (!$user) {
-                toastr()->error("لا يوجد مستفيد لهذا الرقم القومي");
-                return redirect()->route("adminHome");
-            }
-
-            $patients = Patient::where('user_id', $user->id)->get();
-
-            return view('admin/users/parts/details', compact('user', 'patients'));
-
-        }else{
-            toastr()->error("الرقم االومي يجب ان يكون رقم ");
+        if (!is_numeric($request->searchNID)) {
+            toastr()->error("الرقم القومي يجب أن يكون رقماً");
             return redirect()->back();
         }
+
+        $searchNID = $request->searchNID;
+
+        $user = null;
+        $borrower = null;
+        $guarantor = null;
+        $child = null;
+        $patients = null;
+
+        if ($found = User::where("husband_national_id", $searchNID)
+            ->orWhere("wife_national_id", $searchNID)
+            ->first()) {
+            $user = $found;
+            $patients = $user->patient;
+        } elseif ($found = Borrower::where("nationalID", $searchNID)->first()) {
+            $borrower = $found;
+        } elseif ($found = Guarantor::where("nationalID", $searchNID)->first()) {
+            $guarantor = $found;
+        } elseif ($found = Children::where("children_national_id", $searchNID)->first()) {
+            $child = $found;
+        } else {
+            toastr()->error("لا يوجد مستفيد لهذا الرقم القومي");
+            return redirect()->route("adminHome");
+        }
+
+        return view('admin/search', compact('user', 'borrower', 'guarantor', 'child', 'patients'));
     }
+
+
     public function userDetails($id, Request $request)
     {
         if ($request->has('searchNID')) {

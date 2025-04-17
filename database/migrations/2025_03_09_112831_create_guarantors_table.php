@@ -17,8 +17,8 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('borrower_id')->nullable()->index('guarantors_borrower_id_foreign');
             $table->string('name');
-            $table->integer('phone');
-            $table->integer('nationalID');
+            $table->bigInteger('phone');
+            $table->bigInteger('nationalID');
             $table->string('address');
             $table->string('job');
             $table->timestamps();
