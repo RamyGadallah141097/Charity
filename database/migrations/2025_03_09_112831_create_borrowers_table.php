@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('borrowers', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            $table->integer('phone');
-            $table->integer('nationalID');
+            $table->bigInteger('phone');
+            $table->bigInteger('nationalID');
             $table->string('address');
             $table->string('job');
             $table->timestamps();
