@@ -52,6 +52,7 @@
                         text: 'اكسيل',
                         className: 'btn-primary'
                     },
+
                     {
                         extend: 'colvis',
                         text: 'عرض',
@@ -60,6 +61,12 @@
                 ]
             });
         }
+    //     pdf solved successfully
+    //     pdf solved successfully
+    //     pdf solved successfully
+    //     pdf solved successfully
+    //     pdf solved successfully
+    //     pdf solved successfully
 
     // Delete Using Ajax
     function deleteScript(routeOfDelete) {
