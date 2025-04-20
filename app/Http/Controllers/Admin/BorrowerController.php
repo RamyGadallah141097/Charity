@@ -23,7 +23,8 @@ class BorrowerController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $borrowers = Borrower::select(['id', 'name', 'phone', 'nationalID', 'address', 'job']);
+            $borrowers = Borrower::select(['id', 'name', 'phone', 'nationalID', 'address', 'job' , "review"]);
+
 
             return DataTables::of($borrowers)
                 ->addColumn('action', function ($borrower) {
@@ -60,7 +61,14 @@ class BorrowerController extends Controller
                             </button>
                         ';
 
-                    return '<div class="d-flex">' . $editButton . $deleteButton . $viewGuarantorsButton . $viewMediaButton . '</div>';
+                        $borrowerReview = '
+                            <button class="btn btn-pill btn-primary-light borrowerReview" data-id="' . $borrower->id . '"  data-review="' . $borrower->review . '">
+                                <i class="fa fa-star"></i>
+
+                            </button>
+                        ';
+
+                    return '<div class="d-flex">' . $editButton . $deleteButton . $viewGuarantorsButton . $viewMediaButton . $borrowerReview . '</div>';
                 })
 
                 ->rawColumns(['action'])
@@ -368,5 +376,16 @@ class BorrowerController extends Controller
         return response()->json(['media' => $borrower->media]);
     }
 
+    public function storeReview(Request $request)
+    {
+        try{
+            $borrower = Borrower::find($request->borrower_id);
+            $borrower->review = $request->review;
+            $borrower->save();
+            return redirect()->back()->with("تم رفع التقييم");
+        }catch (\Exception $e){
+            return redirect()->back()->with("مشكله في التقييم ");
+        }
+    }
 
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnToLockerLogsTable extends Migration
+class AddColumnReviewToBorrowerTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddColumnToLockerLogsTable extends Migration
      */
     public function up()
     {
-        Schema::table('locker_logs', function (Blueprint $table) {
-//            $table->foreignId()
+        Schema::table('borrowers', function (Blueprint $table) {
+            $table->String('review')->after('email')->nullable();
         });
     }
 
@@ -25,7 +25,7 @@ class AddColumnToLockerLogsTable extends Migration
      */
     public function down()
     {
-        Schema::table('locker_logs', function (Blueprint $table) {
+        Schema::table('borrowers', function (Blueprint $table) {
             //
         });
     }

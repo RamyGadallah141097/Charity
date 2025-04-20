@@ -176,6 +176,36 @@
             </div>
         </div>
 
+        <!-- borrowerReviewModal Modal -->
+        <div class="modal fade" id="borrowerReviewModal" tabindex="-1" role="dialog" aria-labelledby="borrowerReviewModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">  تقييم المقترض</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body ">
+                        <form action="{{ route('BorrowerReview') }}" method="POST" id="borrowerReviewForm">
+                            @csrf
+
+                            <input type="hidden" name="borrower_id" id="borrower_idReview">
+
+                            <div class="form-group">
+                                <label for="review">التقييم</label>
+                                <textarea class="form-control" name="review" id="review" rows="4" placeholder="اكتب التقييم هنا..."></textarea>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">إرسال التقييم</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">إغلاق</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
 
     </div>
@@ -297,6 +327,21 @@
             $("#mediaModal").modal("show");
         });
     </script>
+
+    <script>
+        //التقييم
+        $(document).on("click", ".borrowerReview", function () {
+            let borrowerId = $(this).data("id");
+            let review = $(this).data("review");
+            $("#borrower_idReview").val(borrowerId);
+            $("#review").val(review);
+            loadMedia(borrowerId);
+
+            $("#borrowerReviewModal").modal("show");
+        });
+
+    </script>
+
 
     <script>
         function loadMedia(borrowerId) {
