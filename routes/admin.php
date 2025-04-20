@@ -134,6 +134,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('setting', 'SettingController@index')->name('setting.index')->middleware(['permission:setting.index', 'admin']);
     Route::post('settingUpdate', 'SettingController@update')->name('settingUpdate');
 
+
+    Route::post('borrowerReviewModal', 'BorrowerController@storeReview')->name('BorrowerReview');
     #### Auth ####
     Route::get('logout', 'AuthController@logout')->name('admin.logout');
 });
