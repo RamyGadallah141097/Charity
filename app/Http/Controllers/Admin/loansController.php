@@ -163,7 +163,7 @@ class loansController extends Controller
                 })
                 ->addColumn('action', function ($loan) {
                     return '
-                    <button class="btn btn-success pay-btn" data-id="' . $loan->id . '">
+                    <button class="btn btn-success pay-btn" data-id="' . $loan->id . '" data-status="'.$loan->status.'">
                         دفع <i class="fas fa-money-check-alt"></i>
                     </button>
                     ';

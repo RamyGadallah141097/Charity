@@ -53,11 +53,6 @@
                         className: 'btn-primary'
                     },
                     {
-                        extend: 'pdf',
-                        text: 'PDF',
-                        className: 'btn-primary'
-                    },
-                    {
                         extend: 'colvis',
                         text: 'عرض',
                         className: 'btn-primary'
