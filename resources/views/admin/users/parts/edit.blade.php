@@ -12,6 +12,63 @@
     تعديل مستفيد
 @endsection
 @section('content')
+    <style>
+        .gallery-image {
+            cursor: pointer;
+            transition: 0.3s;
+            margin: 5px;
+        }
+
+        .gallery-image:hover {
+            opacity: 0.5;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            padding-top: 50px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.9);
+        }
+
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 80%;
+            max-height: 80%;
+            top: 10%;
+            /*    // make image in semi center */
+        }
+
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+
+
+
+
+
     @if (count($errors) > 0)
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -383,6 +440,54 @@
                                 المرفقات </h2>
                         </div>
 
+
+
+
+
+                        <div class="col-12">
+
+
+                            @if ($user->attachments)
+                                @php
+                                    $attachments = is_string($user->attachments) ? json_decode($user->attachments, true) : $user->attachments;
+
+                                @endphp
+
+                                <div class="image-gallery">
+                                    @foreach ($attachments as $attachment)
+                                        <img src="{{ asset('storage/' . $attachment) }}"
+                                             alt="Attachment"
+                                             style="max-width: 500px"
+                                             height="150"
+                                             class="gallery-image"
+                                             onclick="openModal('{{ asset('storage/' . $attachment) }}')">
+                                    @endforeach
+                                </div>
+
+                                <div id="imageModal" class="modal">
+                                    <span class="close" onclick="closeModal()">&times;</span>
+                                    <img class="modal-content" style="width: 1500px" id="modalImage">
+                                </div>
+                            @endif
+
+                            <div id="imageModal" class="modal">
+                                <span class="close" onclick="closeModal()">&times;</span>
+                                <img class="modal-content" style="width: 1500px" id="modalImage">
+                            </div>
+
+
+
+                        </div>
+
+
+
+
+
+
+
+
+
+
 {{--                        @if($user->attachments)--}}
 {{--                                <div class="mb-2">--}}
 {{--                                    <button type="button" class="btn btn-sm btn-danger delete-attachment" data-id="{{ $attachment->id }}">--}}
@@ -687,4 +792,28 @@
             // Your AJAX code here if needed
         });
     </script>
+
+
+
+
+    <script>
+        function openModal(imageSrc) {
+            document.getElementById('modalImage').src = imageSrc;
+            document.getElementById('imageModal').style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').style.display = "none";
+        }
+
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('imageModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+
+
 @endsection

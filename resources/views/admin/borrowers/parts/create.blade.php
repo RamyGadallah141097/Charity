@@ -26,9 +26,15 @@
             </div>
 
             <div class="form-group col-6">
-                <label for="nationalID" class="form-control-label">الرقم القومي</label>
-                <input type="number" class="form-control" name="nationalID" maxlength="15" minlength="14" id="nationalID" required>
+                <label for="BnationalID" class="form-control-label">الرقم القومي</label>
+                <input type="number" class="form-control" name="nationalID" maxlength="15" minlength="14" id="BnationalID" required>
             </div>
+
+            <div class="form-group col-6">
+                <label for="borrower_age" class="form-control-label">السن</label>
+                <input type="text" class="form-control" readonly value="1" name="borrower_age" id="borrower_age">
+            </div>
+
 
             <div class="form-group col-6">
                 <label for="address" class="form-control-label">العنوان</label>
@@ -188,3 +194,91 @@
 </script>
 
 
+<script>
+    document.getElementById('BnationalID').addEventListener('input', function () {
+        const id = this.value;
+
+
+        if (id.length >= 14) {
+            const centuryCode = id[0];
+            const year = parseInt(id.substr(1, 2));
+            const month = parseInt(id.substr(3, 2));
+            const day = parseInt(id.substr(5, 2));
+
+            let fullYear;
+            if (centuryCode === '2') {
+                fullYear = 1900 + year;
+            } else if (centuryCode === '3') {
+                fullYear = 2000 + year;
+            } else {
+                document.getElementById('borrower_age').value = '';
+                return;
+            }
+
+            const birthDate = new Date(fullYear, month - 1, day);
+            const today = new Date();
+
+            let years = today.getFullYear() - birthDate.getFullYear();
+            let months = today.getMonth() - birthDate.getMonth();
+
+            if (months < 0 || (months === 0 && today.getDate() < birthDate.getDate())) {
+                years--;
+                months += 12;
+            }
+
+            if (today.getDate() < birthDate.getDate()) {
+                months--;
+            }
+
+            const ageStr = `${years} سنة و ${months} شهر`;
+            document.getElementById('borrower_age').value = ageStr;
+        } else {
+            document.getElementById('borrower_age').value = '';
+        }
+    });
+</script>
+
+
+
+<script>
+    document.getElementById('BnationalID').addEventListener('input', function () {
+        const id = this.value;
+
+        if (id.length >= 14) {
+            const centuryCode = id[0];
+            const year = parseInt(id.substr(1, 2));
+            const month = parseInt(id.substr(3, 2));
+            const day = parseInt(id.substr(5, 2));
+
+            let fullYear;
+            if (centuryCode === '2') {
+                fullYear = 1900 + year;
+            } else if (centuryCode === '3') {
+                fullYear = 2000 + year;
+            } else {
+                document.getElementById('borrower_age').value = '';
+                return;
+            }
+
+            const birthDate = new Date(fullYear, month - 1, day);
+            const today = new Date();
+
+            let years = today.getFullYear() - birthDate.getFullYear();
+            let months = today.getMonth() - birthDate.getMonth();
+
+            if (months < 0 || (months === 0 && today.getDate() < birthDate.getDate())) {
+                years--;
+                months += 12;
+            }
+
+            if (today.getDate() < birthDate.getDate()) {
+                months--;
+            }
+
+            const ageStr = `${years} سنة و ${months} شهر`;
+            document.getElementById('borrower_age').value = ageStr;
+        } else {
+            document.getElementById('borrower_age').value = '';
+        }
+    });
+</script>

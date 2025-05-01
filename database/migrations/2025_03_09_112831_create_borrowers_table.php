@@ -17,6 +17,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->bigInteger('phone');
+            $table->string('borrower_age')->nullable();
             $table->bigInteger('nationalID');
             $table->string('address');
             $table->string('job');

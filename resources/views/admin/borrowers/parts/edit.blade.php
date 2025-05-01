@@ -1,22 +1,79 @@
 <style>
+    /* Modal Styles */
     .modal-dialog {
-        max-width: calc(100vw - 100px) !important;
+        max-width: calc(90vw - 100px) !important;
         margin: auto;
+        overflow: clip !important;
+    }
+
+    .modal-xl {
+        max-width: 90% !important;
+    }
+
+    .modal-body {
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
+    /* Form Styles */
+    .borrowerForm .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .borrowerForm .text-primary {
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .guarantor-item {
+        background-color: #f8f9fa;
+        border-radius: 5px;
+        margin-bottom: 1rem;
+    }
+
+    .guarantor-item h5 {
+        margin-bottom: 1rem;
+    }
+
+    /* Image Preview Styles */
+    .img-thumbnail {
+        padding: 0.25rem;
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* Button Styles */
+    .removeGuarantor, .removeExistingGuarantor {
+        margin-top: 0.5rem;
+    }
+
+    #addGuarantor {
+        margin-top: 1rem;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .modal-dialog {
+            max-width: 95vw !important;
+        }
+
+        .modal-xl {
+            max-width: 95% !important;
+        }
+
+        .form-group.col-6 {
+            width: 100%;
+        }
     }
 </style>
-
 <div class="modal-body">
     <form id="borrowerForm" class="borrowerForm" method="POST" enctype="multipart/form-data"
           action="{{ isset($borrower) ? route('borrowers.update', $borrower->id) : route('borrowers.store') }}">
         @csrf
         @method('PUT')
-
-{{--        @if(isset($borrower))--}}
-{{--            @method('PUT')--}}
-{{--            <input type="hidden" name="id" value="{{ $borrower->id }}">--}}
-{{--        @else--}}
-{{--            @method('POST')--}}
-{{--        @endif--}}
 
         <!-- Borrower Fields -->
         <h4 class="text-primary">معلومات المقترض</h4>
@@ -96,8 +153,6 @@
                             حذف الضامن
                         </button>
                     </div>
-
-
                 @endforeach
             @endif
         </div>
@@ -108,16 +163,38 @@
         <hr>
 
         <div class="row form-group">
-            <div class="col-6">
-                <label>ملفات المقترض</label>
-                <input class="form-control dropify" accept="image/*"  type="file"  name="borrowerMedia[]" multiple />
+            <div class="col-12 row">
+                <div class="col-6 ">
+                    <label>ملفات المقترض</label>
+                    <input class="form-control dropify" accept="image/*" type="file" name="borrowerMedia[]" multiple />
+                </div>
+                <div class="col-6">
+                    <label>ملفات الضامن</label>
+                    <input class="form-control dropify" accept="image/*" type="file" name="guarantorMedia[]" multiple />
+                </div>
             </div>
-            <div class="col-6">
-                <label>ملفات الضامن</label>
-                <input class="form-control dropify" accept="image/*" type="file" name="guarantorMedia[]" multiple />
+            <div class="col-12 row">
+                <div class="modal-body">
+                    <!-- Borrower Images -->
+                    <h5 class="text-primary">صور المقترض</h5>
+                    <div class="modal-dialog modal-xl" style="width: 100%">
+                        <div class="row" id="borrowerMediaContainer">
+                            <!-- Borrower images will load here -->
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Guarantor Images -->
+                    <h5 class="text-secondary">صور الضامن</h5>
+                    <div class="modal-dialog modal-xl" style="width: 100%">
+                        <div class="row" id="guarantorMediaContainer">
+                            <!-- Guarantor images will load here -->
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
 
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">إغلاق</button>
@@ -128,10 +205,14 @@
     </form>
 </div>
 
-<!-- JavaScript to Handle Dynamic Form -->
 <script>
     $(document).ready(function () {
         let guarantorIndex = {{ isset($borrower) ? $borrower->guarantors->count() : 0 }};
+
+        // Load images when modal opens
+        @if(isset($borrower))
+        loadMedia({{ $borrower->id }});
+        @endif
 
         // Function to add a new guarantor form
         $('#addGuarantor').click(function () {
@@ -142,35 +223,35 @@
                 <h5 class="text-secondary">كفيل ${guarantorIndex}</h5>
 
                 <div class="row">
-                         <div class="form-group col-6">
-                            <label class="form-control-label">اسم الضامن</label>
-                            <input type="text" class="form-control" name="guarantors[${guarantorIndex}][name]" required>
-                        </div>
+                    <div class="form-group col-6">
+                        <label class="form-control-label">اسم الضامن</label>
+                        <input type="text" class="form-control" name="guarantors[${guarantorIndex}][name]" required>
+                    </div>
 
-                        <div class="form-group col-6">
-                            <label class="form-control-label">هاتف الضامن</label>
-                            <input type="text" class="form-control" name="guarantors[${guarantorIndex}][phone]" required>
-                        </div>
+                    <div class="form-group col-6">
+                        <label class="form-control-label">هاتف الضامن</label>
+                        <input type="text" class="form-control" name="guarantors[${guarantorIndex}][phone]" required>
+                    </div>
 
-                        <div class="form-group col-6">
-                            <label class="form-control-label">الرقم القومي</label>
-                            <input type="text" class="form-control" name="guarantors[${guarantorIndex}][nationalID]" required>
-                        </div>
+                    <div class="form-group col-6">
+                        <label class="form-control-label">الرقم القومي</label>
+                        <input type="text" class="form-control" name="guarantors[${guarantorIndex}][nationalID]" required>
+                    </div>
 
-                        <div class="form-group col-6">
-                            <label class="form-control-label">العنوان</label>
-                            <input type="text" class="form-control" name="guarantors[${guarantorIndex}][address]" required>
-                        </div>
+                    <div class="form-group col-6">
+                        <label class="form-control-label">العنوان</label>
+                        <input type="text" class="form-control" name="guarantors[${guarantorIndex}][address]" required>
+                    </div>
 
-                        <div class="form-group col-6">
-                            <label class="form-control-label">المهنة</label>
-                            <input type="text" class="form-control" name="guarantors[${guarantorIndex}][job]" required>
-                        </div>
+                    <div class="form-group col-6">
+                        <label class="form-control-label">المهنة</label>
+                        <input type="text" class="form-control" name="guarantors[${guarantorIndex}][job]" required>
+                    </div>
                 </div>
 
                 <button type="button" class="btn btn-danger removeGuarantor" data-id="${guarantorIndex}">حذف الضامن</button>
             </div>
-        `);
+            `);
         });
 
         // Function to remove a newly added guarantor form
@@ -184,12 +265,8 @@
             $('#guarantor_' + id).remove();
             $('<input>').attr({ type: 'hidden', name: 'remove_guarantors[]', value: id }).appendTo('#borrowerForm');
         });
-    });
-</script>
 
-
-<script>
-    $(document).ready(function () {
+        // Form submission handler
         $("#borrowerForm").on("submit", function (e) {
             e.preventDefault();
 
@@ -206,9 +283,8 @@
                     $("input, select, textarea").removeClass("is-invalid");
                 },
                 success: function (response) {
-
                     if(response.status == 200 ){
-                        toastr.success("added successfully");
+                        toastr.success("تم الحفظ بنجاح");
                         location.reload();
                     }
                 },
@@ -238,12 +314,41 @@
         });
     });
 
+    function loadMedia(borrowerId) {
+        let basePath = "{{ asset('') }}";
+        $.ajax({
+            url: `/admin/borrowers/${borrowerId}/media`,
+            type: "GET",
+            success: function(response) {
+                $("#borrowerMediaContainer").empty();
+                $("#guarantorMediaContainer").empty();
 
+                let borrowerHtml = "";
+                let guarantorHtml = "";
+
+                response.media.forEach((media) => {
+                    let imageUrl = basePath + media.path;
+                    let mediaHtml = `
+                        <div class="col-lg-4 col-md-6 col-12 mb-3">
+                            <img src="${imageUrl}" style="height: 300px; width: 100%; object-fit: contain;" class="img-fluid img-thumbnail">
+                        </div>
+                    `;
+                    if (media.type == 1) {
+                        guarantorHtml += mediaHtml;
+                    } else {
+                        borrowerHtml += mediaHtml;
+                    }
+                });
+
+                $("#borrowerMediaContainer").html(borrowerHtml);
+                $("#guarantorMediaContainer").html(guarantorHtml);
+            },
+            error: function() {
+                toastr.error("فشل في تحميل الصور");
+            }
+        });
+    }
+
+    // Initialize dropify
+    $('.dropify').dropify();
 </script>
-
-
-
-<script>
-    $('.dropify').dropify()
-</script>
-

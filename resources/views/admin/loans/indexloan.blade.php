@@ -10,6 +10,35 @@
 
 @section('content')
     <div class="row">
+        <!-- Modal -->
+        <div class="modal fade" id="payModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <form id="payForm">
+                    @csrf
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">دفع القرض</h5>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+
+                        <div class="modal-body">
+                            <input type="hidden" name="loan_id" id="modal-loan-id">
+
+                            <div class="form-group">
+                                <label>قيمة الدفع</label>
+                                <input type="number" name="amount" id="pay-amount" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">تأكيد الدفع</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">إغلاق</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div class="col-md-12 col-lg-12">
             <div class="card-body w-100">
                 <div class="row w-100"> <!-- Ensuring full width -->
@@ -96,50 +125,87 @@
                         ]
                     });
 
-                    $(document).on('click', '.loan-btn', function () {
-                        let loanId = $(this).data('id');
+                    {{--$(document).on('click', '.loan-btn', function () {--}}
+                    {{--    let loanId = $(this).data('id');--}}
 
-                        if (confirm("هل أنت متأكد من صرف هذا القرض؟")) {
-                            $.ajax({
-                                url: "{{ route('loan.checkout', ':id') }}".replace(':id', loanId),
-                                type: 'get',
-                                data: {_token: '{{ csrf_token() }}'},
-                                success: function (response) {
-                                    window.location.reload();
-                                    alert(response.message);
-                                    table.ajax.reload();
-                                },
-                                error: function (response) {
-                                    alert(response.message);
-                                    alert(response.responseJSON.error);
-                                }
-                            });
-                        }
-                    });
+                    {{--    if (confirm("هل أنت متأكد من صرف هذا القرض؟")) {--}}
+                    {{--        $.ajax({--}}
+                    {{--            url: "{{ route('loan.checkout', ':id') }}".replace(':id', loanId),--}}
+                    {{--            type: 'get',--}}
+                    {{--            data: {_token: '{{ csrf_token() }}'},--}}
+                    {{--            success: function (response) {--}}
+                    {{--                window.location.reload();--}}
+                    {{--                alert(response.message);--}}
+                    {{--                table.ajax.reload();--}}
+                    {{--            },--}}
+                    {{--            error: function (response) {--}}
+                    {{--                alert(response.message);--}}
+                    {{--                alert(response.responseJSON.error);--}}
+                    {{--            }--}}
+                    {{--        });--}}
+                    {{--    }--}}
+                    {{--});--}}
 
-                    $(document).on('click', '.pay-btn', function () {
-                        let loanId = $(this).data('id');
-                        let PayStatus = $(this).data("status");
+                    {{--$(document).on('click', '.pay-btn', function () {--}}
+                    {{--    let loanId = $(this).data('id');--}}
+                    {{--    let PayStatus = $(this).data("status");--}}
 
-                        if(PayStatus == 0){
-                            if (confirm("هل أنت متأكد من دفع هذا القرض؟")) {
-                                $.ajax({
-                                    url: "{{ route('loan.pay', ':id') }}".replace(':id', loanId),
-                                    type: 'POST',
-                                    data: {_token: '{{ csrf_token() }}'},
-                                    success: function (response) {
-                                        window.location.reload();
-                                        alert(response.message);
-                                        table.ajax.reload();
-                                    },
-                                    error: function (response) {
-                                        alert(response.responseJSON.error);
-                                    }
-                                });
-                            }
-                        }
-                    });
+                    {{--    if(PayStatus == 0){--}}
+                    {{--        if (confirm("هل أنت متأكد من دفع هذا القرض؟")) {--}}
+                    {{--            $.ajax({--}}
+                    {{--                url: "{{ route('loan.pay', ':id') }}".replace(':id', loanId),--}}
+                    {{--                type: 'POST',--}}
+                    {{--                data: {_token: '{{ csrf_token() }}'},--}}
+                    {{--                success: function (response) {--}}
+                    {{--                    window.location.reload();--}}
+                    {{--                    alert(response.message);--}}
+                    {{--                    table.ajax.reload();--}}
+                    {{--                },--}}
+                    {{--                error: function (response) {--}}
+                    {{--                    alert(response.responseJSON.error);--}}
+                    {{--                }--}}
+                    {{--            });--}}
+                    {{--        }--}}
+                    {{--    }--}}
+                    {{--});--}}
 
                 });
             </script>
+
+    <script>
+        $(document).on('click', '.pay-btn', function () {
+            let loanId = $(this).data('id');
+            let payStatus = $(this).data('status');
+
+            if (payStatus == 0) {
+                $('#modal-loan-id').val(loanId); // نضع الـ ID داخل الفورم
+                $('#payModal').modal('show');    // نعرض المودال
+            }
+        });
+
+        $('#payForm').submit(function (e) {
+            e.preventDefault();
+
+            let loanId = $('#modal-loan-id').val();
+            let amount = $('#pay-amount').val();
+
+            $.ajax({
+                url: "{{ route('loan.pay', ':id') }}".replace(':id', loanId),
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    amount: amount
+                },
+                success: function (response) {
+                    $('#payModal').modal('hide');
+                    alert(response.message);
+                    window.location.reload();
+                },
+                error: function (response) {
+                    alert(response.responseJSON.error || "حدث خطأ أثناء الدفع");
+                }
+            });
+        });
+
+    </script>
 @endsection

@@ -350,6 +350,73 @@
         </div>
 {{--        total loans --}}
 
+{{--        users social status--}}
+        <div class="row">
+
+            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+                <div class="card  bg-success img-card box-success-shadow">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <div class="text-white">
+                                <h2 class="mb-0 number-font">{{ $social_status0 }}</h2>
+                                <p class="text-white mb-0">المستخدمين العزب</p>
+                            </div>
+                            <div class="mr-auto">
+                                <span class="text-white fs-30 ml-2 mt-2"><i class="fas fa-user-friends"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+                <div class="card bg-primary img-card box-secondary-shadow">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <div class="text-white">
+                                <h2 class="mb-0 number-font"> {{ $social_status1 }} </h2>
+                                <p class="text-white mb-0"> المستخدمين المتزوجين</p>
+                            </div>
+                            <div class="mr-auto">
+                                <span class="text-white fs-30 ml-2 mt-2"><i class="fas fa-user-friends"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- COL END -->
+            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+                <div class="card bg-secondary img-card box-secondary-shadow">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <div class="text-white">
+                                <h2 class="mb-0 number-font"> {{ $social_status2 }} </h2>
+                                <p class="text-white mb-0">المستخدمين المطلقين </p>
+                            </div>
+                            <div class="mr-auto">
+                                <span class="text-white fs-30 ml-2 mt-2"><i class="fas fa-user-friends"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- COL END -->
+            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+                <div class="card bg-danger img-card box-secondary-shadow">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <div class="text-white">
+                                <h2 class="mb-0 number-font"> {{ $social_status3 }} </h2>
+                                <p class="text-white mb-0">المستخدمين الارامل </p>
+                            </div>
+                            <div class="mr-auto">
+                                <span class="text-white fs-30 ml-2 mt-2"><i class="fas fa-user-friends"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- COL END -->
+        </div>
+{{--        users social status--}}
+
 
 
 

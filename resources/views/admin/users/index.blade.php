@@ -28,7 +28,7 @@
 
                         <div class="col-3">
 {{--                            <label for="standard_living">الحالة المعيشيه</label>--}}
-                                <input id="standard_living" class="form-control" placeholder="اختيار الحالة المعيشيه" name="standard_living">
+                                <input id="standard_living" type="number" class="form-control" placeholder="الحالة المعيشيه" name="standard_living">
                         </div>
 
 {{--                        <div class="col-3">--}}
@@ -44,7 +44,7 @@
 {{--                        </div>--}}
                         <div class="col-3">
 {{--                            <label for="family_number">عدد الاطفال</label>--}}
-                            <input id="family_number" class="form-control" name="family_number" placeholder="عدد الاطفال">
+                            <input id="family_number" type="number" class="form-control" name="family_number" placeholder="عدد الاسره">
                         </div>
                     </div>
 

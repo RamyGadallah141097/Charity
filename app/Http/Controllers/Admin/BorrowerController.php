@@ -72,6 +72,7 @@ class BorrowerController extends Controller
                 })
 
                 ->rawColumns(['action'])
+                ->escapeColumns([])
                 ->make(true);
         }
 
@@ -92,7 +93,7 @@ class BorrowerController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
 
-    public function store(BorrowerRequest $request)
+    public function store(Request $request)
     {
       try{
           // Create Borrower
@@ -183,9 +184,9 @@ class BorrowerController extends Controller
 
     public function edit(Borrower $borrower)
     {
-//        $media1 = Media::where("borrower_id" , $borrower->id)->where("type" , null);
-//        $media2 = Media::where("borrower_id" , $borrower->id)->where("type" , 1);
-        return view('admin/borrowers/parts/edit', compact('borrower'));
+        $media1 = Media::where("borrower_id" , $borrower->id)->where("type" , null);
+        $media2 = Media::where("borrower_id" , $borrower->id)->where("type" , 1);
+        return view('admin/borrowers/parts/edit', compact('borrower' , "media1" , "media2"));
     }
 
     /**

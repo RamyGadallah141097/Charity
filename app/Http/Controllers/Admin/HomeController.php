@@ -29,6 +29,10 @@ class HomeController extends Controller
         $accepedUsers     = User::where("status", "accepted")->count();
         $subUsers     = User::where("status", "new")->count();
         $rejectedUsers     = User::where("status", "refused")->count();
+        $social_status0     = User::where("social_status", 0)->count();
+        $social_status1     = User::where("social_status", 1)->count();
+        $social_status2     = User::where("social_status", 2)->count();
+        $social_status3    = User::where("social_status", 3)->count();
 
 //        donors and donations
         $donors_count    = Donor::all()->count();
@@ -80,6 +84,6 @@ class HomeController extends Controller
         $setting = Setting::first();
 
 
-        return view('admin/index', compact('total_donors_money' , "totalDonations" , "donors_count" , "progressData" , 'users' , "accepedUsers" , "subUsers" , "rejectedUsers", 'donors', 'diff', 'users_count', 'subvention' , "totalSubventions", 'users_month', 'users_last_month', 'totalMonthlySubventions' , "totalZakat", "totalLoans" , "totalBorrowers" , "totalLoanOut" , "totalLoansDonations" , "setting"));
+        return view('admin/index', compact('total_donors_money' , "totalDonations" , "donors_count" , "progressData" , 'users' , "accepedUsers" , "subUsers" , "rejectedUsers", 'donors', 'diff', 'users_count', 'subvention' , "totalSubventions", 'users_month', 'users_last_month', 'totalMonthlySubventions' , "totalZakat", "totalLoans" , "totalBorrowers" , "totalLoanOut" , "totalLoansDonations" , "setting" , "social_status3" , "social_status2" , "social_status1" , "social_status0"));
     }
 }
