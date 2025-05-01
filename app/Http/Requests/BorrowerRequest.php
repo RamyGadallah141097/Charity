@@ -25,6 +25,7 @@ class BorrowerRequest extends FormRequest
     {
         $rules = [
             'name' => 'required|string|max:255',
+            'borrower_age' => 'nullable',
             'phone' => '',
             'nationalID' => 'required',
             'address' => 'required|string|max:255',

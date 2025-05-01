@@ -34,17 +34,51 @@ class UserController extends Controller
                 $query->where('standard_living', "<=", $request->standard_living);
             }
 
-            if ($request->filled('family_number')) {
-                if ($request->has('family_number') && (int)$request->family_number >= 1) {
-                    $query->whereHas('childrens', function ($q) use ($request) {
-                        $q->groupBy('user_id')
-                            ->havingRaw('COUNT(id) = ?', [$request->family_number]);
-                    });
-                } else {
-                    $query->whereDoesntHave('childrens');
-                }
+//            if ($request->filled('family_number')) {
+//                $parents = User::where("wife_name" != null)->count();
+//                $parents += User::where("husband_name" != null)->count();
+//                if ($request->has('family_number') && (int)$request->family_number >= 1) {
+//                    $query->whereHas('childrens', function ($q) use ($request) {
+//                        $q->groupBy('user_id')
+//                            ->havingRaw('COUNT(id) = ?', [$request->family_number]);
+//                    });
+//                } else {
+//                    $query->whereDoesntHave('childrens');
+//                }
+//            }
 
+            if ($request->filled('family_number')) {
+                $familyNumber = (int) $request->family_number;
+
+                if($familyNumber == 1){
+                    $query->where(function($q) {
+                        $q->where('husband_name' , "")
+                            ->orWhere('wife_name' , "");
+                    })
+                        ->whereDoesntHave('childrens');
+                }
+                elseif ($familyNumber == 2) {
+                    $query->where(function($q) {
+                        $q->where([
+                            ['husband_name', '!=', null],
+                            ['wife_name', '!=', null]
+                        ])->doesntHave('childrens');
+                        // or condition for compine the both
+                        $q->orWhere(function($q2) {
+                            $q2->whereNull('husband_name')
+                                ->orWhereNull('wife_name');
+                        })
+                            ->has('childrens', '=', 1);
+                    });
+
+                }
+                else {
+                    $query->withCount('childrens')
+                        ->having('childrens_count', '=', $familyNumber - 2);
+                }
             }
+
+
 
             $users = $query->get();
             return Datatables::of($users)
