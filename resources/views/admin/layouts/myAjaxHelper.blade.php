@@ -35,7 +35,7 @@
                     }
                 },
 
-                dom: 'Bfrtip',
+              //  dom: 'Bfrtip',
                 buttons: [
                     {
                         extend: 'copy',

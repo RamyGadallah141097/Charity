@@ -33,8 +33,14 @@ class DonorController extends Controller
                                 <i class="fas fa-trash"></i>
                             </button>
                         ';
+                        $returnMoneyBtn = '
+                            <button class="btn btn-pill btn-success-light" data-toggle="modal" data-target="#returnMoneyBtn"
+                                    data-id="' . $donors->id . '" data-title="' . $donors->name . '">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        ';
 
-                    return '<div class="d-flex">' . $editButton . $deleteButton . '</div>';
+                    return '<div class="d-flex">' . $editButton . $deleteButton . $returnMoneyBtn . '</div>';
                 })
 
                 ->editColumn('notes', function ($donors) {

@@ -72,6 +72,7 @@ class BorrowerController extends Controller
                 })
 
                 ->rawColumns(['action'])
+                ->escapeColumns([])
                 ->make(true);
         }
 

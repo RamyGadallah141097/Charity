@@ -12,7 +12,7 @@ class LockerLog extends Model
         "moneyType",
         "type",
         "admin_id",
-        "donation_id", // إزالة أي مسافة زائدة هنا
+        "donation_id",
         "subvention_id",
         "loan_id",
         "comment",
@@ -21,7 +21,7 @@ class LockerLog extends Model
         "asset_count",
     ];
 
-//    protected $fillable =["moneyType" , "type","admin_id", "donation_id" , "subvention_id" , "loan_id","comment" , "amount" , "asset_id" , "asset_count"];
+
 
     const TYPE_PLUS = 'plus';
     const TYPE_MINUS = 'minus';

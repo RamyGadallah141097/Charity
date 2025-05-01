@@ -75,6 +75,7 @@ class UserController extends Controller
                 else {
                     $query->withCount('childrens')
                         ->having('childrens_count', '=', $familyNumber - 2);
+
                 }
             }
 
