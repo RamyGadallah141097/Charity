@@ -7,6 +7,7 @@
 
 <!-- TITLE -->
 <title>@yield('title')</title>
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 <!-- BOOTSTRAP CSS -->
 <link href="{{ asset('assets/admin') }}/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />

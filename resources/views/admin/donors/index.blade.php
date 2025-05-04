@@ -91,6 +91,43 @@
             </div>
         </div>
         <!-- Create Or Edit Modal -->
+
+
+        <!-- donationReturnModal Modal -->
+        <div class="modal fade" id="donationReturnModal" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            ارجاع القرض للمتبرع
+                            <input type="text" disabled id="name">
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="donationReturnForm" action="{{route("donor.returnDonationMoney")}}">
+                            <input type="hidden" name="donor_id" id="donor_id">
+                            <div class="form-group">
+{{--                                <p>القيمه المتوفره في خزنة القروض : <input type="text" disabled id="avalable"> </p>--}}
+
+{{--                                <br>--}}
+{{--                                <hr>--}}
+                                <label>القيمه المسترده</label>
+                                <input type="number" class="form-control" placeholder="القيمه المسترده" name="DonationReturnAmount" id="DonationReturnAmount" required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" form="donationReturnForm" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- donationReturnModal Modal -->
     </div>
     @include('Admin/layouts/myAjaxHelper')
 @endsection
@@ -118,6 +155,69 @@
         showEditModal('{{route('donors.edit',':id')}}');
         editScript();
     </script>
+
+    <script>
+        $(document).on("click", ".donationReturnBtn", function () {
+            let donorId = $(this).data("id");
+            let name = $(this).data("title");
+            let avalable = $(this).data("avalable");
+            let amount = $(this).data("amount");
+
+            console.log(amount);
+
+            $("#donor_id").val(donorId);
+            $("#avalable").val(avalable);
+            $("#DonationReturnAmount").val(amount);
+            $("#name").val(name);
+            $("#donationReturnModal").modal("show");
+        });
+
+
+    </script>
+
+    <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        // Handle form submission
+        $(document).on('submit', '#donationReturnForm', function (e) {
+            e.preventDefault();
+
+            let form = $(this);
+            let url = form.attr('action');
+            let formData = form.serialize();
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    if (response.status === 'success') {
+                        toastr.success(response.message || 'تم إرجاع المبلغ بنجاح');
+                        $('#donationReturnModal').modal('hide');
+                        form.trigger("reset");
+                    } else {
+                        toastr.warning(response.message || 'حدث شيء غير متوقع');
+                    }
+                },
+                error: function (xhr) {
+                    let errors = xhr.responseJSON?.errors;
+                    if (errors) {
+                        $.each(errors, function (key, error) {
+                            toastr.error(error);
+                        });
+                    } else {
+                        toastr.error('فشل في الإرسال، حاول مرة أخرى.');
+                    }
+                }
+            });
+        });
+    </script>
+
+
 @endsection
 
 

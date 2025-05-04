@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDonate;
+use App\Models\Donation;
 use App\Models\Donor;
+use App\Models\Loan;
+use App\Models\LockerLog;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -29,20 +32,28 @@ class DonorController extends Controller
                         ';
 
                         $deleteButton = '
-                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                            <button class="btn btn-pill btn-danger-light donationReturnBtn" data-toggle="modal" data-target="#delete_modal"
                                     data-id="' . $donors->id . '" data-title="' . $donors->name . '">
                                 <i class="fas fa-trash"></i>
                             </button>
                         ';
 
-                        if ($donors->has('donation') && $donors->donation) {
+                        if ($donors->has('donation') && $donors->donation->contains('donation_type', 2)) {
+                            $totalLoansDonations = $donors->donation->where('donation_type', 2)->sum("donation_amount");
+                            $totalLoanAmount = LockerLog::where("moneyType" , LockerLog::moneyTypeLoans)->where("type" , LockerLog::TYPE_PLUS)->sum("amount") - LockerLog::where("moneyType" , LockerLog::moneyTypeLoans)->where("type" , LockerLog::TYPE_MINUS)->sum("amount");
                             $returnMoneyBtn = '
-                                    <button class="btn btn-pill btn-success-light" data-toggle="modal" data-target="#returnMoneyBtn"
-                                            data-id="' . $donors->id . '" data-title="' . $donors->name . '">
+                                    <button
+                                        class="btn btn-pill btn-success donationReturnBtn"
+                                        data-toggle="modal"
+                                        data-target="#donationReturnModal"
+                                        data-id="' . $donors->id . '"
+                                        data-avalable ="'.$totalLoanAmount.'"
+                                        data-amount ="'.$totalLoansDonations.'"
+                                        data-title="' . $donors->name . '">
                                         <i class="fas fa-hand-holding-usd"></i>
-
                                     </button>
                                 ';
+
                         }else{
                             $returnMoneyBtn = "";
                         }
@@ -61,6 +72,74 @@ class DonorController extends Controller
         }else{
             return view('admin/donors/index');
         }
+    }
+
+    public function returnDonationMoney(Request $request)
+    {
+        try{
+            $donor = Donor::with("donation")->find($request->donor_id);
+            $totalLoansDonations = $donor->donation->where('donation_type', 2)->sum("donation_amount");
+            $returnAmount = $request->DonationReturnAmount;
+
+            if ($returnAmount > $totalLoansDonations) { // check if returned amount smaller than donation amount
+                return response()->json([
+                    'success' => false,
+                    'message' => 'القيمه المسترده اكبر من القيمه المتبرع بها  '
+                ]);
+            }
+
+            $totalLoanAmount = LockerLog::where("moneyType" , LockerLog::moneyTypeLoans)->where("type" , LockerLog::TYPE_PLUS)->sum("amount") - LockerLog::where("moneyType" , LockerLog::moneyTypeLoans)->where("type" , LockerLog::TYPE_MINUS)->sum("amount");
+
+            // check if the returner amount avalable amount
+            if ( $returnAmount >  $totalLoanAmount){
+                return response()->json([
+                    'success' => false,
+                    'message' => 'لا توجد اموال كافيه في خزنة القروض  '
+                ]);
+            }
+
+            $donations = Donation::where("donation_type", 2)
+                ->where("donor_id", $request->donor_id)
+                ->get();
+
+
+            foreach ($donations as $donation) {
+                if ($returnAmount <= 0) break;
+
+                if ($donation->donation_amount <= $returnAmount) {
+                    $returnAmount -= $donation->donation_amount;
+
+                    $donation->donation_amount = 0;
+                } else {
+                    $donation->donation_amount -= $returnAmount;
+                    $returnAmount = 0;
+                }
+
+                // Save updated donation
+                $donation->save();
+            }
+
+
+
+            LockerLog::create([
+                "moneyType" => LockerLog::moneyTypeLoans,
+                "amount" => $request->DonationReturnAmount,
+                "type" => LockerLog::TYPE_MINUS,
+                "admin_id" => auth()->id(),
+                "donation_id" => null,
+                "subvention_id" => null,
+                "loan_id" => null,
+                "comment" => "تم استرداد أموال المتبرع " . $donor->name . " في يوم " . \Carbon\Carbon::now()->format("Y-m-d"),
+            ]);
+
+            return response()->json(['status' => 'success', 'message' => 'Amount returned successfully']);
+        }catch (\Exception $e){
+            return response()->json([
+                "success" => false,
+                "message" => $e->getMessage()
+            ]);
+        }
+
     }
 
     public function create()
