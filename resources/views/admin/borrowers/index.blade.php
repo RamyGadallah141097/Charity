@@ -141,6 +141,7 @@
                                 <th class="min-w-50px">الاسم المقترض</th>
                                 <th class="min-w-125px">رقم المقترض</th>
                                 <th class="min-w-125px">الرقم القومي للمقترض</th>
+                                <th class="min-w-125px">عمر للمقترض</th>
                                 <th class="min-w-125px">عنوان المقترض</th>
                                 <th class="min-w-125px">عمل المقترض</th>
                                 <th class="min-w-125px">العمليات</th>
@@ -287,6 +288,7 @@
             {data: 'name', name: 'name'},
             {data: 'phone', name: 'phone'},
             {data: 'nationalID', name: 'nationalID'},
+            {data: 'borrower_age', name: 'borrower_age'},
             {data: 'address', name: 'address'},
             {data: 'job', name: 'job'},
             {data: 'action', name: 'action'},

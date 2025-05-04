@@ -22,8 +22,9 @@ class BorrowerController extends Controller
      */
     public function index(Request $request)
     {
+
         if ($request->ajax()) {
-            $borrowers = Borrower::select(['id', 'name', 'phone', 'nationalID', 'address', 'job' , "review"]);
+            $borrowers = Borrower::select(['id', 'name', 'phone', 'nationalID', 'address', 'job' , "review" , "borrower_age"]);
 
 
             return DataTables::of($borrowers)
@@ -71,6 +72,9 @@ class BorrowerController extends Controller
                     return '<div class="d-flex">' . $editButton . $deleteButton . $viewGuarantorsButton . $viewMediaButton . $borrowerReview . '</div>';
                 })
 
+                ->editColumn('borrower_age', function ($borrower) {
+                    return $borrower->borrower_age ? $borrower->borrower_age : "--";
+                })
                 ->rawColumns(['action'])
                 ->escapeColumns([])
                 ->make(true);
@@ -95,10 +99,12 @@ class BorrowerController extends Controller
 
     public function store(Request $request)
     {
+
       try{
           // Create Borrower
           $borrower = Borrower::create([
               'name' => $request->name,
+              "borrower_age" => $request->borrower_age,
               'phone' => $request->phone,
               'nationalID' => $request->nationalID,
               'address' => $request->address,
@@ -203,6 +209,7 @@ class BorrowerController extends Controller
             // تحديث بيانات المقترض
             $borrower->update([
                 'name' => $request->name,
+                "borrower_age" => $request->borrower_age,
                 'phone' => $request->phone,
                 'nationalID' => $request->nationalID,
                 'address' => $request->address,
