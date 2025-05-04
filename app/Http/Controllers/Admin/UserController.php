@@ -30,6 +30,11 @@ class UserController extends Controller
                 $query->where('social_status', $request->social_status);
             }
 
+            if ($request->has('has_patient') && $request->input('has_patient') == 1) {
+                $query->has('patient');
+            }
+
+
             if ($request->filled('standard_living')) {
                 $query->where('standard_living', "<=", $request->standard_living);
             }
@@ -492,6 +497,7 @@ class UserController extends Controller
             'gross_expenses' => $request->gross_expenses,
             'standard_living' => $request->standard_living,
             'Case_evaluation' => $request->Case_evaluation,
+            "status"=>"new"
         ]);
 
 
