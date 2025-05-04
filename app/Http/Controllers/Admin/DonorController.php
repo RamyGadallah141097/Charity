@@ -14,8 +14,9 @@ class DonorController extends Controller
 
     public function index(request $request)
     {
+
         if($request->ajax()) {
-            $donors = Donor::latest()->get();
+            $donors = Donor::latest()->with("donation")->get();
             return Datatables::of($donors)
                 ->addColumn('action', function ($donors) {
                     $editButton = '';
@@ -33,12 +34,18 @@ class DonorController extends Controller
                                 <i class="fas fa-trash"></i>
                             </button>
                         ';
-                        $returnMoneyBtn = '
-                            <button class="btn btn-pill btn-success-light" data-toggle="modal" data-target="#returnMoneyBtn"
-                                    data-id="' . $donors->id . '" data-title="' . $donors->name . '">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        ';
+
+                        if ($donors->has('donation') && $donors->donation) {
+                            $returnMoneyBtn = '
+                                    <button class="btn btn-pill btn-success-light" data-toggle="modal" data-target="#returnMoneyBtn"
+                                            data-id="' . $donors->id . '" data-title="' . $donors->name . '">
+                                        <i class="fas fa-hand-holding-usd"></i>
+
+                                    </button>
+                                ';
+                        }else{
+                            $returnMoneyBtn = "";
+                        }
 
                     return '<div class="d-flex">' . $editButton . $deleteButton . $returnMoneyBtn . '</div>';
                 })

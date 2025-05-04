@@ -176,10 +176,12 @@
         $(document).on('click', '.pay-btn', function () {
             let loanId = $(this).data('id');
             let payStatus = $(this).data('status');
+            let amount = $(this).data('amount');
 
             if (payStatus == 0) {
-                $('#modal-loan-id').val(loanId); // نضع الـ ID داخل الفورم
-                $('#payModal').modal('show');    // نعرض المودال
+                $('#modal-loan-id').val(loanId);
+                $('#pay-amount').val(amount);
+                $('#payModal').modal('show');
             }
         });
 
