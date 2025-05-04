@@ -97,6 +97,13 @@
             </div>
 
             <div class="form-group col-6">
+                <label for="borrower_age" class="form-control-label">السن</label>
+                <input type="text" class="form-control" readonly
+                       value="{{ $borrower->borrower_age ?? '' }}" name="borrower_age" id="borrower_age">
+            </div>
+
+
+            <div class="form-group col-6">
                 <label for="address" class="form-control-label">العنوان</label>
                 <input type="text" class="form-control" name="address" id="address"
                        value="{{ $borrower->address ?? '' }}" required>
@@ -136,6 +143,8 @@
                             <input type="text" class="form-control" name="guarantors[{{ $index }}][nationalID]"
                                    value="{{ $guarantor->nationalID }}" required>
                         </div>
+
+
 
                         <div class="form-group">
                             <label class="form-control-label">العنوان</label>
@@ -351,4 +360,45 @@
 
     // Initialize dropify
     $('.dropify').dropify();
+</script>
+<script>
+    document.getElementById('nationalID').addEventListener('input', function () {
+        const id = this.value;
+
+        if (id.length === 14) {
+            const centuryCode = id[0];
+            const year = parseInt(id.substr(1, 2), 10);
+            const month = parseInt(id.substr(3, 2), 10);
+            const day = parseInt(id.substr(5, 2), 10);
+
+            let fullYear;
+            if (centuryCode === '2') {
+                fullYear = 1900 + year;
+            } else if (centuryCode === '3') {
+                fullYear = 2000 + year;
+            } else {
+                document.getElementById('borrower_age').value = '';
+                return;
+            }
+
+            const birthDate = new Date(fullYear, month - 1, day);
+            const today = new Date();
+
+            let ageYears = today.getFullYear() - birthDate.getFullYear();
+            let ageMonths = today.getMonth() - birthDate.getMonth();
+
+            if (today.getDate() < birthDate.getDate()) {
+                ageMonths--;
+            }
+
+            if (ageMonths < 0) {
+                ageYears--;
+                ageMonths += 12;
+            }
+
+            document.getElementById('borrower_age').value = `${ageYears} سنة و ${ageMonths} شهر`;
+        } else {
+            document.getElementById('borrower_age').value = '';
+        }
+    });
 </script>
