@@ -49,6 +49,7 @@
     <!-- SIDE-BAR -->
 
     <!-- FOOTER -->
+
 @include('Admin/layouts/footer')
 <!-- FOOTER END -->
 </div>

@@ -15,7 +15,7 @@
                         قائمة بالمستفدين  {{ isset($setting) ? isset($setting->title) : '' }}
                     </h3>
                     <div class="row mb-3 w-100">
-                        <div class="col-3">
+                        <div class="col-2">
 {{--                            <label for="social_status">الحاله الشخصيه</label>--}}
                             <select id="social_status" class="form-control">
                                 <option value="">اختيار الحاله الشخصيه</option>
@@ -26,12 +26,24 @@
                             </select>
                         </div>
 
-                        <div class="col-3">
+                        <div class="col-2">
 {{--                            <label for="standard_living">الحالة المعيشيه</label>--}}
                                 <input id="standard_living" type="number" class="form-control" placeholder="الحالة المعيشيه" name="standard_living">
                         </div>
 
-{{--                        <div class="col-3">--}}
+
+
+                        <div class="col-2">
+                            <select id="has_patient" class="form-control">
+                                <option value="">لديه مرضي ؟ </option>
+                                <option value="0">لا</option>
+                                <option value="1">نعم</option>
+                            </select>
+                        </div>
+
+
+
+                        {{--                        <div class="col-2">--}}
 {{--                            <label for="family_number">عدد الاطفال</label>--}}
 {{--                            <select id="family_number" class="form-control">--}}
 {{--                                <option value="">اختيار عدد الاطفال</option>--}}
@@ -42,7 +54,7 @@
 {{--                                <option value="4">4+</option>--}}
 {{--                            </select>--}}
 {{--                        </div>--}}
-                        <div class="col-3">
+                        <div class="col-2">
 {{--                            <label for="family_number">عدد الاطفال</label>--}}
                             <input id="family_number" type="number" class="form-control" name="family_number" placeholder="عدد الاسره">
                         </div>
@@ -244,6 +256,7 @@
                     data: function (d) {
                         d.social_status = $('#social_status').val();
                         d.standard_living = $('#standard_living').val();
+                        d.has_patient = $('#has_patient').val();
                         d.family_number = $('#family_number').val();
                     }
                 },
@@ -268,7 +281,7 @@
         var tableUrl = "{{ route('users.index', request()->segment(3)) }}";
         showData(tableUrl, columns);
 
-        $('#social_status, #standard_living, #family_number').change(function () {
+        $('#social_status, #standard_living,#has_patient, #family_number').change(function () {
             showData(tableUrl, columns);
         });
     });
