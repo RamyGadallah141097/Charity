@@ -29,10 +29,11 @@ class HomeController extends Controller
         $accepedUsers     = User::where("status", "accepted")->count();
         $subUsers     = User::where("status", "new")->count();
         $rejectedUsers     = User::where("status", "refused")->count();
-        $social_status0     = User::where("social_status", 0)->count();
-        $social_status1     = User::where("social_status", 1)->count();
-        $social_status2     = User::where("social_status", 2)->count();
-        $social_status3    = User::where("social_status", 3)->count();
+        $social_status0     = User::where("social_status", '0')->count();
+        $social_status1     = User::where("social_status", '1')->count();
+        $social_status2     = User::where("social_status", '2')->count();
+        $social_status3    = User::where("social_status", '3')->count();
+//        dd($social_status0 , $social_status1 , $social_status2 , $social_status3 );
 
 //        donors and donations
         $donors_count    = Donor::all()->count();
