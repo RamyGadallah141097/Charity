@@ -212,6 +212,7 @@
                                 <th>الاسم</th>
                                 <th>الهاتف</th>
                                 <th>الرقم القومي</th>
+                                <th>السن</th>
                                 <th>العنوان</th>
                                 <th>العمل</th>
                             </tr>
@@ -319,6 +320,7 @@
                                         <td>${guarantor.name}</td>
                                         <td>${guarantor.phone}</td>
                                         <td>${guarantor.nationalID}</td>
+                                        <td>${guarantor.guarantorAge}</td>
                                         <td>${guarantor.address}</td>
                                         <td>${guarantor.job}</td>
                                     </tr>`
