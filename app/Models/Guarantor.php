@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Guarantor extends Model
 {
-    protected $fillable = ['name' , "borrower_id", 'nationalID', 'phone', 'address', 'job'];
+    protected $fillable = ['name' , "borrower_id", 'nationalID', 'phone', 'address', 'job' , "guarantorAge"];
     use HasFactory;
 }

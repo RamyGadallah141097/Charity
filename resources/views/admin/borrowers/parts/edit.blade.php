@@ -144,6 +144,12 @@
                                    value="{{ $guarantor->nationalID }}" required>
                         </div>
 
+                        <div class="form-group">
+                            <label class="form-control-label">السن</label>
+                            <input type="text" class="form-control" name="guarantors[{{ $index }}][guarantorAge]"
+                                   value="{{ $guarantor->guarantorAge }}" required>
+                        </div>
+
 
 
                         <div class="form-group">
@@ -245,6 +251,11 @@
                     <div class="form-group col-6">
                         <label class="form-control-label">الرقم القومي</label>
                         <input type="text" class="form-control" name="guarantors[${guarantorIndex}][nationalID]" required>
+                    </div>
+
+                    <div class="form-group col-6">
+                        <label class="form-control-label">السن</label>
+                        <input type="text" class="form-control" name="guarantors[${guarantorIndex}][guarantorAge]" readonly>
                     </div>
 
                     <div class="form-group col-6">
@@ -400,5 +411,62 @@
         } else {
             document.getElementById('borrower_age').value = '';
         }
+    });
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Function to calculate age in format "XX سنة و YY شهر"
+    function calculateAgeFromNationalID(nationalID) {
+        if (!/^\d{14}$/.test(nationalID)) return null;
+
+        const centuryCode = nationalID[0];
+        let year = parseInt(nationalID.slice(1, 3));
+        const month = parseInt(nationalID.slice(3, 5)) - 1; // JS months 0-11
+        const day = parseInt(nationalID.slice(5, 7));
+
+        if (centuryCode === '2') {
+            year += 1900;
+        } else if (centuryCode === '3') {
+            year += 2000;
+        } else {
+            return null;
+        }
+
+        const birthDate = new Date(year, month, day);
+        const now = new Date();
+
+        let ageYears = now.getFullYear() - birthDate.getFullYear();
+        let ageMonths = now.getMonth() - birthDate.getMonth();
+
+        if (now.getDate() < birthDate.getDate()) {
+            ageMonths--;
+        }
+        if (ageMonths < 0) {
+            ageYears--;
+            ageMonths += 12;
+        }
+
+        return `${ageYears} سنة و ${ageMonths} شهر`;
+    }
+
+    // Attach handler to all National ID inputs
+    function attachAgeCalculator() {
+        $('input[name^="guarantors"][name$="[nationalID]"]').off('input').on('input', function () {
+            const nationalID = $(this).val();
+            const age = calculateAgeFromNationalID(nationalID);
+            if (age) {
+                const ageInputName = $(this).attr('name').replace('[nationalID]', '[guarantorAge]');
+                $(`input[name="${ageInputName}"]`).val(age);
+            }
+        });
+    }
+
+    // Initialize and bind when new row added
+    $(document).ready(function () {
+        attachAgeCalculator();
+
+        $('#addGuarantor').click(function () {
+            setTimeout(attachAgeCalculator, 100); // Ensure input is in DOM
+        });
     });
 </script>

@@ -97,89 +97,97 @@ class BorrowerController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
 
+
+
     public function store(Request $request)
     {
+//        dd($request->all());
+        try {
+            // Create Borrower
+            $borrower = Borrower::create([
+                'name' => $request->name,
+                'borrower_age' => $request->borrower_age,
+                'phone' => $request->phone,
+                'nationalID' => $request->nationalID,
+                'address' => $request->address,
+                'job' => $request->job,
+            ]);
 
-      try{
-          // Create Borrower
-          $borrower = Borrower::create([
-              'name' => $request->name,
-              "borrower_age" => $request->borrower_age,
-              'phone' => $request->phone,
-              'nationalID' => $request->nationalID,
-              'address' => $request->address,
-              'job' => $request->job,
-          ]);
+            if ($borrower) {
+                $borrower_id = $borrower->id;
 
-//          dd($borrower);
+                // Create Guarantors with Age
+                if ($request->has('guarantors')) {
+                    foreach ($request->guarantors as $index => $guarantor) {
+                        $guarantor['age'] = $request->guarantorAge[$index]['guarantorAge'] ?? null;
 
-          if ($borrower){
+                        $borrower->guarantors()->create([
+                            'name' => $guarantor['name'],
+                            'phone' => $guarantor['phone'],
+                            'nationalID' => $guarantor['nationalID'],
+                            'address' => $guarantor['address'],
+                            'job' => $guarantor['job'],
+                            'guarantorAge' => $guarantor['guarantorAge'],
+                        ]);
+                    }
+                }
 
-              $borrower_id = $borrower->id;
+                // Handle Borrower Media
+                if ($request->hasFile('borrowerMedia')) {
+                    foreach ($request->file('borrowerMedia') as $borrowerMedia) {
+                        if ($borrowerMedia->isValid()) {
+                            $file_name = time() . "_" . $borrowerMedia->getClientOriginalName();
+                            $storagePath = 'BorrowerUploads/Borrower';
+                            $borrowerMedia->move(public_path($storagePath), $file_name);
 
-              // Create Guarantors for the Borrower
-              if ($request->has('guarantors')) {
-                  foreach ($request->guarantors as $guarantor) {
-                      $borrower->guarantors()->create($guarantor);
-                  }
-              }
+                            Media::create([
+                                'name' => $file_name,
+                                'path' => $storagePath . '/' . $file_name,
+                                'type' => 0, // Borrower Media
+                                'borrower_id' => $borrower_id,
+                                'guarantor_id' => null
+                            ]);
+                        }
+                    }
+                }
 
+                // Handle Guarantor Media
+                if ($request->hasFile('guarantorMedia')) {
+                    foreach ($request->file('guarantorMedia') as $guarantorMedia) {
+                        if ($guarantorMedia->isValid()) {
+                            $file_name = time() . "_" . $guarantorMedia->getClientOriginalName();
+                            $file_path = 'GuarantorUploads/Guarantor';
+                            $guarantorMedia->move(public_path($file_path), $file_name);
 
-              if ($request->hasFile('borrowerMedia')) {
-                  foreach ($request->file('borrowerMedia') as $borrowerMedia) {
-                      if ($borrowerMedia->isValid()) {
-                          $file_name = time() . "_"  . $borrowerMedia->getClientOriginalName();
-                          $storagePath = 'BorrowerUploads/Borrower';
-                          $borrowerMedia->move(public_path($storagePath), $file_name);
-                          Media::create([
-                              'name' => $file_name,
-                              'path' => $storagePath . '/' . $file_name,
-                              'type' => 0, // 0 = Borrower Media
-                              'borrower_id' => $borrower_id,
-                              'guarantor_id' => null
-                          ]);
-                      }
-                  }
+                            Media::create([
+                                'name' => $file_name,
+                                'path' => $file_path . '/' . $file_name,
+                                'type' => 1, // Guarantor Media
+                                'borrower_id' => $borrower_id,
+                                'guarantor_id' => null
+                            ]);
+                        }
+                    }
+                }
+            }
 
+            return response()->json([
+                'status' => 200,
+                'success' => 'Added successfully',
+            ]);
 
-              }
-
-
-
-              if ($request->hasFile('guarantorMedia')) {
-                  foreach ($request->file('guarantorMedia') as $guarantorMedia) {
-                      if ($guarantorMedia->isValid()) {
-                          $file_name = time() . "_" . $guarantorMedia->getClientOriginalName();
-                          $file_path = "GuarantorUploads/Guarantor";
-                          $guarantorMedia->move(public_path($file_path), $file_name);
-                          Media::create([
-                              "name" => $file_name,
-                              "path" => $file_path . "/" . $file_name,
-                              "type" => 1,
-                              "borrower_id" => $borrower_id,
-                              "guarantor_id" => null
-                          ]);
-                      }
-                  }
-              }
-
-
-          }
-
-          return response()->json([
-              "status"=>200,
-              "success"=>"added successfully",
-          ]);
-      }catch (\Exception $e){
-          return response()->json([
-              "status"=>405,
-              "errors"=>"faild ". $e->getMessage(),
-          ]);
-      }
-
-
-
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 405,
+                'errors' => 'Failed: ' . $e->getMessage(),
+            ]);
+        }
     }
+
+
+
+
+
 
 
     public function show(Borrower $borrower)
@@ -228,6 +236,7 @@ class BorrowerController extends Controller
                                 'phone' => $guarantorData['phone'],
                                 'nationalID' => $guarantorData['nationalID'],
                                 'address' => $guarantorData['address'],
+                                'guarantorAge' => $guarantorData['guarantorAge'],
                                 'job' => $guarantorData['job'],
                             ]);
                         }
