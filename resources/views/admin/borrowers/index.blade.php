@@ -40,7 +40,7 @@
             margin: auto;
             display: block;
             max-width: 90%;
-            max-height: 80vh;
+            /*max-height: 80vh;*/
             animation: zoom 0.6s;
         }
 

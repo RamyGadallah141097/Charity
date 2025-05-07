@@ -40,9 +40,9 @@ class User extends Authenticatable
     ];
 
 
-    public function childrens(){
-        return $this->hasMany(Children::class,'user_id');
-    }
+//    public function childrens(){
+//        return $this->hasMany(Children::class,'user_id');
+//    }
 
     public function patient(){
         return $this->hasOne(Patient::class,'user_id');
