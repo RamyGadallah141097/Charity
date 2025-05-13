@@ -8,11 +8,11 @@
     </div>
     <div class="form-group">
         <label for="name" class="form-control-label">الاسم</label>
-        <input type="text" class="form-control" name="name" id="name">
+        <input type="text" class="form-control" name="name" id="name" >
     </div>
     <div class="form-group">
         <label for="email" class="form-control-label">الايميل</label>
-        <input type="text" class="form-control" name="email" id="email">
+        <input type="text" class="form-control" name="email" id="email" >
     </div>
     <div class="form-group">
         <label for="password" class="form-control-label">كلمة المرور</label>

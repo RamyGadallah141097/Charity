@@ -113,7 +113,15 @@
 @section('ajaxCalls')
     <script>
         var columns = [
-            { data: "id", name: "id" },
+            {
+                data: null,
+                name: 'index',
+                render: function (data, type, row, meta) {
+                    return meta.row + 1;
+                },
+                orderable: false,
+                searchable: false
+            },
             { data: "title", name: "title" }, // This now returns admin name
             { data: "amount", name: "amount" },
             { data: "created_at", name: "created_at" },

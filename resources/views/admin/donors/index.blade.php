@@ -134,7 +134,15 @@
 @section('ajaxCalls')
     <script>
         var columns = [
-            {data: 'id', name: 'id'},
+            {
+                data: null,
+                name: 'index',
+                render: function (data, type, row, meta) {
+                    return meta.row + 1;
+                },
+                orderable: false,
+                searchable: false
+            },
             {data: 'name', name: 'name'},
             {data: 'phone', name: 'phone'},
             {data: 'address', name: 'address'},

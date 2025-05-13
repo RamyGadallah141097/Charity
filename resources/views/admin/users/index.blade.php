@@ -83,6 +83,7 @@
                                 <th class="min-w-50px">اجمالي الدخل</th>
                                 <th class="min-w-50px">اجمالي المصاريف</th>
                                 <th class="min-w-50px">مستوى المعيشة</th>
+                                {{-- <th class="min-w-50px">اجمالي التبرعات </th> --}}
                                 <th class="min-w-50px">الحالة </th>
                                 <th class="min-w-50px"> تحديث</th>
                                 <th class="min-w-50px rounded-end">العمليات</th>
@@ -152,10 +153,16 @@
 @section('ajaxCalls')
     <script>
         {{-- alert("{{Request::segment(3)}}") --}}
-        var columns = [{
-            data: 'id',
-            name: 'id'
-        },
+        var columns = [
+            {
+                data: null,
+                name: 'index',
+                render: function (data, type, row, meta) {
+                    return meta.row + 1;
+                },
+                orderable: false,
+                searchable: false
+            },
             {
                 data: 'husband_name',
                 name: 'husband_name'
@@ -184,6 +191,10 @@
                 data: 'standard_living',
                 name: 'standard_living'
             },
+            {{-- {
+                data: 'donations_amount',
+                name: 'donations_amount'
+            }, --}}
 
             {
                 data: 'status',

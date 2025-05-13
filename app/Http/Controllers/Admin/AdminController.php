@@ -100,7 +100,8 @@ class AdminController extends Controller
                 $file_name = $this->saveImage($request->image,'assets/uploads/admins');
                 $inputs['image'] = 'assets/uploads/admins/'.$file_name;
             }
-            $inputs['password'] = Hash::make($request->password);
+            // $inputs['password'] = Hash::make($request->password);
+            
             if(Admin::create($inputs)->assignRole($request->adminRole))
 
                 return response()->json(['status'=>200]);
@@ -169,11 +170,11 @@ class AdminController extends Controller
             $inputs['image'] = $file_name;
         }
 
-        if (!empty($request->password)) {
-            $inputs['password'] = Hash::make($request->password);
-        } else {
-            unset($inputs['password']);
-        }
+        // if (!empty($request->password)) {
+        //     $inputs['password'] = Hash::make($request->password);
+        // } else {
+        //     unset($inputs['password']);
+        // }
 
         $admin = Admin::findOrFail($id);
 

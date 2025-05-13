@@ -115,7 +115,15 @@
                         serverSide: true,
                         ajax: "{{ route('person.loans', ':id') }}".replace(':id', borrowerId),
                         columns: [
-                            {data: 'id', name: 'id'},
+                            {
+                                data: null,
+                                name: 'index',
+                                render: function (data, type, row, meta) {
+                                    return meta.row + 1;
+                                },
+                                orderable: false,
+                                searchable: false
+                            },
                             {data: 'borrower_name', name: 'borrower_name'},
                             {data: 'borrower_phone', name: 'borrower_phone'},
                             {data: 'amount', name: 'amount'},

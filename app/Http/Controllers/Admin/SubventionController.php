@@ -44,11 +44,11 @@ class SubventionController extends Controller
 
 
 
-                    return '<div class="d-flex">' . $editButton . $deleteButton  . '</div>';
+                    return '<div class="d-flex">' . $deleteButton   . '</div>';
                 })
 
                 ->editColumn('user_id', function ($data) {
-                    return ($data->user->husband_name) ?? 'تم حذفه';
+                    return ($data->user->wife_name) ?? 'تم حذفه';
                 })
                 ->editColumn('created_at', function ($data) {
                     return $data->created_at->format('F d Y');
@@ -97,7 +97,7 @@ class SubventionController extends Controller
 
     public function create()
     {
-        $users = User::where('status','accepted')->whereDoesntHave('subvention')->select('id','husband_name')->latest()->get();
+        $users = User::where('status','accepted')->select('id','wife_name')->latest()->get();
         $assets = Asset::all();
         return view('admin/subventions/parts/create',compact('users' , "assets"));
 
@@ -106,7 +106,6 @@ class SubventionController extends Controller
 
     public function store(subventionRequest $request)
     {
-
         DB::beginTransaction();
         try{
             $user = User::find($request->user_id);
@@ -217,9 +216,9 @@ class SubventionController extends Controller
 
 //        $Dtype = $Dtype  == "sadaka" ? "صدقه" : ($Dtype == "zakat" ? "زكاة" : "عينيه");
         $users = User::where('status','accepted')
-            ->whereDoesntHave('subvention')
+            // ->whereDoesntHave('subvention')
             ->orWhere('id',$subvention->user_id)
-            ->select('id','husband_name')
+            ->select('id','wife_name')
             ->latest()->get();
         $assets = Asset::all();
 

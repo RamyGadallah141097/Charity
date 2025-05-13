@@ -50,11 +50,11 @@ class DonationController extends Controller
                     $editButton = '';
                     $deleteButton = '';
 
-                        $editButton = '
-                            <button type="button" data-id="' . $donation->id . '" class="btn btn-pill btn-info-light editBtn">
-                                <i class="fa fa-edit"></i>
-                            </button>
-                        ';
+                        // $editButton = '
+                        //     <button type="button" data-id="' . $donation->id . '" class="btn btn-pill btn-info-light editBtn">
+                        //         <i class="fa fa-edit"></i>
+                        //     </button>
+                        // ';
 
                         $deleteButton = '
                             <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
@@ -63,7 +63,7 @@ class DonationController extends Controller
                             </button>
                         ';
 
-                    return '<div class="d-flex">' . $editButton . $deleteButton . '</div>';
+                    return '<div class="d-flex">'  . $deleteButton . '</div>';
                 })
                 ->editColumn('donation_amount', function ($donation) {
                     if ($donation->donation_type == 3 ){
