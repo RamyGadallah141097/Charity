@@ -124,7 +124,15 @@
             let dataTableUrl = "{{ route('lock', '') }}" + '/' + model;
 
             var columns = [
-            {data: 'id', name: 'id'},
+            {
+                data: null,
+                name: 'index',
+                render: function (data, type, row, meta) {
+                    return meta.row + 1;
+                },
+                orderable: false,
+                searchable: false
+            },
             {data: 'admin_id', name: 'admin_id'},
             {data: 'amount', name: 'amount'},
             {data: 'comment', name: 'comment'},

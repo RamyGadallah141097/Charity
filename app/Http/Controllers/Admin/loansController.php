@@ -56,7 +56,7 @@ class loansController extends Controller
 //            }
 //        }
 //        solve error
-        $borrowers = Borrower::doesntHave('loans')->get();
+        $borrowers = Borrower::get();
         return view('admin/loans/parts/create', ["borrowers" => $borrowers]);
     }
 

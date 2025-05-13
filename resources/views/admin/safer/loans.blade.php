@@ -156,9 +156,15 @@
 @endsection
 @section('ajaxCalls')
     <script>
-        var columns = [{
-                data: 'id',
-                name: 'id'
+        var columns = [
+            {
+                data: null,
+                name: 'index',
+                render: function (data, type, row, meta) {
+                    return meta.row + 1;
+                },
+                orderable: false,
+                searchable: false
             },
             {
                 data: 'donor_name',

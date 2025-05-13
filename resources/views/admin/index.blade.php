@@ -145,7 +145,7 @@
                     <div class="d-flex">
                         <div class="text-white">
                             <h2 class="mb-0 number-font">{{$accepedUsers}}</h2>
-                            <p class="text-white mb-0">المتسفيدين المقبولين</p>
+                            <p class="text-white mb-0"> المقبولين</p>
                         </div>
                         <div class="mr-auto"><i class="fe fe-user-check text-white fs-30 ml-2 mt-2"></i></div>
                     </div>
@@ -158,7 +158,7 @@
                     <div class="d-flex">
                         <div class="text-white">
                             <h2 class="mb-0 number-font"> {{ $subUsers }} </h2>
-                            <p class="text-white mb-0">  المتسفيدين المعلقين</p>
+                            <p class="text-white mb-0">   المعلقين</p>
                         </div>
                         <div class="mr-auto">
                             <span class="text-white fs-30 ml-2 mt-2">
@@ -175,7 +175,7 @@
                     <div class="d-flex">
                         <div class="text-white">
                             <h2 class="mb-0 number-font">{{ $rejectedUsers }}</h2>
-                            <p class="text-white mb-0">المتسفيدين المرفوضين</p>
+                            <p class="text-white mb-0"> المرفوضين</p>
                         </div>
                         <div class="mr-auto"><i class="fe fe-shopping-bag text-white fs-30 ml-2 mt-2"></i></div>
                     </div>
@@ -359,7 +359,7 @@
                         <div class="d-flex">
                             <div class="text-white">
                                 <h2 class="mb-0 number-font">{{ $social_status0 }}</h2>
-                                <p class="text-white mb-0">المستخدمين العزب</p>
+                                <p class="text-white mb-0"> العزب</p>
                             </div>
                             <div class="mr-auto">
                                 <span class="text-white fs-30 ml-2 mt-2"><i class="fas fa-user-friends"></i></span>
@@ -375,7 +375,7 @@
                         <div class="d-flex">
                             <div class="text-white">
                                 <h2 class="mb-0 number-font"> {{ $social_status1 }} </h2>
-                                <p class="text-white mb-0">المستخدمين المتزوجين</p>
+                                <p class="text-white mb-0"> المتزوجين</p>
                             </div>
                             <div class="mr-auto">
                                 <span class="text-white fs-30 ml-2 mt-2"><i class="fas fa-user-friends"></i></span>
@@ -391,7 +391,7 @@
                         <div class="d-flex">
                             <div class="text-white">
                                 <h2 class="mb-0 number-font"> {{ $social_status2 }} </h2>
-                                <p class="text-white mb-0">المستخدمين المطلقين</p>
+                                <p class="text-white mb-0"> المطلقين</p>
                             </div>
                             <div class="mr-auto">
                                 <span class="text-white fs-30 ml-2 mt-2"><i class="fas fa-user-friends"></i></span>
@@ -407,7 +407,7 @@
                         <div class="d-flex">
                             <div class="text-white">
                                 <h2 class="mb-0 number-font"> {{ $social_status3 }} </h2>
-                                <p class="text-white mb-0">المستخدمين الأرامل</p>
+                                <p class="text-white mb-0"> الأرامل</p>
                             </div>
                             <div class="mr-auto">
                                 <span class="text-white fs-30 ml-2 mt-2"><i class="fas fa-user-friends"></i></span>

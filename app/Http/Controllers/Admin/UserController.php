@@ -150,14 +150,15 @@ class UserController extends Controller
                     } elseif ($users->status == 'accepted') {
                         $available_actions = '
                             <li>
-                                <a data-id="{{ $users->id }}" data-status="preparing" href="#" class="statusBtn">قيد التنفيذ</a>
+                                <a data-id="'. $users->id .'" data-status="preparing" href="#" class="statusBtn">قيد التنفيذ</a>
                             </li>
                             <li>
-                                <a data-id="{{ $users->id }}" data-status="refused" href="#" class="statusBtn">رفض</a>
+                                <a data-id="'. $users->id .'" data-status="refused" href="#" class="statusBtn">رفض</a>
                             </li>
                     ';
                     } elseif ($users->status == 'preparing') {
                         $available_actions = '
+                                <li><a data-id="' . $users->id . '" data-status="accepted" href="#" class="statusBtn ">قبول</a></li>
                                <li><a data-id="' . $users->id . '" data-status="refused" href="#" class="statusBtn ">رفض</a></li>
                     ';
                     } else { // waiting
@@ -175,6 +176,9 @@ class UserController extends Controller
                         </div>
                    ';
                 })
+                // ->addColumn("donations_amount" , function($users){
+                //     return $users->subvention->sum("price");
+                // })
 
                 ->editColumn('status', function ($users) {
                     if ($users->status == 'new')
@@ -339,7 +343,7 @@ class UserController extends Controller
     {
         try {
             $user = User::find($request->id);
-            $user->update(['status' => $request->status]);
+            $user->update(["status" => $request->status]);
             return response(['message' => 'تم تحديث حالة المستفيد بنجاح', 'status' => true], 200);
         } catch (\Exception $ex) {
             return response(['message' => $ex->getMessage(), 'status' => false], 200);

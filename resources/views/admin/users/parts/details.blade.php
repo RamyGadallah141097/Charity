@@ -285,7 +285,7 @@
         @endif
 
 
-        @if ($user->childrens)
+        {{-- @if ($user->childrens)
             <h3>الاولاد</h3>
             <div class="table-responsive">
                 <table class="table table-striped table-bordered w-100">
@@ -315,7 +315,7 @@
                     </tbody>
                 </table>
             </div>
-            @endif
+            @endif --}}
 
 
         @if ($user->patient != null)
