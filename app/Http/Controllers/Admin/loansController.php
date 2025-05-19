@@ -284,17 +284,17 @@ class loansController extends Controller
                 ]);
             }
 
-            LockerLog::create([
-                "moneyType" => LockerLog::moneyTypeLoans,
-                "amount" => $request->amount,
-                "type" => LockerLog::TYPE_PLUS,
-                "admin_id" => auth()->id(),
-                "donation_id" => null,
-                "subvention_id" => null,
-                "loan_id" => $loan->id,
-                "comment" => "  دفع قرض من  " . ($loan->borrower->phone ??  "مجهول") .
-                    " ورقم هاتفه " . ($loan->borrower->phone   ?? "غير متوفر"),
-            ]);
+            // LockerLog::create([
+            //     "moneyType" => LockerLog::moneyTypeLoans,
+            //     "amount" => $request->amount,
+            //     "type" => LockerLog::TYPE_PLUS,
+            //     "admin_id" => auth()->id(),
+            //     "donation_id" => null,
+            //     "subvention_id" => null,
+            //     "loan_id" => $loan->id,
+            //     "comment" => "  دفع قرض من  " . ($loan->borrower->phone ??  "مجهول") .
+            //         " ورقم هاتفه " . ($loan->borrower->phone   ?? "غير متوفر"),
+            // ]);
 
             DB::commit();
             return response()->json(['message' => 'تم دفع القرض بنجاح']);

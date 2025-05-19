@@ -24,32 +24,36 @@ class StoreUser extends FormRequest
     public function rules()
     {
         return [
-            'husband_name'     => 'nullable',
-            'wife_name'        => 'nullable',
-            'husband_national_id' => 'nullable|numeric|unique:users,husband_national_id',
-            'wife_national_id' => 'nullable|numeric|unique:users,wife_national_id',
-            'social_status'    => 'nullable|in:0,1,2,3',
-            'work_type'        => 'nullable',
-            'nearest_phone'    => 'nullable|string|unique:users,nearest_phone',
-            'salary'           => 'nullable|numeric',
-            'pension'          => 'nullable|numeric',
-            'insurance'        => 'nullable|numeric',
-            'dignity'          => 'nullable|numeric',
-            'trade'            => 'nullable|numeric',
-            'pillows'          => 'nullable|numeric',
-            'other'            => 'nullable|numeric',
-            'gross_income'     => 'nullable|numeric',
-            'rent'             => 'nullable|numeric',
-            'gas'              => 'nullable|numeric',
-            'debt'             => 'nullable|numeric',
-            'water'            => 'nullable|numeric',
-            'electricity'      => 'nullable|numeric',
-            'association'      => 'nullable|numeric',
-            'food'             => 'nullable|numeric',
-            'study'            => 'nullable|numeric',
-            'gross_expenses'   => 'nullable|numeric',
-            'standard_living'  => 'nullable|numeric',
-            'Case_evaluation'  => 'nullable|string',
+            'husband_name'          => 'nullable',
+            'wife_name'             => 'nullable',
+            'husband_national_id'   => 'nullable|numeric',
+            'wife_national_id'      => 'nullable|numeric',
+            'social_status'         => 'nullable',
+            'work_type'             => 'nullable',
+            'nearest_phone'         => 'nullable|string',
+            'salary'                => 'nullable|numeric',
+            'pension'               => 'nullable|numeric',
+            'insurance'             => 'nullable|numeric',
+            'dignity'               => 'nullable|numeric',
+            'trade'                 => 'nullable|numeric',
+            'pillows'               => 'nullable|numeric',
+            'other'                 => 'nullable|numeric',
+            'gross_income'          => 'nullable|numeric',
+            'rent'                  => 'nullable|numeric',
+            'gas'                   => 'nullable|numeric',
+            'debt'                  => 'nullable|numeric',
+            'water'                 => 'nullable|numeric',
+            'electricity'           => 'nullable|numeric',
+            'association'           => 'nullable|numeric',
+            'food'                  => 'nullable|numeric',
+            'study'                 => 'nullable|numeric',
+            'gross_expenses'        => 'nullable|numeric',
+            'standard_living'       => 'nullable|numeric',
+            'Case_evaluation'       => 'nullable|string',
+
+
+
+    
 //            'attachments' => 'nullable|array',
 //            'attachments.*' => 'nullable|mimes:jpg,png,jpeg,pdf,doc,docx',
 //            'child_names' => 'array',
@@ -78,7 +82,8 @@ class StoreUser extends FormRequest
 //            'note' => 'array',
 //            'note.*' => 'nullable',
 
-        ];
+];
+
     }
 
 
@@ -129,6 +134,9 @@ class StoreUser extends FormRequest
             'patient_name.*.required'   => 'اسم المريض مطلوب',
             'type.*.required'           => 'نوع المريض مطلوب',
             'notes.*.required'          => 'ملاحظات المريض مطلوبة',
+
+
+
 
         ];
     }

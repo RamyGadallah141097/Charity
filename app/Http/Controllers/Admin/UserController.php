@@ -471,38 +471,42 @@ class UserController extends Controller
         // إنشاء المستخدم
         $userData = $request->except('_token', 'attachments', 'child_names',  'children_national_id',  'age', 'schools', 'monthly_cost', 'notes', 'patient_name',  'treatment_pay_by', 'type', 'doctor_name', 'treatment');
 
+
         $user = User::create([
-            'husband_name' => $request->husband_name,
-            'wife_name' => $request->wife_name,
-            'husband_national_id' => $request->husband_national_id,
-            'wife_national_id' => $request->wife_national_id,
-            'age_husband' => $request->age_husband,
-            'address' => $request->address,
-            'age_wife' => $request->age_wife,
-            'social_status' => $request->social_status,
-            'work_type' => $request->work_type,
-            'nearest_phone' => $request->nearest_phone,
-            'salary' => $request->salary,
-            'pension' => $request->pension,
-            'insurance' => $request->insurance,
-            'dignity' => $request->dignity,
-            'trade' => $request->trade,
-            'pillows' => $request->pillows,
-            'other' => $request->other,
-            'gross_income' => $request->gross_income,
-            'rent' => $request->rent,
-            'gas' => $request->gas,
-            'debt' => $request->debt,
-            'water' => $request->water,
-            'electricity' => $request->electricity,
-            'association' => $request->association,
-            'food' => $request->food,
-            'study' => $request->study,
-            'gross_expenses' => $request->gross_expenses,
-            'standard_living' => $request->standard_living,
-            'Case_evaluation' => $request->Case_evaluation,
+            'husband_name' => @$request->husband_name,
+            'wife_name' => @$request->wife_name,
+            'husband_national_id' => @$request->husband_national_id,
+            'wife_national_id' => @$request->wife_national_id,
+            'age_husband' => @$request->age_husband,
+            'address' => @$request->address,
+            'age_wife' => @$request->age_wife,
+            'social_status' => @$request->social_status,
+            'work_type' => @$request->work_type,
+            'nearest_phone' => @$request->nearest_phone,
+            'salary' => @$request->salary,
+            'pension' => @$request->pension,
+            'insurance' => @$request->insurance,
+            'dignity' => @$request->dignity,
+            'trade' => @$request->trade,
+            'pillows' => @$request->pillows,
+            'other' => @$request->other,
+            'gross_income' => @$request->gross_income,
+            'rent' => @$request->rent,
+            'gas' => @$request->gas,
+            'debt' => @$request->debt,
+            'water' => @$request->water,
+            'electricity' => @$request->electricity,
+            'association' => @$request->association,
+            'food' => @$request->food,
+            'study' => @$request->study,
+            'gross_expenses' => @$request->gross_expenses,
+            'standard_living' => @$request->standard_living,
+            'Case_evaluation' => @$request->Case_evaluation,
             "status"=>"new"
         ]);
+
+
+        // dd($request->all() , $user);
 
 
 
