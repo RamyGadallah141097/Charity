@@ -135,8 +135,8 @@ class SubventionController extends Controller
                                 "amount" => $request->price,
                                 "type" => LockerLog::TYPE_MINUS,
                                 "admin_id" => auth()->id(),
-                                "comment" => "  صدقه جديده الي" . ($user ? $user->husband_name : "مجهول") .
-                                    " ورقم هاتفه " . ($user ? $user->nearest_phone : "غير متوفر"),
+                                "comment" => "   صدقه  جديده  الي" . ($user ? $user->husband_name : " مجهول "  ) .
+                                    "  ورقم هاتفه  " . ($user ? $user->nearest_phone : "  غير متوفر"),
                             ]);
                         }else{
                             toastr()->error("لا توجد سيوله لهذه الاعانه");
@@ -164,8 +164,8 @@ class SubventionController extends Controller
                                 "asset_count" => $request->asset_count,
                                 "type" => LockerLog::TYPE_MINUS,
                                 "admin_id" => auth()->id(),
-                                "comment" => "  اعانه جديده الي" . ($user ? $user->husband_name : "مجهول") .
-                                    " ورقم هاتفه " . ($user ? $user->nearest_phone : "غير متوفر"),
+                                "comment" => "  اعانه جديده الي " . ($user ? $user->husband_name : " مجهول ") .
+                                    " ورقم هاتفه " . ($user ? $user->nearest_phone : " غير  متوفر "),
                             ]);
 
                         }else{

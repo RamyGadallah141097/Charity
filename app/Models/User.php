@@ -51,6 +51,10 @@ class User extends Authenticatable
     public function subvention(){
         return $this->hasOne(Subvention::class,'user_id');
     }
+    
+    public function subventions(){
+        return $this->hasMany(Subvention::class,'user_id');
+    }
 
    
 

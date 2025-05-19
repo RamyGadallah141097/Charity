@@ -328,8 +328,8 @@ class UserController extends Controller
                 ->addColumn('name', function ($user) {
                     return $user->husband_name;
                 })->addColumn('zakahTotal', function ($user) {
-                    return $user->subvention ?$user->subvention->price :  0;
-
+                    return $user->subventions ? 
+                        $user->subventions->sum('price') : 0;
                 })
                 ->escapeColumns([])
                 ->make(true);

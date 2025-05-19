@@ -24,7 +24,8 @@
                             <tr class="fw-bolder text-muted bg-light">
                                 <th class="min-w-25px">#</th>
                                 <th class="min-w-50px">اسم المستفيد</th>
-                                <th class="min-w-50px">اجمالي الصدقات</th>
+                                <th class="min-w-50px">اجمالي التبرعات</th>
+                                {{-- <th class="min-w-50px">اجمالي التبرعات العينيه</th> --}}
 
                             </tr>
                             </thead>

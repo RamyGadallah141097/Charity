@@ -61,14 +61,15 @@ table, td, th{
           <div>
             <h5 class="text-center mt-1 mb-3"> اقر انا / {{$subventions ? $subventions->user->wife_name : "---" }}</h5>
           </div>
-          <h5 class="text-center mt-1 mb-3"> المقيم / المنوفية - قرية طنبدى</h5>
+          <h5 class="text-center mt-1 mb-3"> المقيم / المنوفية - قرية كفر طنبدى</h5>
             <p> الرقم القومى / <span>{{$subventions ? $subventions->user->wife_national_id : "---"}}</span></p>
             <p> رقم الموبايل / <span>{{$subventions?->user->nearest_phone}}</span></p>
             <p> باننى استلمت من لجنة الزكاة بكفر طنبدى مبلغ  <span> {{$subventions?->price}} </span> جنيها فقط لاغير وذلك / <span> {{$subventions?->comment}}</span></p>
             <div class="d-flex justify-content-end">
                 <p>بتاريخ {{\Carbon\Carbon::now()->format("Y-m-d")}}</p>
             </div>
-            <p>المقر بما فيه / <span>{{auth()->user()->name}}</span></p>
+            {{-- <p>المقر بما فيه / <span>{{auth()->user()->name}}</span></p> --}}
+            <p>المقر بما فيه / <span>{{$subventions ? $subventions->user->wife_name}}</span></p>
 
             <!-- footer -->
             <div class="d-flex justify-content-center fw-normal pt-5 pb-5">

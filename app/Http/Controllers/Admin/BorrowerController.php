@@ -49,18 +49,18 @@ class BorrowerController extends Controller
                             </button>
                         ';
 
-                        $viewGuarantorsButton = '
-                            <button class="btn btn-pill view-guarantors btn-success-light" data-id="' . $borrower->id . '">
-                                <i class="fa fa-eye"></i>
-                            </button>
-                        ';
+                        // $viewGuarantorsButton = '
+                        //     <button class="btn btn-pill view-guarantors btn-success-light" data-id="' . $borrower->id . '">
+                        //         <i class="fa fa-eye"></i>
+                        //     </button>
+                        // ';
 
 
-                        $viewMediaButton = '
-                            <button class="btn btn-pill btn-primary-light viewMedia" data-id="' . $borrower->id . '">
-                                <i class="fa fa-photo-video"></i>
-                            </button>
-                        ';
+                        // $viewMediaButton = '
+                        //     <button class="btn btn-pill btn-primary-light viewMedia" data-id="' . $borrower->id . '">
+                        //         <i class="fa fa-photo-video"></i>
+                        //     </button>
+                        // ';
 
                         $borrowerReview = '
                             <button class="btn btn-pill btn-primary-light borrowerReview" data-id="' . $borrower->id . '"  data-review="' . $borrower->review . '">
