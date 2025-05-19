@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('borrower_age')->nullable();
             $table->bigInteger('nationalID');
             $table->string('address');
+            $table->integer('rate');
             $table->string('job');
             $table->timestamps();
         });

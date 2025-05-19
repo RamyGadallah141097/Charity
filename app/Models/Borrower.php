@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Borrower extends Model
 {
-    protected $fillable = ['name', 'nationalID', 'phone', 'address', 'job' , "borrower_age"];
+    
     use HasFactory;
 
+    protected $fillable = ['name', 'nationalID', 'phone', 'address', 'job' , "borrower_age" , "rate" , "review"];
 
     public function guarantors()
     {

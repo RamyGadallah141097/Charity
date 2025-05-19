@@ -24,7 +24,7 @@ class BorrowerController extends Controller
     {
 
         if ($request->ajax()) {
-            $borrowers = Borrower::select(['id', 'name', 'phone', 'nationalID', 'address', 'job' , "review" , "borrower_age"]);
+            $borrowers = Borrower::select(['id', 'name', 'phone', 'nationalID', 'address', 'job' , "review" , "borrower_age" , "rate" , "review"]);
 
 
             return DataTables::of($borrowers)
@@ -74,6 +74,11 @@ class BorrowerController extends Controller
 
                 ->editColumn('borrower_age', function ($borrower) {
                     return $borrower->borrower_age ? $borrower->borrower_age : "--";
+                })
+                ->editColumn('rate', function ($borrower) {
+                    return $borrower->rate 
+                            ? $borrower->rate . ' <i class="fa fa-star" style="color: gold;"></i>' 
+                            : '-';
                 })
                 ->rawColumns(['action'])
                 ->escapeColumns([])
@@ -395,9 +400,10 @@ class BorrowerController extends Controller
 
     public function storeReview(Request $request)
     {
-        try{
+        try{    
             $borrower = Borrower::find($request->borrower_id);
             $borrower->review = $request->review;
+            $borrower->rate = $request->rating;
             $borrower->save();
             return redirect()->back()->with("تم رفع التقييم");
         }catch (\Exception $e){

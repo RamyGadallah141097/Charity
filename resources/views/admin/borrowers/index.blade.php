@@ -109,6 +109,48 @@
             min-height: 150px;
         }
     </style>
+
+
+    
+<style>
+    .star-rating {
+        direction: rtl;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .star-rating input {
+        display: none;
+    }
+
+    .star-rating label {
+        color: #ddd;
+        font-size: 24px;
+        padding: 0 2px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .star-rating label:hover,
+    .star-rating label:hover~label,
+    .star-rating input:checked~label {
+        color: #ffc107;
+    }
+</style>
+
+<script>
+    document.querySelectorAll('.star-rating:not(.readonly) label').forEach(star => {
+        star.addEventListener('click', function() {
+            this.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+        });
+    });
+</script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
     @if($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -143,6 +185,7 @@
                                 <th class="min-w-125px">الرقم القومي للمقترض</th>
                                 <th class="min-w-125px">عمر للمقترض</th>
                                 <th class="min-w-125px">عنوان المقترض</th>
+                                <th class="min-w-125px">  5 /التقييم</th>
                                 <th class="min-w-125px">عمل المقترض</th>
                                 <th class="min-w-125px">العمليات</th>
                             </tr>
@@ -269,6 +312,27 @@
                                 <label for="review">التقييم</label>
                                 <textarea class="form-control" name="review" id="review" rows="4" placeholder="اكتب التقييم هنا..."></textarea>
                             </div>
+
+
+
+                            <div class="col-md-6">
+                                <div class="rating-card p-4">
+                                    <div class="star-rating animated-stars">
+                                        <input type="radio" id="star5" name="rating" value="5">
+                                        <label for="star5" class="bi bi-star-fill"></label>
+                                        <input type="radio" id="star4" name="rating" value="4">
+                                        <label for="star4" class="bi bi-star-fill"></label>
+                                        <input type="radio" id="star3" name="rating" value="3">
+                                        <label for="star3" class="bi bi-star-fill"></label>
+                                        <input type="radio" id="star2" name="rating" value="2">
+                                        <label for="star2" class="bi bi-star-fill"></label>
+                                        <input type="radio" id="star1" name="rating" value="1">
+                                        <label for="star1" class="bi bi-star-fill"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary">إرسال التقييم</button>
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">إغلاق</button>
@@ -299,6 +363,7 @@
             {data: 'nationalID', name: 'nationalID'},
             {data: 'borrower_age', name: 'borrower_age'},
             {data: 'address', name: 'address'},
+            {data: 'rate', name: 'rate'},
             {data: 'job', name: 'job'},
             {data: 'action', name: 'action'},
         ]
