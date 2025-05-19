@@ -466,8 +466,8 @@ class UserController extends Controller
 
     public function store(StoreUser $request)
     {
-        DB::beginTransaction();
-        try {
+        // DB::beginTransaction();
+        // try {
         // إنشاء المستخدم
         $userData = $request->except('_token', 'attachments', 'child_names',  'children_national_id',  'age', 'schools', 'monthly_cost', 'notes', 'patient_name',  'treatment_pay_by', 'type', 'doctor_name', 'treatment');
 
@@ -506,7 +506,6 @@ class UserController extends Controller
         ]);
 
 
-        // dd($request->all() , $user);
 
 
 
@@ -515,7 +514,7 @@ class UserController extends Controller
             // إضافة الأطفال
             if ($request->filled('child_names')) {
                 foreach ($request->child_names as $index => $childName) {
-                    Children::create([
+                    $child = Children::create([
                         'user_id' => $user->id,
                         'child_name' => $childName,
                         'children_national_id' => $request->children_national_id[$index] ?? null,
@@ -526,6 +525,7 @@ class UserController extends Controller
                     ]);
                 }
             }
+
 
             // إضافة بيانات المرضى
             if ($request->filled('patient_name')) {
@@ -557,10 +557,10 @@ class UserController extends Controller
             toastr('تم اضافة مستفيد جديد', 'success');
             return redirect(route('users.index', 'new'));
 
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->withInput()->with('error', 'حدث خطأ أثناء حفظ البيانات.');
-        }
+        // } catch (\Exception $e) {
+        //     DB::rollBack();
+        //     return redirect()->back()->withInput()->with('error', 'حدث خطأ أثناء حفظ البيانات.');
+        // }
     }
 
     public function edit($id)

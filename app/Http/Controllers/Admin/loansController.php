@@ -23,8 +23,9 @@ class loansController extends Controller
             return Datatables::of($loans)
                 ->addColumn('action', function ($loans) {
                     return '
-                            <a href="' . route("person.loans", $loans->borrower_id) . '" class="btn btn-pill btn-secondary-light"
-                                    data-id="' . $loans->id . '">
+                            <a href="' . route("person.loans", $loans->id) . '" class="btn btn-pill btn-secondary-light"
+                                    data-id="' . $loans->id . '"
+                                    >
                                      القروض
                                     <i class="fas fa-money-check-alt"></i>
                             </a>
@@ -91,6 +92,8 @@ class loansController extends Controller
 
 
                 if ($request->type == 0) {
+                    // dd($request->all() , 1);
+
                     $data['isStarted'] = now()->format("Y-m");
                     $amount = $request->loan_amount / 10;
                     $loan = Loan::create($data);
@@ -116,10 +119,13 @@ class loansController extends Controller
                             " ورقم هاتفه " . ($borrower ? $borrower->phone : "غير متوفر"),
                     ]);
                 }else{
+
+
                     $amount = $request->loan_amount / 10;
                     $loan = Loan::create($data);
+
                     for ($i = 0; $i < 10; $i++) {
-                        PersonalLoan::create([
+                        $pLoan = PersonalLoan::create([
                             "amount" => $amount,
                             "loan_id" => $loan->id,
                             "borrower_id" => $request->borrower_id,
@@ -127,6 +133,7 @@ class loansController extends Controller
                             "status" => 0
                         ]);
                     }
+
                 }
 
 
@@ -146,7 +153,7 @@ class loansController extends Controller
     public function personLoans(Request $request, $id)
     {
         if ($request->ajax()) {
-            $loans = PersonalLoan::where('borrower_id', $id)->get();
+            $loans = PersonalLoan::where('loan_id', $id)->get();
 
             if ($loans->isEmpty()) {
                 return response()->json(['error' => 'لا توجد قروض لهذا المقترض'], 404);
@@ -172,10 +179,10 @@ class loansController extends Controller
                 ->rawColumns(['borrower_phone', 'status', 'action'])
                 ->make(true);
         }
-        $total = Loan::where('borrower_id', $id)->first()->loan_amount;
-        $totalIn = Loan::where("borrower_id", $id)->first()->loan_amount - PersonalLoan::where('borrower_id', $id)->where('status', 0)->sum('amount');
-        $totalOut = PersonalLoan::where('borrower_id', $id)->where('status', 0)->sum('amount');
-        $pay = Loan::where('borrower_id', $id)->value('type');
+        $total = Loan::where('id', $id)->first()->loan_amount;
+        $totalIn = Loan::where("id", $id)->first()->loan_amount - PersonalLoan::where('loan_id', $id)->where('status', 0)->sum('amount');
+        $totalOut = PersonalLoan::where('loan_id', $id)->where('status', 0)->sum('amount');
+        $pay = Loan::where('id', $id)->value('type');
 
 //        return view('admin/loans/indexloan', compact('id' , "totalIn" , "totalOut" , "total" , "pay"));
         return view('admin.loans.indexloan', compact('id', 'totalIn', 'totalOut', 'total', 'pay'));
@@ -185,10 +192,11 @@ class loansController extends Controller
 
     public function checkout($id)
     {
+    
         try {
-            $loan = Borrower::find($id)->loans()->first();
+            $loan = Loan::find($id);
             if (LockerLog::where("moneyType" , LockerLog::moneyTypeLoans)->sum("amount") >= $loan->loan_amount){
-                $borrower = Borrower::find($id);
+                $borrower = $loan->borrower;
                 LockerLog::create([
                     "moneyType" => LockerLog::moneyTypeLoans,
                     "amount" => $loan->loan_amount,
@@ -212,12 +220,14 @@ class loansController extends Controller
     public function payLoan( Request $request , $id)
     {
         //get the loan
+        // dd($id);
         try {
             DB::beginTransaction();
 
             $loan = PersonalLoan::find($id);
+            $borrower = $loan->borrower;
             $amount = $request->amount;
-            $totalLoan = PersonalLoan::where("borrower_id" , $loan->loan->borrower_id)->where("status" , 0)->sum("amount"); // calc the amount that doesn't payed
+            $totalLoan = PersonalLoan::where("loan_id" , $loan->loan_id)->where("status" , 0)->sum("amount"); 
             //check if loan exist
             if (!$loan) {
                 return response()->json(['error' => 'القرض غير موجود'], 404);
@@ -232,7 +242,7 @@ class loansController extends Controller
                     $loan->save();
                     $amount = $amount - $loan->amount;
                     while ($amount > 0) {
-                        $personal_loan = PersonalLoan::where("borrower_id", $loan->borrower_id)->where("status", 0)->latest()->first();
+                        $personal_loan = PersonalLoan::where("loan_id", $loan->loan_id)->where("status", 0)->latest()->first();
                         if ($personal_loan) {
                             if ($amount == $personal_loan->amount) {
                                 $personal_loan->status = 1;
@@ -271,30 +281,30 @@ class loansController extends Controller
                 }
 
 
-                LockerLog::create([
-                    "moneyType" => LockerLog::moneyTypeLoans,
-                    "amount" => $request->amount,
-                    "type" => LockerLog::TYPE_PLUS,
-                    "admin_id" => auth()->id(),
-                    "donation_id" => null,
-                    "subvention_id" => null,
-                    "loan_id" => $loan->id,
-                    "comment" => "  دفع قرض من  " . ($loan->borrower->phone ??  "مجهول") .
-                        " ورقم هاتفه " . ($loan->borrower->phone   ?? "غير متوفر"),
-                ]);
+                // LockerLog::create([
+                //     "moneyType" => LockerLog::moneyTypeLoans,
+                //     "amount" => $request->amount,
+                //     "type" => LockerLog::TYPE_PLUS,
+                //     "admin_id" => auth()->id(),
+                //     "donation_id" => null,
+                //     "subvention_id" => null,
+                //     "loan_id" => $loan->id,
+                //     "comment" => "  دفع قرض من  " . ($loan->borrower->phone ??  "مجهول") .
+                //         " ورقم هاتفه " . ($loan->borrower->phone   ?? "غير متوفر"),
+                // ]);
             }
 
-            // LockerLog::create([
-            //     "moneyType" => LockerLog::moneyTypeLoans,
-            //     "amount" => $request->amount,
-            //     "type" => LockerLog::TYPE_PLUS,
-            //     "admin_id" => auth()->id(),
-            //     "donation_id" => null,
-            //     "subvention_id" => null,
-            //     "loan_id" => $loan->id,
-            //     "comment" => "  دفع قرض من  " . ($loan->borrower->phone ??  "مجهول") .
-            //         " ورقم هاتفه " . ($loan->borrower->phone   ?? "غير متوفر"),
-            // ]);
+            LockerLog::create([
+                "moneyType" => LockerLog::moneyTypeLoans,
+                "amount" => $request->amount,
+                "type" => LockerLog::TYPE_PLUS,
+                "admin_id" => auth()->id(),
+                "donation_id" => null,
+                "subvention_id" => null,
+                "loan_id" => $loan->loan_id,
+                "comment" => "  دفع قرض من  " . ($borrower->phone ??  "مجهول") .
+                    " ورقم هاتفه " . ($borrower->phone   ?? "غير متوفر"),
+            ]);
 
             DB::commit();
             return response()->json(['message' => 'تم دفع القرض بنجاح']);

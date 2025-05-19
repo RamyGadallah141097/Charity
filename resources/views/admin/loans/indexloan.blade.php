@@ -133,26 +133,26 @@
                         ]
                     });
 
-                    {{--$(document).on('click', '.loan-btn', function () {--}}
-                    {{--    let loanId = $(this).data('id');--}}
+                    $(document).on('click', '.loan-btn', function () {
+                        let loanId = $(this).data('id');
 
-                    {{--    if (confirm("هل أنت متأكد من صرف هذا القرض؟")) {--}}
-                    {{--        $.ajax({--}}
-                    {{--            url: "{{ route('loan.checkout', ':id') }}".replace(':id', loanId),--}}
-                    {{--            type: 'get',--}}
-                    {{--            data: {_token: '{{ csrf_token() }}'},--}}
-                    {{--            success: function (response) {--}}
-                    {{--                window.location.reload();--}}
-                    {{--                alert(response.message);--}}
-                    {{--                table.ajax.reload();--}}
-                    {{--            },--}}
-                    {{--            error: function (response) {--}}
-                    {{--                alert(response.message);--}}
-                    {{--                alert(response.responseJSON.error);--}}
-                    {{--            }--}}
-                    {{--        });--}}
-                    {{--    }--}}
-                    {{--});--}}
+                        if (confirm("هل أنت متأكد من صرف هذا القرض؟")) {
+                            $.ajax({
+                                url: "{{ route('loan.checkout', ':id') }}".replace(':id', loanId),
+                                type: 'get',
+                                data: {_token: '{{ csrf_token() }}'},
+                                success: function (response) {
+                                    window.location.reload();
+                                    alert(response.message);
+                                    table.ajax.reload();
+                                },
+                                error: function (response) {
+                                    alert(response.message);
+                                    alert(response.responseJSON.error);
+                                }
+                            });
+                        }
+                    });
 
                     {{--$(document).on('click', '.pay-btn', function () {--}}
                     {{--    let loanId = $(this).data('id');--}}

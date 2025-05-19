@@ -13,7 +13,7 @@ class CreateSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::table('settings', function (Blueprint $table) {
+        Schema::create('settings', function (Blueprint $table) {
             $table->integer("maxSubvention")->nullable();
             $table->integer("maxLoan")->nullable();
             $table->string("branch")->nullable();

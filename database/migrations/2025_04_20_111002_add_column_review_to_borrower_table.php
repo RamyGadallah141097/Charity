@@ -14,7 +14,7 @@ class AddColumnReviewToBorrowerTable extends Migration
     public function up()
     {
         Schema::table('borrowers', function (Blueprint $table) {
-            $table->String('review')->after('email')->nullable();
+            $table->String('review')->after('phone')->nullable();
         });
     }
 
