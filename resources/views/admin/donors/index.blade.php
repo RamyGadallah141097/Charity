@@ -164,6 +164,7 @@
         editScript();
     </script>
 
+
     <script>
         $(document).on("click", ".donationReturnBtn", function () {
             let donorId = $(this).data("id");
@@ -179,6 +180,9 @@
             $("#name").val(name);
             $("#donationReturnModal").modal("show");
         });
+
+        
+
 
 
     </script>
@@ -206,6 +210,7 @@
                     if (response.status === 'success') {
                         toastr.success(response.message || 'تم إرجاع المبلغ بنجاح');
                         $('#donationReturnModal').modal('hide');
+                        location.reload();
                         form.trigger("reset");
                     } else {
                         toastr.warning(response.message || 'حدث شيء غير متوقع');

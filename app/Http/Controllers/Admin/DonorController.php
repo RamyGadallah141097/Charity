@@ -37,9 +37,10 @@ class DonorController extends Controller
                                 <i class="fas fa-trash"></i>
                             </button>
                         ';
-
                         if ($donors->has('donation') && $donors->donation->contains('donation_type', 2)) {
                             $totalLoansDonations = $donors->donation->where('donation_type', 2)->sum("donation_amount");
+                            // $totalLoansDonations = $DonationsAmount - LockerLog::where("donor_id" , $donors->id)->where("moneyType" , LockerLog::moneyTypeLoans)->where("type" , LockerLog::TYPE_MINUS)->sum("amount");
+
                             $totalLoanAmount = LockerLog::where("moneyType" , LockerLog::moneyTypeLoans)->where("type" , LockerLog::TYPE_PLUS)->sum("amount") - LockerLog::where("moneyType" , LockerLog::moneyTypeLoans)->where("type" , LockerLog::TYPE_MINUS)->sum("amount");
                             $returnMoneyBtn = '
                                     <button
@@ -90,7 +91,6 @@ class DonorController extends Controller
 
             $totalLoanAmount = LockerLog::where("moneyType" , LockerLog::moneyTypeLoans)->where("type" , LockerLog::TYPE_PLUS)->sum("amount") - LockerLog::where("moneyType" , LockerLog::moneyTypeLoans)->where("type" , LockerLog::TYPE_MINUS)->sum("amount");
 
-            // check if the returner amount avalable amount
             if ( $returnAmount >  $totalLoanAmount){
                 return response()->json([
                     'success' => false,
@@ -115,7 +115,6 @@ class DonorController extends Controller
                     $returnAmount = 0;
                 }
 
-                // Save updated donation
                 $donation->save();
             }
 
@@ -128,11 +127,13 @@ class DonorController extends Controller
                 "admin_id" => auth()->id(),
                 "donation_id" => null,
                 "subvention_id" => null,
+                "donor_id" => $donor->id,
                 "loan_id" => null,
-                "comment" => "تم استرداد أموال المتبرع " . $donor->name . " في يوم " . \Carbon\Carbon::now()->format("Y-m-d"),
+                "comment" => " تم استرداد أموال المتبرع " . $donor->name . " في يوم " . \Carbon\Carbon::now()->format("Y-m-d"),
             ]);
 
             return response()->json(['status' => 'success', 'message' => 'Amount returned successfully']);
+
         }catch (\Exception $e){
             return response()->json([
                 "success" => false,

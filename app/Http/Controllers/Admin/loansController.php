@@ -289,7 +289,7 @@ class loansController extends Controller
                 //     "donation_id" => null,
                 //     "subvention_id" => null,
                 //     "loan_id" => $loan->id,
-                //     "comment" => "  دفع قرض من  " . ($loan->borrower->phone ??  "مجهول") .
+                //     "comment" => "  دفع قرض من  " . ($loan->borrower->name ??  "مجهول") .
                 //         " ورقم هاتفه " . ($loan->borrower->phone   ?? "غير متوفر"),
                 // ]);
             }
@@ -302,7 +302,7 @@ class loansController extends Controller
                 "donation_id" => null,
                 "subvention_id" => null,
                 "loan_id" => $loan->loan_id,
-                "comment" => "  دفع قرض من  " . ($borrower->phone ??  "مجهول") .
+                "comment" => "  دفع قرض من  " . ($borrower->name ??  "مجهول") .
                     " ورقم هاتفه " . ($borrower->phone   ?? "غير متوفر"),
             ]);
 

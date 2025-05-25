@@ -19,6 +19,7 @@ class LockerLog extends Model
         "amount",
         "asset_id",
         "asset_count",
+        "donor_id",
     ];
 
 
