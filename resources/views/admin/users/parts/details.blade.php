@@ -261,6 +261,20 @@
             <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
         </div>
 
+
+
+        <div class="card-header">
+            <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">
+                ممتلكات المستفيد</h2>
+        </div>
+
+        <textarea rows="5"  class="form-control" name="Case_evaluation" id="Case_evaluation" readonly disabled>{{ old('Case_evaluation', $user->Case_evaluation) }}</textarea>
+
+        <div class="card-header">
+            <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">
+                المرفقات </h2>
+        </div>
+
         @if ($user->attachments)
             @php
                 $attachments = is_string($user->attachments) ? json_decode($user->attachments, true) : $user->attachments;

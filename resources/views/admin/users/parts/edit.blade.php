@@ -1,8 +1,3 @@
-{{--solve uplaodin --}}
-{{--solve uplaodin --}}
-{{--solve uplaodin --}}
-{{--solve uplaodin --}}
-{{--solve uplaodin --}}
 
 @extends('Admin/layouts/master')
 @section('title')
@@ -301,7 +296,7 @@
                                     <div class="col-3">
                                         <div class="form-group">
                                             <label for="age" class="form-control-label"> السن </label>
-                                            <input type="text" class="form-control" disabled value="{{ old('age.'.$index, $child->age) }}" name="age[]" readonly>
+                                            <input type="text" class="form-control"  value="{{ old('age.'.$index, $child->age) }}" name="age[]" readonly>
                                         </div>
                                     </div>
 
@@ -478,23 +473,6 @@
 
 
                         </div>
-
-
-
-
-
-
-
-
-
-
-{{--                        @if($user->attachments)--}}
-{{--                                <div class="mb-2">--}}
-{{--                                    <button type="button" class="btn btn-sm btn-danger delete-attachment" data-id="{{ $attachment->id }}">--}}
-{{--                                        <i class="fe fe-trash"></i>--}}
-{{--                                    </button>--}}
-{{--                                </div>--}}
-{{--                        @endif--}}
                         <input type="file" class="dropify" name="attachments[]" accept="image/png, image/gif, image/jpeg, image/jpg" multiple>
 
                     </div>
@@ -560,6 +538,9 @@
     </script>
 
     <script>
+  
+
+
         // Calculate age from national ID
         function calculateAge(nationalIdField, ageField) {
             const nationalId = document.querySelector(nationalIdField).value;
@@ -580,6 +561,60 @@
 
         document.querySelector('[name="wife_national_id"]')?.addEventListener('input', function() {
             calculateAge('[name="wife_national_id"]', '[name="age_wife"]');
+        });
+        
+       
+    </script>
+
+    <script>
+        // Function to calculate age from national ID
+        function calculateAgeFromNationalId(nationalId) {
+            if (!nationalId || nationalId.length !== 14) return null;
+
+            const currentDate = new Date();
+            const currentYear = currentDate.getFullYear();
+            const currentMonth = currentDate.getMonth() + 1;
+
+            const yearPrefix = nationalId.charAt(0) === '2' ? 1900 : 2000;
+            const birthYear = yearPrefix + parseInt(nationalId.substring(1, 3), 10);
+            const birthMonth = parseInt(nationalId.substring(3, 5), 10);
+
+            let ageYears = currentYear - birthYear;
+            let ageMonths = currentMonth - birthMonth;
+
+            if (ageMonths < 0) {
+                ageYears -= 1;
+                ageMonths += 12;
+            }
+
+            return ageYears;
+        }
+
+        // Function to handle national ID input changes
+        function handleNationalIdInput(event) {
+            const nationalIdInput = event.target;
+            const row = nationalIdInput.closest('.child-row');
+            if (!row) return;
+
+            const ageInput = row.querySelector('[name="age[]"]');
+            if (ageInput) {
+                const age = calculateAgeFromNationalId(nationalIdInput.value);
+                ageInput.value = age || '';
+            }
+        }
+
+        // Add event delegation for dynamically added children
+        document.getElementById('child_container').addEventListener('input', function(e) {
+            if (e.target.matches('[name="children_national_id[]"]')) {
+                handleNationalIdInput(e);
+            }
+        });
+
+        // Initialize existing inputs on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('[name="children_national_id[]"]').forEach(input => {
+                input.addEventListener('input', handleNationalIdInput);
+            });
         });
     </script>
 
@@ -614,7 +649,7 @@
             if (ageField) {
                 ageField.value = calculateAgeFromNationalId(nationalIdField.value);
             }
-        }
+        }   
 
         function addEventListeners() {
             document.querySelectorAll('[name="children_national_id[]"]').forEach(input => {
@@ -659,7 +694,7 @@
                     <div class="col-3">
                         <div class="form-group">
                             <label for="age" class="form-control-label">السن</label>
-                            <input type="text" class="form-control" disabled name="age[]">
+                            <input type="text" class="form-control"  name="age[]">
                         </div>
                     </div>
 
