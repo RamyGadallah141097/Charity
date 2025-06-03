@@ -108,6 +108,7 @@
                     </div>
                     <div class="modal-body">
                         <form id="donationReturnForm" action="{{route("donor.returnDonationMoney")}}">
+                        @csrf
                             <input type="hidden" name="donor_id" id="donor_id">
                             <div class="form-group">
 {{--                                <p>القيمه المتوفره في خزنة القروض : <input type="text" disabled id="avalable"> </p>--}}
@@ -188,13 +189,14 @@
     </script>
 
     <script>
+    $(document).ready(function () {
+        // تأكيد ضبط التوكن بعد تحميل الصفحة
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
 
-        // Handle form submission
         $(document).on('submit', '#donationReturnForm', function (e) {
             e.preventDefault();
 
@@ -217,18 +219,21 @@
                     }
                 },
                 error: function (xhr) {
+                    console.log(xhr.responseText); // لفحص الخطأ
                     let errors = xhr.responseJSON?.errors;
                     if (errors) {
                         $.each(errors, function (key, error) {
                             toastr.error(error);
                         });
                     } else {
-                        toastr.error('فشل في الإرسال، حاول مرة أخرى.');
+                        toastr.error("فشل في الإرسال، حاول مرة أخرى.");
                     }
                 }
             });
         });
-    </script>
+    });
+</script>
+
 
 
 @endsection
