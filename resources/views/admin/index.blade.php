@@ -81,8 +81,7 @@
                                                 تخطت اجمالي التبرعات 1000 جنية
                                             </h4>
                                             <p class="mb-lg-0 text-white-50">
-                                                لقد بلغت اجمالي التبرعات جنية {{ $total_donors_money }}
-                                                , نأمل لمواصلة التقدم وتحقيق الهدف
+                                                لقد بلغت اجمالي التبرعات جنية {{ $total_donors_money }}, نأمل لمواصلة التقدم وتحقيق الهدف
                                             </p>
                                         </div>
                                     </div>
@@ -195,7 +194,7 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
-                            <h2 class="mb-0 number-font">{{ $donors_count }}</h2>
+                            <h2 class="mb-0 number-font">{{ number_format($donors_count, 2, '.') }}</h2>
                             <p class="text-white mb-0">اجمالي المتبرعين</p>
                         </div>
                         <div class="mr-auto">
@@ -211,7 +210,7 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
-                            <h2 class="mb-0 number-font"> {{ $totalDonations }} </h2>
+                            <h2 class="mb-0 number-font"> {{  fmod($totalDonations, 1) == 0.00 ? number_format($totalDonations, 0) : number_format($totalDonations, 2) }}  </h2>
                             <p class="text-white mb-0">إجمالي التبرعات</p>
                         </div>
                         <div class="mr-auto">
@@ -226,7 +225,7 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
-                            <h2 class="mb-0 number-font"> {{ $totalMonthlySubventions }} </h2>
+                            <h2 class="mb-0 number-font"> {{ fmod($totalMonthlySubventions, 1) == 0.00 ? number_format($totalMonthlySubventions, 0) : number_format($totalMonthlySubventions, 2) }} </h2>
                             <p class="text-white mb-0">إجمالي الاعانات الشهرية</p>
                         </div>
                         <div class="mr-auto">
@@ -252,7 +251,7 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
-                            <h2 class="mb-0 number-font"> {{ $totalZakat }} </h2>
+                            <h2 class="mb-0 number-font"> {{  fmod($totalZakat, 1) == 0.00 ? number_format($totalZakat, 0) : number_format($totalZakat, 2) }}  </h2>
                             <p class="text-white mb-0">إجمالي الزكاة و الصدقات</p>
                         </div>
                         <div class="mr-auto">
@@ -268,7 +267,7 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
-                            <h2 class="mb-0 number-font"> {{ $totalMonthlySubventions }} </h2>
+                            <h2 class="mb-0 number-font"> {{  fmod($totalMonthlySubventions, 1) == 0.00 ? number_format($totalMonthlySubventions, 0) : number_format($totalMonthlySubventions, 2) }}</h2>
                             <p class="text-white mb-0">إجمالي الاعانات الشهرية</p>
                         </div>
                         <div class="mr-auto">
@@ -322,7 +321,7 @@
                     <div class="card-body">
                         <div class="d-flex">
                             <div class="text-white">
-                                <h2 class="mb-0 number-font"> {{ $totalLoansDonations }} </h2>
+                                <h2 class="mb-0 number-font"> {{  fmod($totalLoansDonations, 1) == 0.00 ? number_format($totalLoansDonations, 0) : number_format($totalLoansDonations, 2) }}  </h2>
                                 <p class="text-white mb-0">إجمالي  التبرعات </p>
                             </div>
                             <div class="mr-auto">
@@ -337,7 +336,7 @@
                     <div class="card-body">
                         <div class="d-flex">
                             <div class="text-white">
-                                <h2 class="mb-0 number-font"> {{ $totalLoanOut }} </h2>
+                                <h2 class="mb-0 number-font"> {{  fmod($totalLoanOut, 1) == 0.00 ? number_format($totalLoanOut, 0) : number_format($totalLoanOut, 2) }}  </h2>
                                 <p class="text-white mb-0">إجمالي القروض الخارجه </p>
                             </div>
                             <div class="mr-auto">
