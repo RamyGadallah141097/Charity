@@ -258,6 +258,9 @@
                             <span class="text-white fs-30 ml-2 mt-2">£L</span>
                         </div>
                     </div>
+
+
+                    
                 </div>
             </div>
         </div><!-- COL END -->
