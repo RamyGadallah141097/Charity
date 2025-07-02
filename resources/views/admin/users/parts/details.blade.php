@@ -198,8 +198,8 @@
                     <tr class="fw-bolder text-muted bg-light">
                     <tr class="fw-bolder text-muted bg-light">
                         <th class="min-w-25px"> #</th>
-                        <th class="min-w-25px"> اسم الطفل</th>
-                        <th class="min-w-25px">الرقم القومى للطفل</th>
+                        <th class="min-w-25px"> اسم الابن</th>
+                        <th class="min-w-25px">الرقم القومى للابن</th>
                         <th class="min-w-25px">العمر </th>
                         <th class="min-w-25px">المدرسة</th>
                         <th class="min-w-25px"> التكلفة الشهرية</th>
@@ -265,7 +265,7 @@
 
         <div class="card-header">
             <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">
-                ممتلكات المستفيد</h2>
+                ممتلكات المتقدم</h2>
         </div>
 
         <textarea rows="5"  class="form-control" name="Case_evaluation" id="Case_evaluation" readonly disabled>{{ old('Case_evaluation', $user->Case_evaluation) }}</textarea>

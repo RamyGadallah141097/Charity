@@ -50,26 +50,26 @@ class DonationController extends Controller
                     $editButton = '';
                     $deleteButton = '';
 
-                        // $editButton = '
-                        //     <button type="button" data-id="' . $donation->id . '" class="btn btn-pill btn-info-light editBtn">
-                        //         <i class="fa fa-edit"></i>
-                        //     </button>
-                        // ';
+                    // $editButton = '
+                    //     <button type="button" data-id="' . $donation->id . '" class="btn btn-pill btn-info-light editBtn">
+                    //         <i class="fa fa-edit"></i>
+                    //     </button>
+                    // ';
 
-                        $deleteButton = '
-                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
-                                    data-id="' . $donation->id . '">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        ';
+                    // $deleteButton = '
+                    //     <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                    //             data-id="' . $donation->id . '">
+                    //         <i class="fas fa-trash"></i>
+                    //     </button>
+                    // ';
 
                     return '<div class="d-flex">'  . $deleteButton . '</div>';
                 })
                 ->editColumn('donation_amount', function ($donation) {
-                    if ($donation->donation_type == 3 ){
+                    if ($donation->donation_type == 3) {
                         $asset = Asset::where("id", $donation->asset_id)->first();
-                         $asset ? $donation->donation_amount = $asset->name . " : " .  $asset->counter : "-";
-                    }else{
+                        $asset ? $donation->donation_amount = $asset->name . " : " .  $asset->counter : "-";
+                    } else {
                         $donation->donation_amount = $donation->donation_amount;
                     }
                     return $donation->donation_amount;
@@ -79,7 +79,7 @@ class DonationController extends Controller
                 ->escapeColumns([])
                 ->make(true);
         } else {
-            return view('admin/donations/index' );
+            return view('admin/donations/index');
         }
     }
 
@@ -89,7 +89,7 @@ class DonationController extends Controller
         $donors = Donor::all();
         $assets = Asset::all();
 
-        return view('admin/donations/parts/create', ["donors" => $donors ,  "assets" => $assets]);
+        return view('admin/donations/parts/create', ["donors" => $donors,  "assets" => $assets]);
     }
 
 
@@ -97,29 +97,25 @@ class DonationController extends Controller
     {
 
         try {
-            if ($request->donation_type != 3){
+            if ($request->donation_type != 3) {
                 $donor = Donor::find($request->donor_id);
                 LockerLog::create([
-                    "moneyType" => $request->donation_type == 0 ? LockerLog::moneyTypeZakat :
-                        ($request->donation_type == 1 ? LockerLog::moneyTypeSadaka :
-                            ($request->donation_type == 2 ? LockerLog::moneyTypeLoans : "subvention")),
+                    "moneyType" => $request->donation_type == 0 ? LockerLog::moneyTypeZakat : ($request->donation_type == 1 ? LockerLog::moneyTypeSadaka : ($request->donation_type == 2 ? LockerLog::moneyTypeLoans : "subvention")),
                     "amount" => $request->donation_amount,
-//                    "asset_id" =>0,
-//                    "asset_count" =>0,
+                    //                    "asset_id" =>0,
+                    //                    "asset_count" =>0,
                     "type" => LockerLog::TYPE_PLUS,
                     "admin_id" => auth()->id(),
                     "comment" => "تبرع جديد من " . ($donor ? $donor->name : "مجهول") .
                         " ورقم هاتفه " . ($donor ? $donor->phone : "غير متوفر"),
                 ]);
-            }else{
+            } else {
                 $donor = Donor::find($request->donor_id);
                 LockerLog::create([
-                    "moneyType" => $request->donation_type == 0 ? LockerLog::moneyTypeZakat :
-                        ($request->donation_type == 1 ? LockerLog::moneyTypeSadaka :
-                            ($request->donation_type == 2 ? LockerLog::moneyTypeLoans : "subvention")),
-                    "amount" =>0,
-                    "asset_id" =>$request->asset_id,
-                    "asset_count" =>$request->asset_count,
+                    "moneyType" => $request->donation_type == 0 ? LockerLog::moneyTypeZakat : ($request->donation_type == 1 ? LockerLog::moneyTypeSadaka : ($request->donation_type == 2 ? LockerLog::moneyTypeLoans : "subvention")),
+                    "amount" => 0,
+                    "asset_id" => $request->asset_id,
+                    "asset_count" => $request->asset_count,
                     "type" => LockerLog::TYPE_PLUS,
                     "admin_id" => auth()->id(),
                     "comment" => "تبرع جديد من " . ($donor ? $donor->name : "مجهول") .
@@ -136,11 +132,9 @@ class DonationController extends Controller
             Donation::create($request->except('_token'));
 
             return response()->json(['status' => 200]);
-
-        }catch (\Exception $e){
-            return response()->json(["status" => 500 , "message"=>$e->getMessage()]);
+        } catch (\Exception $e) {
+            return response()->json(["status" => 500, "message" => $e->getMessage()]);
         }
-
     }
 
 
@@ -205,8 +199,4 @@ class DonationController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
-
-
-
 }

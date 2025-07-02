@@ -7,15 +7,15 @@
 @endsection
 @section('content')
 
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
 
 
@@ -46,41 +46,48 @@
 
                             <div class="form-group col-md-6">
                                 <label class="form-label">اسم الزوج</label>
-                                <input type="text" value="{{old("husband_name")}}" class="form-control" name="husband_name" placeholder="">
+                                <input type="text" value="{{ old('husband_name') }}" class="form-control"
+                                    name="husband_name" placeholder="">
                             </div>
                             <div class="form-group col-md-6">
                                 <label class="form-label ">اسم الزوجة</label>
-                                <input type="text" value="{{old("wife_name")}}" class="form-control" name="wife_name" placeholder="">
+                                <input type="text" value="{{ old('wife_name') }}" class="form-control" name="wife_name"
+                                    placeholder="">
                             </div>
                             <div class="form-group col-md-6">
                                 <label class="form-label "> الرقم القومى للزوج</label>
-                                <input type="number" value="{{old("husband_national_id")}}" class="form-control" name="husband_national_id" placeholder="">
+                                <input type="number" value="{{ old('husband_national_id') }}" class="form-control"
+                                    name="husband_national_id" placeholder="">
                             </div>
                             <div class="form-group col-md-6">
                                 <label class="form-label "> الرقم القومى للزوجة</label>
-                                <input type="number" value="{{old("wife_national_id")}}" class="form-control" name="wife_national_id" placeholder="">
+                                <input type="number" value="{{ old('wife_national_id') }}" class="form-control"
+                                    name="wife_national_id" placeholder="">
                             </div>
 
                             <div class="form-group col-md-2">
                                 <label class="form-label"> عمر الزوج</label>
-                                <input type="number" value="{{old("age_husband")}}" class="form-control" name="age_husband" placeholder="" readonly>
+                                <input type="number" value="{{ old('age_husband') }}" class="form-control"
+                                    name="age_husband" placeholder="" readonly>
                             </div>
 
                             <div class="form-group col-md-2">
                                 <label class="form-label"> عمر الزوجة</label>
-                                <input type="number" value="{{old("age_wife")}}" class="form-control" name="age_wife" placeholder="" readonly>
+                                <input type="number" value="{{ old('age_wife') }}" class="form-control" name="age_wife"
+                                    placeholder="" readonly>
                             </div>
 
                             <div class="form-group col-md-8">
                                 <label class="form-label"> العنوان </label>
-                                <input type="text" value="{{old("address")}}" class="form-control" name="address" placeholder="">
+                                <input type="text" value="{{ old('address') }}" class="form-control" name="address"
+                                    placeholder="">
                             </div>
 
                             <div class="form-group col-md-2">
                                 <label class="form-label">الحالة الاجتماعية للاب</label>
                                 <select name="social_status" class="form-control select2"
                                     data-placeholder="اختيار الحالة الاجتماعية">
-                                    <option value="{{old("social_status")}}">{{old("social_status")}}</option>
+                                    <option value="{{ old('social_status') }}">{{ old('social_status') }}</option>
                                     <option value="0" selected>أعزب</option>
                                     <option value="1">متزوج</option>
                                     <option value="2">مطلق</option>
@@ -91,12 +98,14 @@
 
                             <div class="form-group col-md-4">
                                 <label class="form-label">نوع العمل</label>
-                                <input type="text" value="{{old("work_type")}}" class="form-control" name="work_type" placeholder="">
+                                <input type="text" value="{{ old('work_type') }}" class="form-control" name="work_type"
+                                    placeholder="">
                             </div>
 
                             <div class="form-group col-md-4">
                                 <label class="form-label">أقرب تليفون</label>
-                                <input value="{{old('nearest_phone')}}" type="nubmer" class="form-control"  value="{{old("nearest_phone")}}" name="nearest_phone" placeholder="">
+                                <input value="{{ old('nearest_phone') }}" type="nubmer" class="form-control"
+                                    value="{{ old('nearest_phone') }}" name="nearest_phone" placeholder="">
                             </div>
                         </div>
                         <hr>
@@ -111,36 +120,43 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <label class="form-label">مرتب</label>
-                                <input value="{{old('salary')}}" type="number" class="form-control income-input"  value="{{old("salary")}}" name="salary" placeholder="">
+                                <input value="{{ old('salary') }}" type="number" class="form-control income-input"
+                                    value="{{ old('salary') }}" name="salary" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">معاش</label>
-                                <input type="number" class="form-control income-input"  value="{{old("pension")}}" name="pension" placeholder="">
+                                <input type="number" class="form-control income-input" value="{{ old('pension') }}"
+                                    name="pension" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">تأمين</label>
-                                <input type="number" class="form-control income-input"  value="{{old("insurance")}}" name="insurance" placeholder="">
+                                <input type="number" class="form-control income-input" value="{{ old('insurance') }}"
+                                    name="insurance" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">كرامة</label>
-                                <input type="number" class="form-control income-input"  value="{{old("dignity")}}" name="dignity" placeholder="">
+                                <input type="number" class="form-control income-input" value="{{ old('dignity') }}"
+                                    name="dignity" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">تجارة</label>
-                                <input type="number" class="form-control income-input"  value="{{old("trade")}}" name="trade" placeholder="">
+                                <input type="number" class="form-control income-input" value="{{ old('trade') }}"
+                                    name="trade" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">سادات</label>
-                                <input type="number" class="form-control income-input"  value="{{old("pillows")}}" name="pillows" placeholder="">
+                                <input type="number" class="form-control income-input" value="{{ old('pillows') }}"
+                                    name="pillows" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">غير ذلك</label>
-                                <input type="number" class="form-control income-input"  value="{{old("other")}}" name="other" placeholder="">
+                                <input type="number" class="form-control income-input" value="{{ old('other') }}"
+                                    name="other" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">إجمالى الدخل</label>
-                                <input type="number" class="form-control"  value="{{old("gross_income")}}" name="gross_income" id="gross_income"
-                                    placeholder="" readonly>
+                                <input type="number" class="form-control" value="{{ old('gross_income') }}"
+                                    name="gross_income" id="gross_income" placeholder="" readonly>
                             </div>
                         </div>
                         {{-- ______________________________________________________________________________________________________________________________ --}}
@@ -154,42 +170,48 @@
                         <div class="row">
                             <div class="col-md-2">
                                 <label class="form-label">إيجار</label>
-                                <input type="number" class="form-control expense-input"  value="{{old("rent")}}" name="rent" placeholder="">
+                                <input type="number" class="form-control expense-input" value="{{ old('rent') }}"
+                                    name="rent" placeholder="">
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">غاز</label>
-                                <input type="number" class="form-control expense-input"  value="{{old("gas")}}" name="gas" placeholder="">
+                                <input type="number" class="form-control expense-input" value="{{ old('gas') }}"
+                                    name="gas" placeholder="">
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">ديون</label>
-                                <input type="number" class="form-control expense-input"  value="{{old("debt")}}" name="debt" placeholder="">
+                                <input type="number" class="form-control expense-input" value="{{ old('debt') }}"
+                                    name="debt" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">مياه</label>
-                                <input type="number" class="form-control expense-input"  value="{{old("water")}}" name="water" placeholder="">
+                                <input type="number" class="form-control expense-input" value="{{ old('water') }}"
+                                    name="water" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">كهرباء</label>
-                                <input type="number" class="form-control expense-input"  value="{{old("electricity")}}" name="electricity"
-                                    placeholder="">
+                                <input type="number" class="form-control expense-input"
+                                    value="{{ old('electricity') }}" name="electricity" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">جمعية</label>
-                                <input type="number" class="form-control expense-input"  value="{{old("association")}}" name="association"
-                                    placeholder="">
+                                <input type="number" class="form-control expense-input"
+                                    value="{{ old('association') }}" name="association" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">طعام</label>
-                                <input type="number" class="form-control expense-input"  value="{{old("food")}}" name="food" placeholder="">
+                                <input type="number" class="form-control expense-input" value="{{ old('food') }}"
+                                    name="food" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">دراسة</label>
-                                <input type="number" class="form-control expense-input"  value="{{old("study")}}" name="study" placeholder="">
+                                <input type="number" class="form-control expense-input" value="{{ old('study') }}"
+                                    name="study" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">إجمالى النفقات</label>
-                                <input type="number" class="form-control"  value="{{old("gross_expenses")}}" name="gross_expenses" id="gross_expenses"
-                                    placeholder="" readonly>
+                                <input type="number" class="form-control" value="{{ old('gross_expenses') }}"
+                                    name="gross_expenses" id="gross_expenses" placeholder="" readonly>
                             </div>
                         </div>
 
@@ -200,19 +222,20 @@
                                 مستوى المعيشة
                             </h2>
                         </div>
-                        <input type="nubmer" class="form-control col-md-3 "  value="{{old("standard_living")}}" name="standard_living"
-                            id="standard_living"readonly>
+                        <input type="nubmer" class="form-control col-md-3 " value="{{ old('standard_living') }}"
+                            name="standard_living" id="standard_living"readonly>
                         <hr>
                         {{-- ______________________________________________________________________________________________________________________________ --}}
 
                         <div class="d-flex justify-content-between mt-3">
                             <div>
-                                <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">الاطفال
+                                <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">الابناء
                                 </h2>
                             </div>
                             <div class="d-flex justify-content-end mb-3">
                                 <button type="button" class="btn btn-primary" id="add">
-                                    <i class="fe fe-plus"></i> {{ ' اضافة طفل' }}
+                                    <i class="fe fe-plus"></i> {{ ' اضافة ابن' }}
+
                                 </button>
                             </div>
                         </div>
@@ -226,64 +249,75 @@
                                         style="width: max-content;
                                        padding: 8px 15px;
                                        border-radius: 5px;">
-                                        الطفل
+                                        الابن
+
                                         <span id="child_number">1</span>
                                     </h4>
                                 </div>
 
-{{--                                @if(old('child_names'))--}}
-{{--                                    @foreach(old('child_names') as $child_name)--}}
-{{--                                        <input type="text" class="form-control" value="{{ $child_name }}" name="child_names[]">--}}
-{{--                                    @endforeach--}}
-{{--                                @else--}}
-{{--                                    <input type="text" class="form-control" name="child_names[]">--}}
-{{--                                @endif--}}
+                                {{--                                @if (old('child_names')) --}}
+                                {{--                                    @foreach (old('child_names') as $child_name) --}}
+                                {{--                                        <input type="text" class="form-control" value="{{ $child_name }}" name="child_names[]"> --}}
+                                {{--                                    @endforeach --}}
+                                {{--                                @else --}}
+                                {{--                                    <input type="text" class="form-control" name="child_names[]"> --}}
+                                {{--                                @endif --}}
 
 
 
 
 
-                                @if(old('child_names'))
-                                    @foreach(old('child_names') as $index => $child_name)
+                                @if (old('child_names'))
+                                    @foreach (old('child_names') as $index => $child_name)
                                         <div class="col-3">
                                             <div class="form-group">
-                                                <label for="child_names" class="form-control-label"> اسم الطفل </label>
-                                                <input type="text" class="form-control" value="{{ $child_name }}" name="child_names[]">
+                                                <label for="child_names" class="form-control-label"> اسم الابن </label>
+                                                <input type="text" class="form-control" value="{{ $child_name }}"
+                                                    name="child_names[]">
                                             </div>
                                         </div>
 
                                         <div class="col-3">
                                             <div class="form-group">
-                                                <label for="children_national_id" class="form-control-label"> الرقم القومي </label>
-                                                <input type="number" class="form-control" value="{{ old('children_national_id')[$index] ?? '' }}" name="children_national_id[]">
+                                                <label for="children_national_id" class="form-control-label"> الرقم القومي
+                                                </label>
+                                                <input type="number" class="form-control"
+                                                    value="{{ old('children_national_id')[$index] ?? '' }}"
+                                                    name="children_national_id[]">
                                             </div>
                                         </div>
 
                                         <div class="col-3">
                                             <div class="form-group">
                                                 <label for="age" class="form-control-label"> السن </label>
-                                                <input type="text" class="form-control" value="{{ old('age')[$index] ?? '' }}" name="age[]" readonly>
+                                                <input type="text" class="form-control"
+                                                    value="{{ old('age')[$index] ?? '' }}" name="age[]" readonly>
                                             </div>
                                         </div>
 
                                         <div class="col-2">
                                             <div class="form-group">
                                                 <label for="schools" class="form-control-label"> المدرسة </label>
-                                                <input type="text" class="form-control" value="{{ old('schools')[$index] ?? '' }}" name="schools[]">
+                                                <input type="text" class="form-control"
+                                                    value="{{ old('schools')[$index] ?? '' }}" name="schools[]">
                                             </div>
                                         </div>
 
                                         <div class="col-2">
                                             <div class="form-group">
-                                                <label for="monthly_cost" class="form-control-label"> التكلفة الشهرية </label>
-                                                <input type="text" class="form-control" value="{{ old('monthly_cost')[$index] ?? '' }}" name="monthly_cost[]">
+                                                <label for="monthly_cost" class="form-control-label"> التكلفة الشهرية
+                                                </label>
+                                                <input type="text" class="form-control"
+                                                    value="{{ old('monthly_cost')[$index] ?? '' }}"
+                                                    name="monthly_cost[]">
                                             </div>
                                         </div>
 
                                         <div class="col-4">
                                             <div class="form-group">
                                                 <label for="notes" class="form-control-label"> ملاحظات </label>
-                                                <input type="text" class="form-control" value="{{ old('notes')[$index] ?? '' }}" name="notes[]">
+                                                <input type="text" class="form-control"
+                                                    value="{{ old('notes')[$index] ?? '' }}" name="notes[]">
                                             </div>
                                         </div>
                                         <div id="child_containerN">
@@ -293,14 +327,15 @@
                                 @else
                                     <div class="col-3">
                                         <div class="form-group">
-                                            <label for="child_names" class="form-control-label"> اسم الطفل </label>
+                                            <label for="child_names" class="form-control-label"> اسم الابن </label>
                                             <input type="text" class="form-control" name="child_names[]">
                                         </div>
                                     </div>
 
                                     <div class="col-3">
                                         <div class="form-group">
-                                            <label for="children_national_id" class="form-control-label"> الرقم القومي </label>
+                                            <label for="children_national_id" class="form-control-label"> الرقم القومي
+                                            </label>
                                             <input type="number" class="form-control" name="children_national_id[]">
                                         </div>
                                     </div>
@@ -365,97 +400,49 @@
 
                         </div>
 
-                            <div id="patient_container">
-                                @if(old('patient_name'))
-                                    @foreach(old('patient_name') as $index => $patient)
-                                        <div class="patient-row row">
-                                            <!-- Patient Name and Treatment Pay By -->
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="form-label">اسم المريض</label>
-                                                    <input type="text" class="form-control" value="{{ $patient }}" name="patient_name[]" placeholder="">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="form-label">وسيلة صرف العلاج</label>
-                                                    <input type="text" class="form-control" value="{{ old('treatment_pay_by')[$index] ?? '' }}" name="treatment_pay_by[]" placeholder="">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label class="form-label">الدواء</label>
-                                                    <input type="text" class="form-control" value="{{ old('treatment')[$index] ?? '' }}" name="treatment[]" placeholder="">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <!-- Patient Type, Attending Doctor, and Insurance -->
-                                            <div class="col-md-4 col-12">
-                                                <div class="form-group">
-                                                    <label class="form-label">نوع المريض</label>
-                                                    <select class="form-control select2" name="type[]" data-placeholder="اختيار نوع المريض">
-                                                        <option value="1" {{ old('type')[$index] == '1' ? 'selected' : '' }}>ذكر</option>
-                                                        <option value="0" {{ old('type')[$index] == '0' ? 'selected' : '' }}>أنثي</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-4 col-12">
-                                                <div class="form-group">
-                                                    <label class="form-label">الطبيب المعالج</label>
-                                                    <input type="text" class="form-control" value="{{ old('doctor_name')[$index] ?? '' }}" name="doctor_name[]" placeholder="">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-4 col-12">
-                                                <div class="form-group">
-                                                    <label class="form-label mb-4">هل له تأمين</label>
-                                                    <div class="material-switch pull-left mb-5">
-                                                        <input id="is_insurance_{{ $index }}" type="checkbox" name="is_insurance[]" value="1"
-                                                            {{ is_array(old('is_insurance')) && isset(old('is_insurance')[$index]) && old('is_insurance')[$index] == '1' ? 'checked' : '' }}>
-                                                        <label for="is_insurance_{{ $index }}" class="label-success"></label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                        </div>
-                                    @endforeach
-                                @else
-                                    <!-- Default empty input for new form -->
+                        <div id="patient_container">
+                            @if (old('patient_name'))
+                                @foreach (old('patient_name') as $index => $patient)
                                     <div class="patient-row row">
+                                        <!-- Patient Name and Treatment Pay By -->
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="form-label">اسم المريض</label>
-                                                <input type="text" class="form-control" name="patient_name[]" placeholder="">
+                                                <input type="text" class="form-control" value="{{ $patient }}"
+                                                    name="patient_name[]" placeholder="">
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="form-label">وسيلة صرف العلاج</label>
-                                                <input type="text" class="form-control" name="treatment_pay_by[]" placeholder="">
+                                                <input type="text" class="form-control"
+                                                    value="{{ old('treatment_pay_by')[$index] ?? '' }}"
+                                                    name="treatment_pay_by[]" placeholder="">
                                             </div>
                                         </div>
 
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label class="form-label">الدواء</label>
-                                                <input type="text" class="form-control" name="treatment[]" placeholder="">
+                                                <input type="text" class="form-control"
+                                                    value="{{ old('treatment')[$index] ?? '' }}" name="treatment[]"
+                                                    placeholder="">
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="row">
+                                        <!-- Patient Type, Attending Doctor, and Insurance -->
                                         <div class="col-md-4 col-12">
                                             <div class="form-group">
                                                 <label class="form-label">نوع المريض</label>
-                                                <select class="form-control select2" name="type[]" data-placeholder="اختيار نوع المريض">
-                                                    <option value="1">ذكر</option>
-                                                    <option value="0">أنثي</option>
+                                                <select class="form-control select2" name="type[]"
+                                                    data-placeholder="اختيار نوع المريض">
+                                                    <option value="1"
+                                                        {{ old('type')[$index] == '1' ? 'selected' : '' }}>ذكر</option>
+                                                    <option value="0"
+                                                        {{ old('type')[$index] == '0' ? 'selected' : '' }}>أنثي</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -463,7 +450,9 @@
                                         <div class="col-md-4 col-12">
                                             <div class="form-group">
                                                 <label class="form-label">الطبيب المعالج</label>
-                                                <input type="text" class="form-control" name="doctor_name[]" placeholder="">
+                                                <input type="text" class="form-control"
+                                                    value="{{ old('doctor_name')[$index] ?? '' }}" name="doctor_name[]"
+                                                    placeholder="">
                                             </div>
                                         </div>
 
@@ -471,24 +460,89 @@
                                             <div class="form-group">
                                                 <label class="form-label mb-4">هل له تأمين</label>
                                                 <div class="material-switch pull-left mb-5">
-                                                    <input id="is_insurance_new" type="checkbox" name="is_insurance[]" value="1">
-                                                    <label for="is_insurance_new" class="label-success"></label>
+                                                    <input id="is_insurance_{{ $index }}" type="checkbox"
+                                                        name="is_insurance[]" value="1"
+                                                        {{ is_array(old('is_insurance')) && isset(old('is_insurance')[$index]) && old('is_insurance')[$index] == '1' ? 'checked' : '' }}>
+                                                    <label for="is_insurance_{{ $index }}"
+                                                        class="label-success"></label>
                                                 </div>
                                             </div>
                                         </div>
                                         <hr>
                                     </div>
-                                @endif
-                            </div>
+                                @endforeach
+                            @else
+                                <!-- Default empty input for new form -->
+                                <div class="patient-row row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">اسم المريض</label>
+                                            <input type="text" class="form-control" name="patient_name[]"
+                                                placeholder="">
+                                        </div>
+                                    </div>
 
-                            <hr>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">وسيلة صرف العلاج</label>
+                                            <input type="text" class="form-control" name="treatment_pay_by[]"
+                                                placeholder="">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="form-label">الدواء</label>
+                                            <input type="text" class="form-control" name="treatment[]"
+                                                placeholder="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4 col-12">
+                                        <div class="form-group">
+                                            <label class="form-label">نوع المريض</label>
+                                            <select class="form-control select2" name="type[]"
+                                                data-placeholder="اختيار نوع المريض">
+                                                <option value="1">ذكر</option>
+                                                <option value="0">أنثي</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 col-12">
+                                        <div class="form-group">
+                                            <label class="form-label">الطبيب المعالج</label>
+                                            <input type="text" class="form-control" name="doctor_name[]"
+                                                placeholder="">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 col-12">
+                                        <div class="form-group">
+                                            <label class="form-label mb-4">هل له تأمين</label>
+                                            <div class="material-switch pull-left mb-5">
+                                                <input id="is_insurance_new" type="checkbox" name="is_insurance[]"
+                                                    value="1">
+                                                <label for="is_insurance_new" class="label-success"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                </div>
+                            @endif
+                        </div>
+
+                        <hr>
 
                         <div class="card-header">
                             <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">
-                                ممتلكات المستفيد</h2>
+                                ممتلكات المتقدم</h2>
+
                         </div>
 
-                        <textarea rows="5" class="form-control"   name="Case_evaluation" id="Case_evaluation">{{old("Case_evaluation")}}</textarea>
+                        <textarea rows="5" class="form-control" name="Case_evaluation" id="Case_evaluation">{{ old('Case_evaluation') }}</textarea>
 
                         <div class="card-header">
                             <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">
@@ -496,8 +550,9 @@
                         </div>
 
                     </div>
-{{--                    <input type="file" class="dropify"  value=""{{old("attachments")}}" name="attachments[]"  accept="image/png, image/gif, image/jpeg,image/jpg"/>--}}
-                        <input type="file" class="dropify" name="attachments[]" accept="image/png, image/gif, image/jpeg, image/jpg" multiple>
+                    {{--                    <input type="file" class="dropify"  value=""{{old("attachments")}}" name="attachments[]"  accept="image/png, image/gif, image/jpeg,image/jpg"/> --}}
+                    <input type="file" class="dropify" name="attachments[]"
+                        accept="image/png, image/gif, image/jpeg, image/jpg" multiple>
 
                     <div class="col-12 text-center">
                         <button class="btn btn-lg btn-outline-primary mt-2 mb-2">حفظ البيانات</button>
@@ -635,7 +690,7 @@
 
                 const ageField = document.querySelector(`[name="${ageFieldName}"]`);
                 if (ageField) {
-                    ageField.value = ageYears ;
+                    ageField.value = ageYears;
                 }
             }
         }
@@ -712,7 +767,7 @@
         <div class="child-row row">
         <div class="col-12">
             <h4 class="bg-danger text-white" style="width: max-content; padding: 8px 15px; border-radius: 5px;">
-                الطفل <span class="child_number">${childNumber}</span>
+                الابن <span class="child_number">${childNumber}</span>
             </h4>
         </div>
 

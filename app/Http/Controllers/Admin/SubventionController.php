@@ -18,7 +18,7 @@ class SubventionController extends Controller
 {
     public function index(request $request)
     {
-        if($request->ajax()) {
+        if ($request->ajax()) {
             $data = Subvention::latest()->get();
             return Datatables::of($data)
                 ->addColumn('action', function ($data) {
@@ -58,15 +58,9 @@ class SubventionController extends Controller
                         return ' عدد : ' . $data->asset_count . ' من ' .
                             ($data->asset ? ($data->asset->name ?? '-') . ' '  : '-');
                     } else {
-                        return " مبلغ قدره : " . $data->price . " جنيه " ;
+                        return " مبلغ قدره : " . $data->price . " جنيه ";
                     }
-//                    $lockerLogs = LockerLog::where("amount" , $data->price)->where("created_at" , $data->created_at)->where("type" , LockerLog::TYPE_MINUS);
-//                    $Dtype = $lockerLogs->first()->moneyType;
-//                    if ($data->price == 0){
-//                        return ' عدد : ' . $data->asset_count . ' من ' . ($data->asset ? ($data->asset->name ?? '-')  . $Dtype: '-');
-//                    }else{
-//                        return " مبلغ قدره : " . $data->price . " جنيه" . $Dtype;
-//                    }
+                    //
                 })
                 ->addColumn("Dtype", function ($data) {
                     $lockerLogs = LockerLog::where("amount", $data->price)
@@ -76,20 +70,20 @@ class SubventionController extends Controller
                     $lockerLog = $lockerLogs->first();
                     $Dtype = $lockerLog ? $lockerLog->moneyType : 'عينيه';
 
-                    return $Dtype  =="sadaka" ? "صدقه" : ($Dtype == "zakat" ? "زكاة" : "عينيه");
+                    return $Dtype  == "sadaka" ? "صدقه" : ($Dtype == "zakat" ? "زكاة" : "عينيه");
                 })
                 ->editColumn('type', function ($data) {
-                    if($data->type == 'once')
+                    if ($data->type == 'once')
                         return 'مرة واحدة';
                     else
                         return 'إعانة شهرية';
                 })
                 ->escapeColumns([])
                 ->make(true);
-        }else{
-            $totoaSadaka = LockerLog::where("type", LockerLog::TYPE_MINUS)->where("moneyType" , LockerLog::moneyTypeSadaka)->sum("amount");
-            $totalZakat = LockerLog::where("type", LockerLog::TYPE_MINUS)->where("moneyType" , LockerLog::moneyTypeZakat)->sum("amount");
-            return view('admin/subventions/index' , compact("totalZakat" , "totoaSadaka"));
+        } else {
+            $totoaSadaka = LockerLog::where("type", LockerLog::TYPE_MINUS)->where("moneyType", LockerLog::moneyTypeSadaka)->sum("amount");
+            $totalZakat = LockerLog::where("type", LockerLog::TYPE_MINUS)->where("moneyType", LockerLog::moneyTypeZakat)->sum("amount");
+            return view('admin/subventions/index', compact("totalZakat", "totoaSadaka"));
         }
     }
 
@@ -97,23 +91,22 @@ class SubventionController extends Controller
 
     public function create()
     {
-        $users = User::where('status','accepted')->select('id','wife_name')->latest()->get();
+        $users = User::where('status', 'accepted')->select('id', 'wife_name')->latest()->get();
         $assets = Asset::all();
-        return view('admin/subventions/parts/create',compact('users' , "assets"));
-
+        return view('admin/subventions/parts/create', compact('users', "assets"));
     }
 
 
     public function store(subventionRequest $request)
     {
         DB::beginTransaction();
-        try{
+        try {
             $user = User::find($request->user_id);
-            if ($user){
-                if ($request->sub_type == 0){
-                    if ($request->moneyType == 0){
-                        if ($request->price <= $totalDonation = Donation::where("donation_type", 0)->sum("donation_amount")){
-                            Subvention::create($request->except('_token' , "sub_type" , "moneyType"));
+            if ($user) {
+                if ($request->sub_type == 0) {
+                    if ($request->moneyType == 0) {
+                        if ($request->price <= $totalDonation = Donation::where("donation_type", 0)->sum("donation_amount")) {
+                            Subvention::create($request->except('_token', "sub_type", "moneyType"));
                             LockerLog::create([
                                 "moneyType" => LockerLog::moneyTypeZakat,
                                 "amount" => $request->price,
@@ -122,42 +115,39 @@ class SubventionController extends Controller
                                 "comment" => "  زكاة جديده الي" . ($user ? $user->husband_name : "مجهول") .
                                     " ورقم هاتفه " . ($user ? $user->nearest_phone : "غير متوفر"),
                             ]);
-
-                        }else{
+                        } else {
                             toastr()->error("لا توجد سيوله لهذه الاعانه");
-                            return response()->json(["status"=>500 , "message" => "لا توجد سيوله لهذه الاعانه"]);
+                            return response()->json(["status" => 500, "message" => "لا توجد سيوله لهذه الاعانه"]);
                         }
-                    }else{
-                        if ($request->price <= $totalDonation = Donation::where("donation_type", 1)->sum("donation_amount")){
-                            Subvention::create($request->except('_token' , "sub_type" , "moneyType"));
+                    } else {
+                        if ($request->price <= $totalDonation = Donation::where("donation_type", 1)->sum("donation_amount")) {
+                            Subvention::create($request->except('_token', "sub_type", "moneyType"));
                             LockerLog::create([
                                 "moneyType" => LockerLog::moneyTypeSadaka,
                                 "amount" => $request->price,
                                 "type" => LockerLog::TYPE_MINUS,
                                 "admin_id" => auth()->id(),
-                                "comment" => "   صدقه  جديده  الي" . ($user ? $user->husband_name : " مجهول "  ) .
+                                "comment" => "   صدقه  جديده  الي" . ($user ? $user->husband_name : " مجهول ") .
                                     "  ورقم هاتفه  " . ($user ? $user->nearest_phone : "  غير متوفر"),
                             ]);
-                        }else{
+                        } else {
                             toastr()->error("لا توجد سيوله لهذه الاعانه");
-                            return response()->json(["status"=>500 , "message" => "لا توجد سيوله لهذه الاعانه"]);
+                            return response()->json(["status" => 500, "message" => "لا توجد سيوله لهذه الاعانه"]);
                         }
                     }
-                }else{
+                } else {
 
 
                     $asset = Asset::find($request->asset_id);
 
-                    if ( $asset && $asset->counter >= $request->asset_count) {
+                    if ($asset && $asset->counter >= $request->asset_count) {
                         $asset->counter -= $request->asset_count;
-//                        dd($asset->counter >= $request->asset_count);
-//                        dd($request->all() , $asset->counter);
                         $asset->save();
 
 
-                        Subvention::create($request->except('_token' , "sub_type" , "moneyType"));
-                        $totalAssets = Asset::where("id" , $request->asset_id)->first();
-                        if($totalAssets->counter >= $request->asset_count) {
+                        Subvention::create($request->except('_token', "sub_type", "moneyType"));
+                        $totalAssets = Asset::where("id", $request->asset_id)->first();
+                        if ($totalAssets->counter >= $request->asset_count) {
                             LockerLog::create([
                                 "moneyType" => LockerLog::moneyTypeSubvention,
                                 "asset_id" => $request->asset_id,
@@ -167,30 +157,27 @@ class SubventionController extends Controller
                                 "comment" => "  اعانه جديده الي " . ($user ? $user->husband_name : " مجهول ") .
                                     " ورقم هاتفه " . ($user ? $user->nearest_phone : " غير  متوفر "),
                             ]);
-
-                        }else{
+                        } else {
                             toastr()->error("لا توجد سيوله لهذه الاعانه");
-                            return response()->json(["status"=>500 , "message" => "لا توجد سيوله لهذه الاعانه"]);
+                            return response()->json(["status" => 500, "message" => "لا توجد سيوله لهذه الاعانه"]);
                         }
-
-                    }else{
+                    } else {
                         toastr()->error("لا توجد سيوله لهذه الاعانه");
-                        return response()->json(["status"=>500 ,  "message" => "لا توجد سيوله لهذه الاعانه"]);
+                        return response()->json(["status" => 500,  "message" => "لا توجد سيوله لهذه الاعانه"]);
                     }
                 }
 
                 return response()->json(['status' => 200]);
-            }else{
+            } else {
                 toastr()->error("المستخدم غير موجود");
-                return response()->json(["status"=>500 ,  "message" => "المستخدم غير موجود"]);
+                return response()->json(["status" => 500,  "message" => "المستخدم غير موجود"]);
             }
 
             DB::commit();
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['status' => 500 , "message" => $e->getMessage()]);
+            return response()->json(['status' => 500, "message" => $e->getMessage()]);
         }
-
     }
 
     /**
@@ -214,60 +201,60 @@ class SubventionController extends Controller
         $lockerLog = $lockerLogs->first();
         $Dtype = $lockerLog ? $lockerLog->moneyType : 'subvention';
 
-//        $Dtype = $Dtype  == "sadaka" ? "صدقه" : ($Dtype == "zakat" ? "زكاة" : "عينيه");
-        $users = User::where('status','accepted')
+        //        $Dtype = $Dtype  == "sadaka" ? "صدقه" : ($Dtype == "zakat" ? "زكاة" : "عينيه");
+        $users = User::where('status', 'accepted')
             // ->whereDoesntHave('subvention')
-            ->orWhere('id',$subvention->user_id)
-            ->select('id','wife_name')
+            ->orWhere('id', $subvention->user_id)
+            ->select('id', 'wife_name')
             ->latest()->get();
         $assets = Asset::all();
 
-        return view('admin/subventions/parts/edit',compact('users','subvention' , "assets" , "Dtype"));
+        return view('admin/subventions/parts/edit', compact('users', 'subvention', "assets", "Dtype"));
     }
 
 
     public function update(subventionRequest $request, $id)
     {
-        try{
+        try {
             $user = User::find($request->user_id);
-            if ($user){
+            if ($user) {
 
-                if ($request->sub_type == 0 && $request->asset_count <= 0){
-                    if ($request->moneyType == 0){
-                        if ($request->price <= $totalDonation = Donation::where("donation_type", 0)->sum("donation_amount")){
+                if ($request->sub_type == 0 && $request->asset_count <= 0) {
+                    if ($request->moneyType == 0) {
+                        if ($request->price <= $totalDonation = Donation::where("donation_type", 0)->sum("donation_amount")) {
                             $subvention = Subvention::find($id);
-                            Subvention::find($id)->update($request->except('_token' , "sub_type" , "moneyType"));
+                            Subvention::find($id)->update($request->except('_token', "sub_type", "moneyType"));
                             $suv = Subvention::find($id);
-                            $lockerLogs = LockerLog::where("amount" , $subvention->price)->where("created_at" , $subvention->created_at)->where("type" , LockerLog::TYPE_MINUS);
+                            $lockerLogs = LockerLog::where("amount", $subvention->price)->where("created_at", $subvention->created_at)->where("type", LockerLog::TYPE_MINUS);
                             $lockerLogs->update([
                                 "amount" => $suv->price,
-                                "asset_id" =>$suv->asset_id,
-                                "asset_count" =>$suv->asset_count,
+                                "asset_id" => $suv->asset_id,
+                                "asset_count" => $suv->asset_count,
                                 "admin_id" => auth()->id(),
                             ]);
-                        }else{
+                        } else {
                             toastr()->error("لا توجد سيوله لهذه الاعانه");
-                            return response()->json(["status"=>500 , "message" => "لا توجد سيوله لهذه الاعانه"]);
+                            return response()->json(["status" => 500, "message" => "لا توجد سيوله لهذه الاعانه"]);
                         }
-                    }else{
-                        if ($request->price <= $totalDonation = Donation::where("donation_type", 1)->sum("donation_amount")){
+                    } else {
+                        if ($request->price <= $totalDonation = Donation::where("donation_type", 1)->sum("donation_amount")) {
                             $subvention = Subvention::find($id);
-                            Subvention::find($id)->update($request->except('_token' , "sub_type" , "moneyType"));
+                            Subvention::find($id)->update($request->except('_token', "sub_type", "moneyType"));
                             $suv = Subvention::find($id);
 
-                            $lockerLogs = LockerLog::where("amount" , $subvention->price)->where("created_at" , $subvention->created_at)->where("type" , LockerLog::TYPE_MINUS);
+                            $lockerLogs = LockerLog::where("amount", $subvention->price)->where("created_at", $subvention->created_at)->where("type", LockerLog::TYPE_MINUS);
                             $lockerLogs->update([
                                 "amount" => $suv->price,
-                                "asset_id" =>$suv->asset_id,
-                                "asset_count" =>$suv->asset_count,
+                                "asset_id" => $suv->asset_id,
+                                "asset_count" => $suv->asset_count,
                                 "admin_id" => auth()->id(),
                             ]);
-                        }else{
+                        } else {
                             toastr()->error("لا توجد سيوله لهذه الاعانه");
-                            return response()->json(["status"=>500 , "message" => "لا توجد سيوله لهذه الاعانه"]);
+                            return response()->json(["status" => 500, "message" => "لا توجد سيوله لهذه الاعانه"]);
                         }
                     }
-                }else{
+                } else {
                     $asset = Asset::find($request->asset_id);
                     $subvention = Subvention::find($id);
                     if (!$asset || !$subvention) {
@@ -277,11 +264,7 @@ class SubventionController extends Controller
                     if ($request->asset_count <= $newCounter) {
                         $asset->counter = $newCounter - $request->asset_count;
                         $asset->save();
-
-//                        Subvention::create($request->except('_token' , "sub_type" , "moneyType"));
-                        $totalAssets = Asset::where("id" , $request->asset_id)->first();
-
-
+                        $totalAssets = Asset::where("id", $request->asset_id)->first();
                         $subvention = Subvention::find($id);
                         Subvention::find($id)->update($request->except('_token', "sub_type", "moneyType"));
                         $suv = Subvention::find($id);
@@ -293,55 +276,21 @@ class SubventionController extends Controller
                             "asset_count" => $suv->asset_count,
                             "admin_id" => auth()->id(),
                         ]);
-                    }else {
+                    } else {
                         toastr()->error("لا توجد سيوله لهذه الاعانه");
-                        return response()->json(["status"=>500 ,  "message" => "لا توجد سيوله لهذه الاعانه"]);
+                        return response()->json(["status" => 500,  "message" => "لا توجد سيوله لهذه الاعانه"]);
                     }
                 }
 
                 return response()->json(['status' => 200]);
-            }else{
+            } else {
                 toastr()->error("المستخدم غير موجود");
-                return response()->json(["status"=>500 ,  "message" => "المستخدم غير موجود"]);
+                return response()->json(["status" => 500,  "message" => "المستخدم غير موجود"]);
             }
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             toastr()->error("لا توجد سيوله لهذه الاعانه");
-            return response()->json(["status"=>500 ,  "message" => "لا توجد سيوله لهذه الاعانه"]);
+            return response()->json(["status" => 500,  "message" => "لا توجد سيوله لهذه الاعانه"]);
         }
-//
-//        \
-//
-//
-//        $subvention = Subvention::find($id);
-//        if ($subvention->price == 0 || $subvention->price == null){
-//            $asset = Asset::find($request->asset_id);
-//            $subvention = Subvention::find($id);
-//            if (!$asset || !$subvention) {
-//                abort(404, "البيانات غير موجودة");
-//            }
-//            $newCounter = $asset->counter + $subvention->asset_count;
-//            if ($request->asset_count < $newCounter) {
-//                $asset->counter = $newCounter - $request->asset_count;
-//                $asset->save();
-//            } else {
-//                toastr()->error("غير كافي");
-//                abort(405, "غير كافي");
-//            }
-//        }
-//        if(
-//        ){
-//
-//            Subvention::find($id)->update($request->except('_token' , "sub_type" , "moneyType"))
-//            $suv = Subvention::find($id);
-//
-//            $lockerLogs = LockerLog::where("amount" , $subvention->price)->where("created_at" , $subvention->created_at)->where("type" , LockerLog::TYPE_MINUS);
-//            $lockerLogs->update([
-//                "amount" => $suv->price,
-//                "asset_id" =>$suv->asset_id,
-//                "asset_count" =>$suv->asset_count,
-//                "admin_id" => auth()->id(),
-//            ]);
-
     }
 
     /**
@@ -359,36 +308,36 @@ class SubventionController extends Controller
     {
         try {
 
-            $subvention = Subvention::where('id',$request->id)->first();
-            $lockerLogs = LockerLog::where("amount" , $subvention->price)->where("created_at" , $subvention->created_at)->where("type" , LockerLog::TYPE_MINUS);
+            $subvention = Subvention::where('id', $request->id)->first();
+            $lockerLogs = LockerLog::where("amount", $subvention->price)->where("created_at", $subvention->created_at)->where("type", LockerLog::TYPE_MINUS);
             $lockerLogs->delete();
             $asset = Asset::find($subvention->asset_id);
             if ($asset) {
-                $asset->counter += Subvention::where('id',$request->id)->first()->asset_count;
+                $asset->counter += Subvention::where('id', $request->id)->first()->asset_count;
                 $asset->save();
             }
             Subvention::destroy($request->id);
             return redirect()->back();
-//            return response(['message'=>'تم الحذف بنجاح','status'=>200],200);
-        }
-        catch (\Exception $ex){
-            return response(['message'=>$ex->getMessage(),'status'=>400]);
+            //            return response(['message'=>'تم الحذف بنجاح','status'=>200],200);
+        } catch (\Exception $ex) {
+            return response(['message' => $ex->getMessage(), 'status' => 400]);
         }
     }
 
-    public function showSubventions(){
-//        $subventions = Subvention::where('type','monthly')->latest()->get();
+    public function showSubventions()
+    {
         $subventions = Subvention::where('type', 'monthly')
-            ->with('user')  // Correct: uses parentheses () instead of square brackets []
+            ->with('user')
             ->latest()
             ->get();
-//        return view('admin.print.subvention-print',compact('subventions'));
-        return view('admin/print/invoice',compact('subventions'));
+
+        return view('admin/print/invoice', compact('subventions'));
     }
 
-    public function showOneSubvention($id){
+    public function showOneSubvention($id)
+    {
         // where('type','once')->
-        $subventions = Subvention::where('id' , $id)->latest()->first();
-        return view('admin/print/invoices2',compact('subventions'));
+        $subventions = Subvention::where('id', $id)->latest()->first();
+        return view('admin/print/invoices2', compact('subventions'));
     }
 }

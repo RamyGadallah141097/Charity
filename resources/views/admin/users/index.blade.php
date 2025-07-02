@@ -12,11 +12,11 @@
             <div class="card">
                 <div class="card-header w-100">
                     <h3 class="card-title">
-                        قائمة بالمستفدين  {{ isset($setting) ? isset($setting->title) : '' }}
+                        قائمة بالمستفدين {{ isset($setting) ? isset($setting->title) : '' }}
                     </h3>
                     <div class="row mb-3 w-100">
                         <div class="col-2">
-{{--                            <label for="social_status">الحاله الشخصيه</label>--}}
+                            {{--                            <label for="social_status">الحاله الشخصيه</label> --}}
                             <select id="social_status" class="form-control">
                                 <option value="">اختيار الحاله الشخصيه</option>
                                 <option value="0">اعزب</option>
@@ -27,8 +27,9 @@
                         </div>
 
                         <div class="col-2">
-{{--                            <label for="standard_living">الحالة المعيشيه</label>--}}
-                                <input id="standard_living" type="number" class="form-control" placeholder="الحالة المعيشيه" name="standard_living">
+                            {{--                            <label for="standard_living">الحالة المعيشيه</label> --}}
+                            <input id="standard_living" type="number" class="form-control" placeholder="الحالة المعيشيه"
+                                name="standard_living">
                         </div>
 
 
@@ -43,20 +44,21 @@
 
 
 
-                        {{--                        <div class="col-2">--}}
-{{--                            <label for="family_number">عدد الاطفال</label>--}}
-{{--                            <select id="family_number" class="form-control">--}}
-{{--                                <option value="">اختيار عدد الاطفال</option>--}}
-{{--                                <option value="0">0</option>--}}
-{{--                                <option value="1">1</option>--}}
-{{--                                <option value="2">2</option>--}}
-{{--                                <option value="3">3</option>--}}
-{{--                                <option value="4">4+</option>--}}
-{{--                            </select>--}}
-{{--                        </div>--}}
+                        {{--                        <div class="col-2"> --}}
+                        {{--                            <label for="family_number">عدد الاطفال</label> --}}
+                        {{--                            <select id="family_number" class="form-control"> --}}
+                        {{--                                <option value="">اختيار عدد الاطفال</option> --}}
+                        {{--                                <option value="0">0</option> --}}
+                        {{--                                <option value="1">1</option> --}}
+                        {{--                                <option value="2">2</option> --}}
+                        {{--                                <option value="3">3</option> --}}
+                        {{--                                <option value="4">4+</option> --}}
+                        {{--                            </select> --}}
+                        {{--                        </div> --}}
                         <div class="col-2">
-{{--                            <label for="family_number">عدد الاطفال</label>--}}
-                            <input id="family_number" type="number" class="form-control" name="family_number" placeholder="عدد الاسره">
+                            {{--                            <label for="family_number">عدد الاطفال</label> --}}
+                            <input id="family_number" type="number" class="form-control" name="family_number"
+                                placeholder="عدد الاسره">
                         </div>
                     </div>
 
@@ -65,7 +67,7 @@
                         <a href="{{ route('users.create') }}" class="btn btn-secondary btn-icon text-white">
                             <span>
                                 <i class="fe fe-plus"></i>
-                            </span> اضافة مستفيد
+                            </span> استمارة متقدم
                         </a>
                     </div>
                 </div>
@@ -74,20 +76,20 @@
                         <!--begin::Table-->
                         <table class="table table-striped table-bordered text-nowrap w-100" id="dataTable">
                             <thead>
-                            <tr class="fw-bolder text-muted bg-light">
-                                <th class="min-w-25px">#</th>
-                                <th class="min-w-50px">اسم الزوج</th>
-                                <th class="min-w-50px">اسم الزوجة</th>
-                                <th class="min-w-50px">الحالة الاجتماعية</th>
-                                <th class="min-w-50px">الهاتف</th>
-                                <th class="min-w-50px">اجمالي الدخل</th>
-                                <th class="min-w-50px">اجمالي المصاريف</th>
-                                <th class="min-w-50px">مستوى المعيشة</th>
-                                {{-- <th class="min-w-50px">اجمالي التبرعات </th> --}}
-                                <th class="min-w-50px">الحالة </th>
-                                <th class="min-w-50px"> تحديث</th>
-                                <th class="min-w-50px rounded-end">العمليات</th>
-                            </tr>
+                                <tr class="fw-bolder text-muted bg-light">
+                                    <th class="min-w-25px">#</th>
+                                    <th class="min-w-50px">اسم الزوج</th>
+                                    <th class="min-w-50px">اسم الزوجة</th>
+                                    <th class="min-w-50px">الحالة الاجتماعية</th>
+                                    <th class="min-w-50px">الهاتف</th>
+                                    <th class="min-w-50px">اجمالي الدخل</th>
+                                    <th class="min-w-50px">اجمالي المصاريف</th>
+                                    <th class="min-w-50px">مستوى المعيشة</th>
+                                    {{-- <th class="min-w-50px">اجمالي التبرعات </th> --}}
+                                    <th class="min-w-50px">الحالة </th>
+                                    <th class="min-w-50px"> تحديث</th>
+                                    <th class="min-w-50px rounded-end">العمليات</th>
+                                </tr>
                             </thead>
                         </table>
                     </div>
@@ -97,7 +99,7 @@
 
         <!--Delete MODAL -->
         <div class="modal fade" id="delete_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
+            aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -108,7 +110,7 @@
                     </div>
                     <form id="delete_form" action="{{ route('delete_users') }}" method="POST">
                         @csrf
-                        @method("DELETE")
+                        @method('DELETE')
                         <div class="modal-body">
                             <input id="delete_id" name="id" type="hidden">
                             <p>هل انت متأكد من حذف البيانات التالية <span id="title" class="text-danger"></span>؟</p>
@@ -128,7 +130,7 @@
 
         <!-- Edit MODAL -->
         <div class="modal fade bd-example-modal-lg" id="editOrCreate" data-backdrop="static" tabindex="-1" role="dialog"
-             aria-hidden="true">
+            aria-hidden="true">
             <div class="modal-dialog modal-" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -153,11 +155,10 @@
 @section('ajaxCalls')
     <script>
         {{-- alert("{{Request::segment(3)}}") --}}
-        var columns = [
-            {
+        var columns = [{
                 data: null,
                 name: 'index',
-                render: function (data, type, row, meta) {
+                render: function(data, type, row, meta) {
                     return meta.row + 1;
                 },
                 orderable: false,
@@ -255,80 +256,113 @@
         });
     </script>
 
-<script>
-    $(document).ready(function () {
-        function showData(url, columns) {
-            $('#dataTable').DataTable({
-                processing: true,
-                serverSide: true,
-                destroy: true, // Ensure reloading
-                ajax: {
-                    url: url,
-                    data: function (d) {
-                        d.social_status = $('#social_status').val();
-                        d.standard_living = $('#standard_living').val();
-                        d.has_patient = $('#has_patient').val();
-                        d.family_number = $('#family_number').val();
-                    }
+    <script>
+        $(document).ready(function() {
+            function showData(url, columns) {
+                $('#dataTable').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    destroy: true, // Ensure reloading
+                    ajax: {
+                        url: url,
+                        data: function(d) {
+                            d.social_status = $('#social_status').val();
+                            d.standard_living = $('#standard_living').val();
+                            d.has_patient = $('#has_patient').val();
+                            d.family_number = $('#family_number').val();
+                        }
+                    },
+                    columns: columns
+                });
+            }
+
+            var columns = [{
+                    data: 'id',
+                    name: 'id'
                 },
-                columns: columns
-            });
-        }
+                {
+                    data: 'husband_name',
+                    name: 'husband_name'
+                },
+                {
+                    data: 'wife_name',
+                    name: 'wife_name'
+                },
+                {
+                    data: 'social_status',
+                    name: 'social_status'
+                },
+                {
+                    data: 'nearest_phone',
+                    name: 'nearest_phone'
+                },
+                {
+                    data: 'gross_income',
+                    name: 'gross_income'
+                },
+                {
+                    data: 'gross_expenses',
+                    name: 'gross_expenses'
+                },
+                {
+                    data: 'standard_living',
+                    name: 'standard_living'
+                },
+                {
+                    data: 'status',
+                    name: 'status'
+                },
+                {
+                    data: 'statusChange',
+                    name: 'statusChange'
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false
+                }
+            ];
 
-        var columns = [
-            { data: 'id', name: 'id' },
-            { data: 'husband_name', name: 'husband_name' },
-            { data: 'wife_name', name: 'wife_name' },
-            { data: 'social_status', name: 'social_status' },
-            { data: 'nearest_phone', name: 'nearest_phone' },
-            { data: 'gross_income', name: 'gross_income' },
-            { data: 'gross_expenses', name: 'gross_expenses' },
-            { data: 'standard_living', name: 'standard_living' },
-            { data: 'status', name: 'status' },
-            { data: 'statusChange', name: 'statusChange' },
-            { data: 'action', name: 'action', orderable: false, searchable: false }
-        ];
-
-        var tableUrl = "{{ route('users.index', request()->segment(3)) }}";
-        showData(tableUrl, columns);
-
-        $('#social_status, #standard_living,#has_patient, #family_number').change(function () {
+            var tableUrl = "{{ route('users.index', request()->segment(3)) }}";
             showData(tableUrl, columns);
-        });
-    });
 
-</script>
+            $('#social_status, #standard_living,#has_patient, #family_number').change(function() {
+                showData(tableUrl, columns);
+            });
+        });
+    </script>
     // Change Status Using Ajax
     <script>
-    $(document).on('click', '.statusBtn', function(event) {
-    event.preventDefault()
-    var id = $(this).data("id"),
-    status = $(this).data("status")
-    $.ajax({
-    type: 'POST',
-    url: "{{ route('updateUserStatus') }}",
-    data: {
-    '_token': "{{ csrf_token() }}",
-    'id': id,
-    'status': status,
-    },
-    success: function(data) {
-    if (data.status === true) {
-    $('#dataTable').DataTable().ajax.reload();
-    toastr.success(data.message)
-    } else
-    toastr.error('هناك خطأ ما يرجي اعادة المحاولة')
-    },
-    error: function(data) {
-    toastr.error(data.message)
-    }
-    });
-    });
+        $(document).on('click', '.statusBtn', function(event) {
+            event.preventDefault()
+            var id = $(this).data("id"),
+                status = $(this).data("status")
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('updateUserStatus') }}",
+                data: {
+                    '_token': "{{ csrf_token() }}",
+                    'id': id,
+                    'status': status,
+                },
+                success: function(data) {
+                    if (data.status === true) {
+                        $('#dataTable').DataTable().ajax.reload();
+                        toastr.success(data.message)
+                    } else
+                        toastr.error('هناك خطأ ما يرجي اعادة المحاولة')
+                },
+                error: function(data) {
+                    toastr.error(data.message)
+                }
+            });
+        });
     </script>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             // عند الضغط على أيقونة الحذف داخل الجدول
-            $(".delete_button").on("click", function () {
+            $(".delete_button").on("click", function() {
                 let id = $(this).data("id");
                 let title = $(this).data("title");
 
@@ -338,11 +372,9 @@
             });
 
             // عند الضغط على زر "حذف" داخل المودال
-            $("#delete_btn").on("click", function () {
+            $("#delete_btn").on("click", function() {
                 $("#delete_form").submit(); // إرسال النموذج
             });
         });
-
     </script>
-
 @endsection
