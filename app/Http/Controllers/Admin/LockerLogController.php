@@ -21,19 +21,20 @@ class LockerLogController extends Controller
 
     public function index(Request $request, $model = null)
     {
+
         if ($request->ajax()) {
             $type = $model == 0 ? LockerLog::moneyTypeZakat : ($model == 1 ? LockerLog::moneyTypeSadaka : ($model == 2 ? LockerLog::moneyTypeLoans : ""));
             $donations = LockerLog::where("moneyType", $type)->with("admin")->get();
 
-            if ($model == 3){
+            if ($model == 3) {
                 return DataTables::of($donations)
                     ->editColumn('admin_id', function ($donation) {
                         return optional($donation->admin)->name ?? "غير متوفر";
                     })
                     ->editColumn('amount', function ($donation) {
                         return $donation->type == LockerLog::TYPE_PLUS
-                            ? ' عدد : ' . $donation->asset_count . ' من ' . ($donation->asset ? ($donation->asset->name ?? '-') : '-'). "<i class='fas fa-arrow-down' style='color: #63E6BE; font-size: 30px ;transform: rotate(45deg); margin-right: 20px;'></i>"
-                            :' عدد : ' . $donation->asset_count . ' من ' . ($donation->asset ? ($donation->asset->name ?? '-') : '-') . "<i class='fas fa-arrow-up' style='color: #e42f2f; font-size: 30px ; transform: rotate(45deg);margin-right: 20px;'></i>";
+                            ? ' عدد : ' . $donation->asset_count . ' من ' . ($donation->asset ? ($donation->asset->name ?? '-') : '-') . "<i class='fas fa-arrow-down' style='color: #63E6BE; font-size: 30px ;transform: rotate(45deg); margin-right: 20px;'></i>"
+                            : ' عدد : ' . $donation->asset_count . ' من ' . ($donation->asset ? ($donation->asset->name ?? '-') : '-') . "<i class='fas fa-arrow-up' style='color: #e42f2f; font-size: 30px ; transform: rotate(45deg);margin-right: 20px;'></i>";
                     })
                     ->editColumn('comment', function ($donation) {
                         $icon = $donation->type === LockerLog::TYPE_PLUS
@@ -46,7 +47,7 @@ class LockerLogController extends Controller
                     })
                     ->escapeColumns([])
                     ->make(true);
-            }else{
+            } else {
                 return DataTables::of($donations)
                     ->addColumn('admin_id', function ($donation) {
                         return optional($donation->admin)->name ?? "غير متوفر";
@@ -68,16 +69,23 @@ class LockerLogController extends Controller
                     ->escapeColumns([])
                     ->make(true);
             }
-
-
-        }else {
+        } else {
             $title = $model == 0 ? "زكاة" : ($model == 1 ? "صدقات" : ($model == 2 ? "قرض حسن " : "عينيات"));
             $type = $model == 0 ? LockerLog::moneyTypeZakat : ($model == 1 ? LockerLog::moneyTypeSadaka : ($model == 2 ? LockerLog::moneyTypeLoans : LockerLog::moneyTypeSubvention));
-            $totalPlus = LockerLog::where("moneyType", $type)->where("type" , LockerLog::TYPE_PLUS)->sum("amount");
-            $totalMinus = LockerLog::where("moneyType", $type)->where("type" , LockerLog::TYPE_MINUS)->sum("amount");
-            $total = $totalPlus - $totalMinus;
+            $totalPlus = LockerLog::where("moneyType", $type)->where("type", LockerLog::TYPE_PLUS)->sum("amount");
+            $totalMinus = LockerLog::where("moneyType", $type)->where("type", LockerLog::TYPE_MINUS)->sum("amount");
+            if ($totalPlus < $totalMinus) {
+                $error = 'المجموع الكلي للخارج اكبر من الداخل';
+                $total = 0;
+                return response()->view('admin/lock/stdPage', compact('model', "title", "total", "totalMinus", "totalPlus", "error"));
+            } else {
+                $total = $totalPlus - $totalMinus;
+            }
 
-            return view('admin/lock/stdPage', compact('model', "title" , "total" , "totalMinus" , "totalPlus"));
+
+
+
+            return view('admin/lock/stdPage', compact('model', "title", "total", "totalMinus", "totalPlus"));
         }
     }
 

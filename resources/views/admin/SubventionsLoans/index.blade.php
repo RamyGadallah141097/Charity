@@ -12,7 +12,7 @@
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"> تخصيص اعانات القرض الحسن للمستفيدين المقبولين </h3>
+                    <h3 class="card-title"> تخصيص اعانات القرض الحسن قائمة المقبولين </h3>
                     <div class="">
                         <a href="{{ route('showSubventions') }}" title="طباعة" class="btn btn-success btn-icon text-white">
                             طباعة
@@ -96,11 +96,10 @@
 @endsection
 @section('ajaxCalls')
     <script>
-        var columns = [
-            {
+        var columns = [{
                 data: null,
                 name: 'index',
-                render: function (data, type, row, meta) {
+                render: function(data, type, row, meta) {
                     return meta.row + 1;
                 },
                 orderable: false,

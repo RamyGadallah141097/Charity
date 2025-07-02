@@ -2,7 +2,7 @@
 
 @section('title')
     {{ isset($setting) ? $setting->title : '' }}
- | التبرعات
+    | التبرعات
 @endsection
 @section('page_name')
     التبرعات
@@ -13,13 +13,13 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title"> قائمة تبرعات الصدقات والزكاة </h3>
-                        <div class="">
-                            <button class="btn btn-secondary btn-icon text-white addBtn">
-                                <span>
-                                    <i class="fe fe-plus"></i>
-                                </span> اضافة جديد
-                            </button>
-                        </div>
+                    <div class="">
+                        <button class="btn btn-secondary btn-icon text-white addBtn">
+                            <span>
+                                <i class="fe fe-plus"></i>
+                            </span> اضافة جديد
+                        </button>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -33,7 +33,7 @@
                                     <th class="min-w-125px">تاريخ التبرع</th>
                                     <th class="min-w-125px">نوع التبرع </th>
                                     <th class="min-w-125px">قيمه التبرع </th>
-                                    <th class="min-w-50px rounded-end">العمليات</th>
+                                    {{-- <th class="min-w-50px rounded-end">العمليات</th> --}}
                                 </tr>
                             </thead>
                         </table>
@@ -94,11 +94,10 @@
 @endsection
 @section('ajaxCalls')
     <script>
-        var columns = [
-            {
+        var columns = [{
                 data: null,
                 name: 'index',
-                render: function (data, type, row, meta) {
+                render: function(data, type, row, meta) {
                     return meta.row + 1;
                 },
                 orderable: false,
@@ -124,12 +123,12 @@
                 data: 'donation_amount',
                 name: 'donation_amount'
             },
-            {
-                data: 'action',
-                name: 'action',
-                orderable: false,
-                searchable: false
-            },
+            // {
+            //     data: 'action',
+            //     name: 'action',
+            //     orderable: false,
+            //     searchable: false
+            // },
         ]
         showData('{{ route('Donations.index') }}', columns);
         deleteScript('{{ route('donations_delete') }}');

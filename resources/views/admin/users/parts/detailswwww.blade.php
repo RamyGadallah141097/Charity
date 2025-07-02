@@ -127,9 +127,9 @@
                             <tr class="fw-bolder text-muted bg-light">
                             <tr class="fw-bolder text-muted bg-light">
                                 <th class="min-w-25px"> #</th>
-                                <th class="min-w-25px"> اسم الطفل</th>
-                                <th class="min-w-25px">الرقم القومى للطفل</th>
-                                <th class="min-w-25px">تاريخ ميلاد الطفل </th>
+                                <th class="min-w-25px"> اسم الابن</th>
+                                <th class="min-w-25px">الرقم القومى للابن</th>
+                                <th class="min-w-25px">تاريخ ميلاد الابن </th>
                                 <th class="min-w-25px">العمر </th>
                                 <th class="min-w-25px">المدرسة</th>
                                 <th class="min-w-25px"> تكلفة الدروس </th>

@@ -42,12 +42,12 @@ class BorrowerController extends Controller
                         ';
 
                     // التحقق من إذن الحذف
-                        $deleteButton = '
-                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
-                                    data-id="' . $borrower->id . '">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        ';
+                        // $deleteButton = '
+                        //     <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                        //             data-id="' . $borrower->id . '">
+                        //         <i class="fas fa-trash"></i>
+                        //     </button>
+                        // ';
 
                         // $viewGuarantorsButton = '
                         //     <button class="btn btn-pill view-guarantors btn-success-light" data-id="' . $borrower->id . '">
@@ -76,8 +76,8 @@ class BorrowerController extends Controller
                     return $borrower->borrower_age ? $borrower->borrower_age : "--";
                 })
                 ->editColumn('rate', function ($borrower) {
-                    return $borrower->rate 
-                            ? $borrower->rate . ' <i class="fa fa-star" style="color: gold;"></i>' 
+                    return $borrower->rate
+                            ? $borrower->rate . ' <i class="fa fa-star" style="color: gold;"></i>'
                             : '-';
                 })
                 ->rawColumns(['action'])
@@ -400,7 +400,7 @@ class BorrowerController extends Controller
 
     public function storeReview(Request $request)
     {
-        try{    
+        try{
             $borrower = Borrower::find($request->borrower_id);
             $borrower->review = $request->review;
             $borrower->rate = $request->rating;

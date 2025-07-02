@@ -2,11 +2,12 @@
 
 @section('title')
     {{ isset($setting) ? $setting->title : '' }}
- | الاعانات
+    | الاعانات
 @endsection
-@section('page_name') الاعانات @endsection
+@section('page_name')
+    الاعانات
+@endsection
 @section('content')
-
     <div class="row">
 
         <div class="col-md-12 col-lg-12">
@@ -15,13 +16,13 @@
                     <div class="col-12"> <!-- Making it take full width -->
                         <div class="card bg-secondary img-card box-secondary-shadow">
                             <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
-                                <span class="text-white fs-30">  الزكاة   </span>
-                                <span class="text-white fs-30"> {{$totalZakat}} EGP</span>
+                                <span class="text-white fs-30"> الزكاة </span>
+                                <span class="text-white fs-30"> {{ $totalZakat }} EGP</span>
                                 <!-- Changed dollar icon to EGP -->
                             </div>
                             <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
-                                <span class="text-white fs-30">  الصدقات </span>
-                                <span class="text-white fs-30"> {{$totoaSadaka}} EGP </span>
+                                <span class="text-white fs-30"> الصدقات </span>
+                                <span class="text-white fs-30"> {{ $totoaSadaka }} EGP </span>
                                 <!-- Changed dollar icon to EGP -->
                             </div>
 
@@ -38,17 +39,17 @@
             </div>
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"> تخصيص الاعانات للمستفيدين المقبولين </h3>
+                    <h3 class="card-title">تخصيص الاعانات ل قائمة المقبولين</h3>
                     <div class="">
-                        <a href="{{route('showSubventions')}}" title="طباعة" class="btn btn-success btn-icon text-white">
-                             طباعة
+                        <a href="{{ route('showSubventions') }}" title="طباعة" class="btn btn-success btn-icon text-white">
+                            طباعة
                             <i class="fa fa-print"></i>
                         </a>
 
                         <button class="btn btn-secondary btn-icon text-white addBtn">
-									<span>
-										<i class="fe fe-plus"></i>
-									</span> اضافة جديد
+                            <span>
+                                <i class="fe fe-plus"></i>
+                            </span> اضافة جديد
                         </button>
                     </div>
                 </div>
@@ -57,16 +58,16 @@
                         <!--begin::Table-->
                         <table class="table table-striped table-bordered text-nowrap w-100" id="dataTable">
                             <thead>
-                            <tr class="fw-bolder text-muted bg-light">
-                                <th class="min-w-25px">#</th>
-                                <th class="min-w-50px">المستفيد</th>
-                                <th class="min-w-125px">القيمه</th>
-                                <th class="min-w-125px">شهري/ مرة</th>
-                                <th class="min-w-125px">النوع</th>
-                                <th class="min-w-125px">التاريخ</th>
-                                <th class="min-w-125px">السبب</th>
-                                <th class="min-w-50px rounded-end">العمليات</th>
-                            </tr>
+                                <tr class="fw-bolder text-muted bg-light">
+                                    <th class="min-w-25px">#</th>
+                                    <th class="min-w-50px">المستفيد</th>
+                                    <th class="min-w-125px">القيمه</th>
+                                    <th class="min-w-125px">شهري/ مرة</th>
+                                    <th class="min-w-125px">النوع</th>
+                                    <th class="min-w-125px">التاريخ</th>
+                                    <th class="min-w-125px">السبب</th>
+                                    <th class="min-w-50px rounded-end">العمليات</th>
+                                </tr>
                             </thead>
                         </table>
                     </div>
@@ -76,7 +77,7 @@
 
         <!--Delete MODAL -->
         <div class="modal fade" id="delete_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
+            aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -85,9 +86,9 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <form action="{{route("delete_subventions")}}" method="post" >
+                    <form action="{{ route('delete_subventions') }}" method="post">
                         @csrf
-                        @method("post")
+                        @method('post')
                         <div class="modal-body">
                             <input id="delete_id" name="id" type="hidden">
                             <p>هل انت متأكد من حذف البيانات التالية <span id="title" class="text-danger"></span>؟</p>
@@ -126,37 +127,54 @@
 @endsection
 @section('ajaxCalls')
     <script>
-        var columns = [
-            {
+        var columns = [{
                 data: null,
                 name: 'index',
-                render: function (data, type, row, meta) {
+                render: function(data, type, row, meta) {
                     return meta.row + 1;
                 },
                 orderable: false,
                 searchable: false
             },
-            {data: 'user_id', name: 'user_id'},
-            {data: 'price', name: 'price'},
-            {data: 'type', name: 'type'},
-            {data: 'Dtype', name: 'Dtype'},
-            {data: 'created_at', name: 'created_at'},
-            {data: 'comment', name: 'comment'},
-            {data: 'action', name: 'action', orderable: false, searchable: false},
+            {
+                data: 'user_id',
+                name: 'user_id'
+            },
+            {
+                data: 'price',
+                name: 'price'
+            },
+            {
+                data: 'type',
+                name: 'type'
+            },
+            {
+                data: 'Dtype',
+                name: 'Dtype'
+            },
+            {
+                data: 'created_at',
+                name: 'created_at'
+            },
+            {
+                data: 'comment',
+                name: 'comment'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
         ]
-        showData('{{route('subventions.index')}}', columns);
+        showData('{{ route('subventions.index') }}', columns);
         // Delete Using Ajax
-        deleteScript('{{route('delete_subventions')}}');
+        deleteScript('{{ route('delete_subventions') }}');
         // Add Using Ajax
-        showAddModal('{{route('subventions.create')}}');
+        showAddModal('{{ route('subventions.create') }}');
         addScript();
         // Add Using Ajax
-        showEditModal('{{route('subventions.edit',':id')}}');
+        showEditModal('{{ route('subventions.edit', ':id') }}');
         editScript();
     </script>
-
-
-
 @endsection
-
-

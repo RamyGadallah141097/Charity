@@ -53,7 +53,7 @@ class StoreUser extends FormRequest
 
 
 
-    
+
 //            'attachments' => 'nullable|array',
 //            'attachments.*' => 'nullable|mimes:jpg,png,jpeg,pdf,doc,docx',
 //            'child_names' => 'array',
@@ -126,8 +126,8 @@ class StoreUser extends FormRequest
             'gross_expenses.numeric'    => 'إجمالى النفقات يجب أن يكون رقمًا',
             'standard_living.numeric'   => 'مستوى المعيشة يجب أن يكون رقمًا',
             'attachments.*.mimes'       => 'المرفقات يجب أن تكون من الأنواع التالية: jpg, png, jpeg, pdf, doc, docx',
-            'child_names.*.required'    => 'اسم الطفل مطلوب',
-            'children_national_id.*.required' => 'الرقم القومى للطفل مطلوب',
+            'child_names.*.required'    => 'اسم الابن مطلوب',
+            'children_national_id.*.required' => 'الرقم القومى الابن مطلوب',
             'children_national_id.*.numeric'  => 'الرقم القومى للأطفال يجب أن يكون رقمًا',
             'children_national_id.*.digits'   => 'الرقم القومى للأطفال يجب أن يتكون من 14 رقمًا',
             'patient_name.array'        => 'أسماء المرضى يجب أن تكون مصفوفة',

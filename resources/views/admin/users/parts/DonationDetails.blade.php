@@ -21,13 +21,13 @@
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered text-nowrap w-100" id="dataTable">
                             <thead>
-                            <tr class="fw-bolder text-muted bg-light">
-                                <th class="min-w-25px">#</th>
-                                <th class="min-w-50px">اسم المستفيد</th>
-                                <th class="min-w-50px">اجمالي التبرعات</th>
-                                {{-- <th class="min-w-50px">اجمالي التبرعات العينيه</th> --}}
+                                <tr class="fw-bolder text-muted bg-light">
+                                    <th class="min-w-25px">#</th>
+                                    <th class="min-w-50px">اسم المستفيد</th>
+                                    <th class="min-w-50px">اجمالي التبرعات</th>
+                                    {{-- <th class="min-w-50px">اجمالي التبرعات العينيه</th> --}}
 
-                            </tr>
+                                </tr>
                             </thead>
                         </table>
                     </div>
@@ -41,11 +41,19 @@
 
 @section('ajaxCalls')
     <script>
-        var columns = [
-            {data: 'id', name: 'id'},
-            {data: 'name', name: 'name'},
+        var columns = [{
+                data: 'id',
+                name: 'id'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
             // Uncomment if required
-            {data: 'zakahTotal', name: 'zakahTotal'},
+            {
+                data: 'zakahTotal',
+                name: 'zakahTotal'
+            },
 
         ];
 
@@ -56,14 +64,14 @@
         // deleteScript('{{ route('delete_users') }}');
 
         // Show Details Modal
-        $(document).on('click', '.detailsBtn', function () {
+        $(document).on('click', '.detailsBtn', function() {
             var id = $(this).data('id');
             var url = "{{ route('userDetails', ':id') }}".replace(':id', id);
 
             $('#modal-body').html(loader);
             $('#editOrCreate').modal('show');
 
-            setTimeout(function () {
+            setTimeout(function() {
                 $('#modal-body').load(url);
             }, 500);
         });
