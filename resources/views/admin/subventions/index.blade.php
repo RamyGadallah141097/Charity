@@ -123,7 +123,7 @@
         </div>
         <!-- Create Or Edit Modal -->
     </div>
-    @include('Admin/layouts/myAjaxHelper')
+    @include('admin/layouts/myAjaxHelper')
 @endsection
 @section('ajaxCalls')
     <script>

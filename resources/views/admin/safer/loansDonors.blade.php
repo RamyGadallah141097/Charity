@@ -2,7 +2,7 @@
 
 @section('title')
     {{ isset($setting) ? $setting->title : '' }}
- | القروض الحسنة
+    | القروض الحسنة
 @endsection
 @section('page_name')
     القروض الحسنة
@@ -12,8 +12,8 @@
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="p-3">
-                    <h3 class="card-title"> المتبرعين من القروض الحسنة  {{ isset($setting) ? $setting->title : '' }}
-</h3>
+                    <h3 class="card-title"> المتبرعين من القروض الحسنة {{ isset($setting) ? $setting->title : '' }}
+                    </h3>
 
                     <div class="card-body w-100">
                         <div class="row w-100"> <!-- Ensuring full width -->
@@ -42,12 +42,12 @@
                         <!--begin::Table-->
                         <table class="table table-striped table-bordered text-nowrap w-75" id="dataTable">
                             <thead>
-                            <tr class="fw-bolder text-muted bg-light">
-                                <th class="min-w-25px">#</th>
-                                <th class="min-w-50px"> الاسم المتبرع</th>
-                                <th class="min-w-125px">تاريخ التبرع</th>
-                                <th class="min-w-125px">قيمه التبرع </th>
-                            </tr>
+                                <tr class="fw-bolder text-muted bg-light">
+                                    <th class="min-w-25px">#</th>
+                                    <th class="min-w-50px"> الاسم المتبرع</th>
+                                    <th class="min-w-125px">تاريخ التبرع</th>
+                                    <th class="min-w-125px">قيمه التبرع </th>
+                                </tr>
                             </thead>
                         </table>
                     </div>
@@ -57,7 +57,7 @@
 
         <!--Delete MODAL -->
         <div class="modal fade" id="delete_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
+            aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -103,15 +103,14 @@
         </div>
         <!-- Create Or Edit Modal -->
     </div>
-    @include('Admin/layouts/myAjaxHelper')
+    @include('admin/layouts/myAjaxHelper')
 @endsection
 @section('ajaxCalls')
     <script>
-        var columns = [
-            {
+        var columns = [{
                 data: null,
                 name: 'index',
-                render: function (data, type, row, meta) {
+                render: function(data, type, row, meta) {
                     return meta.row + 1;
                 },
                 orderable: false,

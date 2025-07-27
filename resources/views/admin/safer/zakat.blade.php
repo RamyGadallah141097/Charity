@@ -1,8 +1,8 @@
 @extends('Admin/layouts/master')
 
 @section('title')
-   {{ isset($setting) ? $setting->title : '' }}
- | الزكاة
+    {{ isset($setting) ? $setting->title : '' }}
+    | الزكاة
 @endsection
 @section('page_name')
     الزكاة
@@ -13,7 +13,7 @@
             <div class="card">
                 <div class="p-3">
                     <h3 class="card-title"> اجمالي الزكاة{{ isset($setting) ? $setting->title : '' }}
-</h3>
+                    </h3>
 
                     <div class="card-body w-100">
                         <div class="row w-100"> <!-- Ensuring full width -->
@@ -102,15 +102,14 @@
         </div>
         <!-- Create Or Edit Modal -->
     </div>
-    @include('Admin/layouts/myAjaxHelper')
+    @include('admin/layouts/myAjaxHelper')
 @endsection
 @section('ajaxCalls')
     <script>
-        var columns = [
-            {
+        var columns = [{
                 data: null,
                 name: 'index',
-                render: function (data, type, row, meta) {
+                render: function(data, type, row, meta) {
                     return meta.row + 1;
                 },
                 orderable: false,

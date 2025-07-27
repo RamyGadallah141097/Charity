@@ -4,9 +4,10 @@
     {{ isset($setting) ? $setting->title : '' }}
     | اشتراكات المشرفين
 @endsection
-@section('page_name') اشتراكات المشرفين @endsection
+@section('page_name')
+    اشتراكات المشرفين
+@endsection
 @section('content')
-
     <div class="row">
 
         <div class="col-md-12 col-lg-12">
@@ -16,8 +17,8 @@
                         <div class="col-12"> <!-- Making it take full width -->
                             <div class="card bg-secondary img-card box-secondary-shadow">
                                 <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
-                                    <span class="text-white fs-30">  اشتراكات المشرفين</span>
-                                    <span class="text-white fs-30"> {{$total}} EGP</span>
+                                    <span class="text-white fs-30"> اشتراكات المشرفين</span>
+                                    <span class="text-white fs-30"> {{ $total }} EGP</span>
                                     <!-- Changed dollar icon to EGP -->
                                 </div>
                                 <div class="card-body">
@@ -35,27 +36,27 @@
                         انواع التبرعات
                         {{ isset($setting) ? $setting->title : '' }}
                     </h3>
-                        <div class="">
-                            <button class="btn btn-secondary btn-icon text-white addBtn">
-                                        <span>
-                                            <i class="fe fe-plus"></i>
-                                        </span> اضافة اشتراك
-                            </button>
-                        </div>
+                    <div class="">
+                        <button class="btn btn-secondary btn-icon text-white addBtn">
+                            <span>
+                                <i class="fe fe-plus"></i>
+                            </span> اضافة اشتراك
+                        </button>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <!--begin::Table-->
                         <table class="table table-striped table-bordered text-nowrap w-75" id="dataTable">
                             <thead>
-                            <tr class="fw-bolder text-muted bg-light">
-                                <th class="min-w-25px">#</th>
-                                <th class="min-w-50px">الاسم</th>
-                                <th class="min-w-125px">عدد الشهور</th>
-                                <th class="min-w-125px"> القيمه</th>
-                                <th class="min-w-125px"> التاريخ</th>
-                                {{--                                <th class="min-w-50px rounded-end">العمليات</th>--}}
-                            </tr>
+                                <tr class="fw-bolder text-muted bg-light">
+                                    <th class="min-w-25px">#</th>
+                                    <th class="min-w-50px">الاسم</th>
+                                    <th class="min-w-125px">عدد الشهور</th>
+                                    <th class="min-w-125px"> القيمه</th>
+                                    <th class="min-w-125px"> التاريخ</th>
+                                    {{--                                <th class="min-w-50px rounded-end">العمليات</th> --}}
+                                </tr>
                             </thead>
                         </table>
                     </div>
@@ -65,7 +66,7 @@
 
         <!--Delete MODAL -->
         <div class="modal fade" id="delete_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
+            aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -74,9 +75,9 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <form action="{{route("assetsDelete")}}" method="post" >
+                    <form action="{{ route('assetsDelete') }}" method="post">
                         @csrf
-                        @method("post")
+                        @method('post')
                         <div class="modal-body">
                             <input id="delete_id" name="id" type="hidden">
                             <p>هل انت متأكد من حذف البيانات التالية <span id="title" class="text-danger"></span>؟</p>
@@ -111,32 +112,41 @@
         </div>
         <!-- Create Or Edit Modal -->
     </div>
-    @include('Admin/layouts/myAjaxHelper')
+    @include('admin/layouts/myAjaxHelper')
 @endsection
 @section('ajaxCalls')
     <script>
-        var columns = [
-            {
+        var columns = [{
                 data: null,
                 name: 'index',
-                render: function (data, type, row, meta) {
+                render: function(data, type, row, meta) {
                     return meta.row + 1;
                 },
                 orderable: false,
                 searchable: false
             },
-            { data: "admin_id", name: "admin_id" }, // This now returns admin name
-            { data: "months_count", name: "months_count" },
-            { data: "amount", name: "amount" },
-            { data: "created_at", name: "created_at" },
+            {
+                data: "admin_id",
+                name: "admin_id"
+            }, // This now returns admin name
+            {
+                data: "months_count",
+                name: "months_count"
+            },
+            {
+                data: "amount",
+                name: "amount"
+            },
+            {
+                data: "created_at",
+                name: "created_at"
+            },
             // {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
-        showData('{{route('adminSubscription.index')}}', columns);
+        showData('{{ route('adminSubscription.index') }}', columns);
 
-        {{--// Add Using Ajax--}}
-        showAddModal('{{route('adminSubscription.create')}}');
+        {{-- // Add Using Ajax --}}
+        showAddModal('{{ route('adminSubscription.create') }}');
         addScript();
     </script>
 @endsection
-
-

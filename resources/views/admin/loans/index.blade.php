@@ -2,7 +2,7 @@
 
 @section('title')
     {{ isset($setting) ? $setting->title : '' }}
- | القروض
+    | القروض
 @endsection
 @section('page_name')
     التبرعات
@@ -14,11 +14,11 @@
                 <div class="card-header">
                     <h3 class="card-title"> القروض </h3>
                     <div class="">
-{{--                        <button onclick="printDataTable()" title="طباعة" class="btn btn-success btn-icon text-white">--}}
-{{--                            طباعة--}}
-{{--                            <i class="fa fa-print"></i>--}}
-{{--                        </button>--}}
-                        <a href="{{route("printLoan")}}" title="طباعة" class="btn btn-success btn-icon text-white">
+                        {{--                        <button onclick="printDataTable()" title="طباعة" class="btn btn-success btn-icon text-white"> --}}
+                        {{--                            طباعة --}}
+                        {{--                            <i class="fa fa-print"></i> --}}
+                        {{--                        </button> --}}
+                        <a href="{{ route('printLoan') }}" title="طباعة" class="btn btn-success btn-icon text-white">
                             طباعة
                             <i class="fa fa-print"></i>
                         </a>
@@ -97,15 +97,14 @@
         </div>
         <!-- Create Or Edit Modal -->
     </div>
-    @include('Admin/layouts/myAjaxHelper')
+    @include('admin/layouts/myAjaxHelper')
 @endsection
 @section('ajaxCalls')
     <script>
-        var columns = [
-            {
+        var columns = [{
                 data: null,
                 name: 'index',
-                render: function (data, type, row, meta) {
+                render: function(data, type, row, meta) {
                     return meta.row + 1;
                 },
                 orderable: false,
@@ -142,61 +141,61 @@
         editScript();
     </script>
 
-{{--    <script>--}}
-{{--        function printDataTable() {--}}
-{{--            var table = document.querySelector('.dataTable');--}}
+    {{--    <script> --}}
+    {{--        function printDataTable() { --}}
+    {{--            var table = document.querySelector('.dataTable'); --}}
 
 
-{{--            var tableHTML = table.outerHTML;--}}
+    {{--            var tableHTML = table.outerHTML; --}}
 
-{{--            var printWindow = window.open('', '', 'width=900,height=600');--}}
+    {{--            var printWindow = window.open('', '', 'width=900,height=600'); --}}
 
-{{--            printWindow.document.write(`--}}
-{{--            <html>--}}
-{{--            <head>--}}
-{{--                <title>طباعة الجدول</title>--}}
-{{--                <style>--}}
-{{--                    body { font-family: Arial, sans-serif; direction: rtl; text-align: right; }--}}
-{{--                    table { width: 100%; border-collapse: collapse; margin: 20px 0; }--}}
-{{--                    th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }--}}
-{{--                    th { background-color: #f2f2f2; }--}}
-{{--                </style>--}}
-{{--            </head>--}}
-{{--            <body>--}}
+    {{--            printWindow.document.write(` --}}
+    {{--            <html> --}}
+    {{--            <head> --}}
+    {{--                <title>طباعة الجدول</title> --}}
+    {{--                <style> --}}
+    {{--                    body { font-family: Arial, sans-serif; direction: rtl; text-align: right; } --}}
+    {{--                    table { width: 100%; border-collapse: collapse; margin: 20px 0; } --}}
+    {{--                    th, td { border: 1px solid #ddd; padding: 8px; text-align: center; } --}}
+    {{--                    th { background-color: #f2f2f2; } --}}
+    {{--                </style> --}}
+    {{--            </head> --}}
+    {{--            <body> --}}
 
-{{--            <div class="text-center" style="margin-top:100px ">--}}
-{{--                        <h4 class="mt-4 mb-1">بيان باسماء حالات  الاعانه الشهريه / {{ isset($setting) ? $setting->title : '' }}
-</h4>--}}
-{{--                        <hr style="width: 40%" class="mt-0 mb-1 text-dark"></hr>--}}
-{{--                        <h4 class="mt-4 mb-2"></h4>--}}
-{{--            </div>--}}
-{{--            <div class="card-header mt-4 mb-2" style="justify-content:space-between">--}}
-{{--                <div class="fw-bold" style="font-size: 1.125rem">--}}
-{{--                    شبين الكوم - محافطة المنوفية--}}
-{{--                </div>--}}
-{{--                <div class="fw-bold" style="font-size: 1.125rem">--}}
-{{--                    بتاريخ--}}
-{{--                    {{date('Y/m/d')}}--}}
-{{--                </div>--}}
-{{--            </div>--}}
+    {{--            <div class="text-center" style="margin-top:100px "> --}}
+    {{--                        <h4 class="mt-4 mb-1">بيان باسماء حالات  الاعانه الشهريه / {{ isset($setting) ? $setting->title : '' }}
+</h4> --}}
+    {{--                        <hr style="width: 40%" class="mt-0 mb-1 text-dark"></hr> --}}
+    {{--                        <h4 class="mt-4 mb-2"></h4> --}}
+    {{--            </div> --}}
+    {{--            <div class="card-header mt-4 mb-2" style="justify-content:space-between"> --}}
+    {{--                <div class="fw-bold" style="font-size: 1.125rem"> --}}
+    {{--                    شبين الكوم - محافطة المنوفية --}}
+    {{--                </div> --}}
+    {{--                <div class="fw-bold" style="font-size: 1.125rem"> --}}
+    {{--                    بتاريخ --}}
+    {{--                    {{date('Y/m/d')}} --}}
+    {{--                </div> --}}
+    {{--            </div> --}}
 
-{{--                ${tableHTML}--}}
-{{--                <div style="margin-top:50px"></div>--}}
-{{--                <hr/>--}}
-{{--                 <h4 class="mb-2" style="margin-top:50px">--}}
-{{--                            عضو له حق التوقيع ...................................... أمين الصندوق .............................................. مقرر اللجنة..............................................--}}
-{{--                        </h4>--}}
-{{--                <script>--}}
-{{--                    window.onload = function() {--}}
-{{--                        window.print();--}}
-{{--                        window.onafterprint = function() { window.close(); };--}}
-{{--                    };--}}
-{{--                <\/script>--}}
-{{--            </body>--}}
-{{--            </html>--}}
-{{--        `);--}}
+    {{--                ${tableHTML} --}}
+    {{--                <div style="margin-top:50px"></div> --}}
+    {{--                <hr/> --}}
+    {{--                 <h4 class="mb-2" style="margin-top:50px"> --}}
+    {{--                            عضو له حق التوقيع ...................................... أمين الصندوق .............................................. مقرر اللجنة.............................................. --}}
+    {{--                        </h4> --}}
+    {{--                <script> --}}
+    {{--                    window.onload = function() { --}}
+    {{--                        window.print(); --}}
+    {{--                        window.onafterprint = function() { window.close(); }; --}}
+    {{--                    }; --}}
+    {{--                <\/script> --}}
+    {{--            </body> --}}
+    {{--            </html> --}}
+    {{--        `); --}}
 
-{{--            printWindow.document.close();--}}
-{{--        }--}}
-{{--    </script>--}}
+    {{--            printWindow.document.close(); --}}
+    {{--        } --}}
+    {{--    </script> --}}
 @endsection
