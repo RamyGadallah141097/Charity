@@ -1,4 +1,4 @@
-@extends('Admin/layouts/master')
+@extends('admin/layouts/master')
 @section('title')
     {{ isset($setting) ? $setting->title : '' }}
  | الصفحة الرئيسية
@@ -76,7 +76,7 @@
                                     <div class="col-xl-7 col-lg-6">
                                         <div class="text-right text-white mt-xl-4">
                                             <h3 class="font-weight-semibold">
-                                                تهانينا يا {{ loggedAdmin('name') }}</h3>
+                                                تهانينا يا {{ loggedadmin('name') }}</h3>
                                             <h4 class="font-weight-normal">
                                                 تخطت اجمالي التبرعات 1000 جنية
                                             </h4>
