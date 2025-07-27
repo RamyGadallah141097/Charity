@@ -257,7 +257,6 @@ class UserController extends Controller
         }
 
         $searchNID = $request->searchNID;
-        dd($searchNID);
 
         $user = null;
         $borrower = null;
