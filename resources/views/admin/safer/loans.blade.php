@@ -1,4 +1,4 @@
-@extends('Admin/layouts/master')
+@extends('admin/layouts/master')
 
 @section('title')
     {{ isset($setting) ? $setting->title : '' }}
@@ -220,7 +220,7 @@
                                 } else {
                                     modalBody.append(
                                         '<tr><td colspan="3" class="text-center">لا يوجد تبرعات</td></tr>'
-                                        );
+                                    );
                                 }
 
                                 // تحديث المبلغ الإجمالي في المودال
