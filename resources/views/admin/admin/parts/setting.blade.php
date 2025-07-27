@@ -1,27 +1,29 @@
-@extends('Admin/layouts/master')
+@extends('admin/layouts/master')
 
 @section('title')
     {{ isset($setting) ? $setting->title : '' }}
     | المشرفين
 @endsection
-@section('page_name') المشرفين @endsection
+@section('page_name')
+    المشرفين
+@endsection
 @section('content')
-
     <div class="modal-body">
-        <form id="updateForm" method="POST" enctype="multipart/form-data" action="{{route('admins.update',$admin->id)}}" >
+        <form id="updateForm" method="POST" enctype="multipart/form-data" action="{{ route('admins.update', $admin->id) }}">
             @csrf
             @method('PUT')
             <div class="form-group">
                 <label for="name" class="form-control-label">الصورة</label>
-                <input type="file" id="testDrop" class="dropify" name="image" data-default-file="{{get_user_file($admin->image)}}"/>
+                <input type="file" id="testDrop" class="dropify" name="image"
+                    data-default-file="{{ get_user_file($admin->image) }}" />
             </div>
             <div class="form-group">
                 <label for="name" class="form-control-label">الاسم</label>
-                <input type="text" class="form-control" name="name" id="name" value="{{$admin->name}}">
+                <input type="text" class="form-control" name="name" id="name" value="{{ $admin->name }}">
             </div>
             <div class="form-group">
                 <label for="email" class="form-control-label">الايميل</label>
-                <input type="text" class="form-control" name="email" id="email" value="{{$admin->email}}">
+                <input type="text" class="form-control" name="email" id="email" value="{{ $admin->email }}">
             </div>
             <div class="form-group">
                 <label for="password" class="form-control-label">كلمة المرور</label>
@@ -30,7 +32,7 @@
             <div class="form-group">
                 <label> الصلاحيه</label>
                 <select name="adminRole" class="form-control ">
-                    @foreach($roles as $role)
+                    @foreach ($roles as $role)
                         <option value="{{ $role->name }}"
                             {{ $admin->roles->pluck('name')->contains($role->name) ? 'selected' : '' }}>
                             {{ $role->name }}
@@ -47,6 +49,4 @@
     <script>
         $('.dropify').dropify()
     </script>
-
-
 @endsection

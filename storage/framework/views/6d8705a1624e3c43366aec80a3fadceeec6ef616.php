@@ -1,22 +1,22 @@
 <?php $__env->startSection('title'); ?>
-    <?php echo e(isset($setting) ? $setting->title : ''); ?>
+<?php echo e(isset($setting) ? $setting->title : ''); ?>
 
- | الصفحة الرئيسية
+| الصفحة الرئيسية
 
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('page_name'); ?>
-    الرئـيسية
+الرئـيسية
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
-    <link href="<?php echo e(asset('assets/admin')); ?>/assets/plugins/morris/morris.css" rel="stylesheet" />
+<link href="<?php echo e(asset('assets/admin')); ?>/assets/plugins/morris/morris.css" rel="stylesheet" />
 
 
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
 
 
-    <div style="display: flex; gap: 20px; flex-wrap: wrap;" class="bg-white-light  mb-9 p-5 card   ">
+<div style="display: flex; gap: 20px; flex-wrap: wrap;" class="bg-white-light  mb-9 p-5 card   ">
     <div style="display: flex; gap: 20px; flex-wrap: wrap;" class="bg-white  mb-9 p-5 card   ">
         <div class="row">
             <div class="col-6">
@@ -39,19 +39,24 @@
                 <div id="DonorsChart"></div>
             </div>
         </div>
-        <div class="card-header" >
+        <div class="card-header">
             <h2 class="card-title">لوحة تقدم الافكار</h2>
         </div>
 
         <div class="card-body d-flex g-2">
-            <?php $__currentLoopData = $progressData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $task): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <?php $__currentLoopData = $progressData;
+            $__env->addLoop($__currentLoopData);
+            foreach ($__currentLoopData as $index => $task): $__env->incrementLoopIndices();
+                $loop = $__env->getLastLoop(); ?>
                 <div style="text-align: center;" class="m-3">
                     <canvas id="chart-<?php echo e($index); ?>" width="120" height="120"></canvas>
                     <p>
                         <?php echo e($task['title']); ?>: <?php echo e($task['progress']); ?>%
                     </p>
                 </div>
-            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            <?php endforeach;
+            $__env->popLoop();
+            $loop = $__env->getLastLoop(); ?>
         </div>
     </div>
 
@@ -62,7 +67,7 @@
 
 
 
-    <?php if($total_donors_money >= 1000): ?>
+    <?php if ($total_donors_money >= 1000): ?>
         <div class="row">
             <div class="col-md-12">
                 <div class="card  banner">
@@ -157,7 +162,7 @@
                     <div class="d-flex">
                         <div class="text-white">
                             <h2 class="mb-0 number-font"> <?php echo e($subUsers); ?> </h2>
-                            <p class="text-white mb-0">   المعلقين</p>
+                            <p class="text-white mb-0"> المعلقين</p>
                         </div>
                         <div class="mr-auto">
                             <span class="text-white fs-30 ml-2 mt-2">
@@ -210,7 +215,7 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
-                            <h2 class="mb-0 number-font"> <?php echo e(fmod($totalDonations, 1) == 0.00 ? number_format($totalDonations, 0) : number_format($totalDonations, 2)); ?>  </h2>
+                            <h2 class="mb-0 number-font"> <?php echo e(fmod($totalDonations, 1) == 0.00 ? number_format($totalDonations, 0) : number_format($totalDonations, 2)); ?> </h2>
                             <p class="text-white mb-0">إجمالي التبرعات</p>
                         </div>
                         <div class="mr-auto">
@@ -251,7 +256,7 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
-                            <h2 class="mb-0 number-font"> <?php echo e(fmod($totalZakat, 1) == 0.00 ? number_format($totalZakat, 0) : number_format($totalZakat, 2)); ?>  </h2>
+                            <h2 class="mb-0 number-font"> <?php echo e(fmod($totalZakat, 1) == 0.00 ? number_format($totalZakat, 0) : number_format($totalZakat, 2)); ?> </h2>
                             <p class="text-white mb-0">إجمالي الزكاة و الصدقات</p>
                         </div>
                         <div class="mr-auto">
@@ -268,7 +273,7 @@
 
 
 
-        
+
 
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
             <div class="card bg-warning img-card box-secondary-shadow">
@@ -293,138 +298,138 @@
 
 
 
-        <div class="row">
+    <div class="row">
 
-            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-                <div class="card  bg-success img-card box-success-shadow">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="text-white">
-                                <h2 class="mb-0 number-font"><?php echo e($totalLoans); ?></h2>
-                                <p class="text-white mb-0">اجمالي عدد القروض</p>
-                            </div>
-                            <div class="mr-auto"><i class="fe fe-shopping-bag text-white fs-30 ml-2 mt-2"></i></div>
+        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+            <div class="card  bg-success img-card box-success-shadow">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="text-white">
+                            <h2 class="mb-0 number-font"><?php echo e($totalLoans); ?></h2>
+                            <p class="text-white mb-0">اجمالي عدد القروض</p>
+                        </div>
+                        <div class="mr-auto"><i class="fe fe-shopping-bag text-white fs-30 ml-2 mt-2"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+            <div class="card bg-primary img-card box-secondary-shadow">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="text-white">
+                            <h2 class="mb-0 number-font"> <?php echo e($totalBorrowers); ?> </h2>
+                            <p class="text-white mb-0">إجمالي المقترضين</p>
+                        </div>
+                        <div class="mr-auto">
+                            <span class="text-white fs-30 ml-2 mt-2"><i class="fas fa-user-friends"></i></span>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-                <div class="card bg-primary img-card box-secondary-shadow">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="text-white">
-                                <h2 class="mb-0 number-font"> <?php echo e($totalBorrowers); ?> </h2>
-                                <p class="text-white mb-0">إجمالي المقترضين</p>
-                            </div>
-                            <div class="mr-auto">
-                                <span class="text-white fs-30 ml-2 mt-2"><i class="fas fa-user-friends"></i></span>
-                            </div>
+        </div><!-- COL END -->
+        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+            <div class="card bg-secondary img-card box-secondary-shadow">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="text-white">
+                            <h2 class="mb-0 number-font"> <?php echo e(fmod($totalLoansDonations, 1) == 0.00 ? number_format($totalLoansDonations, 0) : number_format($totalLoansDonations, 2)); ?> </h2>
+                            <p class="text-white mb-0">إجمالي التبرعات </p>
                         </div>
-                    </div>
-                </div>
-            </div><!-- COL END -->
-            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-                <div class="card bg-secondary img-card box-secondary-shadow">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="text-white">
-                                <h2 class="mb-0 number-font"> <?php echo e(fmod($totalLoansDonations, 1) == 0.00 ? number_format($totalLoansDonations, 0) : number_format($totalLoansDonations, 2)); ?>  </h2>
-                                <p class="text-white mb-0">إجمالي  التبرعات </p>
-                            </div>
-                            <div class="mr-auto">
-                                <span class="text-white fs-30 ml-2 mt-2">£L</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div><!-- COL END -->
-            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-                <div class="card bg-danger img-card box-secondary-shadow">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="text-white">
-                                <h2 class="mb-0 number-font"> <?php echo e(fmod($totalLoanOut, 1) == 0.00 ? number_format($totalLoanOut, 0) : number_format($totalLoanOut, 2)); ?>  </h2>
-                                <p class="text-white mb-0">إجمالي القروض الخارجه </p>
-                            </div>
-                            <div class="mr-auto">
-                                <span class="text-white fs-30 ml-2 mt-2">#</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div><!-- COL END -->
-        </div>
-
-
-
-        <div class="row">
-
-            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-                <div class="card  bg-success img-card box-success-shadow">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="text-white">
-                                <h2 class="mb-0 number-font"><?php echo e($social_status0); ?></h2>
-                                <p class="text-white mb-0"> العزب</p>
-                            </div>
-                            <div class="mr-auto">
-                                <span class="text-white fs-30 ml-2 mt-2"><i class="fas fa-user-friends"></i></span>
-                            </div>
+                        <div class="mr-auto">
+                            <span class="text-white fs-30 ml-2 mt-2">£L</span>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-                <div class="card bg-primary img-card box-secondary-shadow">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="text-white">
-                                <h2 class="mb-0 number-font"> <?php echo e($social_status1); ?> </h2>
-                                <p class="text-white mb-0"> المتزوجين</p>
-                            </div>
-                            <div class="mr-auto">
-                                <span class="text-white fs-30 ml-2 mt-2"><i class="fas fa-user-friends"></i></span>
-                            </div>
+        </div><!-- COL END -->
+        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+            <div class="card bg-danger img-card box-secondary-shadow">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="text-white">
+                            <h2 class="mb-0 number-font"> <?php echo e(fmod($totalLoanOut, 1) == 0.00 ? number_format($totalLoanOut, 0) : number_format($totalLoanOut, 2)); ?> </h2>
+                            <p class="text-white mb-0">إجمالي القروض الخارجه </p>
+                        </div>
+                        <div class="mr-auto">
+                            <span class="text-white fs-30 ml-2 mt-2">#</span>
                         </div>
                     </div>
                 </div>
-            </div><!-- COL END -->
+            </div>
+        </div><!-- COL END -->
+    </div>
 
-            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-                <div class="card bg-secondary img-card box-secondary-shadow">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="text-white">
-                                <h2 class="mb-0 number-font"> <?php echo e($social_status2); ?> </h2>
-                                <p class="text-white mb-0"> المطلقين</p>
-                            </div>
-                            <div class="mr-auto">
-                                <span class="text-white fs-30 ml-2 mt-2"><i class="fas fa-user-friends"></i></span>
-                            </div>
+
+
+    <div class="row">
+
+        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+            <div class="card  bg-success img-card box-success-shadow">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="text-white">
+                            <h2 class="mb-0 number-font"><?php echo e($social_status0); ?></h2>
+                            <p class="text-white mb-0"> العزب</p>
+                        </div>
+                        <div class="mr-auto">
+                            <span class="text-white fs-30 ml-2 mt-2"><i class="fas fa-user-friends"></i></span>
                         </div>
                     </div>
                 </div>
-            </div><!-- COL END -->
-
-            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-                <div class="card bg-danger img-card box-secondary-shadow">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="text-white">
-                                <h2 class="mb-0 number-font"> <?php echo e($social_status3); ?> </h2>
-                                <p class="text-white mb-0"> الأرامل</p>
-                            </div>
-                            <div class="mr-auto">
-                                <span class="text-white fs-30 ml-2 mt-2"><i class="fas fa-user-friends"></i></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div><!-- COL END -->
-
+            </div>
         </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+            <div class="card bg-primary img-card box-secondary-shadow">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="text-white">
+                            <h2 class="mb-0 number-font"> <?php echo e($social_status1); ?> </h2>
+                            <p class="text-white mb-0"> المتزوجين</p>
+                        </div>
+                        <div class="mr-auto">
+                            <span class="text-white fs-30 ml-2 mt-2"><i class="fas fa-user-friends"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- COL END -->
+
+        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+            <div class="card bg-secondary img-card box-secondary-shadow">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="text-white">
+                            <h2 class="mb-0 number-font"> <?php echo e($social_status2); ?> </h2>
+                            <p class="text-white mb-0"> المطلقين</p>
+                        </div>
+                        <div class="mr-auto">
+                            <span class="text-white fs-30 ml-2 mt-2"><i class="fas fa-user-friends"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- COL END -->
+
+        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+            <div class="card bg-danger img-card box-secondary-shadow">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="text-white">
+                            <h2 class="mb-0 number-font"> <?php echo e($social_status3); ?> </h2>
+                            <p class="text-white mb-0"> الأرامل</p>
+                        </div>
+                        <div class="mr-auto">
+                            <span class="text-white fs-30 ml-2 mt-2"><i class="fas fa-user-friends"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- COL END -->
+
+    </div>
 
 
 
@@ -435,47 +440,47 @@
 
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('js'); ?>
-    
-    <script src="<?php echo e(asset('assets/admin')); ?>/assets/plugins/chart/Chart.bundle.js"></script>
-    <script src="<?php echo e(asset('assets/admin')); ?>/assets/plugins/chart/utils.js"></script>
 
-    <!-- INTERNAL PIETY CHART JS -->
-    <script src="<?php echo e(asset('assets/admin')); ?>/assets/plugins/peitychart/jquery.peity.min.js"></script>
-    <script src="<?php echo e(asset('assets/admin')); ?>/assets/plugins/peitychart/peitychart.init.js"></script>
+<script src="<?php echo e(asset('assets/admin')); ?>/assets/plugins/chart/Chart.bundle.js"></script>
+<script src="<?php echo e(asset('assets/admin')); ?>/assets/plugins/chart/utils.js"></script>
 
-    <!-- INTERNAL MORRIS CHART JS -->
-    <script src="<?php echo e(asset('assets/admin')); ?>/assets/plugins/morris/morris.js"></script>
-    <script src="<?php echo e(asset('assets/admin')); ?>/assets/plugins/morris/raphael-min.js"></script>
-    
-    <script src="<?php echo e(asset('assets/admin')); ?>/assets/js/apexcharts.js"></script>
-    <!--INTERNAL INDEX JS-->
-    <script src="<?php echo e(asset('assets/admin')); ?>/assets/js/index4.js"></script>
+<!-- INTERNAL PIETY CHART JS -->
+<script src="<?php echo e(asset('assets/admin')); ?>/assets/plugins/peitychart/jquery.peity.min.js"></script>
+<script src="<?php echo e(asset('assets/admin')); ?>/assets/plugins/peitychart/peitychart.init.js"></script>
+
+<!-- INTERNAL MORRIS CHART JS -->
+<script src="<?php echo e(asset('assets/admin')); ?>/assets/plugins/morris/morris.js"></script>
+<script src="<?php echo e(asset('assets/admin')); ?>/assets/plugins/morris/raphael-min.js"></script>
+
+<script src="<?php echo e(asset('assets/admin')); ?>/assets/js/apexcharts.js"></script>
+<!--INTERNAL INDEX JS-->
+<script src="<?php echo e(asset('assets/admin')); ?>/assets/js/index4.js"></script>
 <?php $__env->stopSection(); ?>
 
 <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const progressData = <?php echo json_encode($progressData, 15, 512) ?>;
+    document.addEventListener("DOMContentLoaded", function() {
+        const progressData = <?php echo json_encode($progressData, 15, 512) ?>;
 
-                progressData.forEach((task, index) => {
-                    const ctx = document.getElementById(`chart-${index}`).getContext('2d');
+        progressData.forEach((task, index) => {
+            const ctx = document.getElementById(`chart-${index}`).getContext('2d');
 
-                    new Chart(ctx, {
-                        type: 'doughnut',
-                        data: {
-                            datasets: [{
-                                data: [task.progress, 100 - task.progress], // Access the correct progress value
-                                backgroundColor: ['#4CAF50', '#E0E0E0']
-                            }]
-                        },
-                        options: {
-                            cutout: '75%',
-                            responsive: false,
-                            maintainAspectRatio: false,
-                        }
-                    });
-                });
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [task.progress, 100 - task.progress], // Access the correct progress value
+                        backgroundColor: ['#4CAF50', '#E0E0E0']
+                    }]
+                },
+                options: {
+                    cutout: '75%',
+                    responsive: false,
+                    maintainAspectRatio: false,
+                }
             });
-        </script>
+        });
+    });
+</script>
 
 
 <script>
@@ -644,7 +649,7 @@
 
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         fetch("/chart-data")
             .then(response => response.json())
             .then(data => {
@@ -675,7 +680,7 @@
                     },
                     tooltip: {
                         y: {
-                            formatter: function (val) {
+                            formatter: function(val) {
                                 return val + " مستخدم";
                             }
                         }
@@ -690,7 +695,7 @@
 
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         fetch("donors/chart-data")
             .then(response => response.json())
             .then(data => {
@@ -721,7 +726,7 @@
                     },
                     tooltip: {
                         y: {
-                            formatter: function (val) {
+                            formatter: function(val) {
                                 return val + " متبرع";
                             }
                         }
@@ -734,4 +739,4 @@
     });
 </script>
 
-<?php echo $__env->make('Admin/layouts/master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\new-zakat\resources\views/admin/index.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('admin/layouts/master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\new-zakat\resources\views/admin/index.blade.php ENDPATH**/ ?>

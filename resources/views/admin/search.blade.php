@@ -1,4 +1,4 @@
-@extends('Admin/layouts/master')
+@extends('admin/layouts/master')
 @section('content')
     @if ($user != null)
         <!-- User details section (keep your existing user display code) -->

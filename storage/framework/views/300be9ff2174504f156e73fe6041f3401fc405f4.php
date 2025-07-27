@@ -517,4 +517,4 @@
 
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('Admin/layouts/master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\new-zakat\resources\views/admin/borrowers/index.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('admin/layouts/master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\new-zakat\resources\views/admin/borrowers/index.blade.php ENDPATH**/ ?>
