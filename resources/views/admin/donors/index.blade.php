@@ -2,40 +2,41 @@
 
 @section('title')
     {{ isset($setting) ? $setting->title : '' }}
- | المتبرعين
+    | المتبرعين
 @endsection
-@section('page_name') المتبرعين @endsection
+@section('page_name')
+    المتبرعين
+@endsection
 @section('content')
-
     <div class="row">
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title"> المتبرعين الي {{ isset($setting) ? $setting->title : '' }}
-</h3>
-                        <div class="">
-                            <button class="btn btn-secondary btn-icon text-white addBtn">
-                                        <span>
-                                            <i class="fe fe-plus"></i>
-                                        </span> اضافة جديد
-                            </button>
-                        </div>
+                    </h3>
+                    <div class="">
+                        <button class="btn btn-secondary btn-icon text-white addBtn">
+                            <span>
+                                <i class="fe fe-plus"></i>
+                            </span> اضافة جديد
+                        </button>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <!--begin::Table-->
                         <table class="table table-striped table-bordered text-nowrap w-75" id="dataTable">
                             <thead>
-                            <tr class="fw-bolder text-muted bg-light">
-                                <th class="min-w-25px">#</th>
-                                <th class="min-w-50px">الاسم</th>
-                                <th class="min-w-125px">الهاتف</th>
-                                <th class="min-w-125px">العنوان</th>
-                                <th class="min-w-125px">تاريخ الميلاد</th>
-                                <th class="min-w-125px">ملاحظات</th>
-                                <th class="min-w-125px">وقت التسجيل</th>
-                                <th class="min-w-50px rounded-end">العمليات</th>
-                            </tr>
+                                <tr class="fw-bolder text-muted bg-light">
+                                    <th class="min-w-25px">#</th>
+                                    <th class="min-w-50px">الاسم</th>
+                                    <th class="min-w-125px">الهاتف</th>
+                                    <th class="min-w-125px">العنوان</th>
+                                    <th class="min-w-125px">تاريخ الميلاد</th>
+                                    <th class="min-w-125px">ملاحظات</th>
+                                    <th class="min-w-125px">وقت التسجيل</th>
+                                    <th class="min-w-50px rounded-end">العمليات</th>
+                                </tr>
                             </thead>
                         </table>
                     </div>
@@ -45,7 +46,7 @@
 
         <!--Delete MODAL -->
         <div class="modal fade" id="delete_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
+            aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -54,9 +55,9 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <form action="{{route("delete_donors")}}" method="post" >
+                    <form action="{{ route('delete_donors') }}" method="post">
                         @csrf
-                        @method("post")
+                        @method('post')
                         <div class="modal-body">
                             <input id="delete_id" name="id" type="hidden">
                             <p>هل انت متأكد من حذف البيانات التالية <span id="title" class="text-danger"></span>؟</p>
@@ -94,7 +95,8 @@
 
 
         <!-- donationReturnModal Modal -->
-        <div class="modal fade" id="donationReturnModal" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal fade" id="donationReturnModal" data-backdrop="static" tabindex="-1" role="dialog"
+            aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -107,16 +109,17 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form id="donationReturnForm" action="{{route("donor.returnDonationMoney")}}">
-                        @csrf
+                        <form id="donationReturnForm" action="{{ route('donor.returnDonationMoney') }}">
+                            @csrf
                             <input type="hidden" name="donor_id" id="donor_id">
                             <div class="form-group">
-{{--                                <p>القيمه المتوفره في خزنة القروض : <input type="text" disabled id="avalable"> </p>--}}
+                                {{--                                <p>القيمه المتوفره في خزنة القروض : <input type="text" disabled id="avalable"> </p> --}}
 
-{{--                                <br>--}}
-{{--                                <hr>--}}
+                                {{--                                <br> --}}
+                                {{--                                <hr> --}}
                                 <label>القيمه المسترده</label>
-                                <input type="number" class="form-control" placeholder="القيمه المسترده" name="DonationReturnAmount" id="DonationReturnAmount" required>
+                                <input type="number" class="form-control" placeholder="القيمه المسترده"
+                                    name="DonationReturnAmount" id="DonationReturnAmount" required>
                             </div>
                         </form>
                     </div>
@@ -130,44 +133,66 @@
 
         <!-- donationReturnModal Modal -->
     </div>
-    @include('Admin/layouts/myAjaxHelper')
+    @include('admin/layouts/myAjaxHelper')
 @endsection
 @section('ajaxCalls')
     <script>
-        var columns = [
-            {
+        var columns = [{
                 data: null,
                 name: 'index',
-                render: function (data, type, row, meta) {
+                render: function(data, type, row, meta) {
                     return meta.row + 1;
                 },
                 orderable: false,
                 searchable: false
             },
-            {data: 'name', name: 'name'},
-            {data: 'phone', name: 'phone'},
-            {data: 'address', name: 'address'},
-            {data: 'burn_date', name: 'burn_date'},
-            {data: 'notes', name: 'notes'},
-            {data: 'created_at', name: 'created_at'},
-            {data: 'action', name: 'action', orderable: false, searchable: false},
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'phone',
+                name: 'phone'
+            },
+            {
+                data: 'address',
+                name: 'address'
+            },
+            {
+                data: 'burn_date',
+                name: 'burn_date'
+            },
+            {
+                data: 'notes',
+                name: 'notes'
+            },
+            {
+                data: 'created_at',
+                name: 'created_at'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
         ]
-        showData('{{route('donors.index')}}', columns);
+        showData('{{ route('donors.index') }}', columns);
         // Delete Using Ajax
 
-        deleteScript('{{route('delete_donors')}}');
+        deleteScript('{{ route('delete_donors') }}');
 
         // Add Using Ajax
-        showAddModal('{{route('donors.create')}}');
+        showAddModal('{{ route('donors.create') }}');
         addScript();
         // Add Using Ajax
-        showEditModal('{{route('donors.edit',':id')}}');
+        showEditModal('{{ route('donors.edit', ':id') }}');
         editScript();
     </script>
 
 
     <script>
-        $(document).on("click", ".donationReturnBtn", function () {
+        $(document).on("click", ".donationReturnBtn", function() {
             let donorId = $(this).data("id");
             let name = $(this).data("title");
             let avalable = $(this).data("avalable");
@@ -181,61 +206,51 @@
             $("#name").val(name);
             $("#donationReturnModal").modal("show");
         });
-
-        
-
-
-
     </script>
 
     <script>
-    $(document).ready(function () {
-        // تأكيد ضبط التوكن بعد تحميل الصفحة
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $(document).on('submit', '#donationReturnForm', function (e) {
-            e.preventDefault();
-
-            let form = $(this);
-            let url = form.attr('action');
-            let formData = form.serialize();
-
-            $.ajax({
-                url: url,
-                type: 'POST',
-                data: formData,
-                success: function (response) {
-                    if (response.status === 'success') {
-                        toastr.success(response.message || 'تم إرجاع المبلغ بنجاح');
-                        $('#donationReturnModal').modal('hide');
-                        location.reload();
-                        form.trigger("reset");
-                    } else {
-                        toastr.warning(response.message || 'حدث شيء غير متوقع');
-                    }
-                },
-                error: function (xhr) {
-                    console.log(xhr.responseText); // لفحص الخطأ
-                    let errors = xhr.responseJSON?.errors;
-                    if (errors) {
-                        $.each(errors, function (key, error) {
-                            toastr.error(error);
-                        });
-                    } else {
-                        toastr.error("فشل في الإرسال، حاول مرة أخرى.");
-                    }
+        $(document).ready(function() {
+            // تأكيد ضبط التوكن بعد تحميل الصفحة
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+
+            $(document).on('submit', '#donationReturnForm', function(e) {
+                e.preventDefault();
+
+                let form = $(this);
+                let url = form.attr('action');
+                let formData = form.serialize();
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            toastr.success(response.message || 'تم إرجاع المبلغ بنجاح');
+                            $('#donationReturnModal').modal('hide');
+                            location.reload();
+                            form.trigger("reset");
+                        } else {
+                            toastr.warning(response.message || 'حدث شيء غير متوقع');
+                        }
+                    },
+                    error: function(xhr) {
+                        console.log(xhr.responseText); // لفحص الخطأ
+                        let errors = xhr.responseJSON?.errors;
+                        if (errors) {
+                            $.each(errors, function(key, error) {
+                                toastr.error(error);
+                            });
+                        } else {
+                            toastr.error("فشل في الإرسال، حاول مرة أخرى.");
+                        }
+                    }
+                });
+            });
         });
-    });
-</script>
-
-
-
+    </script>
 @endsection
-
-

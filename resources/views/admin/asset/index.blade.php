@@ -2,37 +2,38 @@
 
 @section('title')
     {{ isset($setting) ? $setting->title : '' }}
- | انواع التبرعات
+    | انواع التبرعات
 @endsection
-@section('page_name') انواع التبرعات @endsection
+@section('page_name')
+    انواع التبرعات
+@endsection
 @section('content')
-
     <div class="row">
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title"> {{ isset($setting) ? $setting->title : '' }}
-</h3>
-                        <div class="">
-                            <button class="btn btn-secondary btn-icon text-white addBtn">
-                                        <span>
-                                            <i class="fe fe-plus"></i>
-                                        </span> اضافة جديد
-                            </button>
-                        </div>
+                    </h3>
+                    <div class="">
+                        <button class="btn btn-secondary btn-icon text-white addBtn">
+                            <span>
+                                <i class="fe fe-plus"></i>
+                            </span> اضافة جديد
+                        </button>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <!--begin::Table-->
                         <table class="table table-striped table-bordered text-nowrap w-75" id="dataTable">
                             <thead>
-                            <tr class="fw-bolder text-muted bg-light">
-                                <th class="min-w-25px">#</th>
-                                <th class="min-w-50px">الاسم</th>
-                                <th class="min-w-125px">ملاحظات</th>
-                                <th class="min-w-125px"> الكميه</th>
-                                <th class="min-w-50px rounded-end">العمليات</th>
-                            </tr>
+                                <tr class="fw-bolder text-muted bg-light">
+                                    <th class="min-w-25px">#</th>
+                                    <th class="min-w-50px">الاسم</th>
+                                    <th class="min-w-125px">ملاحظات</th>
+                                    <th class="min-w-125px"> الكميه</th>
+                                    <th class="min-w-50px rounded-end">العمليات</th>
+                                </tr>
                             </thead>
                         </table>
                     </div>
@@ -42,7 +43,7 @@
 
         <!--Delete MODAL -->
         <div class="modal fade" id="delete_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
+            aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -51,9 +52,9 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <form action="{{route("assetsDelete")}}" method="post" >
+                    <form action="{{ route('assetsDelete') }}" method="post">
                         @csrf
-                        @method("post")
+                        @method('post')
                         <div class="modal-body">
                             <input id="delete_id" name="id" type="hidden">
                             <p>هل انت متأكد من حذف البيانات التالية <span id="title" class="text-danger"></span>؟</p>
@@ -88,29 +89,43 @@
         </div>
         <!-- Create Or Edit Modal -->
     </div>
-    @include('Admin/layouts/myAjaxHelper')
+    @include('admin/layouts/myAjaxHelper')
 @endsection
 @section('ajaxCalls')
     <script>
-        var columns = [
-            {data: 'id', name: 'id'},
-            {data: 'name', name: 'name'},
-            {data: 'description', name: 'description'},
-            {data: 'counter', name: 'counter'},
-            {data: 'action', name: 'action', orderable: false, searchable: false},
+        var columns = [{
+                data: 'id',
+                name: 'id'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'description',
+                name: 'description'
+            },
+            {
+                data: 'counter',
+                name: 'counter'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
         ]
-        showData('{{route('assets.index')}}', columns);
+        showData('{{ route('assets.index') }}', columns);
         // Delete Using Ajax
 
-        deleteScript('{{route('assetsDelete')}}');
+        deleteScript('{{ route('assetsDelete') }}');
 
         // Add Using Ajax
-        showAddModal('{{route('assets.create')}}');
+        showAddModal('{{ route('assets.create') }}');
         addScript();
         // Add Using Ajax
-        showEditModal('{{route('assets.edit',':id')}}');
+        showEditModal('{{ route('assets.edit', ':id') }}');
         editScript();
     </script>
 @endsection
-
-

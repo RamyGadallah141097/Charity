@@ -2,7 +2,7 @@
 
 @section('title')
     {{ isset($setting) ? $setting->title : '' }}
- | القروض الحسنة
+    | القروض الحسنة
 @endsection
 @section('page_name')
     القروض الحسنة
@@ -13,7 +13,7 @@
             <div class="card">
                 <div class="p-3">
                     <h3 class="card-title"> القروض الحسنة {{ isset($setting) ? $setting->title : '' }}
-</h3>
+                    </h3>
 
                     <div class="card-body w-100">
                         <div class="row w-100"> <!-- Ensuring full width -->
@@ -110,7 +110,8 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="donationsModalLabel">تفاصيل التبرعات</h5>
-                        <button type="button" class="btn btn-danger" id="forceCloseModal"><i class="fa fa-window-close"></i></button>
+                        <button type="button" class="btn btn-danger" id="forceCloseModal"><i
+                                class="fa fa-window-close"></i></button>
                     </div>
 
                     <div class="card-body w-100">
@@ -118,133 +119,136 @@
                             <div class="col-12">
                                 <div class="card bg-secondary img-card box-secondary-shadow">
                                     <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
-                                        <span class="text-white fs-20">  مجموع التبرعات  </span>
-                                        <span class="text-white fs-20"><p id="total_amount"></p> </span>
+                                        <span class="text-white fs-20"> مجموع التبرعات </span>
+                                        <span class="text-white fs-20">
+                                            <p id="total_amount"></p>
+                                        </span>
                                     </div>
                                 </div>
-                    <div class="modal-body" id="donationsModalBody">
+                                <div class="modal-body" id="donationsModalBody">
 
+                                </div>
+                                <div class="modal-body" id="donationsModalBody">
+                                    <hr>
+                                    <table class="table">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">المبلغ</th>
+                                                <th scope="col">التاريخ</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="donationsModalBodyTable">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
-                    <div class="modal-body" id="donationsModalBody">
-                        <hr>
-                        <table class="table">
-                            <thead class="thead-light">
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">المبلغ</th>
-                                <th scope="col">التاريخ</th>
-                            </tr>
-                            </thead>
-                            <tbody id="donationsModalBodyTable">
-
-                            </tbody>
-                        </table>
-                    </div>
-
                 </div>
+                <!-- Modal for view all donations of the donor !!!!!! -->
+
+                <!-- Modal for view all donations of the donor !!!!!! -->
+
+                <!-- Create Or Edit Modal -->
+
             </div>
-        </div>
-    </div>
-        <!-- Modal for view all donations of the donor !!!!!! -->
+            @include('admin/layouts/myAjaxHelper')
+        @endsection
+        @section('ajaxCalls')
+            <script>
+                var columns = [{
+                        data: null,
+                        name: 'index',
+                        render: function(data, type, row, meta) {
+                            return meta.row + 1;
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'donor_name',
+                        name: 'donor_name'
+                    },
+                    {
+                        data: 'created_at',
+                        name: 'created_at'
+                    },
+                    {
+                        data: 'donation_amount',
+                        name: 'donation_amount'
+                    },
 
-    <!-- Modal for view all donations of the donor !!!!!! -->
-
-    <!-- Create Or Edit Modal -->
-
-    </div>
-    @include('Admin/layouts/myAjaxHelper')
-@endsection
-@section('ajaxCalls')
-    <script>
-        var columns = [
-            {
-                data: null,
-                name: 'index',
-                render: function (data, type, row, meta) {
-                    return meta.row + 1;
-                },
-                orderable: false,
-                searchable: false
-            },
-            {
-                data: 'donor_name',
-                name: 'donor_name'
-            },
-            {
-                data: 'created_at',
-                name: 'created_at'
-            },
-            {
-                data: 'donation_amount',
-                name: 'donation_amount'
-            },
-
-            {
-                data: 'operations',
-                name: 'operations'
-            },
-        ]
-        showData('{{ route('indexLoansDonations') }}', columns);
-    </script>
+                    {
+                        data: 'operations',
+                        name: 'operations'
+                    },
+                ]
+                showData('{{ route('indexLoansDonations') }}', columns);
+            </script>
 
 
-                <script>
-                    $(document).ready(function() {
-                        $(document).on('click', '.view-donations', function() {
-                            let donorId = $(this).data('donor'); // جلب الـ ID الخاص بالمتبرع
-                            let total = $(this).data('total'); // جلب المجموع الكلي للتبرعات
+            <script>
+                $(document).ready(function() {
+                    $(document).on('click', '.view-donations', function() {
+                        let donorId = $(this).data('donor'); // جلب الـ ID الخاص بالمتبرع
+                        let total = $(this).data('total'); // جلب المجموع الكلي للتبرعات
 
-                            // طلب AJAX للحصول على التبرعات الخاصة بالمتبرع
-                            $.ajax({
-                                url: "{{ route('getDonors') }}",
-                                type: "GET",
-                                data: { donor_id: donorId },
-                                success: function(response) {
-                                    let modalBody = $('#donationsModalBodyTable');
-                                    modalBody.empty(); // تفريغ الجدول قبل إضافة البيانات الجديدة
+                        // طلب AJAX للحصول على التبرعات الخاصة بالمتبرع
+                        $.ajax({
+                            url: "{{ route('getDonors') }}",
+                            type: "GET",
+                            data: {
+                                donor_id: donorId
+                            },
+                            success: function(response) {
+                                let modalBody = $('#donationsModalBodyTable');
+                                modalBody.empty(); // تفريغ الجدول قبل إضافة البيانات الجديدة
 
-                                    if (response.length > 0) {
-                                        response.forEach(function(donation, index) {
-                                            modalBody.append(`
+                                if (response.length > 0) {
+                                    response.forEach(function(donation, index) {
+                                        modalBody.append(`
                                 <tr>
                                     <th scope="row">${index+1}</th>
                                     <td>${donation.amount} EGP</td>
                                     <td>${donation.date}</td>
                                 </tr>
                             `);
-                                        });
-                                    } else {
-                                        modalBody.append('<tr><td colspan="3" class="text-center">لا يوجد تبرعات</td></tr>');
-                                    }
-
-                                    // تحديث المبلغ الإجمالي في المودال
-                                    $("#total_amount").text(total + " EGP");
-
-                                    // عرض المودال
-                                    $('#donationsModal').modal('show');
-                                },
-                                error: function() {
-                                    alert("حدث خطأ أثناء جلب البيانات.");
+                                    });
+                                } else {
+                                    modalBody.append(
+                                        '<tr><td colspan="3" class="text-center">لا يوجد تبرعات</td></tr>'
+                                        );
                                 }
-                            });
-                        });
 
-                        // زر إغلاق المودال بالقوة
-                        $('#forceCloseModal').click(function() {
-                            $('#donationsModal').modal('hide');
+                                // تحديث المبلغ الإجمالي في المودال
+                                $("#total_amount").text(total + " EGP");
+
+                                // عرض المودال
+                                $('#donationsModal').modal('show');
+                            },
+                            error: function() {
+                                alert("حدث خطأ أثناء جلب البيانات.");
+                            }
                         });
                     });
-                </script>
 
-                <script>
-        $(document).ready(function() {
-            $('#forceCloseModal').click(function() {
-                $('#donationsModal').modal('hide');
-                $('.modal-backdrop').remove();
-                $('body').removeClass('modal-open');
-            });
-        });
+                    // زر إغلاق المودال بالقوة
+                    $('#forceCloseModal').click(function() {
+                        $('#donationsModal').modal('hide');
+                    });
+                });
+            </script>
 
-    </script>
-
-@endsection
+            <script>
+                $(document).ready(function() {
+                    $('#forceCloseModal').click(function() {
+                        $('#donationsModal').modal('hide');
+                        $('.modal-backdrop').remove();
+                        $('body').removeClass('modal-open');
+                    });
+                });
+            </script>
+        @endsection

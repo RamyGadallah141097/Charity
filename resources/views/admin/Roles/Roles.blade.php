@@ -4,11 +4,10 @@
     {{ isset($setting) ? $setting->title : '' }}
     | الصلاحيات
 @endsection
-@section('page_name') الصلاحيات @endsection
+@section('page_name')
+    الصلاحيات
+@endsection
 @section('content')
-
-
-
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
 
     <style>
@@ -35,25 +34,25 @@
                 <div class="card-header">
                     <h3 class="card-title">{{ isset($setting) ? $setting->title : '' }}
                     </h3>
-                        <div class="">
-                            <button class="btn btn-secondary btn-icon text-white addBtn">
-                                        <span>
-                                            <i class="fe fe-plus"></i>
-                                        </span> اضافة جديد
-                            </button>
-                        </div>
+                    <div class="">
+                        <button class="btn btn-secondary btn-icon text-white addBtn">
+                            <span>
+                                <i class="fe fe-plus"></i>
+                            </span> اضافة جديد
+                        </button>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <!--begin::Table-->
                         <table class="table table-striped table-bordered text-nowrap w-75" id="dataTable">
                             <thead>
-                            <tr class="fw-bolder text-muted bg-light">
-                                <th class="min-w-25px">#</th>
-                                <th class="min-w-50px">الاسم</th>
-                                <th class="min-w-50px">الصلاحيات</th>
-                                <th class="min-w-50px rounded-end">العمليات</th>
-                            </tr>
+                                <tr class="fw-bolder text-muted bg-light">
+                                    <th class="min-w-25px">#</th>
+                                    <th class="min-w-50px">الاسم</th>
+                                    <th class="min-w-50px">الصلاحيات</th>
+                                    <th class="min-w-50px rounded-end">العمليات</th>
+                                </tr>
                             </thead>
                         </table>
                     </div>
@@ -63,7 +62,7 @@
 
         <!--Delete MODAL -->
         <div class="modal fade" id="delete_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
+            aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -72,9 +71,9 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <form action="{{route("Role_delete")}}" method="post" >
+                    <form action="{{ route('Role_delete') }}" method="post">
                         @csrf
-                        @method("post")
+                        @method('post')
                         <div class="modal-body">
                             <input id="delete_id" name="id" type="hidden">
                             <p>هل انت متأكد من حذف البيانات التالية <span id="title" class="text-danger"></span>؟</p>
@@ -109,35 +108,42 @@
         </div>
         <!-- Create Or Edit Modal -->
     </div>
-    @include('Admin/layouts/myAjaxHelper')
+    @include('admin/layouts/myAjaxHelper')
 @endsection
 @section('ajaxCalls')
     <script>
-        var columns = [
-            {
+        var columns = [{
                 data: null,
                 name: 'index',
-                render: function (data, type, row, meta) {
+                render: function(data, type, row, meta) {
                     return meta.row + 1;
                 },
                 orderable: false,
                 searchable: false
             },
-            {data: 'name', name: 'name'},
-            {data: 'permissions', name: 'permissions'},
-            {data: 'action', name: 'action', orderable: false, searchable: false},
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'permissions',
+                name: 'permissions'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
         ]
-        showData('{{route('roles.index')}}', columns);
+        showData('{{ route('roles.index') }}', columns);
         // Delete Using Ajax
-        deleteScript('{{route('Role_delete')}}');
+        deleteScript('{{ route('Role_delete') }}');
         // Add Using Ajax
-        showAddModal('{{route('roles.create')}}');
+        showAddModal('{{ route('roles.create') }}');
         addScript();
         // Add Using Ajax
-        showEditModal('{{route('roles.edit',':id')}}');
+        showEditModal('{{ route('roles.edit', ':id') }}');
         editScript();
     </script>
-
 @endsection
-
-

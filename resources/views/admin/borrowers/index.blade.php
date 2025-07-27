@@ -33,7 +33,7 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0,0,0,0.9);
+            background-color: rgba(0, 0, 0, 0.9);
         }
 
         .modal-content {
@@ -45,8 +45,13 @@
         }
 
         @keyframes zoom {
-            from {transform: scale(0.1)}
-            to {transform: scale(1)}
+            from {
+                transform: scale(0.1)
+            }
+
+            to {
+                transform: scale(1)
+            }
         }
 
         .close {
@@ -111,51 +116,51 @@
     </style>
 
 
-    
-<style>
-    .star-rating {
-        direction: rtl;
-        display: inline-block;
-        cursor: pointer;
-    }
 
-    .star-rating input {
-        display: none;
-    }
+    <style>
+        .star-rating {
+            direction: rtl;
+            display: inline-block;
+            cursor: pointer;
+        }
 
-    .star-rating label {
-        color: #ddd;
-        font-size: 24px;
-        padding: 0 2px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
+        .star-rating input {
+            display: none;
+        }
 
-    .star-rating label:hover,
-    .star-rating label:hover~label,
-    .star-rating input:checked~label {
-        color: #ffc107;
-    }
-</style>
+        .star-rating label {
+            color: #ddd;
+            font-size: 24px;
+            padding: 0 2px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
 
-<script>
-    document.querySelectorAll('.star-rating:not(.readonly) label').forEach(star => {
-        star.addEventListener('click', function() {
-            this.style.transform = 'scale(1.2)';
-            setTimeout(() => {
-                this.style.transform = 'scale(1)';
-            }, 200);
+        .star-rating label:hover,
+        .star-rating label:hover~label,
+        .star-rating input:checked~label {
+            color: #ffc107;
+        }
+    </style>
+
+    <script>
+        document.querySelectorAll('.star-rating:not(.readonly) label').forEach(star => {
+            star.addEventListener('click', function() {
+                this.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 200);
+            });
         });
-    });
-</script>
+    </script>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
-    @if($errors->any())
+    @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
-                @foreach($errors->all() as $error)
-                    <li>{{$error}}</li>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
                 @endforeach
             </ul>
         </div>
@@ -178,17 +183,17 @@
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered text-nowrap w-75" id="dataTable">
                             <thead>
-                            <tr class="fw-bolder text-muted bg-light">
-                                <th class="min-w-25px">#</th>
-                                <th class="min-w-50px">الاسم المقترض</th>
-                                <th class="min-w-125px">رقم المقترض</th>
-                                <th class="min-w-125px">الرقم القومي للمقترض</th>
-                                <th class="min-w-125px">عمر للمقترض</th>
-                                <th class="min-w-125px">عنوان المقترض</th>
-                                <th class="min-w-125px">  5 /التقييم</th>
-                                <th class="min-w-125px">عمل المقترض</th>
-                                <th class="min-w-125px">العمليات</th>
-                            </tr>
+                                <tr class="fw-bolder text-muted bg-light">
+                                    <th class="min-w-25px">#</th>
+                                    <th class="min-w-50px">الاسم المقترض</th>
+                                    <th class="min-w-125px">رقم المقترض</th>
+                                    <th class="min-w-125px">الرقم القومي للمقترض</th>
+                                    <th class="min-w-125px">عمر للمقترض</th>
+                                    <th class="min-w-125px">عنوان المقترض</th>
+                                    <th class="min-w-125px"> 5 /التقييم</th>
+                                    <th class="min-w-125px">عمل المقترض</th>
+                                    <th class="min-w-125px">العمليات</th>
+                                </tr>
                             </thead>
                         </table>
                     </div>
@@ -197,7 +202,8 @@
         </div>
 
         <!-- Delete MODAL -->
-        <div class="modal fade" id="delete_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="delete_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -206,15 +212,16 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <form action="{{route("delete_borrowers")}}" method="post">
+                    <form action="{{ route('delete_borrowers') }}" method="post">
                         @csrf
-                        @method("post")
+                        @method('post')
                         <div class="modal-body">
                             <input id="delete_id" name="id" type="hidden">
                             <p>هل انت متأكد من حذف البيانات التالية <span id="title" class="text-danger"></span>؟</p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal" id="dismiss_delete_modal">اغلاق</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"
+                                id="dismiss_delete_modal">اغلاق</button>
                             <button type="submit" class="btn btn-danger" id="delete_btn">حذف !</button>
                         </div>
                     </form>
@@ -250,15 +257,15 @@
                     <div class="modal-body">
                         <table class="table">
                             <thead class="thead-light">
-                            <tr>
-                                <th>#</th>
-                                <th>الاسم</th>
-                                <th>الهاتف</th>
-                                <th>الرقم القومي</th>
-                                <th>السن</th>
-                                <th>العنوان</th>
-                                <th>العمل</th>
-                            </tr>
+                                <tr>
+                                    <th>#</th>
+                                    <th>الاسم</th>
+                                    <th>الهاتف</th>
+                                    <th>الرقم القومي</th>
+                                    <th>السن</th>
+                                    <th>العنوان</th>
+                                    <th>العمل</th>
+                                </tr>
                             </thead>
                             <tbody id="guarantorModalBodyTable"></tbody>
                         </table>
@@ -268,7 +275,8 @@
         </div>
 
         <!-- Media Modal -->
-        <div class="modal fade" id="mediaModal" tabindex="-1" role="dialog" aria-labelledby="mediaModalLabel" aria-hidden="true">
+        <div class="modal fade" id="mediaModal" tabindex="-1" role="dialog" aria-labelledby="mediaModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -297,7 +305,8 @@
         </div>
 
         <!-- borrowerReviewModal Modal -->
-        <div class="modal fade" id="borrowerReviewModal" tabindex="-1" role="dialog" aria-labelledby="borrowerReviewModalLabel" aria-hidden="true">
+        <div class="modal fade" id="borrowerReviewModal" tabindex="-1" role="dialog"
+            aria-labelledby="borrowerReviewModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -343,50 +352,75 @@
             </div>
         </div>
     </div>
-    @include('Admin/layouts/myAjaxHelper')
+    @include('admin/layouts/myAjaxHelper')
 @endsection
 
 @section('ajaxCalls')
     <script>
-        var columns = [
-            {
+        var columns = [{
                 data: null,
                 name: 'index',
-                render: function (data, type, row, meta) {
+                render: function(data, type, row, meta) {
                     return meta.row + 1;
                 },
                 orderable: false,
                 searchable: false
             },
-            {data: 'name', name: 'name'},
-            {data: 'phone', name: 'phone'},
-            {data: 'nationalID', name: 'nationalID'},
-            {data: 'borrower_age', name: 'borrower_age'},
-            {data: 'address', name: 'address'},
-            {data: 'rate', name: 'rate'},
-            {data: 'job', name: 'job'},
-            {data: 'action', name: 'action'},
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'phone',
+                name: 'phone'
+            },
+            {
+                data: 'nationalID',
+                name: 'nationalID'
+            },
+            {
+                data: 'borrower_age',
+                name: 'borrower_age'
+            },
+            {
+                data: 'address',
+                name: 'address'
+            },
+            {
+                data: 'rate',
+                name: 'rate'
+            },
+            {
+                data: 'job',
+                name: 'job'
+            },
+            {
+                data: 'action',
+                name: 'action'
+            },
         ]
         showData('{{ route('borrowers.index') }}', columns);
-        deleteScript('{{route('delete_borrowers')}}');
-        showAddModal('{{route('borrowers.create')}}');
+        deleteScript('{{ route('delete_borrowers') }}');
+        showAddModal('{{ route('borrowers.create') }}');
         addScript();
-        showEditModal('{{route('borrowers.edit',':id')}}');
+        showEditModal('{{ route('borrowers.edit', ':id') }}');
         editScript();
 
-        $(document).ready(function () {
-            $(document).on('click', '.view-guarantors', function () {
+        $(document).ready(function() {
+            $(document).on('click', '.view-guarantors', function() {
                 let borrower_id = $(this).data('id');
                 $.ajax({
                     url: "{{ route('getGuarantor') }}",
                     type: "GET",
-                    data: { borrower_id: borrower_id },
-                    success: function (response) {
+                    data: {
+                        borrower_id: borrower_id
+                    },
+                    success: function(response) {
                         let modalBody = $('#guarantorModalBodyTable');
                         modalBody.empty();
 
                         if (response.guarantors.length > 0) {
-                            response.guarantors.forEach(function (guarantor, index) {
+                            response.guarantors.forEach(function(guarantor, index) {
                                 modalBody.append(
                                     `<tr>
                                         <th scope="row">${index + 1}</th>
@@ -400,11 +434,12 @@
                                 );
                             });
                         } else {
-                            modalBody.append('<p class="text-center text-danger">لا يوجد كفلاء</p>');
+                            modalBody.append(
+                                '<p class="text-center text-danger">لا يوجد كفلاء</p>');
                         }
                         $('#guarantorModal').modal('show');
                     },
-                    error: function () {
+                    error: function() {
                         alert('حدث خطأ أثناء جلب بيانات الكفيل');
                     }
                 });
@@ -412,14 +447,14 @@
         });
 
         // Show media
-        $(document).on("click", ".viewMedia", function () {
+        $(document).on("click", ".viewMedia", function() {
             let borrowerId = $(this).data("id");
             loadMedia(borrowerId);
             $("#mediaModal").modal("show");
         });
 
         // Show review modal
-        $(document).on("click", ".borrowerReview", function () {
+        $(document).on("click", ".borrowerReview", function() {
             let borrowerId = $(this).data("id");
             let review = $(this).data("review");
             $("#borrower_idReview").val(borrowerId);
@@ -432,7 +467,7 @@
             $.ajax({
                 url: `/admin/borrowers/${borrowerId}/media`,
                 type: "GET",
-                success: function (response) {
+                success: function(response) {
                     $("#borrowerMedia").empty();
                     $("#guarantorMedia").empty();
                     let borrowerHtml = "";
@@ -457,7 +492,7 @@
                     $("#borrowerMedia").html(borrowerHtml);
                     $("#guarantorMedia").html(guarantorHtml);
                 },
-                error: function () {
+                error: function() {
                     toastr.error("فشل في تحميل الصور");
                 },
             });
@@ -480,6 +515,4 @@
             }
         }
     </script>
-
-
 @endsection
