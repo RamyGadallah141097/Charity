@@ -39,13 +39,6 @@
       0 => 'Intervention\\Image\\ImageServiceProvider',
     ),
   ),
-  'kitloong/laravel-migrations-generator' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'KitLoong\\MigrationsGenerator\\MigrationsGeneratorServiceProvider',
-    ),
-  ),
   'laravel/sail' => 
   array (
     'providers' => 
@@ -164,13 +157,13 @@
   ),
   'yoeunes/toastr' => 
   array (
-    'providers' => 
-    array (
-      0 => 'Yoeunes\\Toastr\\ToastrServiceProvider',
-    ),
     'aliases' => 
     array (
       'Toastr' => 'Yoeunes\\Toastr\\Facades\\Toastr',
+    ),
+    'providers' => 
+    array (
+      0 => 'Yoeunes\\Toastr\\ToastrServiceProvider',
     ),
   ),
 );
