@@ -5,15 +5,23 @@
 			</div>
         `;
     // Show Data Using YAJRA
-    async function showData(routeOfShow,columns) {
-            $('#dataTable').DataTable({
+        async function showData(routeOfShow, columns) {
+            // Destroy existing table if it exists
+            if ($.fn.DataTable.isDataTable('#dataTable')) {
+                // Save current state before destroying
+                var state = table.state();
+                localStorage.setItem('DataTable_state', JSON.stringify(state));
+                table.destroy();
+            }
+
+            // Initialize DataTable
+            table = $('#dataTable').DataTable({
                 processing: true,
                 serverSide: true,
+                stateSave: true, // Enable DataTables state saving
                 ajax: routeOfShow,
                 columns: columns,
-                order: [
-                    [0, "ASC"]
-                ],
+                order: [[0, "ASC"]],
                 "language": {
                     "sProcessing": "جاري التحميل ..",
                     "sLengthMenu": "اظهار _MENU_ سجل",
@@ -34,8 +42,6 @@
                         },
                     }
                 },
-
-              //  dom: 'Bfrtip',
                 buttons: [
                     {
                         extend: 'copy',
@@ -52,13 +58,26 @@
                         text: 'اكسيل',
                         className: 'btn-primary'
                     },
-
                     {
                         extend: 'colvis',
                         text: 'عرض',
                         className: 'btn-primary'
                     },
-                ]
+                ],
+                initComplete: function() {
+                    // Load saved state if exists
+                    var savedState = localStorage.getItem('DataTable_state');
+                    if (savedState) {
+                        var state = JSON.parse(savedState);
+                        table.columns().search(state.search.search);
+                        table.page(state.start / state.length).draw(false);
+                    }
+                }
+            });
+
+            // Save state on various events
+            table.on('stateSaveParams', function(e, settings, data) {
+                localStorage.setItem('DataTable_state', JSON.stringify(data));
             });
         }
     //     pdf solved successfully
@@ -231,48 +250,50 @@
         });
     }
 
+
     document.addEventListener("DOMContentLoaded", function () {
-        const tableWrapper = document.querySelector(".table-responsive");
-        const table = document.querySelector("#dataTable");
+    const tableWrapper = document.querySelector(".table-responsive");
+    const table = document.querySelector("#dataTable");
 
-        if (!tableWrapper || !table) return;
+    if (!tableWrapper || !table) return;
 
-        const topScroll = document.createElement("div");
-        topScroll.style.overflowX = "auto";
-        topScroll.style.overflowY = "hidden";
-        topScroll.style.height = "20px";
-        topScroll.style.marginBottom = "5px";
-        topScroll.style.width = "100%";
-        topScroll.style.display = "none"; 
+    const topScroll = document.createElement("div");
+    topScroll.style.overflowX = "auto";
+    topScroll.style.overflowY = "hidden";
+    topScroll.style.height = "20px";
+    topScroll.style.marginBottom = "5px";
+    topScroll.style.width = "100%";
+    topScroll.style.display = "none";
 
-        const topInner = document.createElement("div");
-        topInner.style.height = "1px";
+    const topInner = document.createElement("div");
+    topInner.style.height = "1px";
 
-        topScroll.appendChild(topInner);
-        tableWrapper.parentNode.insertBefore(topScroll, tableWrapper);
+    topScroll.appendChild(topInner);
+    tableWrapper.parentNode.insertBefore(topScroll, tableWrapper);
 
-        topScroll.addEventListener("scroll", function () {
-            tableWrapper.scrollLeft = topScroll.scrollLeft;
-        });
-
-        tableWrapper.addEventListener("scroll", function () {
-            topScroll.scrollLeft = tableWrapper.scrollLeft;
-        });
-
-        function adjustTopScroll() {
-            const scrollWidth = table.scrollWidth;
-            const clientWidth = tableWrapper.clientWidth;
-
-            if (scrollWidth > clientWidth) {
-                topInner.style.width = scrollWidth + "px";
-                topScroll.style.display = "block";
-            } else {
-                topScroll.style.display = "none";
-            }
-        }
-
-        setTimeout(adjustTopScroll, 200); 
-        window.addEventListener("resize", adjustTopScroll);
+    topScroll.addEventListener("scroll", function () {
+        tableWrapper.scrollLeft = topScroll.scrollLeft;
     });
+
+    tableWrapper.addEventListener("scroll", function () {
+        topScroll.scrollLeft = tableWrapper.scrollLeft;
+    });
+
+    function adjustTopScroll() {
+        const scrollWidth = table.scrollWidth;
+        const clientWidth = tableWrapper.clientWidth;
+
+        if (scrollWidth > clientWidth) {
+            topInner.style.width = (scrollWidth + 500) + "px"; // increased scroll area
+            topScroll.style.display = "block";
+        } else {
+            topScroll.style.display = "none";
+        }
+    }
+
+    setTimeout(adjustTopScroll, 200);
+    window.addEventListener("resize", adjustTopScroll);
+});
+
 
 </script>

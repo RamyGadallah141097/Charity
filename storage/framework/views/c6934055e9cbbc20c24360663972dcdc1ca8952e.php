@@ -1,145 +1,146 @@
 <?php $__env->startSection('title'); ?>
-    <?php echo e(isset($setting) ? isset($setting->title) : ''); ?> | المستفيدين
+<?php echo e(isset($setting) ? isset($setting->title) : ''); ?> | المستفيدين
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('page_name'); ?>
-    المستفيدين
+المستفيدين
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>
-    <div class="row">
-        <div class="col-md-12 col-lg-12">
-            <div class="card">
-                <div class="card-header w-100">
-                    <h3 class="card-title">
-                        قائمة بالمستفدين <?php echo e(isset($setting) ? isset($setting->title) : ''); ?>
+<div class="row">
+    <div class="col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-header w-100">
+                <h3 class="card-title">
+                    قائمة بالمستفدين <?php echo e(isset($setting) ? isset($setting->title) : ''); ?>
 
-                    </h3>
-                    <div class="row mb-3 w-100">
-                        <div class="col-2">
-                            
-                            <select id="social_status" class="form-control">
-                                <option value="">اختيار الحاله الشخصيه</option>
-                                <option value="0">اعزب</option>
-                                <option value="1">متزوج</option>
-                                <option value="2">مطلق</option>
-                                <option value="3">ارمل</option>
-                            </select>
-                        </div>
+                </h3>
+                <div class="row mb-3 w-100">
+                    <div class="col-2">
+                        
+                        <select id="social_status" class="form-control">
+                            <option value="">اختيار الحاله الشخصيه</option>
+                            <option value="0">اعزب</option>
+                            <option value="1">متزوج</option>
+                            <option value="2">مطلق</option>
+                            <option value="3">ارمل</option>
+                        </select>
+                    </div>
 
-                        <div class="col-2">
-                            
-                            <input id="standard_living" type="number" class="form-control" placeholder="مستوى المعيشة "
-                                name="standard_living">
-                        </div>
-
-
-
-                        <div class="col-2">
-                            <select id="has_patient" class="form-control">
-                                <option value="">لديه مرضي ؟ </option>
-                                <option value="0">لا</option>
-                                <option value="1">نعم</option>
-                            </select>
-                        </div>
-                        <div class="col-2">
-                            
-                            <input id="family_number" type="number" class="form-control" name="family_number"
-                                placeholder="عدد الاسره">
-                        </div>
+                    <div class="col-2">
+                        
+                        <input id="standard_living" type="number" class="form-control" placeholder="مستوى المعيشة "
+                            name="standard_living">
                     </div>
 
 
-                    <div class="">
-                        <a href="<?php echo e(route('users.create')); ?>" class="btn btn-secondary btn-icon text-white">
-                            <span>
-                                <i class="fe fe-plus"></i>
-                            </span> استمارة متقدم
-                        </a>
+
+                    <div class="col-2">
+                        <select id="has_patient" class="form-control">
+                            <option value="">لديه مرضي ؟ </option>
+                            <option value="0">لا</option>
+                            <option value="1">نعم</option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        
+                        <input id="family_number" type="number" class="form-control" name="family_number"
+                            placeholder="عدد الاسره">
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <!--begin::Table-->
-                        <table class="table table-striped table-bordered text-nowrap w-100" id="dataTable">
-                            <thead>
-                                <tr class="fw-bolder text-muted bg-light">
-                                    <th class="min-w-25px">#</th>
-                                    <th class="min-w-50px">اسم الزوج</th>
-                                    <th class="min-w-50px">اسم الزوجة</th>
-                                    <th class="min-w-50px">الحالة الاجتماعية</th>
-                                    <th class="min-w-50px">الهاتف</th>
-                                    <th class="min-w-50px">اجمالي الدخل</th>
-                                    <th class="min-w-50px">اجمالي المصاريف</th>
-                                    <th class="min-w-50px">مستوى المعيشة</th>
-                                    
-                                    <th class="min-w-50px">الحالة </th>
-                                    <th class="min-w-50px"> تحديث</th>
-                                    <th class="min-w-50px rounded-end">العمليات</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
+
+
+                <div class="">
+                    <a href="<?php echo e(route('users.create')); ?>" class="btn btn-secondary btn-icon text-white">
+                        <span>
+                            <i class="fe fe-plus"></i>
+                        </span> استمارة متقدم
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <!--begin::Table-->
+                    <table class="table table-striped table-bordered text-nowrap w-100" id="dataTable">
+                        <thead>
+                            <tr class="fw-bolder text-muted bg-light">
+                                <th class="min-w-25px">#</th>
+                                <th class="min-w-50px">اسم الزوج</th>
+                                <th class="min-w-50px">اسم الزوجة</th>
+                                <th class="min-w-50px">الحالة الاجتماعية</th>
+                                <th class="min-w-50px">الهاتف</th>
+                                <th class="min-w-50px">اجمالي الدخل</th>
+                                <th class="min-w-50px">اجمالي المصاريف</th>
+                                <th class="min-w-50px">مستوى المعيشة</th>
+                                
+                                <th class="min-w-50px">الحالة </th>
+                                <th class="min-w-50px"> تحديث</th>
+                                <th class="min-w-50px rounded-end">العمليات</th>
+                            </tr>
+                        </thead>
+                    </table>
                 </div>
             </div>
         </div>
-
-        <!--Delete MODAL -->
-        <div class="modal fade" id="delete_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">حذف بيانات</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <form id="delete_form" action="<?php echo e(route('delete_users')); ?>" method="POST">
-                        <?php echo csrf_field(); ?>
-                        <?php echo method_field('DELETE'); ?>
-                        <div class="modal-body">
-                            <input id="delete_id" name="id" type="hidden">
-                            <p>هل انت متأكد من حذف البيانات التالية <span id="title" class="text-danger"></span>؟</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal" id="dismiss_delete_modal">
-                                اغلاق
-                            </button>
-                            <button type="button" class="btn btn-danger" id="delete_btn">حذف !</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <!-- MODAL CLOSED -->
-
-
-        <!-- Edit MODAL -->
-        <div class="modal fade bd-example-modal-lg" id="editOrCreate" data-backdrop="static" tabindex="-1" role="dialog"
-            aria-hidden="true">
-            <div class="modal-dialog modal-" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="example-Modal3">تفاصيل عن المستفيد</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body" id="modal-body">
-
-
-
-
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Edit MODAL CLOSED -->
     </div>
-    <?php echo $__env->make('admin/layouts/myAjaxHelper', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+
+    <!--Delete MODAL -->
+    <div class="modal fade" id="delete_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">حذف بيانات</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form id="delete_form" action="<?php echo e(route('delete_users')); ?>" method="POST">
+                    <?php echo csrf_field(); ?>
+                    <?php echo method_field('DELETE'); ?>
+                    <div class="modal-body">
+                        <input id="delete_id" name="id" type="hidden">
+                        <p>هل انت متأكد من حذف البيانات التالية <span id="title" class="text-danger"></span>؟</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="dismiss_delete_modal">
+                            اغلاق
+                        </button>
+                        <button type="button" class="btn btn-danger" id="delete_btn">حذف !</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- MODAL CLOSED -->
+
+
+    <!-- Edit MODAL -->
+    <div class="modal fade bd-example-modal-lg" id="editOrCreate" data-backdrop="static" tabindex="-1" role="dialog"
+        aria-hidden="true">
+        <div class="modal-dialog modal-" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="example-Modal3">تفاصيل عن المستفيد</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modal-body">
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Edit MODAL CLOSED -->
+</div>
+<?php echo $__env->make('admin/layouts/myAjaxHelper', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('ajaxCalls'); ?>
-    <script>
-        
+<script>
+    $(document).ready(function() {
+        // Define columns configuration
         var columns = [{
                 data: null,
                 name: 'index',
@@ -177,8 +178,6 @@
                 data: 'standard_living',
                 name: 'standard_living'
             },
-            
-
             {
                 data: 'status',
                 name: 'status'
@@ -192,134 +191,84 @@
                 name: 'action',
                 orderable: false,
                 searchable: false
-            },
-        ]
-        showData('<?php echo e(route('users.index', request()->segment(3))); ?>', columns);
+            }
+        ];
 
-        // Delete Using Ajax
-        deleteScript('<?php echo e(route('delete_users')); ?>');
+        // Initialize table variable
+        var table;
+        var tableUrl = "<?php echo e(route('users.index', request()->segment(3))); ?>";
 
-        // Show Details Modal
-        $(document).on('click', '.detailsBtn', function() {
-            var id = $(this).data('id')
-            var url = "<?php echo e(route('userDetails', ':id')); ?>";
-            url = url.replace(':id', id)
-            $('#modal-body').html(loader)
-            $('#editOrCreate').modal('show')
-            setTimeout(function() {
-                $('#modal-body').load(url)
-            }, 500)
-        })
-
-        // Change Status Using Ajax
-        $(document).on('click', '.statusBtn', function(event) {
-            event.preventDefault()
-            var id = $(this).data("id"),
-                status = $(this).data("status")
-            $.ajax({
-                type: 'POST',
-                url: "<?php echo e(route('updateUserStatus')); ?>",
-                data: {
-                    '_token': "<?php echo e(csrf_token()); ?>",
-                    'id': id,
-                    'status': status,
-                },
-                success: function(data) {
-                    if (data.status === true) {
-                        $('#dataTable').DataTable().ajax.reload();
-                        toastr.success(data.message)
-                    } else
-                        toastr.error('هناك خطأ ما يرجي اعادة المحاولة')
-                },
-                error: function(data) {
-                    toastr.error(data.message)
-                }
-            });
-        });
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            function showData(url, columns) {
-                $('#dataTable').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    destroy: true, // Ensure reloading
-                    ajax: {
-                        url: url,
-                        data: function(d) {
-                            d.social_status = $('#social_status').val();
-                            d.standard_living = $('#standard_living').val();
-                            d.has_patient = $('#has_patient').val();
-                            d.family_number = $('#family_number').val();
-                        }
-                    },
-                    columns: columns
-                });
+        // Function to initialize/reinitialize DataTable
+        function initDataTable() {
+            // Destroy existing table if it exists
+            if ($.fn.DataTable.isDataTable('#dataTable')) {
+                // Save current state before destroying
+                var state = table.state();
+                localStorage.setItem('DataTable_state', JSON.stringify(state));
+                table.destroy();
             }
 
-            var columns = [{
-                    data: 'id',
-                    name: 'id'
+            // Initialize DataTable
+            table = $('#dataTable').DataTable({
+                processing: true,
+                serverSide: true,
+                stateSave: true, // Enable DataTables state saving
+                ajax: {
+                    url: tableUrl,
+                    data: function(d) {
+                        d.social_status = $('#social_status').val();
+                        d.standard_living = $('#standard_living').val();
+                        d.has_patient = $('#has_patient').val();
+                        d.family_number = $('#family_number').val();
+                    }
                 },
-                {
-                    data: 'husband_name',
-                    name: 'husband_name'
-                },
-                {
-                    data: 'wife_name',
-                    name: 'wife_name'
-                },
-                {
-                    data: 'social_status',
-                    name: 'social_status'
-                },
-                {
-                    data: 'nearest_phone',
-                    name: 'nearest_phone'
-                },
-                {
-                    data: 'gross_income',
-                    name: 'gross_income'
-                },
-                {
-                    data: 'gross_expenses',
-                    name: 'gross_expenses'
-                },
-                {
-                    data: 'standard_living',
-                    name: 'standard_living'
-                },
-                {
-                    data: 'status',
-                    name: 'status'
-                },
-                {
-                    data: 'statusChange',
-                    name: 'statusChange'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
+                columns: columns,
+                initComplete: function() {
+                    // Load saved state if exists
+                    var savedState = localStorage.getItem('DataTable_state');
+                    if (savedState) {
+                        var state = JSON.parse(savedState);
+                        table.columns().search(state.search.search);
+                        table.page(state.start / state.length).draw(false);
+                    }
                 }
-            ];
-
-            var tableUrl = "<?php echo e(route('users.index', request()->segment(3))); ?>";
-            showData(tableUrl, columns);
-
-            $('#social_status, #standard_living,#has_patient, #family_number').change(function() {
-                showData(tableUrl, columns);
             });
+
+            // Save state on various events
+            table.on('stateSaveParams', function(e, settings, data) {
+                localStorage.setItem('DataTable_state', JSON.stringify(data));
+            });
+        }
+
+        // Initial table load
+        initDataTable();
+
+        // Filter change handler
+        $('#social_status, #standard_living, #has_patient, #family_number').change(function() {
+            table.ajax.reload();
         });
-    </script>
-    // Change Status Using Ajax
-    <script>
+
+        // Delete button handler
+        $(".delete_button").on("click", function() {
+            let id = $(this).data("id");
+            let title = $(this).data("title");
+
+            $("#delete_id").val(id);
+            $("#title").text(title);
+            $("#delete_modal").modal("show");
+        });
+
+        // Delete form submission handler
+        $("#delete_btn").on("click", function() {
+            $("#delete_form").submit();
+        });
+
+        // Status change handler
         $(document).on('click', '.statusBtn', function(event) {
-            event.preventDefault()
+            event.preventDefault();
             var id = $(this).data("id"),
-                status = $(this).data("status")
+                status = $(this).data("status");
+                
             $.ajax({
                 type: 'POST',
                 url: "<?php echo e(route('updateUserStatus')); ?>",
@@ -330,35 +279,30 @@
                 },
                 success: function(data) {
                     if (data.status === true) {
-                        $('#dataTable').DataTable().ajax.reload();
-                        toastr.success(data.message)
-                    } else
-                        toastr.error('هناك خطأ ما يرجي اعادة المحاولة')
+                        table.ajax.reload(null, false); // Reload without resetting pagination
+                        toastr.success(data.message);
+                    } else {
+                        toastr.error('هناك خطأ ما يرجي اعادة المحاولة');
+                    }
                 },
                 error: function(data) {
-                    toastr.error(data.message)
+                    toastr.error(data.message);
                 }
             });
         });
-    </script>
-    <script>
-        $(document).ready(function() {
-            // عند الضغط على أيقونة الحذف داخل الجدول
-            $(".delete_button").on("click", function() {
-                let id = $(this).data("id");
-                let title = $(this).data("title");
 
-                $("#delete_id").val(id); // تعيين ID للحذف
-                $("#title").text(title); // عرض اسم العنصر في المودال
-                $("#delete_modal").modal("show"); // عرض المودال
-            });
-
-            // عند الضغط على زر "حذف" داخل المودال
-            $("#delete_btn").on("click", function() {
-                $("#delete_form").submit(); // إرسال النموذج
-            });
+        // Details modal handler
+        $(document).on('click', '.detailsBtn', function() {
+            var id = $(this).data('id');
+            var url = "<?php echo e(route('userDetails', ':id')); ?>";
+            url = url.replace(':id', id);
+            $('#modal-body').html(loader);
+            $('#editOrCreate').modal('show');
+            setTimeout(function() {
+                $('#modal-body').load(url);
+            }, 500);
         });
-    </script>
+    });
+</script>
 <?php $__env->stopSection(); ?>
-
 <?php echo $__env->make('admin/layouts/master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /home/kariem/Desktop/Projects/new-zakat/resources/views/admin/users/index.blade.php ENDPATH**/ ?>
