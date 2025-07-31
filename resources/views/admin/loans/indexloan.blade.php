@@ -109,71 +109,136 @@
     @section('ajaxCalls')
         <script>
             $(document).ready(function() {
-                var borrowerId = "{{ $id }}";
+                    var borrowerId = "{{ $id }}";
 
-                var table = $('#dataTable').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    ajax: "{{ route('person.loans', ':id') }}".replace(':id', borrowerId),
-                    columns: [{
-                            data: null,
-                            name: 'index',
-                            render: function(data, type, row, meta) {
-                                return meta.row + 1;
+                    // Initialize DataTable
+                    var table = $('#dataTable').DataTable({
+                        processing: true,
+                        serverSide: true,
+                        ajax: "{{ route('person.loans', ':id') }}".replace(':id', borrowerId),
+                        columns: [{
+                                data: null,
+                                name: 'index',
+                                render: function(data, type, row, meta) {
+                                    return meta.row + 1;
+                                },
+                                orderable: false,
+                                searchable: false
                             },
-                            orderable: false,
-                            searchable: false
-                        },
-                        {
-                            data: 'borrower_name',
-                            name: 'borrower_name'
-                        },
-                        {
-                            data: 'borrower_phone',
-                            name: 'borrower_phone'
-                        },
-                        {
-                            data: 'amount',
-                            name: 'amount'
-                        },
-                        {
-                            data: 'month',
-                            name: 'month'
-                        },
-                        {
-                            data: 'status',
-                            name: 'status'
-                        },
-                        {
-                            data: 'action',
-                            name: 'action',
-                            orderable: false,
-                            searchable: false
-                        }
-                    ]
-                });
-
-                $(document).on('click', '.loan-btn', function() {
-                    let loanId = $(this).data('id');
-
-                    if (confirm("هل أنت متأكد من صرف هذا القرض؟")) {
-                        $.ajax({
-                            url: "{{ route('loan.checkout', ':id') }}".replace(':id', loanId),
-                            type: 'get',
-                            data: {
-                                _token: '{{ csrf_token() }}'
+                            {
+                                data: 'borrower_name',
+                                name: 'borrower_name'
                             },
-                            success: function(response) {
-                                window.location.reload();
-                                alert(response.message);
-                                table.ajax.reload();
+                            {
+                                data: 'borrower_phone',
+                                name: 'borrower_phone'
                             },
-                            error: function(response) {
-                                alert(response.message);
-                                alert(response.responseJSON.error);
+                            {
+                                data: 'amount',
+                                name: 'amount'
+                            },
+                            {
+                                data: 'month',
+                                name: 'month'
+                            },
+                            {
+                                data: 'status',
+                                name: 'status'
+                            },
+                            {
+                                data: 'action',
+                                name: 'action',
+                                orderable: false,
+                                searchable: false
                             }
+                        ],
+                        initComplete: function() {
+                            // Add horizontal scroll control after table initialization
+                            addHorizontalScrollControl();
+                        }
+                    });
+
+                    // Add horizontal scroll control function
+                    function addHorizontalScrollControl() {
+                        const tableWrapper = document.querySelector(".dataTables_scrollBody");
+                        const table = document.querySelector("#dataTable");
+
+                        if (!tableWrapper || !table) return;
+
+                        const topScroll = document.createElement("div");
+                        topScroll.style.overflowX = "auto";
+                        topScroll.style.overflowY = "hidden";
+                        topScroll.style.height = "20px";
+                        topScroll.style.marginBottom = "5px";
+                        topScroll.style.width = "calc(100% + 500px)";
+                        topScroll.style.marginLeft = "-250px";
+                        topScroll.style.position = "relative";
+                        topScroll.style.left = "250px";
+                        topScroll.style.display = "none";
+
+                        const topInner = document.createElement("div");
+                        topInner.style.height = "1px";
+
+                        topScroll.appendChild(topInner);
+                        tableWrapper.parentNode.insertBefore(topScroll, tableWrapper);
+
+                        topScroll.addEventListener("scroll", function() {
+                            tableWrapper.scrollLeft = topScroll.scrollLeft;
                         });
+
+                        tableWrapper.addEventListener("scroll", function() {
+                            topScroll.scrollLeft = tableWrapper.scrollLeft;
+                        });
+
+                        function adjustTopScroll() {
+                            const scrollWidth = table.scrollWidth;
+                            const clientWidth = tableWrapper.clientWidth;
+
+                            if (scrollWidth > clientWidth) {
+                                topInner.style.width = scrollWidth + "px";
+                                topScroll.style.display = "block";
+                                
+                                // Adjust scroll position to stay centered
+                                const extraSpace = 500;
+                                const maxScroll = scrollWidth - clientWidth;
+                                const scrollRatio = tableWrapper.scrollLeft / maxScroll;
+                                const newMaxScroll = scrollWidth - (clientWidth + extraSpace);
+                                topScroll.scrollLeft = scrollRatio * newMaxScroll;
+                            } else {
+                                topScroll.style.display = "none";
+                            }
+                        }
+
+                        setTimeout(adjustTopScroll, 200);
+                        $(window).on('resize', adjustTopScroll);
+                        
+                        // Adjust scroll when table is redrawn
+                        table.on('draw', adjustTopScroll);
                     }
+
+                    // Loan button click handler
+                    $(document).on('click', '.loan-btn', function() {
+                        let loanId = $(this).data('id');
+
+                        if (confirm("هل أنت متأكد من صرف هذا القرض؟")) {
+                            $.ajax({
+                                url: "{{ route('loan.checkout', ':id') }}".replace(':id', loanId),
+                                type: 'get',
+                                data: {
+                                    _token: '{{ csrf_token() }}'
+                                },
+                                success: function(response) {
+                                    window.location.reload();
+                                    alert(response.message);
+                                    table.ajax.reload();
+                                },
+                                error: function(response) {
+                                    alert(response.message);
+                                    alert(response.responseJSON.error);
+                                }
+                            });
+                        }
+                    });
                 });
 
                 {{-- $(document).on('click', '.pay-btn', function () { --}}

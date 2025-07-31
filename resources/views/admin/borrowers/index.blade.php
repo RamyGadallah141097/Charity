@@ -514,5 +514,10 @@
                 closeZoomModal();
             }
         }
+
+
+       
+
+
     </script>
 @endsection
