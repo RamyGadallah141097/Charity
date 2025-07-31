@@ -57,23 +57,27 @@ class loansController extends Controller
 //            }
 //        }
 //        solve error
-        $borrowers = Borrower::get();
+        $borrowers = Borrower::doesntHave("loans")->get();
         return view('admin/loans/parts/create', ["borrowers" => $borrowers]);
     }
 
     public function searchBorrowers(Request $request)
     {
+        
         try {
 
-            $query = $request->input('borrower_name');
+            
+            $borrowers = Borrower::where('id', $request->input("borrower_id"))
+                // ->doesntHave('loans')
+                ->get();
 
-            // Make sure the table exists and the column name is correct
-            $borrowers = Borrower::where('name', 'like', "%{$query}%")->doesntHave('loans')->get();
             return response()->json($borrowers);
+
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
 
     public function searchBorrower(Request $request)
     {
