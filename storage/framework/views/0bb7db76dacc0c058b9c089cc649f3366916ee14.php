@@ -1,6 +1,6 @@
 <div class="modal-body">
-    <form id="addForm" class="addForm" method="POST" enctype="multipart/form-data" action="{{ route('store.loans') }}">
-        @csrf
+    <form id="addForm" class="addForm" method="POST" enctype="multipart/form-data" action="<?php echo e(route('store.loans')); ?>">
+        <?php echo csrf_field(); ?>
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text" id="donor_search_bar">
@@ -22,9 +22,9 @@
             <label for="borrower_id" class="form-control-label">اسم المقترض</label>
             <select name="borrower_id" id="borrower_id" class="form-control">
                 <option value="">اختر مقترض</option>
-                @foreach ($borrowers as $borrower)
-                    <option value="{{ $borrower->id }}">{{ $borrower->name }}</option>
-                @endforeach
+                <?php $__currentLoopData = $borrowers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $borrower): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <option value="<?php echo e($borrower->id); ?>"><?php echo e($borrower->name); ?></option>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </select>
         </div>
 
@@ -43,7 +43,7 @@
         <div class="form-group">
             <label for="loan_date" class="form-control-label">تاريخ القرض </label>
             <input type="date" class="form-control" name="loan_date" id="loan_date"
-                value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
+                value="<?php echo e(\Carbon\Carbon::now()->format('Y-m-d')); ?>">
         </div>
 
         <div>
@@ -71,7 +71,7 @@
             let query = $(this).val();
 
             $.ajax({
-                url: "{{ route('search.Borrowers') }}",
+                url: "<?php echo e(route('search.Borrowers')); ?>",
                 method: 'GET',
                 data: {
                     borrower_name: query
@@ -110,7 +110,7 @@
             console.log(selectedBorrowerId);
 
             $.ajax({
-               url: "{{ route('search.BorrowerPhone') }}",
+               url: "<?php echo e(route('search.BorrowerPhone')); ?>",
                 method:'get',
                 data: {
                     borrower_id: selectedBorrowerId
@@ -126,4 +126,4 @@
             });
         });
     });
-</script>
+</script><?php /**PATH /home/kariem/Desktop/Projects/new-zakat/resources/views/admin/loans/parts/create.blade.php ENDPATH**/ ?>

@@ -87,7 +87,7 @@
                 type: 'POST ',
                 url: routeOfDelete,
                 data: {
-                    '_token': "{{csrf_token()}}",
+                    '_token': "<?php echo e(csrf_token()); ?>",
                     'id': id,
                 },
                 success: function (data) {
@@ -276,3 +276,4 @@
     });
 
 </script>
+<?php /**PATH /home/kariem/Desktop/Projects/new-zakat/resources/views/admin/layouts/myAjaxHelper.blade.php ENDPATH**/ ?>
