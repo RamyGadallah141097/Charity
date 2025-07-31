@@ -1,11 +1,10 @@
-@extends('admin/layouts/master')
-@section('title')
-    {{ isset($setting->title) ? $setting->title : '' }} | تعديل مستفيد
-@endsection
-@section('page_name')
+<?php $__env->startSection('title'); ?>
+    <?php echo e(isset($setting->title) ? $setting->title : ''); ?> | تعديل مستفيد
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('page_name'); ?>
     تعديل مستفيد
-@endsection
-@section('content')
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
     <style>
         .gallery-image {
             cursor: pointer;
@@ -63,21 +62,21 @@
 
 
 
-    @if (count($errors) > 0)
+    <?php if(count($errors) > 0): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
             <ul class="p-0 m-0" style="list-style: none;">
-                @foreach ($errors->all() as $error)
-                    <li><i class="fa fa-times-circle"></i> {{ $error }}</li>
-                @endforeach
+                <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <li><i class="fa fa-times-circle"></i> <?php echo e($error); ?></li>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </ul>
         </div>
-    @endif
-    <form id="editForm" action="{{ route('users.update', $user->id) }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        @method('PUT')
+    <?php endif; ?>
+    <form id="editForm" action="<?php echo e(route('users.update', $user->id)); ?>" method="POST" enctype="multipart/form-data">
+        <?php echo csrf_field(); ?>
+        <?php echo method_field('PUT'); ?>
 
         <div class="row">
             <div class="col-md-12">
@@ -92,40 +91,40 @@
 
                             <div class="form-group col-md-6">
                                 <label class="form-label">اسم الزوج</label>
-                                <input type="text" value="{{ old('husband_name', $user->husband_name) }}"
+                                <input type="text" value="<?php echo e(old('husband_name', $user->husband_name)); ?>"
                                     class="form-control" name="husband_name" placeholder="">
                             </div>
                             <div class="form-group col-md-6">
                                 <label class="form-label ">اسم الزوجة</label>
-                                <input type="text" value="{{ old('wife_name', $user->wife_name) }}" class="form-control"
+                                <input type="text" value="<?php echo e(old('wife_name', $user->wife_name)); ?>" class="form-control"
                                     name="wife_name" placeholder="">
                             </div>
                             <div class="form-group col-md-6">
                                 <label class="form-label "> الرقم القومى للزوج</label>
-                                <input type="number" value="{{ old('husband_national_id', $user->husband_national_id) }}"
+                                <input type="number" value="<?php echo e(old('husband_national_id', $user->husband_national_id)); ?>"
                                     class="form-control" name="husband_national_id" placeholder="">
                             </div>
                             <div class="form-group col-md-6">
                                 <label class="form-label "> الرقم القومى للزوجة</label>
-                                <input type="number" value="{{ old('wife_national_id', $user->wife_national_id) }}"
+                                <input type="number" value="<?php echo e(old('wife_national_id', $user->wife_national_id)); ?>"
                                     class="form-control" name="wife_national_id" placeholder="">
                             </div>
 
                             <div class="form-group col-md-2">
                                 <label class="form-label"> عمر الزوج</label>
-                                <input type="number" value="{{ old('age_husband', $user->age_husband) }}"
+                                <input type="number" value="<?php echo e(old('age_husband', $user->age_husband)); ?>"
                                     class="form-control" name="age_husband" placeholder="" readonly>
                             </div>
 
                             <div class="form-group col-md-2">
                                 <label class="form-label"> عمر الزوجة</label>
-                                <input type="number" value="{{ old('age_wife', $user->age_wife) }}" class="form-control"
+                                <input type="number" value="<?php echo e(old('age_wife', $user->age_wife)); ?>" class="form-control"
                                     name="age_wife" placeholder="" readonly>
                             </div>
 
                             <div class="form-group col-md-8">
                                 <label class="form-label"> العنوان </label>
-                                <input type="text" value="{{ old('address', $user->address) }}" class="form-control"
+                                <input type="text" value="<?php echo e(old('address', $user->address)); ?>" class="form-control"
                                     name="address" placeholder="">
                             </div>
 
@@ -133,8 +132,8 @@
                                 <label class="form-label">الحالة الاجتماعية للاب</label>
                                 <select name="social_status" class="form-control select2"
                                     data-placeholder="اختيار الحالة الاجتماعية">
-                                    <option value="{{ old('social_status', $user->social_status) }}" selected>
-                                        {{ old('social_status', $user->social_status) }}</option>
+                                    <option value="<?php echo e(old('social_status', $user->social_status)); ?>" selected>
+                                        <?php echo e(old('social_status', $user->social_status)); ?></option>
                                     <option value="0">أعزب</option>
                                     <option value="1">متزوج</option>
                                     <option value="2">مطلق</option>
@@ -145,19 +144,19 @@
 
                             <div class="form-group col-md-4">
                                 <label class="form-label">نوع العمل</label>
-                                <input type="text" value="{{ old('work_type', $user->work_type) }}" class="form-control"
+                                <input type="text" value="<?php echo e(old('work_type', $user->work_type)); ?>" class="form-control"
                                     name="work_type" placeholder="">
                             </div>
 
                             <div class="form-group col-md-4">
                                 <label class="form-label">أقرب تليفون</label>
                                 <input type="nubmer" class="form-control"
-                                    value="{{ old('nearest_phone', $user->nearest_phone) }}" name="nearest_phone"
+                                    value="<?php echo e(old('nearest_phone', $user->nearest_phone)); ?>" name="nearest_phone"
                                     placeholder="">
                             </div>
                         </div>
                         <hr>
-                        {{-- ______________________________________________________________________________________________________________________________ --}}
+                        
 
                         <div class="card-header">
                             <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">
@@ -169,46 +168,46 @@
                             <div class="col-md-3">
                                 <label class="form-label">مرتب</label>
                                 <input type="number" class="form-control income-input"
-                                    value="{{ old('salary', $user->salary) }}" name="salary" placeholder="">
+                                    value="<?php echo e(old('salary', $user->salary)); ?>" name="salary" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">معاش</label>
                                 <input type="number" class="form-control income-input"
-                                    value="{{ old('pension', $user->pension) }}" name="pension" placeholder="">
+                                    value="<?php echo e(old('pension', $user->pension)); ?>" name="pension" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">تأمين</label>
                                 <input type="number" class="form-control income-input"
-                                    value="{{ old('insurance', $user->insurance) }}" name="insurance" placeholder="">
+                                    value="<?php echo e(old('insurance', $user->insurance)); ?>" name="insurance" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">كرامة</label>
                                 <input type="number" class="form-control income-input"
-                                    value="{{ old('dignity', $user->dignity) }}" name="dignity" placeholder="">
+                                    value="<?php echo e(old('dignity', $user->dignity)); ?>" name="dignity" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">تجارة</label>
                                 <input type="number" class="form-control income-input"
-                                    value="{{ old('trade', $user->trade) }}" name="trade" placeholder="">
+                                    value="<?php echo e(old('trade', $user->trade)); ?>" name="trade" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">سادات</label>
                                 <input type="number" class="form-control income-input"
-                                    value="{{ old('pillows', $user->pillows) }}" name="pillows" placeholder="">
+                                    value="<?php echo e(old('pillows', $user->pillows)); ?>" name="pillows" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">غير ذلك</label>
                                 <input type="number" class="form-control income-input"
-                                    value="{{ old('other', $user->other) }}" name="other" placeholder="">
+                                    value="<?php echo e(old('other', $user->other)); ?>" name="other" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">إجمالى الدخل</label>
                                 <input type="number" class="form-control"
-                                    value="{{ old('gross_income', $user->gross_income) }}" name="gross_income"
+                                    value="<?php echo e(old('gross_income', $user->gross_income)); ?>" name="gross_income"
                                     id="gross_income" placeholder="" readonly>
                             </div>
                         </div>
-                        {{-- ______________________________________________________________________________________________________________________________ --}}
+                        
                         <hr>
                         <div class="card-header">
                             <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">
@@ -220,65 +219,65 @@
                             <div class="col-md-2">
                                 <label class="form-label">إيجار</label>
                                 <input type="number" class="form-control expense-input"
-                                    value="{{ old('rent', $user->rent) }}" name="rent" placeholder="">
+                                    value="<?php echo e(old('rent', $user->rent)); ?>" name="rent" placeholder="">
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">غاز</label>
                                 <input type="number" class="form-control expense-input"
-                                    value="{{ old('gas', $user->gas) }}" name="gas" placeholder="">
+                                    value="<?php echo e(old('gas', $user->gas)); ?>" name="gas" placeholder="">
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">ديون</label>
                                 <input type="number" class="form-control expense-input"
-                                    value="{{ old('debt', $user->debt) }}" name="debt" placeholder="">
+                                    value="<?php echo e(old('debt', $user->debt)); ?>" name="debt" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">مياه</label>
                                 <input type="number" class="form-control expense-input"
-                                    value="{{ old('water', $user->water) }}" name="water" placeholder="">
+                                    value="<?php echo e(old('water', $user->water)); ?>" name="water" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">كهرباء</label>
                                 <input type="number" class="form-control expense-input"
-                                    value="{{ old('electricity', $user->electricity) }}" name="electricity"
+                                    value="<?php echo e(old('electricity', $user->electricity)); ?>" name="electricity"
                                     placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">جمعية</label>
                                 <input type="number" class="form-control expense-input"
-                                    value="{{ old('association', $user->association) }}" name="association"
+                                    value="<?php echo e(old('association', $user->association)); ?>" name="association"
                                     placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">طعام</label>
                                 <input type="number" class="form-control expense-input"
-                                    value="{{ old('food', $user->food) }}" name="food" placeholder="">
+                                    value="<?php echo e(old('food', $user->food)); ?>" name="food" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">دراسة</label>
                                 <input type="number" class="form-control expense-input"
-                                    value="{{ old('study', $user->study) }}" name="study" placeholder="">
+                                    value="<?php echo e(old('study', $user->study)); ?>" name="study" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">إجمالى النفقات</label>
                                 <input type="number" class="form-control"
-                                    value="{{ old('gross_expenses', $user->gross_expenses) }}" name="gross_expenses"
+                                    value="<?php echo e(old('gross_expenses', $user->gross_expenses)); ?>" name="gross_expenses"
                                     id="gross_expenses" placeholder="" readonly>
                             </div>
                         </div>
 
                         <hr>
-                        {{-- ______________________________________________________________________________________________________________________________ --}}
+                        
                         <div>
                             <h2 class="mb-0 btn btn-success mb-3" style="pointer-events: none; user-select: none;">
                                 مستوى المعيشة
                             </h2>
                         </div>
                         <input type="nubmer" class="form-control col-md-3 "
-                            value="{{ old('standard_living', $user->standard_living) }}" name="standard_living"
+                            value="<?php echo e(old('standard_living', $user->standard_living)); ?>" name="standard_living"
                             id="standard_living"readonly>
                         <hr>
-                            {{-- ______________________________________________________________________________________________________________________________ --}}
+                            
 
                             <div class="d-flex justify-content-between mt-3">
                                 <div>
@@ -295,20 +294,20 @@
                             </div>
                             <hr>
 
-                            {{-- ______________________________________________________________________________________________________________________________ --}}
+                            
                             <div id="child_container">
-                                @foreach ($user->childrens as $index => $child)
+                                <?php $__currentLoopData = $user->childrens; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $child): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <div class="child-row row">
                                         <div class="col-12">
                                             <h4 class="bg-danger text-white" style="width: max-content; padding: 8px 15px;">
-                                                الابن <span class="child_number">{{ $index + 1 }}</span>
+                                                الابن <span class="child_number"><?php echo e($index + 1); ?></span>
                                             </h4>
                                         </div>
 
                                         <div class="col-3">
                                             <label for="child_names" class="form-control-label"> اسم الابن </label>
                                             <input type="text" class="form-control"
-                                                value="{{ old('child_names.' . $index, $child->child_name) }}"
+                                                value="<?php echo e(old('child_names.' . $index, $child->child_name)); ?>"
                                                 name="child_names[]">
                                         </div>
 
@@ -316,7 +315,7 @@
                                             <div class="form-group">
                                                 <label for="children_national_id" class="form-control-label"> الرقم القومي </label>
                                                 <input type="number" class="form-control"
-                                                    value="{{ old('children_national_id.' . $index, $child->children_national_id) }}"
+                                                    value="<?php echo e(old('children_national_id.' . $index, $child->children_national_id)); ?>"
                                                     name="children_national_id[]">
                                             </div>
                                         </div>
@@ -325,7 +324,7 @@
                                             <div class="form-group">
                                                 <label for="age" class="form-control-label"> السن </label>
                                                 <input type="text" class="form-control"
-                                                    value="{{ old('age.' . $index, $child->age) }}" name="age[]" readonly>
+                                                    value="<?php echo e(old('age.' . $index, $child->age)); ?>" name="age[]" readonly>
                                             </div>
                                         </div>
 
@@ -333,7 +332,7 @@
                                             <div class="form-group">
                                                 <label for="schools" class="form-control-label"> المدرسة </label>
                                                 <input type="text" class="form-control"
-                                                    value="{{ old('schools.' . $index, $child->school) }}" name="schools[]">
+                                                    value="<?php echo e(old('schools.' . $index, $child->school)); ?>" name="schools[]">
                                             </div>
                                         </div>
 
@@ -341,7 +340,7 @@
                                             <div class="form-group">
                                                 <label for="monthly_cost" class="form-control-label"> التكلفة الشهرية </label>
                                                 <input type="text" class="form-control"
-                                                    value="{{ old('monthly_cost.' . $index, $child->monthly_cost) }}"
+                                                    value="<?php echo e(old('monthly_cost.' . $index, $child->monthly_cost)); ?>"
                                                     name="monthly_cost[]">
                                             </div>
                                         </div>
@@ -350,22 +349,22 @@
                                             <div class="form-group">
                                                 <label for="notes" class="form-control-label"> ملاحظات </label>
                                                 <input type="text" class="form-control"
-                                                    value="{{ old('notes.' . $index, $child->notes) }}" name="notes[]">
+                                                    value="<?php echo e(old('notes.' . $index, $child->notes)); ?>" name="notes[]">
                                             </div>
                                         </div>
 
-                                        @if ($index >= 0)
+                                        <?php if($index >= 0): ?>
                                             <div class="col-1">
                                                 <button type="button" class="btn btn-danger mt-5 removeColor">
                                                     <i class="fe fe-trash"></i>
                                                 </button>
                                             </div>
-                                        @endif
+                                        <?php endif; ?>
                                     </div>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
                         </div>
-                    {{-- ______________________________________________________________________________________________________________________________ --}}
+                    
                     <hr>
 
                     <div class="d-flex justify-content-between mt-3">
@@ -375,14 +374,15 @@
                         </div>
                         <div class="d-flex justify-content-end mb-3">
                             <button type="button" class="btn btn-primary" id="add_patient">
-                                <i class="fe fe-plus"></i> {{ 'اضافة حالة ' }}
+                                <i class="fe fe-plus"></i> <?php echo e('اضافة حالة '); ?>
+
                             </button>
                         </div>
                     </div>
                     <hr>
 
                     <div id="patient_container">
-                        @foreach ($patients as $index => $patient)
+                        <?php $__currentLoopData = $patients; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $patient): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div class="patient-row row">
                                 <div class="col-12">
                                     <h4 class="bg-danger text-white"
@@ -390,7 +390,7 @@
                                        padding: 8px 15px;
                                        border-radius: 5px;">
                                         الحالة
-                                        <span class="patient_number">{{ $index + 1 }}</span>
+                                        <span class="patient_number"><?php echo e($index + 1); ?></span>
                                     </h4>
                                 </div>
 
@@ -398,7 +398,7 @@
                                     <div class="form-group">
                                         <label class="form-label">اسم المريض</label>
                                         <input type="text" class="form-control"
-                                            value="{{ old('patient_name.' . $index, $patient->patient_name) }}"
+                                            value="<?php echo e(old('patient_name.' . $index, $patient->patient_name)); ?>"
                                             name="patient_name[]" placeholder="">
                                     </div>
                                 </div>
@@ -407,7 +407,7 @@
                                     <div class="form-group">
                                         <label class="form-label">وسيلة صرف العلاج</label>
                                         <input type="text" class="form-control"
-                                            value="{{ old('treatment_pay_by.' . $index, $patient->treatment_pay_by) }}"
+                                            value="<?php echo e(old('treatment_pay_by.' . $index, $patient->treatment_pay_by)); ?>"
                                             name="treatment_pay_by[]" placeholder="">
                                     </div>
                                 </div>
@@ -416,7 +416,7 @@
                                     <div class="form-group">
                                         <label class="form-label">الدواء</label>
                                         <input type="text" class="form-control"
-                                            value="{{ old('treatment.' . $index, $patient->treatment) }}"
+                                            value="<?php echo e(old('treatment.' . $index, $patient->treatment)); ?>"
                                             name="treatment[]" placeholder="">
                                     </div>
                                 </div>
@@ -427,10 +427,10 @@
                                         <select class="form-control select2" name="type[]"
                                             data-placeholder="اختيار نوع المريض">
                                             <option value="1"
-                                                {{ old('type.' . $index, $patient->type) == '1' ? 'selected' : '' }}>ذكر
+                                                <?php echo e(old('type.' . $index, $patient->type) == '1' ? 'selected' : ''); ?>>ذكر
                                             </option>
                                             <option value="0"
-                                                {{ old('type.' . $index, $patient->type) == '0' ? 'selected' : '' }}>أنثي
+                                                <?php echo e(old('type.' . $index, $patient->type) == '0' ? 'selected' : ''); ?>>أنثي
                                             </option>
                                         </select>
                                     </div>
@@ -440,7 +440,7 @@
                                     <div class="form-group">
                                         <label class="form-label">الطبيب المعالج</label>
                                         <input type="text" class="form-control"
-                                            value="{{ old('doctor_name.' . $index, $patient->doctor_name) }}"
+                                            value="<?php echo e(old('doctor_name.' . $index, $patient->doctor_name)); ?>"
                                             name="doctor_name[]" placeholder="">
                                     </div>
                                 </div>
@@ -449,24 +449,24 @@
                                     <div class="form-group">
                                         <label class="form-label mb-4">هل له تأمين</label>
                                         <div class="material-switch pull-left mb-5">
-                                            <input id="is_insurance{{ $index }}" name="is_insurance[]"
+                                            <input id="is_insurance<?php echo e($index); ?>" name="is_insurance[]"
                                                 type="checkbox" value="1"
-                                                {{ old('is_insurance.' . $index, $patient->is_insurance) == '1' ? 'checked' : '' }}>
-                                            <label for="is_insurance{{ $index }}" class="label-success"></label>
+                                                <?php echo e(old('is_insurance.' . $index, $patient->is_insurance) == '1' ? 'checked' : ''); ?>>
+                                            <label for="is_insurance<?php echo e($index); ?>" class="label-success"></label>
                                         </div>
                                     </div>
                                 </div>
 
-                                @if ($index > 0)
+                                <?php if($index > 0): ?>
                                     <div class="col-md-1">
                                         <button type="button" class="btn btn-danger mt-5 removepatient">
                                             <i class="fe fe-trash"></i>
                                         </button>
                                     </div>
-                                @endif
+                                <?php endif; ?>
                                 <hr>
                             </div>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
 
                     <hr>
@@ -477,7 +477,7 @@
 
                     </div>
 
-                    <textarea rows="5" class="form-control" name="Case_evaluation" id="Case_evaluation">{{ old('Case_evaluation', $user->Case_evaluation) }}</textarea>
+                    <textarea rows="5" class="form-control" name="Case_evaluation" id="Case_evaluation"><?php echo e(old('Case_evaluation', $user->Case_evaluation)); ?></textarea>
 
                     <div class="card-header">
                         <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">
@@ -491,27 +491,27 @@
                     <div class="col-12">
 
 
-                        @if ($user->attachments)
-                            @php
+                        <?php if($user->attachments): ?>
+                            <?php
                                 $attachments = is_string($user->attachments)
                                     ? json_decode($user->attachments, true)
                                     : $user->attachments;
 
-                            @endphp
+                            ?>
 
                             <div class="image-gallery">
-                                @foreach ($attachments as $attachment)
-                                    <img src="{{ asset('storage/' . $attachment) }}" alt="Attachment"
+                                <?php $__currentLoopData = $attachments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $attachment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <img src="<?php echo e(asset('storage/' . $attachment)); ?>" alt="Attachment"
                                         style="max-width: 500px" height="150" class="gallery-image"
-                                        onclick="openModal('{{ asset('storage/' . $attachment) }}')">
-                                @endforeach
+                                        onclick="openModal('<?php echo e(asset('storage/' . $attachment)); ?>')">
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </div>
 
                             <div id="imageModal" class="modal">
                                 <span class="close" onclick="closeModal()">&times;</span>
                                 <img class="modal-content" style="width: 1500px" id="modalImage">
                             </div>
-                        @endif
+                        <?php endif; ?>
 
                         <div id="imageModal" class="modal">
                             <span class="close" onclick="closeModal()">&times;</span>
@@ -534,8 +534,8 @@
         </div>
         <!-- COL END -->
     </form>
-@endsection
-@section('js')
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('js'); ?>
     <script>
         $('.dropify').dropify()
     </script>
@@ -709,7 +709,7 @@
 
     <script>
         // Children management
-       let childNumber = {{ count($user->childrens ?? []) }};
+       let childNumber = <?php echo e(count($user->childrens ?? [])); ?>;
 
         $('#addChild').on('click', function() {
             toastr.success("تم انشاء طفل جديد");
@@ -787,7 +787,7 @@
 
 
         // Patient management
-        let patientNumber = {{ count($patients ?? []) }};
+        let patientNumber = <?php echo e(count($patients ?? [])); ?>;
         $('#add_patient').on('click', function() {
             toastr.success("تم انشاء حاله جديد");
             patientNumber++;
@@ -897,4 +897,6 @@
             }
         }
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('admin/layouts/master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /home/kariem/Desktop/Projects/new-zakat/resources/views/admin/users/parts/edit.blade.php ENDPATH**/ ?>
