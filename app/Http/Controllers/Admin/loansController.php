@@ -35,9 +35,9 @@ class loansController extends Controller
                     return $loans->borrower ? $loans->borrower->name : "-";
                 })
                 ->editColumn('borrower_phone', function ($loans) {
-                    $phone = $loans->borrower_phone;
-                    return '<a href="tel:' . $phone . '">' . $phone . '</a>';
+                    return $loans->borrower ? $loans->borrower->phone : "-";
                 })
+              
                 ->escapeColumns([])
                 ->make(true);
         } else {
