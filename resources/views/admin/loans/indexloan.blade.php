@@ -241,30 +241,8 @@
                     });
                 });
 
-                {{-- $(document).on('click', '.pay-btn', function () { --}}
-                {{--    let loanId = $(this).data('id'); --}}
-                {{--    let PayStatus = $(this).data("status"); --}}
+               
 
-                {{--    if(PayStatus == 0){ --}}
-                {{--        if (confirm("هل أنت متأكد من دفع هذا القرض؟")) { --}}
-                {{--            $.ajax({ --}}
-                {{--                url: "{{ route('loan.pay', ':id') }}".replace(':id', loanId), --}}
-                {{--                type: 'POST', --}}
-                {{--                data: {_token: '{{ csrf_token() }}'}, --}}
-                {{--                success: function (response) { --}}
-                {{--                    window.location.reload(); --}}
-                {{--                    alert(response.message); --}}
-                {{--                    table.ajax.reload(); --}}
-                {{--                }, --}}
-                {{--                error: function (response) { --}}
-                {{--                    alert(response.responseJSON.error); --}}
-                {{--                } --}}
-                {{--            }); --}}
-                {{--        } --}}
-                {{--    } --}}
-                {{-- }); --}}
-
-            });
         </script>
 
         <script>

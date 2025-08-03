@@ -106,7 +106,7 @@
                             اغلاق
                         </button>
                         <button type="button" class="btn btn-danger" id="delete_btn">حذف !</button>
-                    </div>
+                    </div>  
                 </form>
             </div>
         </div>

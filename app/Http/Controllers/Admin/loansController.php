@@ -171,14 +171,22 @@ class loansController extends Controller
                     return $loan->borrower ? '<a href="tel:' . $loan->borrower->phone . '">' . $loan->borrower->phone . '</a>' : 'غير متوفر';
                 })
                 ->addColumn('status', function ($loan) {
-                    return $loan->status == 1 ? '<span class="badge badge-success">مدفوع</span>' : '<span class="badge badge-warning">غير مدفوع</span>';
+                    return $loan->status == 1 ? '<span class="badge badge-success">مدفوع</span>' : '<span class="badge badge-danger">غير مدفوع</span>';
                 })
                 ->addColumn('action', function ($loan) {
-                    return '
-                    <button class="btn btn-success pay-btn" data-id="' . $loan->id . '"  data-amount="' . $loan->amount . '"  data-status="'.$loan->status.'">
+                    $loan->status == 1 ?
+                    $button  =  '
+                    <button class="btn btn-success "  data-id="' . $loan->id . '"  data-amount="' . $loan->amount . '"  data-status="'.$loan->status.'">
+                        مدفوع <i class="fas fa-money-check-alt"></i>
+                    </button>
+                    '
+                    :
+                    $button = 
+                     '<button class="btn btn-warning pay-btn" data-id="' . $loan->id . '"  data-amount="' . $loan->amount . '"  data-status="'.$loan->status.'">
                         دفع <i class="fas fa-money-check-alt"></i>
                     </button>
                     ';
+                    return $button;
                 })
                 ->rawColumns(['borrower_phone', 'status', 'action'])
                 ->make(true);
@@ -188,11 +196,11 @@ class loansController extends Controller
         $totalOut = PersonalLoan::where('loan_id', $id)->where('status', 0)->sum('amount');
         $pay = Loan::where('id', $id)->value('type');
 
-//        return view('admin/loans/indexloan', compact('id' , "totalIn" , "totalOut" , "total" , "pay"));
         return view('admin.loans.indexloan', compact('id', 'totalIn', 'totalOut', 'total', 'pay'));
 
-//        solve the path .
     }
+
+
 
     public function checkout($id)
     {
