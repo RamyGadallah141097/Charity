@@ -397,11 +397,11 @@
                 name: 'action'
             },
         ]
-        showData('<?php echo e(route('borrowers.index')); ?>', columns);
-        deleteScript('<?php echo e(route('delete_borrowers')); ?>');
-        showAddModal('<?php echo e(route('borrowers.create')); ?>');
+        showData('<?php echo e(route("borrowers.index")); ?>', columns);
+        deleteScript('<?php echo e(route("delete_borrowers")); ?>');
+        showAddModal('<?php echo e(route("borrowers.create")); ?>');
         addScript();
-        showEditModal('<?php echo e(route('borrowers.edit', ':id')); ?>');
+        showEditModal('<?php echo e(route("borrowers.edit", ":id")); ?>');
         editScript();
 
         $(document).ready(function() {
@@ -451,6 +451,7 @@
             $("#mediaModal").modal("show");
         });
 
+      
         // Show review modal
         $(document).on("click", ".borrowerReview", function() {
             let borrowerId = $(this).data("id");
@@ -512,6 +513,36 @@
                 closeZoomModal();
             }
         }
+
+
+
+
+       $(document).ready(function(){
+            $('.dataTables_filter input').val('');
+            
+            $('.dataTables_filter input').trigger('keyup');
+            
+            $('.dataTables_filter input').focus();
+            
+            $("dataTable").DataTable().draw();
+            
+        }); 
+
+        $('#editOrCreate').on('hidden.bs.modal', function() {
+            $('#editOrCreate').modal('hide');
+            
+            $('.modal-backdrop').remove();
+
+            $('body').removeClass('modal-open');
+            
+            $(this).css('display', 'none');
+            
+            $('#modal-body').empty();
+        });
+
+        
+        
+
     </script>
 <?php $__env->stopSection(); ?>
 
