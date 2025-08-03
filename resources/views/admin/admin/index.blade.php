@@ -136,4 +136,5 @@
         showEditModal('{{ route('admins.edit', ':id') }}');
         editScript();
     </script>
+    <!-- test uploading the storage  -->
 @endsection
