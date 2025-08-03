@@ -399,11 +399,11 @@
                 name: 'action'
             },
         ]
-        showData('{{ route('borrowers.index') }}', columns);
-        deleteScript('{{ route('delete_borrowers') }}');
-        showAddModal('{{ route('borrowers.create') }}');
+        showData('{{ route("borrowers.index") }}', columns);
+        deleteScript('{{ route("delete_borrowers") }}');
+        showAddModal('{{ route("borrowers.create") }}');
         addScript();
-        showEditModal('{{ route('borrowers.edit', ':id') }}');
+        showEditModal('{{ route("borrowers.edit", ":id") }}');
         editScript();
 
         $(document).ready(function() {
@@ -453,6 +453,7 @@
             $("#mediaModal").modal("show");
         });
 
+      
         // Show review modal
         $(document).on("click", ".borrowerReview", function() {
             let borrowerId = $(this).data("id");
@@ -516,8 +517,33 @@
         }
 
 
-       
 
+
+       $(document).ready(function(){
+            $('.dataTables_filter input').val('');
+            
+            $('.dataTables_filter input').trigger('keyup');
+            
+            $('.dataTables_filter input').focus();
+            
+            $("dataTable").DataTable().draw();
+            
+        }); 
+
+        $('#editOrCreate').on('hidden.bs.modal', function() {
+            $('#editOrCreate').modal('hide');
+            
+            $('.modal-backdrop').remove();
+
+            $('body').removeClass('modal-open');
+            
+            $(this).css('display', 'none');
+            
+            $('#modal-body').empty();
+        });
+
+        
+        
 
     </script>
 @endsection

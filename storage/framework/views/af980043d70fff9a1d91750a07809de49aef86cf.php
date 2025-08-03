@@ -196,7 +196,7 @@
             url = url.replace(':id', id)
             $('#modal-body').html(loader)
             $('#editOrCreate').modal('show')
-
+            
             setTimeout(function () {
                 $('#modal-body').load(url)
             }, 500)
