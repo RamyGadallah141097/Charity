@@ -35,7 +35,9 @@ class loansController extends Controller
                     return $loans->borrower ? $loans->borrower->name : "-";
                 })
                 ->editColumn('borrower_phone', function ($loans) {
-                    return $loans->borrower ? $loans->borrower->phone : "-";
+                    $phone = $loans->borrower->phone;
+                    return '<a href="tel:' . $phone . '">' . $phone . '</a>';
+
                 })
               
                 ->escapeColumns([])
@@ -167,7 +169,7 @@ class loansController extends Controller
                 ->addColumn('borrower_name', function ($loan) {
                     return $loan->borrower ? $loan->borrower->name : 'غير معروف';
                 })
-                ->addColumn('borrower_phone', function ($loan) {
+                ->editColumn('borrower_phone', function ($loan) {
                     return $loan->borrower ? '<a href="tel:' . $loan->borrower->phone . '">' . $loan->borrower->phone . '</a>' : 'غير متوفر';
                 })
                 ->addColumn('status', function ($loan) {

@@ -30,7 +30,7 @@
 
         <div class="form-group">
             <label for="borrower_phone" class="form-control-label">رقم المقترض</label>
-            <input type="text" class="form-control" name="borrower_phone" id="borrower_phone" readonly>
+            <input type="text" class="form-control"  id="borrower_phone" readonly>
         </div>
 
         <div class="form-group">

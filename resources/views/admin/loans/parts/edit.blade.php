@@ -31,8 +31,6 @@
         <div class="form-group">
             <label for="name" class="form-control-label" >رقم المتبرع</label>
             <input type="text" value="{{$donation->donor->phone}}"  class="form-control" disabled   id="donor_phone">
-
-
         </div>
 
 
