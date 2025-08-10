@@ -278,90 +278,93 @@
                             value="{{ old('standard_living', $user->standard_living) }}" name="standard_living"
                             id="standard_living"readonly>
                         <hr>
-                        {{-- ______________________________________________________________________________________________________________________________ --}}
+                            {{-- ______________________________________________________________________________________________________________________________ --}}
 
-                        <div class="d-flex justify-content-between mt-3">
-                            <div>
-                                <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">الابناء
-                                </h2>
+                            <div class="d-flex justify-content-between mt-3">
+                                <div>
+                                    <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">الابناء
+                                    </h2>
+                                </div>
+                                <div class="d-flex justify-content-end mb-3" style="cursor: pointer;">
+                                    <button type="button" id="addChild" class="btn btn-primary">
+                                        <i class="fe fe-plus"></i> اضافة ابن
+                                    </button>
+                                </div>
+
+
                             </div>
-                            <div class="d-flex justify-content-end mb-3">
-                                <i class="fe fe-plus"></i> {{ 'اضافة ابن' }} </button>
-                            </div>
+                            <hr>
+
+                            {{-- ______________________________________________________________________________________________________________________________ --}}
+                            <div id="child_container">
+                                @foreach ($user->childrens as $index => $child)
+                                    <div class="child-row row">
+                                        <div class="col-12">
+                                            <h4 class="bg-danger text-white" style="width: max-content; padding: 8px 15px;">
+                                                الابن <span class="child_number">{{ $index + 1 }}</span>
+                                            </h4>
+                                        </div>
+
+                                        <div class="col-3">
+                                            <label for="child_names" class="form-control-label"> اسم الابن </label>
+                                            <input type="text" class="form-control"
+                                                value="{{ old('child_names.' . $index, $child->child_name) }}"
+                                                name="child_names[]">
+                                        </div>
+
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label for="children_national_id" class="form-control-label"> الرقم القومي </label>
+                                                <input type="number" class="form-control"
+                                                    value="{{ old('children_national_id.' . $index, $child->children_national_id) }}"
+                                                    name="children_national_id[]">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label for="age" class="form-control-label"> السن </label>
+                                                <input type="text" class="form-control"
+                                                    value="{{ old('age.' . $index, $child->age) }}" name="age[]" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-2">
+                                            <div class="form-group">
+                                                <label for="schools" class="form-control-label"> المدرسة </label>
+                                                <input type="text" class="form-control"
+                                                    value="{{ old('schools.' . $index, $child->school) }}" name="schools[]">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-2">
+                                            <div class="form-group">
+                                                <label for="monthly_cost" class="form-control-label"> التكلفة الشهرية </label>
+                                                <input type="text" class="form-control"
+                                                    value="{{ old('monthly_cost.' . $index, $child->monthly_cost) }}"
+                                                    name="monthly_cost[]">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label for="notes" class="form-control-label"> ملاحظات </label>
+                                                <input type="text" class="form-control"
+                                                    value="{{ old('notes.' . $index, $child->notes) }}" name="notes[]">
+                                            </div>
+                                        </div>
+
+                                        @if ($index >= 0)
+                                            <div class="col-1">
+                                                <button type="button" class="btn btn-danger mt-5 removeColor">
+                                                    <i class="fe fe-trash"></i>
+                                                </button>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @endforeach
+
                         </div>
-                        <hr>
-
-                        {{-- ______________________________________________________________________________________________________________________________ --}}
-                        <div id="child_container">
-                            @foreach ($user->childrens as $index => $child)
-                                <div class="child-row row">
-                                    <div class="col-12">
-                                        <h4 class="bg-danger text-white" style="width: max-content; padding: 8px 15px;">
-                                            الابن <span class="child_number">{{ $index + 1 }}</span>
-                                        </h4>
-                                    </div>
-
-                                    <div class="col-3">
-                                        <label for="child_names" class="form-control-label"> اسم الابن </label> <input
-                                            type="text" class="form-control"
-                                            value="{{ old('child_names.' . $index, $child->child_name) }}"
-                                            name="child_names[]">
-                                    </div>
-                                </div>
-
-                                <div class="col-3">
-                                    <div class="form-group">
-                                        <label for="children_national_id" class="form-control-label"> الرقم القومي
-                                        </label>
-                                        <input type="number" class="form-control"
-                                            value="{{ old('children_national_id.' . $index, $child->children_national_id) }}"
-                                            name="children_national_id[]">
-                                    </div>
-                                </div>
-
-                                <div class="col-3">
-                                    <div class="form-group">
-                                        <label for="age" class="form-control-label"> السن </label>
-                                        <input type="text" class="form-control"
-                                            value="{{ old('age.' . $index, $child->age) }}" name="age[]" readonly>
-                                    </div>
-                                </div>
-
-                                <div class="col-2">
-                                    <div class="form-group">
-                                        <label for="schools" class="form-control-label"> المدرسة </label>
-                                        <input type="text" class="form-control"
-                                            value="{{ old('schools.' . $index, $child->school) }}" name="schools[]">
-                                    </div>
-                                </div>
-
-                                <div class="col-2">
-                                    <div class="form-group">
-                                        <label for="monthly_cost" class="form-control-label"> التكلفة الشهرية </label>
-                                        <input type="text" class="form-control"
-                                            value="{{ old('monthly_cost.' . $index, $child->monthly_cost) }}"
-                                            name="monthly_cost[]">
-                                    </div>
-                                </div>
-
-                                <div class="col-4">
-                                    <div class="form-group">
-                                        <label for="notes" class="form-control-label"> ملاحظات </label>
-                                        <input type="text" class="form-control"
-                                            value="{{ old('notes.' . $index, $child->notes) }}" name="notes[]">
-                                    </div>
-                                </div>
-
-                                @if ($index > 0)
-                                    <div class="col-1">
-                                        <button type="button" class="btn btn-danger mt-5 removeColor">
-                                            <i class="fe fe-trash"></i>
-                                        </button>
-                                    </div>
-                                @endif
-                        </div>
-                        @endforeach
-                    </div>
                     {{-- ______________________________________________________________________________________________________________________________ --}}
                     <hr>
 
@@ -706,14 +709,18 @@
 
     <script>
         // Children management
-        let childNumber = {{ count($user->childrens ?? []) }};
-        $('#add').on('click', function() {
+       let childNumber = {{ count($user->childrens ?? []) }};
+
+        $('#addChild').on('click', function() {
+            toastr.success("تم انشاء طفل جديد");
             childNumber++;
 
             let newRow = `
                 <div class="child-row row">
                     <div class="col-12">
-                        الابن <span class="child_number">${childNumber}</span> </h4>
+                        <h4 class="bg-danger text-white" style="width: max-content; padding: 8px 15px;">
+                            الابن <span class="child_number">${childNumber}</span>
+                        </h4>
                     </div>
 
                     <div class="col-3">
@@ -726,14 +733,14 @@
                     <div class="col-3">
                         <div class="form-group">
                             <label for="children_national_id" class="form-control-label">الرقم القومي</label>
-                            <input type="text" class="form-control"  name="children_national_id[]">
+                            <input type="text" class="form-control" name="children_national_id[]">
                         </div>
                     </div>
 
                     <div class="col-3">
                         <div class="form-group">
                             <label for="age" class="form-control-label">السن</label>
-                            <input type="text" class="form-control"  name="age[]">
+                            <input type="text" class="form-control" name="age[]">
                         </div>
                     </div>
 
@@ -767,7 +774,7 @@
             `;
 
             $('#child_container').append(newRow);
-            addAgeCalculationListener();
+            addAgeCalculationListener(); // تأكد أن هذه الدالة معرفة في مكان ما
         });
 
         // Remove child
@@ -778,9 +785,11 @@
             });
         });
 
+
         // Patient management
         let patientNumber = {{ count($patients ?? []) }};
         $('#add_patient').on('click', function() {
+            toastr.success("تم انشاء حاله جديد");
             patientNumber++;
 
             let newRowPatient = `
