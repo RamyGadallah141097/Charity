@@ -72,7 +72,7 @@ class loansController extends Controller
             $borrowers = Borrower::where('id', $request->input("borrower_id"))
                 // ->doesntHave('loans')
                 ->get();
-
+            
             return response()->json($borrowers);
 
         } catch (\Exception $e) {

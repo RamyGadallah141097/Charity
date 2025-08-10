@@ -1,7 +1,7 @@
 <div class="modal-body">
     <form id="addForm" class="addForm" method="POST" enctype="multipart/form-data" action="{{ route('store.loans') }}">
         @csrf
-        <div class="input-group mb-3">
+        <!-- <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text" id="donor_search_bar">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -12,7 +12,7 @@
             </div>
             <input type="text" id="search_borrower" aria-label="Username" aria-describedby="basic-addon1"
                 class="form-control" placeholder="ابحث عن اسم المقترض.">
-        </div>
+        </div> -->
 
         <div class="" id="create_donor">
 
