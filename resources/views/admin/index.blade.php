@@ -126,7 +126,7 @@
 
     <div class="row">
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card bg-danger img-card box-primary-shadow">
+            <div class="card img-card box-primary-shadow" style="background-color: rgb(255, 99, 132);">
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
@@ -139,7 +139,7 @@
             </div>
         </div><!-- COL END -->
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card bg-secondary  img-card box-info-shadow">
+            <div class="card   img-card box-info-shadow" style="background-color: rgb(54, 162, 235);">
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
@@ -152,7 +152,7 @@
             </div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card bg-primary  img-card box-secondary-shadow">
+            <div class="card   img-card box-secondary-shadow" style="background-color: rgb(255, 206, 86);">
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
@@ -169,7 +169,7 @@
             </div>
         </div><!-- COL END -->
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card  bg-success  img-card box-success-shadow">
+            <div class="card    img-card box-success-shadow" style="background-color: rgb(75, 192, 192);">
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
@@ -206,7 +206,7 @@
         </div>
 
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card bg-info img-card box-secondary-shadow">
+            <div class="card  img-card box-secondary-shadow" style="background-color: rgb(54, 162, 235);">
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
@@ -221,7 +221,7 @@
             </div>
         </div><!-- COL END -->
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card bg-dark   img-card box-secondary-shadow">
+            <div class="card  img-card box-secondary-shadow" style="background-color: rgb(33, 37, 41);">
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
@@ -271,7 +271,7 @@
         {{-- update test  --}}
 
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card bg-warning img-card box-secondary-shadow">
+            <div class="card  img-card box-secondary-shadow" style="background-color: rgb(33, 37, 41);">
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
@@ -310,7 +310,7 @@
             </div>
 
             <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-                <div class="card bg-primary img-card box-secondary-shadow">
+                <div class="card  img-card box-secondary-shadow" style="background-color: rgb(0, 123, 255);">
                     <div class="card-body">
                         <div class="d-flex">
                             <div class="text-white">
