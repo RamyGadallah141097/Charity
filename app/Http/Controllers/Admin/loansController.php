@@ -126,7 +126,6 @@ class loansController extends Controller
                     ]);
                 }else{
 
-
                     $amount = $request->loan_amount / 10;
                     $loan = Loan::create($data);
 
