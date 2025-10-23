@@ -67,8 +67,6 @@ class UserController extends Controller
                 }
             }
 
-
-
             $users = $query->get();
             return Datatables::of($users)
                 ->addColumn('action', function ($users) {
@@ -158,9 +156,7 @@ class UserController extends Controller
                         </div>
                    ';
                 })
-                // ->addColumn("donations_amount" , function($users){
-                //     return $users->subvention->sum("price");
-                // })
+
 
                 ->editColumn('status', function ($users) {
                     if ($users->status == 'new')
@@ -185,70 +181,6 @@ class UserController extends Controller
         }
     }
 
-    //    public function searchNID(Request $request)
-    //    {
-    //        if (is_numeric($request->searchNID)){
-    //            $searchNID = $request->searchNID;
-    //
-    //            $user = User::where("husband_national_id", $searchNID)
-    //                ->orWhere("wife_national_id", $searchNID)
-    //                ->first()
-    //                ?? Borrower::where("nationalID", $searchNID)->first()
-    //                ?? Guarantor::where("nationalID", $searchNID)->first()
-    //                ?? Children::where("children_national_id", $searchNID)->first();
-    //
-    //
-    //
-    //            if (!$user) {
-    //                toastr()->error("لا يوجد مستفيد لهذا الرقم القومي");
-    //                return redirect()->route("adminHome");
-    //            }
-    //
-    //            $patients = Patient::where('user_id', $user->id)->get();
-    //            if ($patients->isEmpty()) {
-    //                $patients = null;
-    //            }
-    //
-    //            return view('admin/search', compact('user', 'patients'));
-    //        }else{
-    //            toastr()->error("الرقم االومي يجب ان يكون رقم ");
-    //            return redirect()->back();
-    //        }
-    //    }
-
-    //    public function searchNID(Request $request)
-    //    {
-    //        if (!is_numeric($request->searchNID)) {
-    //            toastr()->error("الرقم القومي يجب أن يكون رقماً");
-    //            return redirect()->back();
-    //        }
-    //
-    //        $searchNID = $request->searchNID;
-    //
-    //        $user = null;
-    //        $borrower = null;
-    //        $guarantor = null;
-    //        $child = null;
-    //
-    //        if ($found = User::where("husband_national_id", $searchNID)
-    //            ->orWhere("wife_national_id", $searchNID)
-    //            ->first()) {
-    //            $user = $found;
-    //        } elseif ($found = Borrower::where("nationalID", $searchNID)->first()) {
-    //            $borrower = $found;
-    //        } elseif ($found = Guarantor::where("nationalID", $searchNID)->first()) {
-    //            $guarantor = $found;
-    //        } elseif ($found = Children::where("children_national_id", $searchNID)->first()) {
-    //            $child = $found;
-    //        } else {
-    //            toastr()->error("لا يوجد مستفيد لهذا الرقم القومي");
-    //            return redirect()->route("adminHome");
-    //        }
-    //
-    //        $patients = $user ? Patient::where('user_id', $user->id)->get() : null;
-    //
-    //        return view('admin/search', compact('user', 'borrower', 'guarantor', 'child', 'patients'));
-    //    }
     public function searchNID(Request $request)
     {
         if (!is_numeric($request->searchNID)) {
@@ -333,25 +265,7 @@ class UserController extends Controller
         }
     }
 
-    //
-    //    public function updateUserStatus(Request $request)
-    //    {
-    //        try {
-    //            $user = User::where("id" , $request->user_id)->first();
-    //           if ($user){
-    //               $user->status = $request->status;
-    //               $user->save();
-    //           }else{
-    //               toastr()->error("المستخدم غير موجود");
-    //               return redirect("admin/users/new");
-    //           }
-    //            toastr()->success("success");
-    //            return redirect("admin/users/new");
-    //        } catch (\Exception $ex) {
-    //            toastr()->error($ex->getMessage());
-    //            return redirect("admin/users/new");
-    //        }
-    //    }
+
 
     public function create()
     {
@@ -363,9 +277,7 @@ class UserController extends Controller
 
     public function store(StoreUser $request)
     {
-        // DB::beginTransaction();
-        // try {
-        // إنشاء المستخدم
+
         $userData = $request->except('_token', 'attachments', 'child_names',  'children_national_id',  'age', 'schools', 'monthly_cost', 'notes', 'patient_name',  'treatment_pay_by', 'type', 'doctor_name', 'treatment');
 
 
@@ -402,12 +314,6 @@ class UserController extends Controller
             "status" => "new"
         ]);
 
-
-
-
-
-
-
         // إضافة الأطفال
         if ($request->filled('child_names')) {
             foreach ($request->child_names as $index => $childName) {
@@ -423,7 +329,6 @@ class UserController extends Controller
             }
         }
 
-
         // إضافة بيانات المرضى
         if ($request->filled('patient_name')) {
             foreach ($request->patient_name as $index => $patientName) {
@@ -435,6 +340,7 @@ class UserController extends Controller
                     'type' => $request->type[$index] ?? null,
                     'doctor_name' => $request->doctor_name[$index] ?? null,
                     'is_insurance' => $request->has('is_insurance') ? '1' : '0',
+                    'medical_expenses' => $request->medical_expenses[$index] ?? null,
                     'notes' => $request->notes[$index] ?? null,
                 ]);
             }
@@ -453,11 +359,6 @@ class UserController extends Controller
 
         toastr('تم اضافة مستفيد جديد', 'success');
         return redirect(route('users.index', 'new'));
-
-        // } catch (\Exception $e) {
-        //     DB::rollBack();
-        //     return redirect()->back()->withInput()->with('error', 'حدث خطأ أثناء حفظ البيانات.');
-        // }
     }
 
     public function edit($id)
@@ -475,7 +376,7 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
-        //    dd($request->all());
+        
 
         DB::beginTransaction();
 
@@ -544,7 +445,8 @@ class UserController extends Controller
                             'treatment' => $request['treatment'][$index] ?? null,
                             'type' => $request['type'][$index] ?? 1,
                             'doctor_name' => $request['doctor_name'][$index] ?? null,
-                            'is_insurance' => isset($request['is_insurance'][$index]) ? 1 : 0
+                            'is_insurance' => isset($request['is_insurance'][$index]) ? 1 : 0,
+                            'medical_expenses' => $request['medical_expenses'][$index] ?? 0
                         ]);
                     }
                 }

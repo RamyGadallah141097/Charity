@@ -490,10 +490,17 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label">الدواء</label>
                                             <input type="text" class="form-control" name="treatment[]"
+                                                placeholder="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">مصاريف الطبية</label>
+                                            <input type="text" class="form-control" name="medical_expenses[]"
                                                 placeholder="">
                                         </div>
                                     </div>

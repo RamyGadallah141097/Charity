@@ -21,7 +21,7 @@ class LockerLogController extends Controller
 
     public function index(Request $request, $model = null)
     {
-
+        
         if ($request->ajax()) {
             $type = $model == 0 ? LockerLog::moneyTypeZakat : ($model == 1 ? LockerLog::moneyTypeSadaka : ($model == 2 ? LockerLog::moneyTypeLoans : ""));
             $donations = LockerLog::where("moneyType", $type)->with("admin")->get();

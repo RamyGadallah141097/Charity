@@ -26,10 +26,20 @@ class DonorController extends Controller
                     $deleteButton = '';
 
                     $editButton = '
-                            <button type="button" data-id="' . $donors->id . '" class="btn btn-pill btn-info-light editBtn">
-                                <i class="fa fa-edit"></i>
-                            </button>
-                        ';
+<div class="d-flex justify-content-center align-items-center gap-2">
+    <button type="button" data-id="' . $donors->id . '"
+        class="btn btn-pill btn-info-light editBtn"
+        title="تعديل">
+        <i class="fa fa-edit"></i>
+    </button>
+
+    <a href="' . route('userDetails', $donors->id) . '"
+       class="btn btn-pill btn-success-light"
+       title="عرض التفاصيل">
+        <i class="fas fa-eye"></i>
+    </a>
+</div>
+';
 
                     // $deleteButton = '
                     //     <button class="btn btn-pill btn-danger-light donationReturnBtn" data-toggle="modal" data-target="#delete_modal"

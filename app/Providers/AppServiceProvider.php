@@ -26,9 +26,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        view()->composer('*', function ($view) {
-            $view->with('setting', Setting::first());
-        });
+        Schema::defaultStringLength(191);
 
+        $settings = Setting::first();
+        View::share('setting', $settings);
     }
 }

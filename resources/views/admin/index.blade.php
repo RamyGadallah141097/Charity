@@ -1,8 +1,7 @@
 @extends('admin/layouts/master')
 @section('title')
     {{ isset($setting) ? $setting->title : '' }}
- | الصفحة الرئيسية
-
+    | الصفحة الرئيسية
 @endsection
 @section('page_name')
     الرئـيسية
@@ -17,43 +16,43 @@
 
 
     <div style="display: flex; gap: 20px; flex-wrap: wrap;" class="bg-white-light  mb-9 p-5 card   ">
-    <div style="display: flex; gap: 20px; flex-wrap: wrap;" class="bg-white  mb-9 p-5 card   ">
-        <div class="row">
-            <div class="col-6">
-                <h2>مخطط عدد المستفيدين</h2>
-                <div id="UsersChart"></div>
-            </div>
-            <div class="col-6">
-                <h2>مخطط عدد المتبرعين</h2>
-                <div id="DonorsChart"></div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-6">
-                <h2>مخطط عدد المستفيدين</h2>
-                <div id="UsersChart"></div>
-            </div>
-            <div class="col-6">
-                <h2>مخطط عدد المتبرعين</h2>
-                <div id="DonorsChart"></div>
-            </div>
-        </div>
-        <div class="card-header" >
-            <h2 class="card-title">لوحة تقدم الافكار</h2>
-        </div>
-
-        <div class="card-body d-flex g-2">
-            @foreach ($progressData as $index => $task)
-                <div style="text-align: center;" class="m-3">
-                    <canvas id="chart-{{ $index }}" width="120" height="120"></canvas>
-                    <p>
-                        {{ $task['title'] }}: {{ $task['progress'] }}%
-                    </p>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;" class="bg-white  mb-9 p-5 card   ">
+            <div class="row">
+                <div class="col-6">
+                    <h2>مخطط عدد المستفيدين</h2>
+                    <div id="UsersChart"></div>
                 </div>
-            @endforeach
+                <div class="col-6">
+                    <h2>مخطط عدد المتبرعين</h2>
+                    <div id="DonorsChart"></div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <h2>مخطط عدد المستفيدين</h2>
+                    <div id="UsersChart"></div>
+                </div>
+                <div class="col-6">
+                    <h2>مخطط عدد المتبرعين</h2>
+                    <div id="DonorsChart"></div>
+                </div>
+            </div>
+            <div class="card-header">
+                <h2 class="card-title">لوحة تقدم الافكار</h2>
+            </div>
+
+            <div class="card-body d-flex g-2">
+                @foreach ($progressData as $index => $task)
+                    <div style="text-align: center;" class="m-3">
+                        <canvas id="chart-{{ $index }}" width="120" height="120"></canvas>
+                        <p>
+                            {{ $task['title'] }}: {{ $task['progress'] }}%
+                        </p>
+                    </div>
+                @endforeach
+            </div>
         </div>
-    </div>
 
 
 
@@ -62,36 +61,38 @@
 
 
 
-    @if ($total_donors_money >= 1000)
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card  banner">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-xl-3 col-lg-2 text-center"><img
-                                    src="{{ asset('assets/admin') }}/assets/images/pngs/dash5.png" alt="img"
-                                    class="w-95"></div>
-                            <div class="col-xl-9 col-lg-10 pl-lg-0">
-                                <div class="row">
-                                    <div class="col-xl-7 col-lg-6">
-                                        <div class="text-right text-white mt-xl-4">
-                                            <h3 class="font-weight-semibold">
-                                                تهانينا يا {{ loggedadmin('name') }}</h3>
-                                            <h4 class="font-weight-normal">
-                                                تخطت اجمالي التبرعات 1000 جنية
-                                            </h4>
-                                            <p class="mb-lg-0 text-white-50">
-                                                لقد بلغت اجمالي التبرعات جنية {{ $total_donors_money }}, نأمل لمواصلة التقدم وتحقيق الهدف
-                                            </p>
+        @if ($total_donors_money >= 1000)
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card  banner">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-xl-3 col-lg-2 text-center"><img
+                                        src="{{ asset('assets/admin') }}/assets/images/pngs/dash5.png" alt="img"
+                                        class="w-95"></div>
+                                <div class="col-xl-9 col-lg-10 pl-lg-0">
+                                    <div class="row">
+                                        <div class="col-xl-7 col-lg-6">
+                                            <div class="text-right text-white mt-xl-4">
+                                                <h3 class="font-weight-semibold">
+                                                    تهانينا يا {{ loggedadmin('name') }}</h3>
+                                                <h4 class="font-weight-normal">
+                                                    تخطت اجمالي التبرعات 1000 جنية
+                                                </h4>
+                                                <p class="mb-lg-0 text-white-50">
+                                                    لقد بلغت اجمالي التبرعات جنية {{ $total_donors_money }}, نأمل لمواصلة
+                                                    التقدم وتحقيق الهدف
+                                                </p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-xl-5 col-lg-6 text-lg-center mt-xl-4">
-                                        <h5 class="font-weight-semibold mb-1 text-white"> عدد المتبرعين </h5>
-                                        <h2 class="display-2 mb-3 number-font text-white">{{ $donors_count }}</h2>
-                                        <div class="btn-list mb-xl-0"><a href="{{ route('donors.index') }}"
-                                                class="btn btn-dark mb-xl-0">عرض التفاصيل</a>
-                                            <a href="#" class="btn btn-white mb-xl-0" id="skip">
-                                                لاحقا</a>
+                                        <div class="col-xl-5 col-lg-6 text-lg-center mt-xl-4">
+                                            <h5 class="font-weight-semibold mb-1 text-white"> عدد المتبرعين </h5>
+                                            <h2 class="display-2 mb-3 number-font text-white">{{ $donors_count }}</h2>
+                                            <div class="btn-list mb-xl-0"><a href="{{ route('donors.index') }}"
+                                                    class="btn btn-dark mb-xl-0">عرض التفاصيل</a>
+                                                <a href="#" class="btn btn-white mb-xl-0" id="skip">
+                                                    لاحقا</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -100,264 +101,234 @@
                     </div>
                 </div>
             </div>
-        </div>
-    @endif
+        @endif
 
 
-    <div class="row">
-        <div class="col-md-6">
-            <canvas id="usersChart"></canvas>
-        </div>
-
-        <div class="col-md-6">
-            <canvas id="donorsChart"></canvas>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <canvas id="zakatChart"></canvas>
-        </div>
-
-        <div class="col-md-6">
-            <canvas id="loansChart"></canvas>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card img-card box-primary-shadow" style="background-color: rgb(255, 99, 132);">
-                <div class="card-body">
-                    <div class="d-flex">
-                        <div class="text-white">
-                            <h2 class="mb-0 number-font">{{ $users_count }}</h2>
-                            <p class="text-white mb-0">إجمالي المستفيدين </p>
-                        </div>
-                        <div class="mr-auto"><i class="fe fe-users text-white fs-30 ml-2 mt-2"></i></div>
-                    </div>
-                </div>
+        <div class="row">
+            <div class="col-md-6">
+                <canvas id="usersChart"></canvas>
             </div>
-        </div><!-- COL END -->
-        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card   img-card box-info-shadow" style="background-color: rgb(54, 162, 235);">
-                <div class="card-body">
-                    <div class="d-flex">
-                        <div class="text-white">
-                            <h2 class="mb-0 number-font">{{$accepedUsers}}</h2>
-                            <p class="text-white mb-0"> المقبولين</p>
-                        </div>
-                        <div class="mr-auto"><i class="fe fe-user-check text-white fs-30 ml-2 mt-2"></i></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card   img-card box-secondary-shadow" style="background-color: rgb(255, 206, 86);">
-                <div class="card-body">
-                    <div class="d-flex">
-                        <div class="text-white">
-                            <h2 class="mb-0 number-font"> {{ $subUsers }} </h2>
-                            <p class="text-white mb-0">   المعلقين</p>
-                        </div>
-                        <div class="mr-auto">
-                            <span class="text-white fs-30 ml-2 mt-2">
-                                <i class="fas fa-user-friends"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div><!-- COL END -->
-        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card    img-card box-success-shadow" style="background-color: rgb(75, 192, 192);">
-                <div class="card-body">
-                    <div class="d-flex">
-                        <div class="text-white">
-                            <h2 class="mb-0 number-font">{{ $rejectedUsers }}</h2>
-                            <p class="text-white mb-0"> المرفوضين</p>
-                        </div>
-                        <div class="mr-auto"><i class="fe fe-shopping-bag text-white fs-30 ml-2 mt-2"></i></div>
-                    </div>
-                </div>
+
+            <div class="col-md-6">
+                <canvas id="donorsChart"></canvas>
             </div>
         </div>
 
-    </div><!-- COL END -->
+        <div class="row">
+            <div class="col-md-6">
+                <canvas id="zakatChart"></canvas>
+            </div>
 
-
-{{--    total subventiosn--}}
-
-    <div class="row">
-
-        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card  bg-warning  img-card box-success-shadow">
-                <div class="card-body">
-                    <div class="d-flex">
-                        <div class="text-white">
-                            <h2 class="mb-0 number-font">{{ number_format($donors_count, 2, '.') }}</h2>
-                            <p class="text-white mb-0">اجمالي المتبرعين</p>
-                        </div>
-                        <div class="mr-auto">
-                            <i class="fe fe-shopping-bag text-white fs-30 ml-2 mt-2"></i>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-md-6">
+                <canvas id="loansChart"></canvas>
             </div>
         </div>
 
-        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card  img-card box-secondary-shadow" style="background-color: rgb(54, 162, 235);">
-                <div class="card-body">
-                    <div class="d-flex">
-                        <div class="text-white">
-                            <h2 class="mb-0 number-font"> {{  fmod($totalDonations, 1) == 0.00 ? number_format($totalDonations, 0) : number_format($totalDonations, 2) }}  </h2>
-                            <p class="text-white mb-0">إجمالي التبرعات</p>
-                        </div>
-                        <div class="mr-auto">
-                            <span class="text-white fs-30 ml-2 mt-2">£L</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div><!-- COL END -->
-        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card  img-card box-secondary-shadow" style="background-color: rgb(33, 37, 41);">
-                <div class="card-body">
-                    <div class="d-flex">
-                        <div class="text-white">
-                            <h2 class="mb-0 number-font"> {{ fmod($totalMonthlySubventions, 1) == 0.00 ? number_format($totalMonthlySubventions, 0) : number_format($totalMonthlySubventions, 2) }} </h2>
-                            <p class="text-white mb-0">إجمالي الاعانات الشهرية</p>
-                        </div>
-                        <div class="mr-auto">
-                            <span class="text-white fs-30 ml-2 mt-2">£L</span>
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+                <a href="{{ route('users.index', ['status' => 'new']) }}" class="text-decoration-none text-white d-block">
+                    <div class="card img-card box-primary-shadow" style="background-color: rgb(255, 99, 132);">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div>
+                                    <div class="text-white">
+                                        <h2 class="mb-0 number-font">{{ $newUsers }}</h2>
+                                        <p class="text-white mb-0"> المستفيدين الجدد</p>
+                                    </div>
+                                </div>
+                                <div class="mr-auto"><i class="fe fe-users text-white fs-30 ml-2 mt-2"></i></div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div><!-- COL END -->
-    </div>
-{{--    total subventiosn--}}
+                </a>
+            </div><!-- COL END -->
 
-
-
-
-{{--    total subventiosn and zakat--}}
-
-    <div class="row">
-
-
-        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card bg-info img-card box-secondary-shadow">
-                <div class="card-body">
-                    <div class="d-flex">
-                        <div class="text-white">
-                            <h2 class="mb-0 number-font"> {{  fmod($totalZakat, 1) == 0.00 ? number_format($totalZakat, 0) : number_format($totalZakat, 2) }}  </h2>
-                            <p class="text-white mb-0">إجمالي الزكاة و الصدقات</p>
-                        </div>
-                        <div class="mr-auto">
-                            <span class="text-white fs-30 ml-2 mt-2">£L</span>
+            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+                <a href="{{ route('users.index', ['status' => 'accepted']) }}"
+                    class="text-decoration-none text-white d-block">
+                    <div class="card   img-card box-info-shadow" style="background-color: rgb(54, 162, 235);">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="text-white">
+                                    <h2 class="mb-0 number-font">{{ $accepedUsers }}</h2>
+                                    <p class="text-white mb-0"> المقبولين</p>
+                                </div>
+                                <div class="mr-auto"><i class="fe fe-user-check text-white fs-30 ml-2 mt-2"></i></div>
+                            </div>
                         </div>
                     </div>
-
-
-
-                </div>
+                </a>
             </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+                <a href="{{ route('users.index', ['status' => 'preparing']) }}"
+                    class="text-decoration-none text-white d-block">
+                    <div class="card   img-card box-secondary-shadow" style="background-color: rgb(255, 206, 86);">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="text-white">
+                                    <h2 class="mb-0 number-font"> {{ $preparingUsers }} </h2>
+                                    <p class="text-white mb-0"> المعلقين</p>
+                                </div>
+                                <div class="mr-auto">
+                                    <span class="text-white fs-30 ml-2 mt-2">
+                                        <i class="fas fa-user-friends"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div><!-- COL END -->
+
+
+            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+                <a href="{{ route('users.index', ['status' => 'refused']) }}"
+                    class="text-decoration-none text-white d-block">
+                    <div class="card    img-card box-success-shadow" style="background-color: rgb(75, 192, 192);">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="text-white">
+                                    <h2 class="mb-0 number-font">{{ $rejectedUsers }}</h2>
+                                    <p class="text-white mb-0"> المرفوضين</p>
+                                </div>
+                                <div class="mr-auto"><i class="fe fe-shopping-bag text-white fs-30 ml-2 mt-2"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
         </div><!-- COL END -->
 
 
-
-
-        {{-- update test  --}}
-
-        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card  img-card box-secondary-shadow" style="background-color: rgb(33, 37, 41);">
-                <div class="card-body">
-                    <div class="d-flex">
-                        <div class="text-white">
-                            <h2 class="mb-0 number-font"> {{  fmod($totalMonthlySubventions, 1) == 0.00 ? number_format($totalMonthlySubventions, 0) : number_format($totalMonthlySubventions, 2) }}</h2>
-                            <p class="text-white mb-0">إجمالي الاعانات الشهرية</p>
-                        </div>
-                        <div class="mr-auto">
-                            <span class="text-white fs-30 ml-2 mt-2">£L</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div><!-- COL END -->
-    </div>
-
-{{--    total subventiosn--}}
-
-
-
-{{--        total loans --}}
+        {{--    total subventiosn --}}
 
         <div class="row">
 
             <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-                <div class="card  bg-success img-card box-success-shadow">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="text-white">
-                                <h2 class="mb-0 number-font">{{ $totalLoans }}</h2>
-                                <p class="text-white mb-0">اجمالي عدد القروض</p>
+                <a href="{{ route('donors.index') }}" class="text-decoration-none text-white d-block">
+                    <div class="card  bg-warning  img-card box-success-shadow">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="text-white">
+                                    <h2 class="mb-0 number-font">{{ number_format($donors_count) }}</h2>
+                                    <p class="text-white mb-0">اجمالي المتبرعين</p>
+                                </div>
+                                <div class="mr-auto">
+                                    <i class="fe fe-shopping-bag text-white fs-30 ml-2 mt-2"></i>
+                                </div>
                             </div>
-                            <div class="mr-auto"><i class="fe fe-shopping-bag text-white fs-30 ml-2 mt-2"></i></div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
 
             <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-                <div class="card  img-card box-secondary-shadow" style="background-color: rgb(0, 123, 255);">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="text-white">
-                                <h2 class="mb-0 number-font"> {{ $totalBorrowers }} </h2>
-                                <p class="text-white mb-0">إجمالي المقترضين</p>
-                            </div>
-                            <div class="mr-auto">
-                                <span class="text-white fs-30 ml-2 mt-2"><i class="fas fa-user-friends"></i></span>
+                <a href="{{ route('Donations.index') }}" class="text-decoration-none text-white d-block">
+                    <div class="card  img-card box-secondary-shadow" style="background-color: rgb(54, 162, 235);">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="text-white">
+                                    <h2 class="mb-0 number-font">
+                                        {{ fmod($totalDonations, 1) == 0.0 ? number_format($totalDonations, 0) : number_format($totalDonations, 2) }}
+                                    </h2>
+                                    <p class="text-white mb-0">إجمالي التبرعات</p>
+                                </div>
+                                <div class="mr-auto">
+                                    <span class="text-white fs-30 ml-2 mt-2">£L</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div><!-- COL END -->
             <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-                <div class="card bg-secondary img-card box-secondary-shadow">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="text-white">
-                                <h2 class="mb-0 number-font"> {{  fmod($totalLoansDonations, 1) == 0.00 ? number_format($totalLoansDonations, 0) : number_format($totalLoansDonations, 2) }}  </h2>
-                                <p class="text-white mb-0">إجمالي  التبرعات </p>
-                            </div>
-                            <div class="mr-auto">
-                                <span class="text-white fs-30 ml-2 mt-2">£L</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div><!-- COL END -->
-            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-                <div class="card bg-danger img-card box-secondary-shadow">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="text-white">
-                                <h2 class="mb-0 number-font"> {{  fmod($totalLoanOut, 1) == 0.00 ? number_format($totalLoanOut, 0) : number_format($totalLoanOut, 2) }}  </h2>
-                                <p class="text-white mb-0">إجمالي القروض الخارجه </p>
-                            </div>
-                            <div class="mr-auto">
-                                <span class="text-white fs-30 ml-2 mt-2">#</span>
+                <a href="{{ route('subventions.index') }}" class="text-decoration-none text-white d-block">
+                    <div class="card  img-card box-secondary-shadow" style="background-color: rgb(33, 37, 41);">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="text-white">
+                                    <h2 class="mb-0 number-font">
+
+                                        {{ fmod($totalMonthlySubventions, 1) == 0.0 ? number_format($totalMonthlySubventions, 0) : number_format($totalMonthlySubventions, 2) }}
+                                    </h2>
+                                    <p class="text-white mb-0">إجمالي الاعانات الشهرية</p>
+                                </div>
+                                <div class="mr-auto">
+                                    <span class="text-white fs-30 ml-2 mt-2">£L</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div><!-- COL END -->
         </div>
-{{--        total loans --}}
+        {{--    total subventiosn --}}
 
-{{--        users social status--}}
+
+
+
+        {{--        total loans --}}
+
+        <div class="row">
+
+            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+                <a href="{{ route('index.Loans') }}" class="text-decoration-none text-white d-block">
+                    <div class="card  bg-success img-card box-success-shadow">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="text-white">
+                                    <h2 class="mb-0 number-font">{{ $totalLoans }}</h2>
+                                    <p class="text-white mb-0">اجمالي عدد القروض</p>
+                                </div>
+                                <div class="mr-auto"><i class="fe fe-shopping-bag text-white fs-30 ml-2 mt-2"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+                <a href="{{ route('borrowers.index') }}" class="text-decoration-none text-white d-block">
+                    <div class="card  img-card box-secondary-shadow" style="background-color: rgb(0, 123, 255);">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="text-white">
+                                    <h2 class="mb-0 number-font"> {{ $totalBorrowers }} </h2>
+                                    <p class="text-white mb-0">إجمالي المقترضين</p>
+                                </div>
+                                <div class="mr-auto">
+                                    <span class="text-white fs-30 ml-2 mt-2"><i class="fas fa-user-friends"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div><!-- COL END -->
+            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+                <a href="{{ route('Donations.index') }}" class="text-decoration-none text-white d-block">
+                    <div class="card bg-secondary img-card box-secondary-shadow">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="text-white">
+                                    <h2 class="mb-0 number-font">
+                                        {{ fmod($totalLoansDonations, 1) == 0.0 ? number_format($totalLoansDonations, 0) : number_format($totalLoansDonations, 2) }}
+                                    </h2>
+                                    <p class="text-white mb-0">إجمالي تبرعات القروض </p>
+                                </div>
+                                <div class="mr-auto">
+                                    <span class="text-white fs-30 ml-2 mt-2">£L</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div><!-- COL END -->
+        </div>
+        {{--        total loans --}}
+
+        {{--        users social status --}}
         <div class="row">
 
             <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
@@ -425,14 +396,10 @@
             </div><!-- COL END -->
 
         </div>
-{{--        users social status--}}
+        {{--        users social status --}}
 
 
-
-
-
-</div>
-
+    </div>
 @endsection
 @section('js')
     {{--    <!-- INTERNAL CHARTJS CHART JS --> --}}
@@ -453,31 +420,33 @@
 @endsection
 
 <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const progressData = @json($progressData);
+    document.addEventListener("DOMContentLoaded", function() {
+        const progressData = @json($progressData);
 
-                progressData.forEach((task, index) => {
-                    const ctx = document.getElementById(`chart-${index}`).getContext('2d');
+        progressData.forEach((task, index) => {
+            const ctx = document.getElementById(`chart-${index}`).getContext('2d');
 
-                    new Chart(ctx, {
-                        type: 'doughnut',
-                        data: {
-                            datasets: [{
-                                data: [task.progress, 100 - task.progress], // Access the correct progress value
-                                backgroundColor: ['#4CAF50', '#E0E0E0']
-                            }]
-                        },
-                        options: {
-                            cutout: '75%',
-                            responsive: false,
-                            maintainAspectRatio: false,
-                        }
-                    });
-                });
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [task.progress, 100 - task
+                            .progress
+                        ], // Access the correct progress value
+                        backgroundColor: ['#4CAF50', '#E0E0E0']
+                    }]
+                },
+                options: {
+                    cutout: '75%',
+                    responsive: false,
+                    maintainAspectRatio: false,
+                }
             });
-        </script>
+        });
+    });
+</script>
 
-{{--charts for users--}}
+{{-- charts for users --}}
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         var ctx = document.getElementById('usersChart').getContext('2d');
@@ -487,7 +456,9 @@
                 labels: ["إجمالي المستفيدين", "المقبولين", "المعلقين", "المرفوضين"],
                 datasets: [{
                     label: "عدد المستفيدين",
-                    data: [{{ $users_count }}, {{ $accepedUsers }}, {{ $subUsers }}, {{ $rejectedUsers }}],
+                    data: [{{ $users_count }}, {{ $accepedUsers }}, {{ $preparingUsers }},
+                        {{ $rejectedUsers }}
+                    ],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.5)',
                         'rgba(54, 162, 235, 0.5)',
@@ -515,7 +486,7 @@
     });
 </script>
 
-{{--charts for donors--}}
+{{-- charts for donors --}}
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         var ctx = document.getElementById('donorsChart').getContext('2d');
@@ -525,7 +496,9 @@
                 labels: ["إجمالي المتبرعين", "إجمالي التبرعات", "إجمالي الاعانات الشهرية"],
                 datasets: [{
                     label: "إحصائيات التبرعات",
-                    data: [{{ $donors_count }}, {{ $totalDonations }}, {{ $totalMonthlySubventions }}],
+                    data: [{{ $donors_count }}, {{ $totalDonations }},
+                        {{ $totalMonthlySubventions }}
+                    ],
                     backgroundColor: [
                         'rgba(255, 206, 86, 0.5)',
                         'rgba(54, 162, 235, 0.5)',
@@ -551,7 +524,7 @@
     });
 </script>
 
-{{--charts for zakat--}}
+{{-- charts for zakat --}}
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         var ctx = document.getElementById('zakatChart').getContext('2d');
@@ -585,17 +558,21 @@
     });
 </script>
 
-{{--charts for loans--}}
+{{-- charts for loans --}}
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         var ctx = document.getElementById('loansChart').getContext('2d');
         var loansChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ["إجمالي القروض", "إجمالي المقترضين", "إجمالي التبرعات", "إجمالي القروض الخارجة"],
+                labels: ["إجمالي القروض", "إجمالي المقترضين", "إجمالي التبرعات",
+                    "إجمالي القروض الخارجة"
+                ],
                 datasets: [{
                     label: "إحصائيات القروض",
-                    data: [{{ $totalLoans }}, {{ $totalBorrowers }}, {{ $totalLoansDonations }}, {{ $totalLoanOut }}],
+                    data: [{{ $totalLoans }}, {{ $totalBorrowers }},
+                        {{ $totalLoansDonations }}, {{ $totalLoanOut }}
+                    ],
                     backgroundColor: [
                         'rgba(40, 167, 69, 0.5)',
                         'rgba(0, 123, 255, 0.5)',
@@ -644,7 +621,7 @@
 
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         fetch("/chart-data")
             .then(response => response.json())
             .then(data => {
@@ -675,7 +652,7 @@
                     },
                     tooltip: {
                         y: {
-                            formatter: function (val) {
+                            formatter: function(val) {
                                 return val + " مستخدم";
                             }
                         }
@@ -690,7 +667,7 @@
 
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         fetch("donors/chart-data")
             .then(response => response.json())
             .then(data => {
@@ -721,7 +698,7 @@
                     },
                     tooltip: {
                         y: {
-                            formatter: function (val) {
+                            formatter: function(val) {
                                 return val + " متبرع";
                             }
                         }

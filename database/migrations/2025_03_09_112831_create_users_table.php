@@ -46,7 +46,7 @@ return new class extends Migration
             $table->double('standard_living')->nullable()->default(null);
             $table->longText('Case_evaluation')->nullable()->default(null);
             $table->longText('attachments')->nullable()->default(null);
-            $table->enum('status', ['new', 'preparing', 'accepted', 'refused'])->default('new');
+            $table->enum('status', allowed: ['new', 'preparing', 'accepted', 'refused'])->default('new');
             $table->timestamps();
         });
     }

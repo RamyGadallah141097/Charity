@@ -24,30 +24,31 @@ class HomeController extends Controller
     public function index()
     {
 
-//        users
+        //        users
         $users_count     = User::all()->count();
+        $newUsers     = User::where("status",  "new")->count();
         $accepedUsers     = User::where("status", "accepted")->count();
-        $subUsers     = User::where("status", "new")->count();
+        $preparingUsers     = User::where("status", "preparing")->count();
         $rejectedUsers     = User::where("status", "refused")->count();
         $social_status0     = User::where("social_status", '0')->count();
         $social_status1     = User::where("social_status", '1')->count();
         $social_status2     = User::where("social_status", '2')->count();
         $social_status3    = User::where("social_status", '3')->count();
-//        dd($social_status0 , $social_status1 , $social_status2 , $social_status3 );
+        //        dd($social_status0 , $social_status1 , $social_status2 , $social_status3 );
 
-//        donors and donations
+        //        donors and donations
         $donors_count    = Donor::all()->count();
         $total_donors_money    = Donor::all()->sum('price');
         $totalDonations    = Donation::all()->sum('donation_amount');
 
-//  loans
+        //  loans
         $totalLoans = Loan::count();
         $totalLoanOut     = Loan::all()->sum('loan_amount');
         $totalBorrowers     = Borrower::all()->count();
         $totalLoansDonations = Donation::where('donation_type', 2)->sum('donation_amount');
 
 
-//        zaka
+        //        zaka
         $totalMonthlySubventions  = Subvention::where('type', 'monthly')->sum('price');
         $totalZakat  = Donation::whereIn('donation_type', [0, 1])->sum('donation_amount');;
 
@@ -61,9 +62,9 @@ class HomeController extends Controller
             $diff = 1;
 
         $donors      = Donor::take(5)->get();
-        $subvention  = Subvention::orderBy('price','DESC')->first();
+        $subvention  = Subvention::orderBy('price', 'DESC')->first();
         $totalSubventions  = Subvention::all()->sum('price');
-//        $subvention  = Subvention::orderBy('price', 'DESC')->first();
+        //        $subvention  = Subvention::orderBy('price', 'DESC')->first();
 
         $users       = User::latest()->take(5)->get();
 
@@ -85,6 +86,6 @@ class HomeController extends Controller
         $setting = Setting::first();
 
 
-        return view('admin/index', compact('total_donors_money' , "totalDonations" , "donors_count" , "progressData" , 'users' , "accepedUsers" , "subUsers" , "rejectedUsers", 'donors', 'diff', 'users_count', 'subvention' , "totalSubventions", 'users_month', 'users_last_month', 'totalMonthlySubventions' , "totalZakat", "totalLoans" , "totalBorrowers" , "totalLoanOut" , "totalLoansDonations" , "setting" , "social_status3" , "social_status2" , "social_status1" , "social_status0"));
+        return view('admin/index', compact('total_donors_money', "totalDonations", "donors_count", 'preparingUsers', "progressData", 'users', "accepedUsers", "newUsers", "rejectedUsers", 'donors', 'diff', 'users_count', 'subvention', "totalSubventions", 'users_month', 'users_last_month', 'totalMonthlySubventions', "totalZakat", "totalLoans", "totalBorrowers", "totalLoanOut", "totalLoansDonations", "setting", "social_status3", "social_status2", "social_status1", "social_status0"));
     }
 }
