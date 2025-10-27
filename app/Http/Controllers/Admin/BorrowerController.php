@@ -90,7 +90,7 @@ class BorrowerController extends Controller
                 ->make(true);
         }
 
-        return view('admin\borrowers\index');
+        return view('admin/borrowers/index');
     }
 
 
