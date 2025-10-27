@@ -40,10 +40,10 @@ class BorrowerController extends Controller
                                 <i class="fa fa-edit"></i>
                             </button>
                               <a href="' . route('borrowerDetails', $borrower->id) . '"
-       class="btn btn-pill btn-success-light"
-       title="عرض التفاصيل">
-        <i class="fas fa-eye"></i>
-    </a>
+                            class="btn btn-pill btn-success-light"
+                            title="عرض التفاصيل">
+                                <i class="fas fa-eye"></i>
+                            </a>
                         ';
 
                     // التحقق من إذن الحذف
@@ -90,7 +90,7 @@ class BorrowerController extends Controller
                 ->make(true);
         }
 
-        return view(view: 'admin\borrowers\index');
+        return view('admin\borrowers\index');
     }
 
 
