@@ -20,9 +20,9 @@ class UserController extends Controller
 {
     public function index(Request $request, $status)
     {
+            
 
         if ($request->ajax()) {
-
 
             $query = User::where('status', $status);
 
@@ -376,7 +376,7 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
-        
+
 
         DB::beginTransaction();
 

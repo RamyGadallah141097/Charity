@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\BorrowerController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -17,14 +18,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::post('changeRole', 'AdminController@changeRole')->name('changeRole');
     Route::post('showChangeRole', 'AdminController@showChangeRole')->name('showChangeRole');
 
-    Route::resource("adminSubscription" , "AdminSubscriptionsController");
+    Route::resource("adminSubscription", "AdminSubscriptionsController");
     Route::get('/get-subscription-price', function (Request $request) {
         $price = \App\Models\Setting::first()->adminSubscription ?? 0;
         return response()->json(['success' => true, 'price' => $price]);
     })->name('getSubscriptionPrice');
 
 
-    Route::resource("SubscriptionFee" , "SubscriptionFeeController");
+    Route::resource("SubscriptionFee", "SubscriptionFeeController");
 
     #### Users ####
     Route::get('users/{status}', 'UserController@index')->name('users.index')->middleware('permission:users.index');
@@ -41,32 +42,42 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('DonationDetails/{id}', 'UserController@DonationDetails')->name('DonationDetails');
 
     //    الراوتس الخاصه بالمقترض
-    Route::resource("borrowers", "BorrowerController");
+
     Route::get('getGuarantor', 'BorrowerController@getGuarantor')->name('getGuarantor');
     Route::POST('delete_borrowers', 'BorrowerController@delete')->name('delete_borrowers');
     //    Route::get('guarantorDetails/{id}', 'BorrowerController@delete')->name('guarantorDetails');
     Route::get('searchBorrowers', 'loansController@searchBorrowers')->name('search.Borrowers');
     Route::get('search.BorrowerPhone', 'loansController@searchBorrowers')->name('search.BorrowerPhone');
+    Route::get('borrowerDetails/{id}    ', 'BorrowerController@borrowerDetails')->name(name: 'borrowerDetails');
 
-//    الراوتس الخاصه بالمقترض
-//    Route::resource("borrowers", "BorrowerController");
-//    Route::get('getGuarantor', 'BorrowerController@getGuarantor')->name('getGuarantor');
-//    Route::POST('delete_borrowers', 'BorrowerController@delete')->name('delete_borrowers');
+    //    الراوتس الخاصه بالمقترض
+    Route::resource('borrowers', controller: "BorrowerController");
+    //    Route::get('getGuarantor', 'BorrowerController@getGuarantor')->name('getGuarantor');
+    //    Route::POST('delete_borrowers', 'BorrowerController@delete')->name('delete_borrowers');
     Route::get('/borrowers/{id}/media', 'BorrowerController@getMedia');
 
     #### Donors ####
     Route::middleware(['permission:donors.index'])->group(function () {
         Route::resource('donors', 'DonorController');
-        Route::post("donor/returnDonationMoney" , 'DonorController@returnDonationMoney')->name('donor.returnDonationMoney');
-        Route::put('donors/{id}', [DonorController::class, 'update'])->name('updateDonor');
+        Route::post("donor/returnDonationMoney", 'DonorController@returnDonationMoney')->name('donor.returnDonationMoney');
+        Route::put('donors/{id}', 'DonorController@update
+        ')->name('updateDonor');
         Route::POST('delete_donors', 'DonorController@delete')->name('delete_donors');
         Route::POST('Donations_donors', 'DonationController@delete')->name('donations_delete');
         Route::resource('Donations', "DonationController");
         Route::get('/get_donor_phone/{id}', 'DonationController@get_donor_phone')->name("get_donor_phone");
         Route::get('/search-donor', 'DonationController@searchDonor')->name('search.donor');
+        Route::get('donorDetails/{id}', 'DonorController@donorDetails')->name(name: 'donorDetails');
     });
 
-    Route::get("lock/{lock}" , "LockerLogController@index")->name("lock");
+    #### Borrowers ####
+    Route::middleware(['borrowers.index'])->group(function () {
+        // Route::resource('borrowers', 'BorrowerController');
+        Route::get('borrowers/{id}/media', 'BorrowerController@getMedia');
+        Route::get('/get_borrower_phone/{id}', 'BorrowerController@get_borrower_phone')->name("get_borrower_phone");
+    });
+
+    Route::get("lock/{lock}", "LockerLogController@index")->name("lock");
 
     #### Tasks ####
     Route::resource("tasks", "TaskController")->middleware('permission:tasks.index');
@@ -80,7 +91,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('/getDonation', "GoodloansController@getDonors")->name('getDonors');
 
 
-//    Route::get('guarantorDetails/{id}', 'BorrowerController@delete')->name('guarantorDetails');
+    //    Route::get('guarantorDetails/{id}', 'BorrowerController@delete')->name('guarantorDetails');
 
     // القروضsearchDonor
     Route::get('indexLoans', 'loansController@indexLoans')->name('index.Loans');
@@ -90,7 +101,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('person-loans/{id}', 'loansController@personLoans')->name('person.loans');
     Route::get('loans/{id}', 'loansController@checkout')->name('loan.checkout');
     Route::post('loans/pay/{id}', 'loansController@payLoan')->name('loan.pay');
-    Route::get("loan/print"  , "loansController@printLoan" )->name("printLoan");
+    Route::get("loan/print", "loansController@printLoan")->name("printLoan");
 
     //الزكاة والصدقات
     Route::get("safer/CharityZakat", "SaferController@indexCharityZakat")->name("safer.CharityZakat"); //تبرعات الزكاة والصدقات
@@ -108,12 +119,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     #### Safer ####
 
     #### Subventions ####
-//    الاعانات الشهرية للمستفيدين
-//    Route::resource('subventions', 'SubventionController')->middleware('permission:subventions.index');
-//    Route::get('showSubventions', 'SubventionController@showSubventions')->name('showSubventions')->middleware('permission:showSubventions');
-//    Route::POST('delete_subventions', 'SubventionController@delete')->name('delete_subventions')->middleware('permission:delete_subventions');
-//    assets
-    Route::resource("assets" , "AssetController");
+    //    الاعانات الشهرية للمستفيدين
+    //    Route::resource('subventions', 'SubventionController')->middleware('permission:subventions.index');
+    //    Route::get('showSubventions', 'SubventionController@showSubventions')->name('showSubventions')->middleware('permission:showSubventions');
+    //    Route::POST('delete_subventions', 'SubventionController@delete')->name('delete_subventions')->middleware('permission:delete_subventions');
+    //    assets
+    Route::resource("assets", "AssetController");
     Route::get('assetsShow', 'AssetController@show')->name('assetsShow')->middleware('permission:subventions.index');
     Route::POST('assetsDelete', 'AssetController@delete')->name('assetsDelete');
 

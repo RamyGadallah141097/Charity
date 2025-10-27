@@ -24,10 +24,10 @@ class BorrowerController extends Controller
     {
 
         if ($request->ajax()) {
-            $borrowers = Borrower::select(['id', 'name', 'phone', 'nationalID', 'address', 'job' , "review" , "borrower_age" , "rate" , "review"]);
+            $borrowers = Borrower::select(['id', 'name', 'phone', 'nationalID', 'address', 'job', "review", "borrower_age", "rate", "review"]);
 
 
-            return DataTables::of($borrowers)
+            return DataTables::of(source: $borrowers)
                 ->addColumn('action', function ($borrower) {
                     $editButton = '';
                     $deleteButton = '';
@@ -35,34 +35,39 @@ class BorrowerController extends Controller
                     $viewMediaButton = '';
 
                     // التحقق من إذن التعديل
-                        $editButton = '
+                    $editButton = '
                             <button type="button" data-id="' . $borrower->id . '" class="btn btn-pill btn-info-light editBtn">
                                 <i class="fa fa-edit"></i>
                             </button>
+                              <a href="' . route('borrowerDetails', $borrower->id) . '"
+       class="btn btn-pill btn-success-light"
+       title="عرض التفاصيل">
+        <i class="fas fa-eye"></i>
+    </a>
                         ';
 
                     // التحقق من إذن الحذف
-                        // $deleteButton = '
-                        //     <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
-                        //             data-id="' . $borrower->id . '">
-                        //         <i class="fas fa-trash"></i>
-                        //     </button>
-                        // ';
+                    // $deleteButton = '
+                    //     <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                    //             data-id="' . $borrower->id . '">
+                    //         <i class="fas fa-trash"></i>
+                    //     </button>
+                    // ';
 
-                        // $viewGuarantorsButton = '
-                        //     <button class="btn btn-pill view-guarantors btn-success-light" data-id="' . $borrower->id . '">
-                        //         <i class="fa fa-eye"></i>
-                        //     </button>
-                        // ';
+                    // $viewGuarantorsButton = '
+                    //     <button class="btn btn-pill view-guarantors btn-success-light" data-id="' . $borrower->id . '">
+                    //         <i class="fa fa-eye"></i>
+                    //     </button>
+                    // ';
 
 
-                        // $viewMediaButton = '
-                        //     <button class="btn btn-pill btn-primary-light viewMedia" data-id="' . $borrower->id . '">
-                        //         <i class="fa fa-photo-video"></i>
-                        //     </button>
-                        // ';
+                    // $viewMediaButton = '
+                    //     <button class="btn btn-pill btn-primary-light viewMedia" data-id="' . $borrower->id . '">
+                    //         <i class="fa fa-photo-video"></i>
+                    //     </button>
+                    // ';
 
-                        $borrowerReview = '
+                    $borrowerReview = '
                             <button class="btn btn-pill btn-primary-light borrowerReview" data-id="' . $borrower->id . '"  data-review="' . $borrower->review . '">
                                 <i class="fa fa-star"></i>
 
@@ -77,15 +82,15 @@ class BorrowerController extends Controller
                 })
                 ->editColumn('rate', function ($borrower) {
                     return $borrower->rate
-                            ? $borrower->rate . ' <i class="fa fa-star" style="color: gold;"></i>'
-                            : '-';
+                        ? $borrower->rate . ' <i class="fa fa-star" style="color: gold;"></i>'
+                        : '-';
                 })
                 ->rawColumns(['action'])
                 ->escapeColumns([])
                 ->make(true);
         }
 
-        return view('admin/borrowers/index');
+        return view(view: 'admin\borrowers\index');
     }
 
 
@@ -106,7 +111,7 @@ class BorrowerController extends Controller
 
     public function store(Request $request)
     {
-//        dd($request->all());
+        //        dd($request->all());
         try {
             // Create Borrower
             $borrower = Borrower::create([
@@ -180,7 +185,6 @@ class BorrowerController extends Controller
                 'status' => 200,
                 'success' => 'Added successfully',
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 405,
@@ -188,11 +192,6 @@ class BorrowerController extends Controller
             ]);
         }
     }
-
-
-
-
-
 
 
     public function show(Borrower $borrower)
@@ -203,9 +202,9 @@ class BorrowerController extends Controller
 
     public function edit(Borrower $borrower)
     {
-        $media1 = Media::where("borrower_id" , $borrower->id)->where("type" , null);
-        $media2 = Media::where("borrower_id" , $borrower->id)->where("type" , 1);
-        return view('admin/borrowers/parts/edit', compact('borrower' , "media1" , "media2"));
+        $media1 = Media::where("borrower_id", $borrower->id)->where("type", null);
+        $media2 = Media::where("borrower_id", $borrower->id)->where("type", 1);
+        return view('admin/borrowers/parts/edit', compact('borrower', "media1", "media2"));
     }
 
     /**
@@ -257,9 +256,9 @@ class BorrowerController extends Controller
             // تحديث ملفات المقترض
             if ($request->hasFile('borrowerMedia')) {
                 // حذف الملفات القديمة فقط إذا تم رفع ملفات جديدة
-                if ($borrower->media()->where('type'  ,  0)->count() > 0){
-                    foreach ($borrower->media()->where('type' , 0)->get() as $media){
-                        if (File::exists(public_path($media->path))){
+                if ($borrower->media()->where('type',  0)->count() > 0) {
+                    foreach ($borrower->media()->where('type', 0)->get() as $media) {
+                        if (File::exists(public_path($media->path))) {
                             File::delete(public_path($media->path));
                         }
                     }
@@ -286,9 +285,9 @@ class BorrowerController extends Controller
             // تحديث ملفات الضامن
             if ($request->hasFile('guarantorMedia')) {
                 // حذف الملفات القديمة فقط إذا تم رفع ملفات جديدة
-                if ($borrower->media()->where("type" , 1)->count() > 0){
-                    foreach ($borrower->media()->where('type', 1)->get() as $media){
-                        if(FILE::exists(public_path($media->paht))){
+                if ($borrower->media()->where("type", 1)->count() > 0) {
+                    foreach ($borrower->media()->where('type', 1)->get() as $media) {
+                        if (FILE::exists(public_path($media->paht))) {
                             File::delete(public_path($media->path));
                         }
                     }
@@ -341,43 +340,41 @@ class BorrowerController extends Controller
         try {
             $borrower = Borrower::find($request->id);
 
-//            if ($borrower->media()->count() > 0){
-//                foreach ($borrower->media()->get() as $media){
-//                    if (File::exists(public_path($media->path))){
-//                        File::delete(public_path($media->path));
-//                    }
-//                }
+            //            if ($borrower->media()->count() > 0){
+            //                foreach ($borrower->media()->get() as $media){
+            //                    if (File::exists(public_path($media->path))){
+            //                        File::delete(public_path($media->path));
+            //                    }
+            //                }
 
-//            }
-//            $borrower = Borrower::with('media')->findOrFail($request->id);
-//            $loan = Loan::where('borrower_id', $request->id)->first();
-//
-//            if ($loan) {
-//                LockerLog::where("amount", $loan->loan_amount)
-//                    ->whereDate("created_at", $loan->created_at) // Ensures date-only comparison
-//                    ->where("type", LockerLog::TYPE_MINUS)
-//                    ->where("moneyType", LockerLog::moneyTypeLoans)
-//                    ->delete();
-//            }
-                $borrower = Borrower::with('media')->findOrFail($request->id);
-                $loan = Loan::where('borrower_id', $request->id)->first();
+            //            }
+            //            $borrower = Borrower::with('media')->findOrFail($request->id);
+            //            $loan = Loan::where('borrower_id', $request->id)->first();
+            //
+            //            if ($loan) {
+            //                LockerLog::where("amount", $loan->loan_amount)
+            //                    ->whereDate("created_at", $loan->created_at) // Ensures date-only comparison
+            //                    ->where("type", LockerLog::TYPE_MINUS)
+            //                    ->where("moneyType", LockerLog::moneyTypeLoans)
+            //                    ->delete();
+            //            }
+            $borrower = Borrower::with('media')->findOrFail($request->id);
+            $loan = Loan::where('borrower_id', $request->id)->first();
 
-                if ($loan) {
-//                        LockerLog::where("amount", $loan->loan_amount)
-//                        ->where("created_at", $loan->created_at) // Matches exact timestamp
-//                        ->where("type", LockerLog::TYPE_MINUS)
-//                        ->where("moneyType", LockerLog::moneyTypeLoans)
-//                        ->delete();
-                          LockerLog::where("loan_id", $loan->id)->delete();
-
-
-                }
+            if ($loan) {
+                //                        LockerLog::where("amount", $loan->loan_amount)
+                //                        ->where("created_at", $loan->created_at) // Matches exact timestamp
+                //                        ->where("type", LockerLog::TYPE_MINUS)
+                //                        ->where("moneyType", LockerLog::moneyTypeLoans)
+                //                        ->delete();
+                LockerLog::where("loan_id", $loan->id)->delete();
+            }
 
 
             $borrower->delete();
             toastr()->success("deleted successfully");
             return redirect()->back();
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             toastr()->error("faild" . $e->getMessage());
             return redirect()->back();
         }
@@ -388,8 +385,15 @@ class BorrowerController extends Controller
         $guarantors = Guarantor::where('borrower_id', $request->borrower_id)->get();
 
         return response()->json(['guarantors' => $guarantors,]);
+    }
 
+    public function borrowerDetails($id)
+    {
 
+        $borrower = Borrower::findOrFail($id);
+        $loans = Loan::where('borrower_id', $id)->get();
+        $guarantors = Guarantor::where('borrower_id', $id)->get();
+        return view('admin/borrowers/parts/details', compact('borrower', 'loans', 'guarantors'));
     }
 
     public function getMedia($id)
@@ -400,15 +404,14 @@ class BorrowerController extends Controller
 
     public function storeReview(Request $request)
     {
-        try{
+        try {
             $borrower = Borrower::find($request->borrower_id);
             $borrower->review = $request->review;
             $borrower->rate = $request->rating;
             $borrower->save();
             return redirect()->back()->with("تم رفع التقييم");
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return redirect()->back()->with("مشكله في التقييم ");
         }
     }
-
 }

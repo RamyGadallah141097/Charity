@@ -33,7 +33,7 @@ class DonorController extends Controller
         <i class="fa fa-edit"></i>
     </button>
 
-    <a href="' . route('userDetails', $donors->id) . '"
+    <a href="' . route('donorDetails', $donors->id) . '"
        class="btn btn-pill btn-success-light"
        title="عرض التفاصيل">
         <i class="fas fa-eye"></i>
@@ -41,12 +41,7 @@ class DonorController extends Controller
 </div>
 ';
 
-                    // $deleteButton = '
-                    //     <button class="btn btn-pill btn-danger-light donationReturnBtn" data-toggle="modal" data-target="#delete_modal"
-                    //             data-id="' . $donors->id . '" data-title="' . $donors->name . '">
-                    //         <i class="fas fa-trash"></i>
-                    //     </button>
-                    // ';
+
                     if ($donors->has('donation') && $donors->donation->contains('donation_type', 2)) {
                         $totalLoansDonations = $donors->donation->where('donation_type', 2)->sum("donation_amount");
                         // $totalLoansDonations = $DonationsAmount - LockerLog::where("donor_id" , $donors->id)->where("moneyType" , LockerLog::moneyTypeLoans)->where("type" , LockerLog::TYPE_MINUS)->sum("amount");
@@ -231,5 +226,12 @@ class DonorController extends Controller
             ->get();
 
         return response()->json($data);
+    }
+
+    public function donorDetails($id)
+    {
+        $donor = Donor::find($id);
+        $donations = Donation::where("donor_id", $id)->get();
+        return view('admin/donors/parts/details', compact('donor', 'donations'));
     }
 }
