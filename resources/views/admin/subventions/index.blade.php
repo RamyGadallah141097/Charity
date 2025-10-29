@@ -146,7 +146,7 @@
                     return meta.row + 1;
                 },
                 orderable: false,
-                searchable: false
+                searchable: true
             },
             {
                 data: 'user_id',
@@ -176,7 +176,7 @@
                 data: 'action',
                 name: 'action',
                 orderable: false,
-                searchable: false
+                searchable: true
             },
         ]
         showData('{{ route('subventions.index') }}', columns);
