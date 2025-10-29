@@ -198,15 +198,22 @@
                                 <input type="number" class="form-control expense-input"
                                     value="{{ old('association') }}" name="association" placeholder="">
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <label class="form-label">طعام</label>
                                 <input type="number" class="form-control expense-input" value="{{ old('food') }}"
                                     name="food" placeholder="">
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <label class="form-label">دراسة</label>
                                 <input type="number" class="form-control expense-input" value="{{ old('study') }}"
                                     name="study" placeholder="">
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="form-label">مصاريف الطبية</label>
+                                    <input type="number" class="form-control expense-input" name="medical_expenses"
+                                        placeholder="">
+                                </div>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">إجمالى النفقات</label>
@@ -497,13 +504,7 @@
                                                 placeholder="">
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label">مصاريف الطبية</label>
-                                            <input type="text" class="form-control" name="medical_expenses[]"
-                                                placeholder="">
-                                        </div>
-                                    </div>
+
                                 </div>
 
                                 <div class="row">
@@ -545,7 +546,8 @@
 
                         <div class="card-header">
                             <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">
-                                ممتلكات المتقدم</h2>
+
+                                ممتلكات المتقدم وقرار اللجنة </h2>
 
                         </div>
 

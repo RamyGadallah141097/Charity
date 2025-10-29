@@ -39,6 +39,7 @@
                                     <th class="min-w-50px"> اسم المقترض</th>
                                     <th class="min-w-125px"> رقم الهاتف</th>
                                     <th class="min-w-125px">مبلغ القرض </th>
+                                    <th class="min-w-125px"> المبلغ المتبقى من القرض </th>
                                     <th class="min-w-125px"> تاريخ القرض </th>
                                     <th class="min-w-50px rounded-end">العمليات</th>
                                 </tr>
@@ -121,6 +122,10 @@
             {
                 data: 'loan_amount',
                 name: 'loan_amount'
+            },
+            {
+                data: 'still_amount',
+                name: 'still_amount'
             },
             {
                 data: 'loan_date',

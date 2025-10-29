@@ -40,6 +40,18 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">تخصيص الاعانات ل قائمة المقبولين</h3>
+                    <form id="searchByDate">
+                        @csrf
+                        <div class="input-group">
+                            <label class="input-group-text">من تاريخ</label>
+                            <input style="margin-left:20px" type="date" name="from" class="form-control "
+                                placeholder="من تاريخ">
+                            <label class="input-group-text">الى تاريخ</label>
+                            <input style="margin-left:20px" type="date" name="to" class="form-control"
+                                placeholder="الى تاريخ">
+                            <button type="submit" class="btn btn-primary">بحث</button>
+                        </div>
+                    </form>
                     <div class="">
                         <a href="{{ route('showSubventions') }}" title="طباعة" class="btn btn-success btn-icon text-white">
                             طباعة
@@ -176,5 +188,19 @@
         // Add Using Ajax
         showEditModal('{{ route('subventions.edit', ':id') }}');
         editScript();
+    </script>
+    <script>
+        $(document).ready(function() {
+            var table = $('#dataTable').DataTable();
+
+            $('#searchByDate').on('submit', function(e) {
+                e.preventDefault();
+
+                let from = $('input[name="from"]').val();
+                let to = $('input[name="to"]').val();
+
+                table.ajax.url("{{ route('subventions.index') }}" + "?from=" + from + "&to=" + to).load();
+            });
+        });
     </script>
 @endsection

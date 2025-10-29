@@ -249,15 +249,21 @@
                                     value="{{ old('association', $user->association) }}" name="association"
                                     placeholder="">
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <label class="form-label">طعام</label>
                                 <input type="number" class="form-control expense-input"
                                     value="{{ old('food', $user->food) }}" name="food" placeholder="">
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <label class="form-label">دراسة</label>
                                 <input type="number" class="form-control expense-input"
                                     value="{{ old('study', $user->study) }}" name="study" placeholder="">
+                            </div>
+                            <div class="col-md-2 ">
+                                <label class="form-label"> مصاريف العلاج</label>
+                                <input type="text" class="form-control"
+                                    value="{{ old('medical_expenses', $user->medical_expenses) }}"
+                                    name="medical_expenses" placeholder="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">إجمالى النفقات</label>
@@ -447,14 +453,7 @@
                                                 name="doctor_name[]" placeholder="">
                                         </div>
                                     </div>
-                                    <div class="col-md-4 col-12">
-                                        <div class="form-group">
-                                            <label class="form-label"> مصاريف العلاج</label>
-                                            <input type="text" class="form-control"
-                                                value="{{ old('medical_expenses.' . $index, $patient->medical_expenses) }}"
-                                                name="medical_expenses[]" placeholder="">
-                                        </div>
-                                    </div>
+
 
                                     <div class="col-md-3 col-12">
                                         <div class="form-group">
@@ -485,7 +484,7 @@
 
                         <div class="card-header">
                             <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">
-                                ممتلكات المتقدم</h2>
+                                ممتلكات المتقدم وقرار اللجنة </h2>
 
                         </div>
 

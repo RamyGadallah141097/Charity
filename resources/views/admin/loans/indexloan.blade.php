@@ -31,7 +31,7 @@
                         </div>
 
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">تأكيد الدفع</button>
+                            <button type="submit" class="btn btn-primary" id="payment-btn">تأكيد الدفع</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">إغلاق</button>
                         </div>
                     </div>
@@ -109,140 +109,137 @@
     @section('ajaxCalls')
         <script>
             $(document).ready(function() {
-                    var borrowerId = "{{ $id }}";
+                var borrowerId = "{{ $id }}";
 
-                    // Initialize DataTable
-                    var table = $('#dataTable').DataTable({
-                        processing: true,
-                        serverSide: true,
-                        ajax: "{{ route('person.loans', ':id') }}".replace(':id', borrowerId),
-                        columns: [{
-                                data: null,
-                                name: 'index',
-                                render: function(data, type, row, meta) {
-                                    return meta.row + 1;
-                                },
-                                orderable: false,
-                                searchable: false
+                // Initialize DataTable
+                var table = $('#dataTable').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: "{{ route('person.loans', ':id') }}".replace(':id', borrowerId),
+                    columns: [{
+                            data: null,
+                            name: 'index',
+                            render: function(data, type, row, meta) {
+                                return meta.row + 1;
                             },
-                            {
-                                data: 'borrower_name',
-                                name: 'borrower_name'
-                            },
-                            {
-                                data: 'borrower_phone',
-                                name: 'borrower_phone'
-                            },
-                            {
-                                data: 'amount',
-                                name: 'amount'
-                            },
-                            {
-                                data: 'month',
-                                name: 'month'
-                            },
-                            {
-                                data: 'status',
-                                name: 'status'
-                            },
-                            {
-                                data: 'action',
-                                name: 'action',
-                                orderable: false,
-                                searchable: false
-                            }
-                        ],
-                        initComplete: function() {
-                            // Add horizontal scroll control after table initialization
-                            addHorizontalScrollControl();
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'borrower_name',
+                            name: 'borrower_name'
+                        },
+                        {
+                            data: 'borrower_phone',
+                            name: 'borrower_phone'
+                        },
+                        {
+                            data: 'amount',
+                            name: 'amount'
+                        },
+                        {
+                            data: 'month',
+                            name: 'month'
+                        },
+                        {
+                            data: 'status',
+                            name: 'status'
+                        },
+                        {
+                            data: 'action',
+                            name: 'action',
+                            orderable: false,
+                            searchable: false
                         }
-                    });
-
-                    // Add horizontal scroll control function
-                    function addHorizontalScrollControl() {
-                        const tableWrapper = document.querySelector(".dataTables_scrollBody");
-                        const table = document.querySelector("#dataTable");
-
-                        if (!tableWrapper || !table) return;
-
-                        const topScroll = document.createElement("div");
-                        topScroll.style.overflowX = "auto";
-                        topScroll.style.overflowY = "hidden";
-                        topScroll.style.height = "20px";
-                        topScroll.style.marginBottom = "5px";
-                        topScroll.style.width = "calc(100% + 500px)";
-                        topScroll.style.marginLeft = "-250px";
-                        topScroll.style.position = "relative";
-                        topScroll.style.left = "250px";
-                        topScroll.style.display = "none";
-
-                        const topInner = document.createElement("div");
-                        topInner.style.height = "1px";
-
-                        topScroll.appendChild(topInner);
-                        tableWrapper.parentNode.insertBefore(topScroll, tableWrapper);
-
-                        topScroll.addEventListener("scroll", function() {
-                            tableWrapper.scrollLeft = topScroll.scrollLeft;
-                        });
-
-                        tableWrapper.addEventListener("scroll", function() {
-                            topScroll.scrollLeft = tableWrapper.scrollLeft;
-                        });
-
-                        function adjustTopScroll() {
-                            const scrollWidth = table.scrollWidth;
-                            const clientWidth = tableWrapper.clientWidth;
-
-                            if (scrollWidth > clientWidth) {
-                                topInner.style.width = scrollWidth + "px";
-                                topScroll.style.display = "block";
-                                
-                                // Adjust scroll position to stay centered
-                                const extraSpace = 500;
-                                const maxScroll = scrollWidth - clientWidth;
-                                const scrollRatio = tableWrapper.scrollLeft / maxScroll;
-                                const newMaxScroll = scrollWidth - (clientWidth + extraSpace);
-                                topScroll.scrollLeft = scrollRatio * newMaxScroll;
-                            } else {
-                                topScroll.style.display = "none";
-                            }
-                        }
-
-                        setTimeout(adjustTopScroll, 200);
-                        $(window).on('resize', adjustTopScroll);
-                        
-                        // Adjust scroll when table is redrawn
-                        table.on('draw', adjustTopScroll);
+                    ],
+                    initComplete: function() {
+                        // Add horizontal scroll control after table initialization
+                        addHorizontalScrollControl();
                     }
-
-                    // Loan button click handler
-                    $(document).on('click', '.loan-btn', function() {
-                        let loanId = $(this).data('id');
-
-                        if (confirm("هل أنت متأكد من صرف هذا القرض؟")) {
-                            $.ajax({
-                                url: "{{ route('loan.checkout', ':id') }}".replace(':id', loanId),
-                                type: 'get',
-                                data: {
-                                    _token: '{{ csrf_token() }}'
-                                },
-                                success: function(response) {
-                                    window.location.reload();
-                                    alert(response.message);
-                                    table.ajax.reload();
-                                },
-                                error: function(response) {
-                                    alert(response.message);
-                                    alert(response.responseJSON.error);
-                                }
-                            });
-                        }
-                    });
                 });
 
-               
+                // Add horizontal scroll control function
+                function addHorizontalScrollControl() {
+                    const tableWrapper = document.querySelector(".dataTables_scrollBody");
+                    const table = document.querySelector("#dataTable");
 
+                    if (!tableWrapper || !table) return;
+
+                    const topScroll = document.createElement("div");
+                    topScroll.style.overflowX = "auto";
+                    topScroll.style.overflowY = "hidden";
+                    topScroll.style.height = "20px";
+                    topScroll.style.marginBottom = "5px";
+                    topScroll.style.width = "calc(100% + 500px)";
+                    topScroll.style.marginLeft = "-250px";
+                    topScroll.style.position = "relative";
+                    topScroll.style.left = "250px";
+                    topScroll.style.display = "none";
+
+                    const topInner = document.createElement("div");
+                    topInner.style.height = "1px";
+
+                    topScroll.appendChild(topInner);
+                    tableWrapper.parentNode.insertBefore(topScroll, tableWrapper);
+
+                    topScroll.addEventListener("scroll", function() {
+                        tableWrapper.scrollLeft = topScroll.scrollLeft;
+                    });
+
+                    tableWrapper.addEventListener("scroll", function() {
+                        topScroll.scrollLeft = tableWrapper.scrollLeft;
+                    });
+
+                    function adjustTopScroll() {
+                        const scrollWidth = table.scrollWidth;
+                        const clientWidth = tableWrapper.clientWidth;
+
+                        if (scrollWidth > clientWidth) {
+                            topInner.style.width = scrollWidth + "px";
+                            topScroll.style.display = "block";
+
+                            // Adjust scroll position to stay centered
+                            const extraSpace = 500;
+                            const maxScroll = scrollWidth - clientWidth;
+                            const scrollRatio = tableWrapper.scrollLeft / maxScroll;
+                            const newMaxScroll = scrollWidth - (clientWidth + extraSpace);
+                            topScroll.scrollLeft = scrollRatio * newMaxScroll;
+                        } else {
+                            topScroll.style.display = "none";
+                        }
+                    }
+
+                    setTimeout(adjustTopScroll, 200);
+                    $(window).on('resize', adjustTopScroll);
+
+                    // Adjust scroll when table is redrawn
+                    table.on('draw', adjustTopScroll);
+                }
+
+                // Loan button click handler
+                $(document).on('click', '.loan-btn', function() {
+                    let loanId = $(this).data('id');
+
+                    if (confirm("هل أنت متأكد من صرف هذا القرض؟")) {
+                        $.ajax({
+                            url: "{{ route('loan.checkout', ':id') }}".replace(':id', loanId),
+                            type: 'get',
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                window.location.reload();
+                                alert(response.message);
+                                table.ajax.reload();
+                            },
+                            error: function(response) {
+                                alert(response.message);
+                                alert(response.responseJSON.error);
+                            }
+                        });
+                    }
+                });
+            });
         </script>
 
         <script>
@@ -250,6 +247,7 @@
                 let loanId = $(this).data('id');
                 let payStatus = $(this).data('status');
                 let amount = $(this).data('amount');
+
 
                 if (payStatus == 0) {
                     $('#modal-loan-id').val(loanId);
@@ -260,6 +258,7 @@
 
             $('#payForm').submit(function(e) {
                 e.preventDefault();
+                $("#payment-btn").prop('disabled', true); // Disable button temporarily
 
                 let loanId = $('#modal-loan-id').val();
                 let amount = $('#pay-amount').val();
@@ -272,12 +271,15 @@
                         amount: amount
                     },
                     success: function(response) {
+                        $("#payment-btn").prop('disabled', false); // Disable button temporarily
+
                         $('#payModal').modal('hide');
-                        alert(response.message);
                         window.location.reload();
                     },
                     error: function(response) {
                         alert(response.responseJSON.error || "حدث خطأ أثناء الدفع");
+                        $("#payment-btn").prop('disabled', false); // Disable button temporarily
+
                     }
                 });
             });

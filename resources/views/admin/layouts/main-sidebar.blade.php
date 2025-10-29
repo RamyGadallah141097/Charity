@@ -66,7 +66,7 @@
                     <a class="dropdown-item-text side-menu__item {{ request()->is('users/index/accepted') ? 'active' : '' }}"
                         href="{{ route('users.index', 'accepted') }}">
                         <i class="fe fe-user-check side-menu__icon"></i>
-                        <span class="side-menu__label"> المقبولين قائمة</span>
+                        <span class="side-menu__label"> قائمة المقبولين</span>
                     </a>
                 </li>
 
@@ -203,7 +203,7 @@
 
                 <ul class="collapse {{ request()->routeIs('indexLoansDonations') || request()->routeIs('borrowers.index') || request()->routeIs('index.Loans') ? 'show' : '' }}"
                     id="GoodLoansDropdown">
-                   
+
                     <li>
                         <a class="dropdown-item-text side-menu__item {{ request()->routeIs('borrowers.index') ? 'active' : '' }}"
                             href="{{ route('borrowers.index') }}">
@@ -223,10 +223,7 @@
             @endif
         @endif
 
-
         {{--    القروض الحسنة   --}}
-
-
 
         {{--     الزكاة والصدقات   --}}
         @if (auth()->check() && auth()->user()->can('zakat.index'))

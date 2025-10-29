@@ -155,6 +155,7 @@
                         <th class="min-w-25px">منظمة </th>
                         <th class="min-w-25px">طعام </th>
                         <th class="min-w-25px">دراسة</th>
+                        <th class="min-w-25px">المصاريف الطبية</th>
                         <th class="min-w-25px">اجمالى النفقات </th>
                     </tr>
                 </thead>
@@ -169,6 +170,7 @@
                         <td>{{ $user->association }}</td>
                         <td>{{ $user->food }}</td>
                         <td>{{ $user->study }}</td>
+                        <td>{{ $user->medical_expenses }}</td>
                         <td>{{ $user->gross_expenses }}</td>
 
                     </tr>
@@ -266,7 +268,7 @@
 
             <div class="card-header">
                 <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">
-                    ممتلكات المتقدم</h2>
+                    ممتلكات المتقدم وقرار اللجنة </h2>
             </div>
 
             <textarea rows="5" class="form-control" name="Case_evaluation" id="Case_evaluation" readonly disabled>{{ old('Case_evaluation', $user->Case_evaluation) }}</textarea>

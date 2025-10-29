@@ -13,20 +13,25 @@ use Yajra\DataTables\DataTables;
 use App\Models\Borrower;
 use App\Models\Loan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class loansController extends Controller
 {
     public function indexLoans(Request $request)
     {
         if ($request->ajax()) {
-            $loans = Loan::latest()->get();
+            $loans = Loan::whereHas('personal_loan', function ($q) {
+                $q->where('status', 0);
+            })->latest()->get();
+
+
             return Datatables::of($loans)
                 ->addColumn('action', function ($loans) {
                     return '
                             <a href="' . route("person.loans", $loans->id) . '" class="btn btn-pill btn-secondary-light"
                                     data-id="' . $loans->id . '"
                                     >
-                                     القروض
+                                     الاقساط
                                     <i class="fas fa-money-check-alt"></i>
                             </a>
                        ';
@@ -37,14 +42,16 @@ class loansController extends Controller
                 ->editColumn('borrower_phone', function ($loans) {
                     $phone = $loans->borrower->phone;
                     return '<a href="tel:' . $phone . '">' . $phone . '</a>';
-
+                })->addColumn('still_amount', function ($loans) {
+                    $still_amount = PersonalLoan::where('borrower_id', $loans->borrower_id)->where('loan_id', $loans->id)->where('status', 0)->sum('amount');
+                    return $still_amount;
                 })
-              
+
                 ->escapeColumns([])
                 ->make(true);
         } else {
             $setting = Setting::first();
-            return view('admin/loans/index' , compact("setting"));
+            return view('admin/loans/index', compact("setting"));
         }
     }
 
@@ -52,29 +59,28 @@ class loansController extends Controller
 
     public function createLoans()
     {
-//        $borrowers = Borrower::all();
-//        foreach ($borrowers as $borrower) {
-//            if($borrower->loans()->count() > 0){
-//                $borrowers = $borrowers->except($borrower->id);
-//            }
-//        }
-//        solve error
+        //        $borrowers = Borrower::all();
+        //        foreach ($borrowers as $borrower) {
+        //            if($borrower->loans()->count() > 0){
+        //                $borrowers = $borrowers->except($borrower->id);
+        //            }
+        //        }
+        //        solve error
         $borrowers = Borrower::get();
         return view('admin/loans/parts/create', ["borrowers" => $borrowers]);
     }
 
     public function searchBorrowers(Request $request)
     {
-        
+
         try {
 
-            
+
             $borrowers = Borrower::where('id', $request->input("borrower_id"))
                 // ->doesntHave('loans')
                 ->get();
-            
-            return response()->json($borrowers);
 
+            return response()->json($borrowers);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -91,7 +97,7 @@ class loansController extends Controller
 
     public function storeLoans(LoanRequest $request)
     {
-        if ((LockerLog::where("moneyType", LockerLog::moneyTypeLoans)->where("type" , LockerLog::TYPE_PLUS)->sum("amount")) - (LockerLog::where("moneyType", LockerLog::moneyTypeLoans)->where("type" , LockerLog::TYPE_MINUS)->sum("amount")) >= $request->loan_amount ) {
+        if ((LockerLog::where("moneyType", LockerLog::moneyTypeLoans)->where("type", LockerLog::TYPE_PLUS)->sum("amount")) - (LockerLog::where("moneyType", LockerLog::moneyTypeLoans)->where("type", LockerLog::TYPE_MINUS)->sum("amount")) >= $request->loan_amount) {
             try {
                 $data = $request->all();
 
@@ -124,7 +130,7 @@ class loansController extends Controller
                         "comment" => "قرض جديد الي " . ($borrower ? $borrower->name : "مجهول") .
                             " ورقم هاتفه " . ($borrower ? $borrower->phone : "غير متوفر"),
                     ]);
-                }else{
+                } else {
 
                     $amount = $request->loan_amount / 10;
                     $loan = Loan::create($data);
@@ -138,7 +144,6 @@ class loansController extends Controller
                             "status" => 0
                         ]);
                     }
-
                 }
 
 
@@ -157,6 +162,7 @@ class loansController extends Controller
 
     public function personLoans(Request $request, $id)
     {
+
         if ($request->ajax()) {
             $loans = PersonalLoan::where('loan_id', $id)->get();
 
@@ -176,14 +182,14 @@ class loansController extends Controller
                 })
                 ->addColumn('action', function ($loan) {
                     $loan->status == 1 ?
-                    $button  =  '
-                    <button class="btn btn-success "  data-id="' . $loan->id . '"  data-amount="' . $loan->amount . '"  data-status="'.$loan->status.'">
+                        $button  =  '
+                    <button class="btn btn-success "  data-id="' . $loan->id . '"  data-amount="' . $loan->amount . '"  data-status="' . $loan->status . '">
                         مدفوع <i class="fas fa-money-check-alt"></i>
                     </button>
                     '
-                    :
-                    $button = 
-                     '<button class="btn btn-warning pay-btn" data-id="' . $loan->id . '"  data-amount="' . $loan->amount . '"  data-status="'.$loan->status.'">
+                        :
+                        $button =
+                        '<button class="btn btn-warning pay-btn" data-id="' . $loan->id . '"  data-amount="' . $loan->amount . '"  data-status="' . $loan->status . '">
                         دفع <i class="fas fa-money-check-alt"></i>
                     </button>
                     ';
@@ -198,17 +204,16 @@ class loansController extends Controller
         $pay = Loan::where('id', $id)->value('type');
 
         return view('admin.loans.indexloan', compact('id', 'totalIn', 'totalOut', 'total', 'pay'));
-
     }
 
 
 
     public function checkout($id)
     {
-    
+
         try {
             $loan = Loan::find($id);
-            if (LockerLog::where("moneyType" , LockerLog::moneyTypeLoans)->sum("amount") >= $loan->loan_amount){
+            if (LockerLog::where("moneyType", LockerLog::moneyTypeLoans)->sum("amount") >= $loan->loan_amount) {
                 $borrower = $loan->borrower;
                 LockerLog::create([
                     "moneyType" => LockerLog::moneyTypeLoans,
@@ -224,112 +229,109 @@ class loansController extends Controller
                 $loan->isStarted = now()->format('Y-m-d');
                 $loan->type = 0;
                 $loan->save();
-                return response()->json(['status' => 200 , "message" => "تم بنجاح"]);
+                return response()->json(['status' => 200, "message" => "تم بنجاح"]);
             }
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    public function payLoan( Request $request , $id)
+    public function payLoan(Request $request, $id)
     {
         //get the loan
         // dd($id);
-        try {
-            DB::beginTransaction();
+        $lock = Cache::lock('payment', 5); // 5 ثواني
+        DB::beginTransaction();
 
-            $loan = PersonalLoan::find($id);
-            $borrower = $loan->borrower;
-            $amount = $request->amount;
-            $totalLoan = PersonalLoan::where("loan_id" , $loan->loan_id)->where("status" , 0)->sum("amount"); 
-            //check if loan exist
-            if (!$loan) {
-                return response()->json(['error' => 'القرض غير موجود'], 404);
-            }
-//        check if amount smaller than all loan amount
-            if ($amount > $totalLoan){ // check the pay amount is smaller than amount must pay
-                return response()->json(['error' => 'القيمه المدفوعه اكبر من القيمه الاقساط المتبقيه'], 404);
-            }else{
+        if ($lock->get()) {
+            try {
 
-                if ($amount > $loan->amount){  // if he rich and pay more
-                    $loan->status = 1;
-                    $loan->save();
-                    $amount = $amount - $loan->amount;
-                    while ($amount > 0) {
-                        $personal_loan = PersonalLoan::where("loan_id", $loan->loan_id)->where("status", 0)->latest()->first();
-                        if ($personal_loan) {
-                            if ($amount == $personal_loan->amount) {
-                                $personal_loan->status = 1;
-                                $personal_loan->save();
-                                $amount = 0;
-                            } elseif ($personal_loan->amount > $amount) {
-                                $personal_loan->amount = $personal_loan->amount - $amount;
-                                $personal_loan->save();
-                                $amount = 0;
-                            } else {
-                                $personal_loan->status = 1;
-                                $amount = $amount - $personal_loan->amount;
-                                $personal_loan->save();
-                            }
+                $loan = PersonalLoan::find($id);
+                $borrower = $loan->borrower;
+                $amount = $request->amount;
+                $totalLoan = PersonalLoan::where("loan_id", $loan->loan_id)->where("status", 0)->sum("amount");
 
-                        }
-                    }
-                }elseif ($amount < $loan->amount){
-                    $loan->status = 1;
-                    $amount = $loan->amount - $amount;
-                    $loan->amount = $loan->amount -  $amount;
-                    $loan->save();
-                    PersonalLoan::create([
-                        "loan_id" => $loan->loan->id,
-                        "borrower_id" => $loan->borrower_id,
-                        "amount" => $amount,
-                        "month" => \Carbon\Carbon::parse($loan->month)
-                            ->addMonths($loan->loan->month)
-                            ->format("Y-m-d"),
-                        "status" => 0
-
-                    ]);
-                }else{
-                    $loan->status = 1;
-                    $loan->save();
+                //check if loan exist
+                if (!$loan) {
+                    return response()->json(['error' => 'القرض غير موجود'], 404);
                 }
 
+                //check if amount smaller than all loan amount
+                if ($amount > $totalLoan) { // check the pay amount is smaller than amount must pay
+                    return response()->json(['error' => 'القيمه المدفوعه اكبر من القيمه الاقساط المتبقيه'], 404);
+                } else {
 
-                // LockerLog::create([
-                //     "moneyType" => LockerLog::moneyTypeLoans,
-                //     "amount" => $request->amount,
-                //     "type" => LockerLog::TYPE_PLUS,
-                //     "admin_id" => auth()->id(),
-                //     "donation_id" => null,
-                //     "subvention_id" => null,
-                //     "loan_id" => $loan->id,
-                //     "comment" => "  دفع قرض من  " . ($loan->borrower->name ??  "مجهول") .
-                //         " ورقم هاتفه " . ($loan->borrower->phone   ?? "غير متوفر"),
-                // ]);
+                    if ($amount > $loan->amount) {  // if he rich and pay more
+                        $loan->status = 1;
+                        $loan->save();
+                        $amount = $amount - $loan->amount;
+                        while ($amount > 0) {
+                            $personal_loan = PersonalLoan::where("loan_id", $loan->loan_id)->where("status", 0)->latest()->first();
+                            if ($personal_loan) {
+                                if ($amount == $personal_loan->amount) {
+                                    $personal_loan->status = 1;
+                                    $personal_loan->save();
+                                    $amount = 0;
+                                } elseif ($personal_loan->amount > $amount) {
+                                    $personal_loan->amount = $personal_loan->amount - $amount;
+                                    $personal_loan->save();
+                                    $amount = 0;
+                                } else {
+                                    $personal_loan->status = 1;
+                                    $amount = $amount - $personal_loan->amount;
+                                    $personal_loan->save();
+                                }
+                            }
+                        }
+                    } elseif ($amount < $loan->amount) {
+                        $loan->status = 1;
+                        $amount = $loan->amount - $amount;
+                        $loan->amount = $loan->amount -  $amount;
+                        $loan->save();
+                        PersonalLoan::create([
+                            "loan_id" => $loan->loan->id,
+                            "borrower_id" => $loan->borrower_id,
+                            "amount" => $amount,
+                            "month" => \Carbon\Carbon::parse($loan->month)
+                                ->addMonths($loan->loan->month)
+                                ->format("Y-m-d"),
+                            "status" => 0
+
+                        ]);
+                    } else {
+                        $loan->status = 1;
+                        $loan->save();
+                    }
+
+                    LockerLog::create([
+                        "moneyType" => LockerLog::moneyTypeLoans,
+                        "amount" => $request->amount,
+                        "type" => LockerLog::TYPE_PLUS,
+                        "admin_id" => auth()->id(),
+                        "donation_id" => null,
+                        "subvention_id" => null,
+                        "loan_id" => $loan->loan_id,
+                        "comment" => "  دفع قرض من  " . ($borrower->name ??  "مجهول") .
+                            " ورقم هاتفه " . ($borrower->phone   ?? "غير متوفر"),
+                    ]);
+                }
+
+                DB::commit();
+                return response()->json(['message' => 'تم دفع القرض بنجاح']);
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return response()->json(['error' => $e->getMessage()], 500);
+            } finally {
+                $lock->release(); // ✅ تم إضافة تحرير القفل هنا
             }
-
-            LockerLog::create([
-                "moneyType" => LockerLog::moneyTypeLoans,
-                "amount" => $request->amount,
-                "type" => LockerLog::TYPE_PLUS,
-                "admin_id" => auth()->id(),
-                "donation_id" => null,
-                "subvention_id" => null,
-                "loan_id" => $loan->loan_id,
-                "comment" => "  دفع قرض من  " . ($borrower->name ??  "مجهول") .
-                    " ورقم هاتفه " . ($borrower->phone   ?? "غير متوفر"),
-            ]);
-
-            DB::commit();
-            return response()->json(['message' => 'تم دفع القرض بنجاح']);
-        }catch (\Exception $e){
-            DB::rollBack();
-            return response()->json(['error' => $e->getMessage()], 500);
+        } else {
+            return response()->json(['error' => 'Please wait before retrying.'], 429);
         }
     }
+
 
     public function printLoan()
     {
         $loans = Loan::all();
-        return view('admin/print/printLoan',compact('loans'));
+        return view('admin/print/printLoan', compact('loans'));
     }
 }

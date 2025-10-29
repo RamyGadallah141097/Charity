@@ -20,7 +20,7 @@ class UserController extends Controller
 {
     public function index(Request $request, $status)
     {
-            
+
 
         if ($request->ajax()) {
 
@@ -308,6 +308,7 @@ class UserController extends Controller
             'association' => @$request->association,
             'food' => @$request->food,
             'study' => @$request->study,
+            'medical_expenses' => @$request->medical_expenses,
             'gross_expenses' => @$request->gross_expenses,
             'standard_living' => @$request->standard_living,
             'Case_evaluation' => @$request->Case_evaluation,
@@ -340,7 +341,6 @@ class UserController extends Controller
                     'type' => $request->type[$index] ?? null,
                     'doctor_name' => $request->doctor_name[$index] ?? null,
                     'is_insurance' => $request->has('is_insurance') ? '1' : '0',
-                    'medical_expenses' => $request->medical_expenses[$index] ?? null,
                     'notes' => $request->notes[$index] ?? null,
                 ]);
             }
@@ -410,6 +410,7 @@ class UserController extends Controller
                 'association' => $request['association'] ?? 0,
                 'food' => $request['food'] ?? 0,
                 'study' => $request['study'] ?? 0,
+                'medical_expenses' => $request->medical_expenses ?? 0,
                 'gross_expenses' => $request->gross_expenses ?? 0,
                 'standard_living' => $request->standard_living ?? 0,
                 'Case_evaluation' => $request['Case_evaluation'] ?? null
@@ -446,7 +447,6 @@ class UserController extends Controller
                             'type' => $request['type'][$index] ?? 1,
                             'doctor_name' => $request['doctor_name'][$index] ?? null,
                             'is_insurance' => isset($request['is_insurance'][$index]) ? 1 : 0,
-                            'medical_expenses' => $request['medical_expenses'][$index] ?? 0
                         ]);
                     }
                 }

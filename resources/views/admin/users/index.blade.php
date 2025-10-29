@@ -27,7 +27,6 @@
                     </div>
 
                     <div class="col-2">
-                        {{-- <label for="standard_living">الحالة المعيشيه</label> --}}
                         <input id="standard_living" type="number" class="form-control" placeholder="مستوى المعيشة "
                             name="standard_living">
                     </div>
@@ -106,7 +105,7 @@
                             اغلاق
                         </button>
                         <button type="button" class="btn btn-danger" id="delete_btn">حذف !</button>
-                    </div>  
+                    </div>
                 </form>
             </div>
         </div>
@@ -269,7 +268,7 @@
             event.preventDefault();
             var id = $(this).data("id"),
                 status = $(this).data("status");
-                
+
             $.ajax({
                 type: 'POST',
                 url: "{{ route('updateUserStatus') }}",

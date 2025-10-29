@@ -10,48 +10,65 @@
 @section('content')
     <div class="row">
         <div class="col-md-12 col-lg-12">
-            @if ($total)
-                <div class="card-body w-100">
-                    <div class="row w-100"> <!-- Ensuring full width -->
-                        <div class="col-12"> <!-- Making it take full width -->
-                            <div class="card bg-secondary img-card box-secondary-shadow">
-                                <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
-                                    <span class="text-white fs-30">المتوفر في خزنة {{ $title }} </span>
-                                    <span class="text-white fs-30"> {{ number_format($total, 0) }} EGP</span>
-                                    <!-- Changed dollar icon to EGP -->
-                                </div>
-                                <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
-                                    <span class="text-white fs-30"> مجموع الداخل </span>
-                                    <span class="text-white fs-30"> {{ number_format($totalPlus, 0) }} EGP <i
-                                            class='fas fa-arrow-down'
-                                            style='color: #63E6BE; font-size: 30px ;transform: rotate(45deg); margin-right: 20px;'></i></span>
-                                    <!-- Changed dollar icon to EGP -->
-                                </div>
-                                <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
-                                    <span class="text-white fs-30"> مجموع الخارج </span>
-                                    <span class="text-white fs-30"> {{ number_format($totalMinus, 0) }} EGP <i
-                                            class='fas fa-arrow-up'
-                                            style='color: #e42f2f; font-size: 30px ; transform: rotate(45deg);margin-right: 20px;'></i></span>
-                                    <!-- Changed dollar icon to EGP -->
-                                </div>
+            <form id="searchByDate">
+                @csrf
+                <div class="input-group">
+                    <label class="input-group-text">من تاريخ</label>
+                    <input style="margin-left:20px" type="date" name="from" class="form-control " placeholder="من تاريخ">
+                    <label class="input-group-text">الى تاريخ</label>
+                    <input style="margin-left:20px" type="date" name="to" class="form-control"
+                        placeholder="الى تاريخ">
+                    <button type="submit" class="btn btn-primary">بحث</button>
+                </div>
+            </form>
 
-                                <div class="card-body">
-                                    <div class="row text-white">
-                                        <div class="col-4 text-end"> <!-- Added text-end for right alignment -->
-                                        </div>
+            <label for="type">العمليات </label>
+            <select name="type" id="type" class="form-control mt-3">
+                <option value="all">الكل</option>
+                <option value="plus">داخل</option>
+                <option value="minus">خارج</option>
+            </select>
+
+
+            <div class="card-body w-100">
+                <div class="row w-100">
+                    <!-- Ensuring full width -->
+                    <div class="col-12"> <!-- Making it take full width -->
+                        <div class="card bg-secondary img-card box-secondary-shadow">
+                            <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
+                                <span class="text-white fs-30">المتوفر في خزنة {{ $title }} </span>
+                                <span class="text-white fs-30"> {{ number_format($total, 0) }} EGP</span>
+                                <!-- Changed dollar icon to EGP -->
+                            </div>
+                            <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
+                                <span class="text-white fs-30"> مجموع الداخل </span>
+                                <span class="text-white fs-30"> {{ number_format($totalPlus, 0) }} EGP <i
+                                        class='fas fa-arrow-down'
+                                        style='color: #63E6BE; font-size: 30px ;transform: rotate(45deg); margin-right: 20px;'></i></span>
+                                <!-- Changed dollar icon to EGP -->
+                            </div>
+                            <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
+                                <span class="text-white fs-30"> مجموع الخارج </span>
+                                <span class="text-white fs-30"> {{ number_format($totalMinus, 0) }} EGP <i
+                                        class='fas fa-arrow-up'
+                                        style='color: #e42f2f; font-size: 30px ; transform: rotate(45deg);margin-right: 20px;'></i></span>
+                                <!-- Changed dollar icon to EGP -->
+                            </div>
+
+                            <div class="card-body">
+                                <div class="row text-white">
+                                    <div class="col-4 text-end"> <!-- Added text-end for right alignment -->
                                     </div>
                                 </div>
                             </div>
-                        </div><!-- COL END -->
-                    </div><!-- ROW END -->
-                </div>
-            @endif
+                        </div>
+                    </div><!-- COL END -->
+                </div><!-- ROW END -->
+            </div>
+
             <div class="card">
                 <div class="card-header row">
                     <h3 class="card-title"> {{ $title }} </h3>
-
-
-
 
                 </div>
                 <div class="card-body">
@@ -124,37 +141,61 @@
     @include('admin/layouts/myAjaxHelper')
 @endsection
 @section('ajaxCalls')
+
     <script>
-        let model = "{{ $model ?? '' }}";
-        let dataTableUrl = "{{ route('lock', '') }}" + '/' + model;
+        $(document).ready(function() {
 
-        var columns = [{
-                data: null,
-                name: 'index',
-                render: function(data, type, row, meta) {
-                    return meta.row + 1;
+            let model = "{{ $model ?? '' }}";
+            let dataTableUrl = "{{ route('lock', '') }}" + '/' + model;
+
+            var table = $('#dataTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: dataTableUrl,
+                    data: function(d) {
+                        d.from = $('input[name="from"]').val();
+                        d.to = $('input[name="to"]').val();
+                        d.type = $('#type').val();
+                    }
                 },
-                orderable: false,
-                searchable: false
-            },
-            {
-                data: 'admin_id',
-                name: 'admin_id'
-            },
-            {
-                data: 'amount',
-                name: 'amount'
-            },
-            {
-                data: 'comment',
-                name: 'comment'
-            },
-            {
-                data: 'created_at',
-                name: 'created_at'
-            },
-        ];
+                columns: [{
+                        data: null,
+                        name: 'index',
+                        render: function(data, type, row, meta) {
+                            return meta.row + 1;
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'admin_id',
+                        name: 'admin_id'
+                    },
+                    {
+                        data: 'amount',
+                        name: 'amount'
+                    },
+                    {
+                        data: 'comment',
+                        name: 'comment'
+                    },
+                    {
+                        data: 'created_at',
+                        name: 'created_at'
+                    },
+                ]
+            });
 
-        showData(dataTableUrl, columns);
+            $('#searchByDate').on('submit', function(e) {
+                e.preventDefault();
+                table.ajax.reload();
+            });
+
+            $('#type').on('change', function() {
+                table.ajax.reload();
+            });
+
+        });
     </script>
 @endsection

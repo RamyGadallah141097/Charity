@@ -16,76 +16,81 @@ use Yajra\DataTables\DataTables;
 
 class SubventionController extends Controller
 {
-    public function index(request $request)
+    public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Subvention::latest()->get();
-            return Datatables::of($data)
+
+            $data = Subvention::query();
+
+            if ($request->filled('from') && $request->filled('to')) {
+                $data->whereBetween('created_at', [
+                    $request->from . ' 00:00:00',
+                    $request->to . ' 23:59:59',
+                ]);
+            }
+
+            $data = $data->latest()->get();
+
+            return DataTables::of($data)
                 ->addColumn('action', function ($data) {
-                    $editButton = '';
-                    $deleteButton = '';
-
                     $editButton = '
-                            <button type="button" data-id="' . $data->id . '" class="btn btn-pill btn-info-light editBtn">
-                                <i class="fa fa-edit"></i>
-                            </button>
-                            <a href="' . route('showOneSubvention', $data->id) . '" title="طباعة" class="btn btn-success btn-icon btn-pill btn-success-light">
-                                    <i class="fa fa-print"></i>
-                               </a>
-
-                        ';
+                    <button type="button" data-id="' . $data->id . '" class="btn btn-pill btn-info-light editBtn">
+                        <i class="fa fa-edit"></i>
+                    </button>
+                    <a href="' . route('showOneSubvention', $data->id) . '" title="طباعة" class="btn btn-success btn-icon btn-pill btn-success-light">
+                        <i class="fa fa-print"></i>
+                    </a>
+                ';
 
                     $deleteButton = '
-                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
-                                    data-id="' . $data->id . '" data-title="' . ($data->user->name ?? "غير معروف") . '">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        ';
+                    <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                            data-id="' . $data->id . '" data-title="' . ($data->user->name ?? "غير معروف") . '">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                ';
 
-
-
-                    return '<div class="d-flex">' . $deleteButton   . '</div>';
+                    return '<div class="d-flex">' . $editButton . $deleteButton . '</div>';
                 })
-
                 ->editColumn('user_id', function ($data) {
-                    return ($data->user->wife_name) ?? 'تم حذفه';
+                    return $data->user->wife_name ?? 'تم حذفه';
                 })
                 ->editColumn('created_at', function ($data) {
-                    return $data->created_at->format('F d Y');
+                    return $data->created_at->format('d/m/Y');
                 })
                 ->editColumn('price', function ($data) {
                     if ($data->price == 0) {
                         return ' عدد : ' . $data->asset_count . ' من ' .
-                            ($data->asset ? ($data->asset->name ?? '-') . ' '  : '-');
+                            ($data->asset ? ($data->asset->name ?? '-') : '-');
                     } else {
                         return " مبلغ قدره : " . $data->price . " جنيه ";
                     }
-                    //
                 })
                 ->addColumn("Dtype", function ($data) {
-                    $lockerLogs = LockerLog::where("amount", $data->price)
+                    $lockerLog = LockerLog::where("amount", $data->price)
                         ->where("created_at", $data->created_at)
-                        ->where("type", LockerLog::TYPE_MINUS);
+                        ->where("type", LockerLog::TYPE_MINUS)
+                        ->first();
 
-                    $lockerLog = $lockerLogs->first();
                     $Dtype = $lockerLog ? $lockerLog->moneyType : 'عينيه';
-
-                    return $Dtype  == "sadaka" ? "صدقه" : ($Dtype == "zakat" ? "زكاة" : "عينيه");
+                    return $Dtype  == "sadaka" ? "صدقة" : ($Dtype == "zakat" ? "زكاة" : "عينية");
                 })
                 ->editColumn('type', function ($data) {
-                    if ($data->type == 'once')
-                        return 'مرة واحدة';
-                    else
-                        return 'إعانة شهرية';
+                    return $data->type == 'once' ? 'مرة واحدة' : 'إعانة شهرية';
                 })
                 ->escapeColumns([])
                 ->make(true);
-        } else {
-            $totoaSadaka = LockerLog::where("type", LockerLog::TYPE_MINUS)->where("moneyType", LockerLog::moneyTypeSadaka)->sum("amount");
-            $totalZakat = LockerLog::where("type", LockerLog::TYPE_MINUS)->where("moneyType", LockerLog::moneyTypeZakat)->sum("amount");
-            return view('admin/subventions/index', compact("totalZakat", "totoaSadaka"));
         }
+
+        $totoaSadaka = LockerLog::where("type", LockerLog::TYPE_MINUS)
+            ->where("moneyType", LockerLog::moneyTypeSadaka)
+            ->sum("amount");
+        $totalZakat = LockerLog::where("type", LockerLog::TYPE_MINUS)
+            ->where("moneyType", LockerLog::moneyTypeZakat)
+            ->sum("amount");
+
+        return view('admin/subventions/index', compact("totalZakat", "totoaSadaka"));
     }
+
 
 
 

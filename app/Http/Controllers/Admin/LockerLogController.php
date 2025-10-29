@@ -21,54 +21,52 @@ class LockerLogController extends Controller
 
     public function index(Request $request, $model = null)
     {
-        
-        if ($request->ajax()) {
-            $type = $model == 0 ? LockerLog::moneyTypeZakat : ($model == 1 ? LockerLog::moneyTypeSadaka : ($model == 2 ? LockerLog::moneyTypeLoans : ""));
-            $donations = LockerLog::where("moneyType", $type)->with("admin")->get();
 
-            if ($model == 3) {
-                return DataTables::of($donations)
-                    ->editColumn('admin_id', function ($donation) {
-                        return optional($donation->admin)->name ?? "غير متوفر";
-                    })
-                    ->editColumn('amount', function ($donation) {
-                        return $donation->type == LockerLog::TYPE_PLUS
-                            ? ' عدد : ' . $donation->asset_count . ' من ' . ($donation->asset ? ($donation->asset->name ?? '-') : '-') . "<i class='fas fa-arrow-down' style='color: #63E6BE; font-size: 30px ;transform: rotate(45deg); margin-right: 20px;'></i>"
-                            : ' عدد : ' . $donation->asset_count . ' من ' . ($donation->asset ? ($donation->asset->name ?? '-') : '-') . "<i class='fas fa-arrow-up' style='color: #e42f2f; font-size: 30px ; transform: rotate(45deg);margin-right: 20px;'></i>";
-                    })
-                    ->editColumn('comment', function ($donation) {
-                        $icon = $donation->type === LockerLog::TYPE_PLUS
-                            ? "<i class='fa-solid fa-circle-arrow-up' style='color: green;'></i>"
-                            : "<i class='fa-solid fa-circle-arrow-down' style='color: red;'></i>";
-                        return $donation->comment . " " . $icon;
-                    })
-                    ->editColumn('created_at', function ($donation) {
-                        return $donation->created_at ? $donation->created_at->format('d-m-Y') : 'غير متوفر';
-                    })
-                    ->escapeColumns([])
-                    ->make(true);
-            } else {
-                return DataTables::of($donations)
-                    ->addColumn('admin_id', function ($donation) {
-                        return optional($donation->admin)->name ?? "غير متوفر";
-                    })
-                    ->editColumn('amount', function ($donation) {
-                        return $donation->type == LockerLog::TYPE_PLUS
-                            ? $donation->amount . "<i class='fas fa-arrow-down' style='color: #63E6BE; font-size: 30px ;transform: rotate(45deg); margin-right: 20px;'></i>"
-                            : $donation->amount . "<i class='fas fa-arrow-up' style='color: #e42f2f; font-size: 30px ; transform: rotate(45deg);margin-right: 20px;'></i>";
-                    })
-                    ->editColumn('comment', function ($donation) {
-                        $icon = $donation->type === LockerLog::TYPE_PLUS
-                            ? "<i class='fa-solid fa-circle-arrow-up' style='color: green;'></i>"
-                            : "<i class='fa-solid fa-circle-arrow-down' style='color: red;'></i>";
-                        return $donation->comment . " " . $icon;
-                    })
-                    ->editColumn('created_at', function ($donation) {
-                        return $donation->created_at ? $donation->created_at->format('d-m-Y') : 'غير متوفر';
-                    })
-                    ->escapeColumns([])
-                    ->make(true);
+        if ($request->ajax()) {
+            $type = $model == 0 ? LockerLog::moneyTypeZakat
+                : ($model == 1 ? LockerLog::moneyTypeSadaka
+                    : ($model == 2 ? LockerLog::moneyTypeLoans
+                        : ""));
+
+            $donations = LockerLog::where("moneyType", $type)->with("admin");
+
+            if ($request->filled('from') && $request->filled('to')) {
+                $donations->whereBetween('created_at', [
+                    $request->from . ' 00:00:00',
+                    $request->to . ' 23:59:59'
+                ]);
             }
+
+            if ($request->filled('type') && $request->type != 'all') {
+                if ($request->type == 'plus') {
+                    $donations->where('type', LockerLog::TYPE_PLUS);
+                } elseif ($request->type == 'minus') {
+                    $donations->where('type', LockerLog::TYPE_MINUS);
+                }
+            }
+
+            $donations = $donations->latest()->get();
+
+            return DataTables::of($donations)
+                ->addColumn('admin_id', function ($donation) {
+                    return optional($donation->admin)->name ?? "غير متوفر";
+                })
+                ->editColumn('amount', function ($donation) {
+                    return $donation->type == LockerLog::TYPE_PLUS
+                        ? $donation->amount . "<i class='fas fa-arrow-down' style='color: #63E6BE; font-size: 30px ;transform: rotate(45deg); margin-right: 20px;'></i>"
+                        : $donation->amount . "<i class='fas fa-arrow-up' style='color: #e42f2f; font-size: 30px ; transform: rotate(45deg);margin-right: 20px;'></i>";
+                })
+                ->editColumn('comment', function ($donation) {
+                    $icon = $donation->type === LockerLog::TYPE_PLUS
+                        ? "<i class='fa-solid fa-circle-arrow-up' style='color: green;'></i>"
+                        : "<i class='fa-solid fa-circle-arrow-down' style='color: red;'></i>";
+                    return $donation->comment . " " . $icon;
+                })
+                ->editColumn('created_at', function ($donation) {
+                    return $donation->created_at ? $donation->created_at->format('d-m-Y') : 'غير متوفر';
+                })
+                ->escapeColumns([])
+                ->make(true);
         } else {
             $title = $model == 0 ? "زكاة" : ($model == 1 ? "صدقات" : ($model == 2 ? "قرض حسن " : "عينيات"));
             $type = $model == 0 ? LockerLog::moneyTypeZakat : ($model == 1 ? LockerLog::moneyTypeSadaka : ($model == 2 ? LockerLog::moneyTypeLoans : LockerLog::moneyTypeSubvention));
