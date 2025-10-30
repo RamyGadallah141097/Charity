@@ -100,19 +100,19 @@
                         @foreach ($chunk as $index => $Donations)
                             <tr class="text-center">
                                 <td>{{ $pageIndex * 10 + $loop->iteration }}</td>
-                                <td>{{ $Donations->donor->name }}</td>
-                                <td>{{ $Donations->donor->phone }}</td>
+                                <td>{{ @$Donations->donor->name }}</td>
+                                <td>{{ @$Donations->donor->phone }}</td>
                                 <td>{{ Carbon::parse($Donations->created_at)->format('Y-m-d') }}</td>
                                 <td>
-                                    @if ($Donations->donation_type == '0')
+                                    @if (@$Donations->donation_type == '0')
                                         زكاة مال
-                                    @elseif($Donations->donation_type == '1')
+                                    @elseif(@$Donations->donation_type == '1')
                                         صدقات
-                                    @elseif($Donations->donation_type == '2')
+                                    @elseif(@$Donations->donation_type == '2')
                                         قرض حسن
                                     @endif
                                 </td>
-                                <td>{{ $Donations->donation_amount }}</td>
+                                <td>{{ @$Donations->donation_amount }}</td>
                                 <td></td>
                             </tr>
                         @endforeach
