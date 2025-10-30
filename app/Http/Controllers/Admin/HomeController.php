@@ -42,7 +42,9 @@ class HomeController extends Controller
         $totalDonations    = Donation::all()->sum('donation_amount');
 
         //  loans
-        $totalLoans = Loan::count();
+        $totalLoans = Loan::whereHas('Personal_loan', function ($query) {
+            $query->where('status', '0');
+        })->count();
         $totalLoanOut     = Loan::all()->sum('loan_amount');
         $totalBorrowers     = Borrower::all()->count();
         $totalLoansDonations = Donation::where('donation_type', 2)->sum('donation_amount');

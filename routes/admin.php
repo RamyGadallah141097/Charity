@@ -41,6 +41,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('searchNID/{id?}', 'UserController@searchNID')->name('user.searchNID');
     Route::get('DonationDetails/{id}', 'UserController@DonationDetails')->name('DonationDetails');
 
+    #### print users ####
+    Route::get('PrintUsersNew', 'UserController@PrintUsersNew')->name('PrintUsersNew');
+    Route::get('PrintUsersAccepted', 'UserController@PrintUsersAccepted')->name('PrintUsersAccepted');
+    Route::get('PrintUsersPennding', 'UserController@PrintUsersPennding')->name('PrintUsersPennding');
+    Route::get('PrintUsersRefused', 'UserController@PrintUsersRefused')->name('PrintUsersRefused');
+
+
+
     //    الراوتس الخاصه بالمقترض
 
     Route::get('getGuarantor', 'BorrowerController@getGuarantor')->name('getGuarantor');
@@ -68,6 +76,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
         Route::get('/get_donor_phone/{id}', 'DonationController@get_donor_phone')->name("get_donor_phone");
         Route::get('/search-donor', 'DonationController@searchDonor')->name('search.donor');
         Route::get('donorDetails/{id}', 'DonorController@donorDetails')->name(name: 'donorDetails');
+
+        Route::get('PrintDonations', 'DonationController@PrintDonations')->name('PrintDonations');
     });
 
     #### Borrowers ####
@@ -145,8 +155,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     #### Setting ####
     Route::get('setting', 'SettingController@index')->name('setting.index')->middleware(['permission:setting.index', 'admin']);
     Route::post('settingUpdate', 'SettingController@update')->name('settingUpdate');
-
-
     Route::post('borrowerReviewModal', 'BorrowerController@storeReview')->name('BorrowerReview');
     #### Auth ####
     Route::get('logout', 'AuthController@logout')->name('admin.logout');

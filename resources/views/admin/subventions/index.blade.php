@@ -40,18 +40,7 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">تخصيص الاعانات ل قائمة المقبولين</h3>
-                    <form id="searchByDate">
-                        @csrf
-                        <div class="input-group">
-                            <label class="input-group-text">من تاريخ</label>
-                            <input style="margin-left:20px" type="date" name="from" class="form-control "
-                                placeholder="من تاريخ">
-                            <label class="input-group-text">الى تاريخ</label>
-                            <input style="margin-left:20px" type="date" name="to" class="form-control"
-                                placeholder="الى تاريخ">
-                            <button type="submit" class="btn btn-primary">بحث</button>
-                        </div>
-                    </form>
+
                     <div class="">
                         <a href="{{ route('showSubventions') }}" title="طباعة" class="btn btn-success btn-icon text-white">
                             طباعة
@@ -65,7 +54,20 @@
                         </button>
                     </div>
                 </div>
+
                 <div class="card-body">
+                    <form class="mb-5" id="searchByDate">
+                        @csrf
+                        <div class="input-group">
+                            <label class="input-group-text">من تاريخ</label>
+                            <input style="margin-left:20px" type="date" name="from" class="form-control "
+                                placeholder="من تاريخ">
+                            <label class="input-group-text">الى تاريخ</label>
+                            <input style="margin-left:20px" type="date" name="to" class="form-control"
+                                placeholder="الى تاريخ">
+                            <button type="submit" class="btn btn-primary">بحث</button>
+                        </div>
+                    </form>
                     <div class="table-responsive">
                         <!--begin::Table-->
                         <table class="table table-striped table-bordered text-nowrap w-100" id="dataTable">

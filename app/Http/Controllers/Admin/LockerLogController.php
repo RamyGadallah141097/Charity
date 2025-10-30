@@ -83,7 +83,7 @@ class LockerLogController extends Controller
 
 
 
-            return view('admin/lock/stdPage', compact('model', "title", "total", "totalMinus", "totalPlus"));
+            return view('admin/lock/stdPage', compact('model', 'total', "title", "totalMinus", "totalPlus"));
         }
     }
 

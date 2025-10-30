@@ -21,13 +21,15 @@
                     <button type="submit" class="btn btn-primary">بحث</button>
                 </div>
             </form>
+            <div class="w-50 mt-4">
 
-            <label for="type">العمليات </label>
-            <select name="type" id="type" class="form-control mt-3">
-                <option value="all">الكل</option>
-                <option value="plus">داخل</option>
-                <option value="minus">خارج</option>
-            </select>
+                <label for="type">العمليات </label>
+                <select name="type" id="type" class="form-control mt-2">
+                    <option value="all">الكل</option>
+                    <option value="plus">داخل</option>
+                    <option value="minus">خارج</option>
+                </select>
+            </div>
 
 
             <div class="card-body w-100">
@@ -141,7 +143,6 @@
     @include('admin/layouts/myAjaxHelper')
 @endsection
 @section('ajaxCalls')
-
     <script>
         $(document).ready(function() {
 

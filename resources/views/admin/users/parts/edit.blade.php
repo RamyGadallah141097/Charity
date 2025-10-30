@@ -520,13 +520,13 @@
 
                                 <div id="imageModal" class="modal">
                                     <span class="close" onclick="closeModal()">&times;</span>
-                                    <img class="modal-content" style="width: 1500px" id="modalImage">
+                                    <img class="modal-content" style="width: 500px; height: 500px;" id="modalImage">
                                 </div>
                             @endif
 
                             <div id="imageModal" class="modal">
                                 <span class="close" onclick="closeModal()">&times;</span>
-                                <img class="modal-content" style="width: 1500px" id="modalImage">
+                                <img class="modal-content" style="width: 500px; height: 500px;" id="modalImage">
                             </div>
 
 

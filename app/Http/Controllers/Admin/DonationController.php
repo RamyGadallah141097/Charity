@@ -199,4 +199,9 @@ class DonationController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    public function PrintDonations()
+    {
+        $Donations = Donation::get();
+        return view('admin/print/PrintDonations', compact('Donations'));
+    }
 }

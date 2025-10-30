@@ -14,6 +14,9 @@
                 <div class="card-header">
                     <h3 class="card-title"> قائمة تبرعات الصدقات والزكاة </h3>
                     <div class="">
+                        <a href="{{ route('PrintDonations') }}" class="btn btn-warning">
+                            <i class="fa fa-print"></i> طباعة المتبرعين
+                        </a>
                         <button class="btn btn-secondary btn-icon text-white addBtn">
                             <span>
                                 <i class="fe fe-plus"></i>

@@ -234,4 +234,6 @@ class DonorController extends Controller
         $donations = Donation::where("donor_id", $id)->get();
         return view('admin/donors/parts/details', compact('donor', 'donations'));
     }
+
+   
 }

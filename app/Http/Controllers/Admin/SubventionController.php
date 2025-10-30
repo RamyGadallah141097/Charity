@@ -36,11 +36,17 @@ class SubventionController extends Controller
                     $editButton = '
                     <button type="button" data-id="' . $data->id . '" class="btn btn-pill btn-info-light editBtn">
                         <i class="fa fa-edit"></i>
-                    </button>
-                    <a href="' . route('showOneSubvention', $data->id) . '" title="طباعة" class="btn btn-success btn-icon btn-pill btn-success-light">
-                        <i class="fa fa-print"></i>
-                    </a>
-                ';
+                    </button>';
+
+                    $printButton = '';
+                    if ($data->type == "once") {
+                        $printButton = '
+                <a href="' . route('showOneSubvention', $data->id) . '" title="طباعة"
+                   class="btn btn-success btn-icon btn-pill btn-success-light">
+                    <i class="fa fa-print"></i>
+                </a>
+            ';
+                    }
 
                     $deleteButton = '
                     <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
@@ -49,7 +55,7 @@ class SubventionController extends Controller
                     </button>
                 ';
 
-                    return '<div class="d-flex">' . $editButton . $deleteButton . '</div>';
+                    return '<div class="d-flex">' . $editButton . $deleteButton . $printButton . '</div>';
                 })
                 ->editColumn('user_id', function ($data) {
                     return $data->user->wife_name ?? 'تم حذفه';
@@ -342,6 +348,7 @@ class SubventionController extends Controller
     public function showOneSubvention($id)
     {
         // where('type','once')->
+
         $subventions = Subvention::where('id', $id)->latest()->first();
         return view('admin/print/invoices2', compact('subventions'));
     }

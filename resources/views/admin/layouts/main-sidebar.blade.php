@@ -52,10 +52,9 @@
                 </a>
             </p>
 
-            <ul class="collapse {{ request()->segment(1) === 'users' ? 'show' : '' }} {{ request()->routeIs('users.index') ? 'show ' : '' }}"
-                id="sersDropdown">
+            <ul class="collapse {{ request()->segment(1) === 'users' ? 'show' : '' }}" id="sersDropdown">
                 <li>
-                    <a class="dropdown-item-text side-menu__item {{ request()->is('users/index/new') ? 'active' : '' }}"
+                    <a class="dropdown-item-text side-menu__item {{ request()->route('status') == 'new' ? 'active' : '' }}"
                         href="{{ route('users.index', 'new') }}">
                         <i class="fas fa-user-plus" style="margin-left: 10px;"></i>
                         <span class="side-menu__label">المقيدين الجدد</span>
@@ -63,26 +62,26 @@
                 </li>
 
                 <li>
-                    <a class="dropdown-item-text side-menu__item {{ request()->is('users/index/accepted') ? 'active' : '' }}"
+                    <a class="dropdown-item-text side-menu__item {{ request()->route('status') == 'accepted' ? 'active' : '' }}"
                         href="{{ route('users.index', 'accepted') }}">
                         <i class="fe fe-user-check side-menu__icon"></i>
-                        <span class="side-menu__label"> قائمة المقبولين</span>
+                        <span class="side-menu__label">قائمة المقبولين</span>
                     </a>
                 </li>
 
                 <li>
-                    <a class="dropdown-item-text side-menu__item {{ request()->is('users/index/preparing') ? 'active' : '' }}"
+                    <a class="dropdown-item-text side-menu__item {{ request()->route('status') == 'preparing' ? 'active' : '' }}"
                         href="{{ route('users.index', 'preparing') }}">
                         <i class="fe fe-user side-menu__icon"></i>
-                        <span class="side-menu__label">قائمة الانتظار </span>
+                        <span class="side-menu__label">قائمة الانتظار</span>
                     </a>
                 </li>
 
                 <li>
-                    <a class="dropdown-item-text side-menu__item {{ request()->is('users/index/refused') ? 'active' : '' }}"
+                    <a class="dropdown-item-text side-menu__item {{ request()->route('status') == 'refused' ? 'active' : '' }}"
                         href="{{ route('users.index', 'refused') }}">
                         <i class="fe fe-user-x side-menu__icon"></i>
-                        <span class="side-menu__label"> قائمة المرفضون</span>
+                        <span class="side-menu__label">قائمة المرفوضين</span>
                     </a>
                 </li>
             </ul>

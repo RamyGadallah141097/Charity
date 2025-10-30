@@ -234,9 +234,9 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="example-Modal3">بيانات المتبرع</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
+                        <h5 class="modal-title" id="example-Modal3">بيانات المقترض</h5>
+                        <button type="button" style="background-color: transparent; border: none;" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" style="font-size: 20px;">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body" id="modal-body"></div>
@@ -311,7 +311,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">تقييم المقترض</h5>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <button type="button" style="background-color: transparent; border: none; font-size: 20px;" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
                         <form action="{{ route('BorrowerReview') }}" method="POST" id="borrowerReviewForm">
@@ -405,6 +405,28 @@
         addScript();
         showEditModal('{{ route('borrowers.edit', ':id') }}');
         editScript();
+
+
+        function showEditModal(routeOfEdit) {
+        $(document).on('click', '.editBtn', function() {
+            var id = $(this).data('id');
+            var url = routeOfEdit;
+            url = url.replace(':id', id);
+            $('#modal-body').html(loader);
+            $('#editOrCreate').modal('show');
+
+            setTimeout(function() {
+                $('#modal-body').load(url);
+            }, 500);
+        });
+
+        // لما يتقفل المودال اعمل ريلود
+        $('#editOrCreate').on('hidden.bs.modal', function () {
+            window.location.reload();
+        });
+    }
+
+
 
         $(document).ready(function() {
             $(document).on('click', '.view-guarantors', function() {

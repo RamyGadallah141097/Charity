@@ -501,21 +501,25 @@ class UserController extends Controller
 
         return response()->json($data);
     }
+
+    public function PrintUsersNew()
+    {
+        $users = User::where('status', 'new')->get();
+        return view('admin/print/PrintUsersNew', compact('users'));
+    }
+    public function PrintUsersAccepted()
+    {
+        $users = User::where('status', 'accepted')->get();
+        return view('admin/print/PrintUsersAccepted', compact('users'));
+    }
+    public function PrintUsersPennding()
+    {
+        $users = User::where('status', 'preparing')->get();
+        return view('admin/print/PrintUsersPennding', compact('users'));
+    }
+    public function PrintUsersRefused()
+    {
+        $users = User::where('status', 'refused')->get();
+        return view('admin/print/PrintUsersRefused', compact('users'));
+    }
 }
-
-
-
-//the form of change the status
-//<form action="'. route('updateUserStatus') .'" method="POST">
-//'. csrf_field() .'
-//<input type="hidden" name="user_id" value="'. $users->id .'">
-//<input type="hidden" name="status" value="accepted">
-//<button class="btn btn-outline-success">قبول</button>
-//</form>
-//
-//<form action="'. route('updateUserStatus') .'" method="POST">
-//'. csrf_field() .'
-//<input type="hidden" name="user_id" value="'. $users->id .'">
-//<input type="hidden" name="status" value="refused">
-//<button class="btn btn-outline-danger">رفض</button>
-//</form>

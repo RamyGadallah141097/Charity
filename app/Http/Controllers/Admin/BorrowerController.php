@@ -34,7 +34,6 @@ class BorrowerController extends Controller
                     $viewGuarantorsButton = '';
                     $viewMediaButton = '';
 
-                    // التحقق من إذن التعديل
                     $editButton = '
                             <button type="button" data-id="' . $borrower->id . '" class="btn btn-pill btn-info-light editBtn">
                                 <i class="fa fa-edit"></i>
