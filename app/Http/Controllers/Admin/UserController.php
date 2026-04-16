@@ -377,7 +377,7 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
 
-
+        dd(33);
         DB::beginTransaction();
 
         try {

@@ -132,11 +132,11 @@
         @endif
     @endforeach
 
-    <script>
+     <script>
         window.addEventListener('DOMContentLoaded', () => {
             window.print();
         });
-    </script>
+     </script>
 </body>
 
 
