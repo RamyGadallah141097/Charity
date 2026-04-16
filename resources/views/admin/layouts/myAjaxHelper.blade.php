@@ -1,9 +1,34 @@
 <script>
+    var loaderLogo = @json(!empty($setting?->logo) ? asset($setting->logo) : null);
+    var loaderTitle = @json($setting->title ?? 'الجمعية');
     var loader = `
-			<div class="dimmer active">
-			<div class="lds-ring"><div></div><div></div><div></div><div></div></div>
-			</div>
+            <div class="dimmer active">
+                <div style="display:flex;align-items:center;justify-content:center;padding:30px 10px;">
+                    ${
+                        loaderLogo
+                            ? `<div style="width:130px;height:130px;border-radius:30px;background:linear-gradient(135deg,#ffffff 0%,#f7efe7 100%);box-shadow:0 18px 40px rgba(179,44,47,.14);display:flex;align-items:center;justify-content:center;animation:charityAjaxLoaderPulse 1.4s ease-in-out infinite;overflow:hidden;">
+                                    <img src="${loaderLogo}" alt="${loaderTitle}" style="max-width:92px;max-height:92px;object-fit:contain;display:block;">
+                               </div>`
+                            : `<div style="width:130px;height:130px;border-radius:30px;background:linear-gradient(135deg,#b32c2f 0%,#d56b4e 100%);box-shadow:0 18px 40px rgba(179,44,47,.14);display:flex;align-items:center;justify-content:center;animation:charityAjaxLoaderPulse 1.4s ease-in-out infinite;color:#fff;font-size:50px;font-weight:700;">
+                                    ${(loaderTitle || 'ج').charAt(0)}
+                               </div>`
+                    }
+                </div>
+            </div>
         `;
+
+    if (!document.getElementById('charity-ajax-loader-style')) {
+        var loaderStyle = document.createElement('style');
+        loaderStyle.id = 'charity-ajax-loader-style';
+        loaderStyle.textContent = `
+            @keyframes charityAjaxLoaderPulse {
+                0%, 100% { transform: scale(1); opacity: 1; }
+                50% { transform: scale(1.05); opacity: .88; }
+            }
+        `;
+        document.head.appendChild(loaderStyle);
+    }
+
     // Show Data Using YAJRA
     async function showData(routeOfShow, columns) {
         // Destroy existing table if it exists

@@ -24,24 +24,17 @@ class UpdateSetting extends FormRequest
     public function rules()
     {
         return [
-            'title'           => 'required',
-            'vat_number'      => 'required',
-            'address'         => 'required',
-            'sub_address'     => 'required',
-            'branch'          => 'required',
-            'section'         => 'required',
-            'maxSubvention'   => 'required',
-            'maxLoan'         => 'required',
+            'title'   => 'required|string|max:255',
+            'address' => 'required|string|max:1000',
+            'logo'    => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:4096',
         ];
     }
     public function messages(){
         return[
-            'title.required'           => 'اسم الشركة مطلوب',
-            'vat_number.required'      => 'يرجي ادخال رقم الإشهار',
-            'address.required'         => 'يرجي ادخال العنوان',
-            'sub_address.required'     => 'يرجي ادخال عنوان فرعي',
-            'branch.required'          => 'يرجي ادخال اسم الفرع',
-            'section.required'         => 'يرجي ادخال اسم القطاع',
+            'title.required' => 'اسم المؤسسة مطلوب',
+            'address.required' => 'يرجى إدخال العنوان',
+            'logo.image' => 'اللوجو يجب أن يكون صورة',
+            'logo.mimes' => 'صيغة اللوجو يجب أن تكون jpg أو jpeg أو png أو gif أو webp',
         ];
     }
 }
