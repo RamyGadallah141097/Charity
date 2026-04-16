@@ -2,11 +2,20 @@
 @toastr_js
 @toastr_render
 <script>
-    function expand(lbl) {
-        var elemId = lbl.getAttribute("for");
-        document.getElementById(elemId).style.height = "45px";
-        document.getElementById(elemId).classList.add("my-style");
-        lbl.style.transform = "translateY(-45px)";
+    $('[data-password-toggle]').on('click', function () {
+        var passwordField = $('#password');
+        var icon = $(this).find('i');
+        var isPassword = passwordField.attr('type') === 'password';
+
+        passwordField.attr('type', isPassword ? 'text' : 'password');
+        icon.toggleClass('fa-eye fa-eye-slash');
+        $(this).attr('aria-label', isPassword ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور');
+    });
+
+    function resetLoginButton() {
+        $('#loginButton')
+            .html('<span class="btn-text">تسجيل الدخول</span>')
+            .attr('disabled', false);
     }
 
     $("form#LoginForm").submit(function (e) {
@@ -18,13 +27,9 @@
             type: 'POST',
             data: formData,
             beforeSend: function () {
-                $('#loginButton').html('<span class="spinner-border spinner-border-sm mr-2" ' +
-                    ' ></span> <span style="margin-left: 4px;">انتظر ..</span>').attr('disabled', true);
-
-            },
-            complete: function () {
-
-
+                $('#loginButton')
+                    .html('<span class="spinner-border spinner-border-sm mr-2"></span> <span class="btn-text">جاري التحقق...</span>')
+                    .attr('disabled', true);
             },
             success: function (data) {
                 if (data == 200) {
@@ -33,17 +38,17 @@
                         window.location.href = '/admin';
                     }, 1000);
                 } else {
-                    toastr.error('wrong password');
-                    $('#loginButton').html(`<i id="lockId" class="fa fa-lock" style="margin-left: 6px"></i> تسجيل الدخول`).attr('disabled', false);
+                    toastr.error('كلمة المرور غير صحيحة');
+                    resetLoginButton();
                 }
 
             },
             error: function (data) {
                 if (data.status === 500) {
-                    $('#loginButton').html(`<i id="lockId" class="fa fa-lock" style="margin-left: 6px"></i> تسجيل الدخول`).attr('disabled', false);
+                    resetLoginButton();
                     toastr.error('هناك خطأ ما');
                 } else if (data.status === 422) {
-                    $('#loginButton').html(`<i id="lockId" class="fa fa-lock" style="margin-left: 6px"></i> تسجيل الدخول`).attr('disabled', false);
+                    resetLoginButton();
                     var errors = $.parseJSON(data.responseText);
                     $.each(errors, function (key, value) {
                         if ($.isPlainObject(value)) {
@@ -55,9 +60,8 @@
                         }
                     });
                 } else {
-                    $('#loginButton').html(`<i id="lockId" class="fa fa-lock" style="margin-left: 6px"></i> تسجيل الدخول`).attr('disabled', false);
-
-                    toastr.error('there in an error');
+                    resetLoginButton();
+                    toastr.error('تعذر تسجيل الدخول الآن');
                 }
             },//end error method
 
