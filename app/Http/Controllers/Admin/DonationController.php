@@ -121,6 +121,7 @@ class DonationController extends Controller
                     'amount' => $data['amount_value'],
                     'type' => LockerLog::TYPE_PLUS,
                     'admin_id' => auth()->id(),
+                    'donor_id' => $donor?->id,
                     'comment' => 'تبرع وارد جديد من ' . ($donor ? $donor->name : 'مجهول')
                         . ' ورقم هاتفه ' . ($donor ? $donor->phone : 'غير متوفر'),
                 ]);
