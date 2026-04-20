@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DonationsRequest;
-use App\Models\Asset;
 use App\Models\Admin;
 use App\Models\Donation;
+use App\Models\DonationCategory;
 use App\Models\DonationType;
 use App\Models\DonationUnit;
 use App\Models\Donor;
@@ -16,12 +16,13 @@ use Yajra\DataTables\DataTables;
 
 class DonationController extends Controller
 {
+    protected ?DonationUnit $cashDonationUnit = null;
 
     public function index(Request $request)
     {
         if ($request->ajax()) {
             $category = $request->get('category', 'cash');
-            $donationsQuery = Donation::with(['donor', 'referenceDonationType', 'unit', 'receivedBy'])->latest();
+            $donationsQuery = Donation::with(['donor', 'referenceDonationType', 'donationCategory', 'unit', 'receivedBy'])->latest();
 
             if ($category === 'cash') {
                 $donationsQuery
@@ -58,10 +59,16 @@ class DonationController extends Controller
                 ->addColumn('donation_type_name', function ($donation) {
                     return optional($donation->referenceDonationType)->name ?? 'غير محدد';
                 })
+                ->addColumn('donation_category_name', function ($donation) {
+                    return optional($donation->donationCategory)->name ?? '--';
+                })
                 ->addColumn('value_with_unit', function ($donation) {
                     $value = $donation->amount_value ?? $donation->donation_amount ?? $donation->asset_count ?? '-';
                     $unit = optional($donation->unit)->name;
                     return trim($value . ' ' . $unit);
+                })
+                ->addColumn('unit_name', function ($donation) {
+                    return $donation->display_unit_name;
                 })
                 ->addColumn('receipt_number', function ($donation) {
                     return $donation->receipt_number ?: '--';
@@ -82,13 +89,7 @@ class DonationController extends Controller
                 ->make(true);
         }
 
-        $cashTotal = Donation::whereHas('unit', function ($query) {
-            $query->where('code', 'egp')->orWhere('name', 'جنيه');
-        })->whereHas('referenceDonationType', function ($query) {
-            $query->cashLockerTypes();
-        })->sum('amount_value');
-
-        return view('admin/donations/index', compact('cashTotal'));
+        return view('admin/donations/index');
     }
 
 
@@ -102,6 +103,7 @@ class DonationController extends Controller
     {
         try {
             $data = $request->validated();
+            $data['donation_unit_id'] = $this->resolveDonationUnitId($data['donation_type_id'] ?? null, $data['donation_unit_id'] ?? null);
             $data['donation_month'] = $data['donation_month'] ?? \Carbon\Carbon::parse($data['received_at'])->month;
             $data['created_at'] = $data['created_at'] ?? $data['received_at'];
             $data['donation_amount'] = $data['donation_amount'] ?? $data['amount_value'] ?? null;
@@ -171,6 +173,7 @@ class DonationController extends Controller
     {
         $donation = Donation::find($id);
         $data = $request->validated();
+        $data['donation_unit_id'] = $this->resolveDonationUnitId($data['donation_type_id'] ?? null, $data['donation_unit_id'] ?? null);
         $data['donation_month'] = $data['donation_month'] ?? \Carbon\Carbon::parse($data['received_at'])->month;
         $data['donation_amount'] = $data['donation_amount'] ?? $data['amount_value'] ?? null;
         $data['donation_type'] = $data['donation_type_id'];
@@ -223,19 +226,48 @@ class DonationController extends Controller
     }
     public function PrintDonations()
     {
-        $Donations = Donation::with(['donor', 'referenceDonationType', 'unit', 'receivedBy'])->get();
+        $Donations = Donation::with(['donor', 'referenceDonationType', 'donationCategory', 'unit', 'receivedBy'])->get();
         return view('admin/print/PrintDonations', compact('Donations'));
     }
 
     protected function formData(): array
     {
+        $donationTypes = DonationType::active()->orderBy('sort_order')->get();
+        $donationUnits = DonationUnit::active()
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
+
         return [
             'donors' => Donor::orderBy('name')->get(),
-            'assets' => Asset::all(),
-            'donationTypes' => DonationType::active()->orderBy('sort_order')->get(),
-            'donationUnits' => DonationUnit::active()->orderBy('sort_order')->get(),
+            'donationCategories' => DonationCategory::active()->orderBy('sort_order')->orderBy('name')->get(),
+            'donationTypes' => $donationTypes,
+            'donationUnits' => $donationUnits,
+            'cashDonationUnitId' => optional($donationUnits->firstWhere('code', 'egp'))->id,
             'admins' => Admin::orderBy('name')->get(),
             'occasions' => ['رمضان', 'عيد', 'أضحية', 'كفارة', 'صدقة جارية', 'زكاة', 'موسمية', 'أخرى'],
         ];
+    }
+
+    protected function resolveDonationUnitId($donationTypeId, $donationUnitId): ?int
+    {
+        $donationType = $donationTypeId ? DonationType::find($donationTypeId) : null;
+
+        if ($donationType && ! $donationType->requiresDonationUnitSelection()) {
+            return $this->cashDonationUnit()?->id;
+        }
+
+        return $donationUnitId ? (int) $donationUnitId : null;
+    }
+
+    protected function cashDonationUnit(): ?DonationUnit
+    {
+        if ($this->cashDonationUnit) {
+            return $this->cashDonationUnit;
+        }
+
+        $this->cashDonationUnit = DonationUnit::where('code', 'egp')->first();
+
+        return $this->cashDonationUnit;
     }
 }

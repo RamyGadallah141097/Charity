@@ -30,3 +30,4 @@ class AddDonorIdColumnToLockerLogsTable extends Migration
         });
     }
 }
+

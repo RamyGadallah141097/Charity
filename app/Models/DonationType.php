@@ -21,6 +21,11 @@ class DonationType extends Model
         self::GOOD_LOAN_CODE,
     ];
 
+    public function units()
+    {
+        return $this->hasMany(DonationUnit::class);
+    }
+
     public function scopeCashLockerTypes(Builder $query): Builder
     {
         return $query->whereIn('code', self::PROTECTED_CODES);
@@ -34,6 +39,11 @@ class DonationType extends Model
     public function isCashLockerType(): bool
     {
         return in_array($this->code, self::PROTECTED_CODES, true);
+    }
+
+    public function requiresDonationUnitSelection(): bool
+    {
+        return ! $this->isCashLockerType();
     }
 
     public function lockerMoneyType(): ?string
