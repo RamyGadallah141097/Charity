@@ -40,6 +40,9 @@
 <!-- INPUT MASK JS-->
 <script src="{{asset('assets/admin')}}/assets/plugins/input-mask/jquery.mask.min.js"></script>
 
+<!-- SELECT2 JS -->
+<script src="{{ asset('assets/admin') }}/assets/plugins/select2/select2.full.min.js"></script>
+
 <!-- SIDE-MENU JS-->
 <script src="{{asset('assets/admin')}}/assets/plugins/sidemenu/sidemenu.js"></script>
 
@@ -62,6 +65,59 @@
 <script>
     $(document).ready(function () {
         $('.dropify').dropify();
+    });
+</script>
+
+<script>
+    function initSearchableSelects(context) {
+        if (typeof $.fn.select2 !== 'function') {
+            return;
+        }
+
+        var $context = context ? $(context) : $(document);
+        var $selects = $context.find('select').filter(function () {
+            var $select = $(this);
+
+            return !$select.hasClass('select2-hidden-accessible')
+                && !$select.hasClass('no-select2')
+                && !$select.closest('.dataTables_length').length
+                && !$select.closest('.select2-container').length;
+        });
+
+        $selects.each(function () {
+            var $select = $(this);
+            var $modal = $select.closest('.modal');
+            var placeholder = $select.data('placeholder');
+
+            if (!placeholder) {
+                var firstOptionText = $.trim($select.find('option:first').text());
+                var firstOptionValue = $select.find('option:first').val();
+
+                if (firstOptionValue === '' && firstOptionText !== '') {
+                    placeholder = firstOptionText;
+                }
+            }
+
+            $select.select2({
+                width: '100%',
+                dir: 'rtl',
+                placeholder: placeholder || 'ابحث أو اختر',
+                allowClear: !$select.prop('multiple'),
+                dropdownParent: $modal.length ? $modal : $(document.body)
+            });
+        });
+    }
+
+    $(document).ready(function () {
+        initSearchableSelects(document);
+    });
+
+    $(document).on('shown.bs.modal', '.modal', function () {
+        initSearchableSelects(this);
+    });
+
+    $(document).ajaxComplete(function () {
+        initSearchableSelects(document);
     });
 </script>
 

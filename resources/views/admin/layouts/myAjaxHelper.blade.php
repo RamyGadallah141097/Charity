@@ -182,16 +182,12 @@
                 },
                 success: function(data) {
                     if (data.status == 200) {
-                        $('#dataTable').DataTable().ajax.reload();
-                        toastr.success('تم الاضافة بنجاح');
-                        window.location.reload();
                         $('#editOrCreate').modal('hide')
-
-
+                        $('#dataTable').DataTable().ajax.reload(null, false);
+                        toastr.success('تم الاضافة بنجاح');
                     } else
                         toastr.error('There is an error');
                     $('#addButton').html(`اضافة`).attr('disabled', false);
-                    $('#editOrCreate').modal('hide')
                 },
                 error: function(data) {
                     if (data.status === 500) {

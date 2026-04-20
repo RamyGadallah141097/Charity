@@ -4,40 +4,56 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUser;
+use App\Models\BeneficiaryCategory;
 use App\Models\Borrower;
+use App\Models\Center;
 use App\Models\Children;
 use App\Models\Donation;
+use App\Models\Governorate;
 use App\Models\Guarantor;
 use App\Models\Patient;
 use App\Models\Setting;
 use App\Models\User;
+use App\Models\Village;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 //solve path
 class UserController extends Controller
 {
-    public function index(Request $request, $status)
+    public function index(Request $request, $status = null)
     {
+        $allowedStatuses = ['new', 'accepted', 'preparing', 'refused'];
+        $status = in_array($status, $allowedStatuses, true) ? $status : null;
+        $selectedStatus = $request->filled('status') && in_array($request->status, $allowedStatuses, true)
+            ? $request->status
+            : $status;
 
 
         if ($request->ajax()) {
 
-            $query = User::where('status', $status);
+            $query = User::query();
+
+            if ($selectedStatus) {
+                $query->where('status', $selectedStatus);
+            }
 
             if ($request->filled('social_status')) {
                 $query->where('social_status', $request->social_status);
             }
 
-            if ($request->has('has_patient') && $request->input('has_patient') == 1) {
-                $query->has('patient');
-            }
 
 
             if ($request->filled('standard_living')) {
                 $query->where('standard_living', "<=", $request->standard_living);
             }
+
+             if ($request->filled('beneficiary_category_id')) {
+                 $query->where('beneficiary_category_id', $request->beneficiary_category_id);
+             }
 
             if ($request->filled('family_number')) {
                 $familyNumber = (int) $request->family_number;
@@ -71,33 +87,15 @@ class UserController extends Controller
             return Datatables::of($users)
                 ->addColumn('action', function ($users) {
                     return '
-                     <div class="dropdown">
-                      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        actions
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-
-                        <p class="dropdown-item text-center" href="#">
-                            <a href="' . route('DonationDetails', $users->id) . '" data-id="' . $users->id . '" > عرض التبرعات</a>
-                        </p>
-                        <p class="dropdown-item  text-center" href="#">
-                            <a class="btn btn-pill btn-success-light" href="' . route('userDetails', $users->id) . '" data-id="' . $users->id . '" > <i class="fas fa-eye"></i></a>
-                        </p>
-                         <p class="dropdown-item text-center" href="#">
-                                <a href="' . route("users.edit", $users->id) . '" class="btn btn-pill btn-primary-light ">
-                                    <i class="fas fa-edit"> </i>
-                                </a>
-                        </p>
-                        <p class="dropdown-item text-center" href="#">
-                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
-                                 data-id="' . $users->id . '" data-title="' . $users->husband_name . '">
-                                 <i class="fas fa-trash"></i>
-                            </button>
-                        </p>
-
-                      </div>
-                    </div>
-                        ';
+                        <div class="d-flex align-items-center justify-content-center flex-wrap" style="gap: 8px;">
+                            <a class="btn btn-sm btn-success-light" href="' . route('userDetails', $users->id) . '" title="عرض التفاصيل">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="' . route("users.edit", $users->id) . '" class="btn btn-sm btn-primary-light" title="تعديل">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </div>
+                    ';
                 })
                 ->editColumn('work_type', function ($users) {
                     return '<span title="' . e($users->work_type) . '">' . Str::limit($users->work_type, 20, '...') . '</span>';
@@ -177,7 +175,8 @@ class UserController extends Controller
                 ->escapeColumns([])
                 ->make(true);
         } else {
-            return view('admin/users/index');
+            $beneficiaryCategories = BeneficiaryCategory::active()->orderBy('sort_order')->orderBy('name')->get();
+            return view('admin/users/index', compact('selectedStatus', 'beneficiaryCategories'));
         }
     }
 
@@ -201,7 +200,7 @@ class UserController extends Controller
             ->first()
         ) {
             $user = $found;
-            $patients = $user->patient;
+            $patients = $user->patients;
         } elseif ($found = Borrower::where("nationalID", $searchNID)->first()) {
             $borrower = $found;
         } elseif ($found = Guarantor::where("nationalID", $searchNID)->first()) {
@@ -229,7 +228,8 @@ class UserController extends Controller
             toastr()->error("لا يوجد مستفيد لهذا الرقم القومي");
             return redirect()->route("adminHome");
         }
-        $patients = $user ? Patient::where('user_id', $user->id)->get() : [];
+        $user->load(['childrens', 'patients', 'governorate', 'center', 'village', 'beneficiaryCategory']);
+        $patients = $user ? $user->patients : collect();
 
         return view('admin/users/parts/details', compact('user', 'patients'));
     }
@@ -253,6 +253,17 @@ class UserController extends Controller
         }
     }
 
+    public function viewAttachment(Request $request)
+    {
+        $path = $request->query('path');
+
+        if (!$path || !Storage::disk('public')->exists($path)) {
+            abort(404);
+        }
+
+        return Response::file(Storage::disk('public')->path($path));
+    }
+
 
     public function updateUserStatus(Request $request)
     {
@@ -269,7 +280,7 @@ class UserController extends Controller
 
     public function create()
     {
-        return view('admin/users/parts/create');
+        return view('admin/users/parts/create', $this->referenceViewData());
     }
 
 
@@ -278,7 +289,7 @@ class UserController extends Controller
     public function store(StoreUser $request)
     {
 
-        $userData = $request->except('_token', 'attachments', 'child_names',  'children_national_id',  'age', 'schools', 'monthly_cost', 'notes', 'patient_name',  'treatment_pay_by', 'type', 'doctor_name', 'treatment');
+        $userData = $request->except('_token', 'attachments', 'child_names',  'children_national_id',  'age', 'child_gender', 'schools', 'monthly_cost', 'notes', 'patient_name',  'treatment_pay_by', 'type', 'doctor_name', 'treatment');
 
 
         $user = User::create([
@@ -288,10 +299,14 @@ class UserController extends Controller
             'wife_national_id' => @$request->wife_national_id,
             'age_husband' => @$request->age_husband,
             'address' => @$request->address,
+            'governorate_id' => $request->governorate_id,
+            'center_id' => $request->center_id,
+            'village_id' => $request->village_id,
             'age_wife' => @$request->age_wife,
             'social_status' => @$request->social_status,
             'work_type' => @$request->work_type,
             'nearest_phone' => @$request->nearest_phone,
+            'beneficiary_category_id' => $request->beneficiary_category_id,
             'salary' => @$request->salary,
             'pension' => @$request->pension,
             'insurance' => @$request->insurance,
@@ -323,6 +338,7 @@ class UserController extends Controller
                     'child_name' => $childName,
                     'children_national_id' => $request->children_national_id[$index] ?? null,
                     'age' => $request->age[$index] ?? null,
+                    'gender' => $request->child_gender[$index] ?? null,
                     'school' => $request->schools[$index] ?? null,
                     'monthly_cost' => $request->monthly_cost[$index] ?? null,
                     'notes' => $request->notes[$index] ?? null,
@@ -340,7 +356,7 @@ class UserController extends Controller
                     'treatment_pay_by' => $request->treatment_pay_by[$index] ?? null,
                     'type' => $request->type[$index] ?? null,
                     'doctor_name' => $request->doctor_name[$index] ?? null,
-                    'is_insurance' => $request->has('is_insurance') ? '1' : '0',
+                    'is_insurance' => isset($request->is_insurance[$index]) ? '1' : '0',
                     'notes' => $request->notes[$index] ?? null,
                 ]);
             }
@@ -358,26 +374,23 @@ class UserController extends Controller
         DB::commit();
 
         toastr('تم اضافة مستفيد جديد', 'success');
-        return redirect(route('users.index', 'new'));
+        return redirect()->route('users.index');
     }
 
     public function edit($id)
     {
 
-        $user = User::with(['childrens', 'patient'])->findOrFail($id);
-        $patients = Patient::where("user_id", $id)->get();
-        //        dd($patients , $user);
-        return view('admin/users/parts/edit', [
+        $user = User::with(['childrens', 'patients', 'governorate', 'center', 'village', 'beneficiaryCategory'])->findOrFail($id);
+        $patients = $user->patients;
+        return view('admin/users/parts/edit', array_merge($this->referenceViewData(), [
             'user' => $user,
             "patients" => $patients,
             'setting' => Setting::first()
-        ]);
+        ]));
     }
 
-    public function update(Request $request, $id)
+    public function update(StoreUser $request, $id)
     {
-
-        dd(33);
         DB::beginTransaction();
 
         try {
@@ -391,9 +404,13 @@ class UserController extends Controller
                 'age_husband' => $request->age_husband,
                 'age_wife' => $request->age_wife,
                 'address' => $request['address'],
+                'governorate_id' => $request->governorate_id,
+                'center_id' => $request->center_id,
+                'village_id' => $request->village_id,
                 'social_status' => $request['social_status'],
                 'work_type' => $request['work_type'],
                 'nearest_phone' => $request['nearest_phone'],
+                'beneficiary_category_id' => $request->beneficiary_category_id,
                 'salary' => $request['salary'] ?? 0,
                 'pension' => $request['pension'] ?? 0,
                 'insurance' => $request['insurance'] ?? 0,
@@ -426,6 +443,7 @@ class UserController extends Controller
                             'child_name' => $childName,
                             'children_national_id' => $request['children_national_id'][$index] ?? null,
                             'age' => $request->age[$index] ?? null,
+                            'gender' => $request['child_gender'][$index] ?? null,
                             'school' => $request['schools'][$index] ?? null,
                             'monthly_cost' => $request['monthly_cost'][$index] ?? null,
                             'notes' => $request['notes'][$index] ?? null
@@ -436,11 +454,11 @@ class UserController extends Controller
 
 
 
-            $user->patient()->delete();
+            $user->patients()->delete();
             if (!empty($request['patient_name'])) {
                 foreach ($request['patient_name'] as $index => $patientName) {
                     if (!empty($patientName)) {
-                        $user->patient()->create([
+                        $user->patients()->create([
                             'patient_name' => $patientName,
                             'treatment_pay_by' => $request['treatment_pay_by'][$index] ?? null,
                             'treatment' => $request['treatment'][$index] ?? null,
@@ -455,11 +473,21 @@ class UserController extends Controller
 
 
             if ($request->hasFile('attachments')) {
-                foreach ($request->attachments as $attachment) {
-                    $attachmentsName[] = $attachment->store('attachments', 'public');
-                    $user->attachments = $attachmentsName;
-                    $user->save();
+                $existingAttachments = is_array($user->attachments) ? $user->attachments : [];
+
+                foreach ($existingAttachments as $existingAttachment) {
+                    if ($existingAttachment && Storage::disk('public')->exists($existingAttachment)) {
+                        Storage::disk('public')->delete($existingAttachment);
+                    }
                 }
+
+                $newAttachments = [];
+                foreach ($request->file('attachments') as $attachment) {
+                    $newAttachments[] = $attachment->store('attachments', 'public');
+                }
+
+                $user->attachments = $newAttachments;
+                $user->save();
             }
 
 
@@ -468,7 +496,7 @@ class UserController extends Controller
             DB::commit();
 
 
-            return redirect("admin/users/new")->with('success', 'تم تحديث بيانات المستفيد بنجاح');
+            return redirect()->route('users.index')->with('success', 'تم تحديث بيانات المستفيد بنجاح');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withInput()->with('error', $e->getMessage());
@@ -521,5 +549,15 @@ class UserController extends Controller
     {
         $users = User::where('status', 'refused')->get();
         return view('admin/print/PrintUsersRefused', compact('users'));
+    }
+
+    private function referenceViewData(): array
+    {
+        return [
+            'governorates' => Governorate::active()->orderBy('name')->get(),
+            'centers' => Center::active()->orderBy('name')->get(),
+            'villages' => Village::active()->orderBy('name')->get(),
+            'beneficiaryCategories' => BeneficiaryCategory::active()->orderBy('sort_order')->orderBy('name')->get(),
+        ];
     }
 }

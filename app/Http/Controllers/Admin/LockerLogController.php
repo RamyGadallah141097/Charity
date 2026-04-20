@@ -3,13 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Asset;
 use App\Models\Donation;
+use App\Models\DonationType;
 use App\Models\LockerLog;
-use App\Models\Subvention;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
-use function PHPUnit\Framework\matches;
 
 class LockerLogController extends Controller
 {
@@ -21,73 +19,119 @@ class LockerLogController extends Controller
 
     public function index(Request $request, $model = null)
     {
+        $selectedTypeId = $request->input('locker_type', $model);
+        $lockerTypes = DonationType::active()->orderBy('sort_order')->get();
+        $selectedLockerType = $lockerTypes->firstWhere('id', (int) $selectedTypeId);
+
+        if (! $selectedLockerType && $lockerTypes->isNotEmpty()) {
+            $selectedLockerType = $lockerTypes->first();
+            $selectedTypeId = $selectedLockerType->id;
+        }
+
+        $isCashLocker = $selectedLockerType?->isCashLockerType() ?? false;
+        $moneyType = $selectedLockerType?->lockerMoneyType();
 
         if ($request->ajax()) {
-            $type = $model == 0 ? LockerLog::moneyTypeZakat
-                : ($model == 1 ? LockerLog::moneyTypeSadaka
-                    : ($model == 2 ? LockerLog::moneyTypeLoans
-                        : ""));
+            if ($isCashLocker && $moneyType) {
+                $donations = LockerLog::where('moneyType', $moneyType)->with('admin');
 
-            $donations = LockerLog::where("moneyType", $type)->with("admin");
+                if ($request->filled('from') && $request->filled('to')) {
+                    $donations->whereBetween('created_at', [
+                        $request->from . ' 00:00:00',
+                        $request->to . ' 23:59:59',
+                    ]);
+                }
+
+                if ($request->filled('type') && $request->type !== 'all') {
+                    if ($request->type === LockerLog::TYPE_PLUS) {
+                        $donations->where('type', LockerLog::TYPE_PLUS);
+                    } elseif ($request->type === LockerLog::TYPE_MINUS) {
+                        $donations->where('type', LockerLog::TYPE_MINUS);
+                    }
+                }
+
+                return DataTables::of($donations->latest()->get())
+                    ->addColumn('name', function ($donation) {
+                        return optional($donation->admin)->name ?? 'غير متوفر';
+                    })
+                    ->editColumn('amount', function ($donation) {
+                        $amount = number_format((float) $donation->amount, 2);
+                        return $donation->type === LockerLog::TYPE_PLUS
+                            ? $amount . " <i class='fas fa-arrow-down' style='color: #63E6BE; font-size: 22px; transform: rotate(45deg); margin-right: 10px;'></i>"
+                            : $amount . " <i class='fas fa-arrow-up' style='color: #e42f2f; font-size: 22px; transform: rotate(45deg); margin-right: 10px;'></i>";
+                    })
+                    ->editColumn('comment', function ($donation) {
+                        $icon = $donation->type === LockerLog::TYPE_PLUS
+                            ? "<i class='fa-solid fa-circle-arrow-up' style='color: green;'></i>"
+                            : "<i class='fa-solid fa-circle-arrow-down' style='color: red;'></i>";
+
+                        return ($donation->comment ?: '---') . ' ' . $icon;
+                    })
+                    ->editColumn('created_at', function ($donation) {
+                        return $donation->created_at ? $donation->created_at->format('d-m-Y') : 'غير متوفر';
+                    })
+                    ->escapeColumns([])
+                    ->make(true);
+            }
+
+            $donations = Donation::with(['donor', 'unit', 'referenceDonationType'])
+                ->where('donation_type_id', $selectedTypeId);
 
             if ($request->filled('from') && $request->filled('to')) {
                 $donations->whereBetween('created_at', [
                     $request->from . ' 00:00:00',
-                    $request->to . ' 23:59:59'
+                    $request->to . ' 23:59:59',
                 ]);
             }
 
-            if ($request->filled('type') && $request->type != 'all') {
-                if ($request->type == 'plus') {
-                    $donations->where('type', LockerLog::TYPE_PLUS);
-                } elseif ($request->type == 'minus') {
-                    $donations->where('type', LockerLog::TYPE_MINUS);
-                }
-            }
-
-            $donations = $donations->latest()->get();
-
-            return DataTables::of($donations)
-                ->addColumn('admin_id', function ($donation) {
-                    return optional($donation->admin)->name ?? "غير متوفر";
+            return DataTables::of($donations->latest()->get())
+                ->addColumn('name', function ($donation) {
+                    return optional($donation->donor)->name ?? 'غير معروف';
                 })
                 ->editColumn('amount', function ($donation) {
-                    return $donation->type == LockerLog::TYPE_PLUS
-                        ? $donation->amount . "<i class='fas fa-arrow-down' style='color: #63E6BE; font-size: 30px ;transform: rotate(45deg); margin-right: 20px;'></i>"
-                        : $donation->amount . "<i class='fas fa-arrow-up' style='color: #e42f2f; font-size: 30px ; transform: rotate(45deg);margin-right: 20px;'></i>";
+                    return $donation->display_value ?: '---';
                 })
                 ->editColumn('comment', function ($donation) {
-                    $icon = $donation->type === LockerLog::TYPE_PLUS
-                        ? "<i class='fa-solid fa-circle-arrow-up' style='color: green;'></i>"
-                        : "<i class='fa-solid fa-circle-arrow-down' style='color: red;'></i>";
-                    return $donation->comment . " " . $icon;
+                    $typeName = optional($donation->referenceDonationType)->name ?: $donation->display_type_name;
+                    $unitName = optional($donation->unit)->name;
+
+                    return trim($typeName . ($unitName ? ' - ' . $unitName : ''));
                 })
                 ->editColumn('created_at', function ($donation) {
                     return $donation->created_at ? $donation->created_at->format('d-m-Y') : 'غير متوفر';
                 })
                 ->escapeColumns([])
                 ->make(true);
-        } else {
-            $title = $model == 0 ? "زكاة" : ($model == 1 ? "صدقات" : ($model == 2 ? "قرض حسن " : "عينيات"));
-            $type = $model == 0 ? LockerLog::moneyTypeZakat : ($model == 1 ? LockerLog::moneyTypeSadaka : ($model == 2 ? LockerLog::moneyTypeLoans : LockerLog::moneyTypeSubvention));
-            $totalPlus = LockerLog::where("moneyType", $type)->where("type", LockerLog::TYPE_PLUS)->sum("amount");
-            $totalMinus = LockerLog::where("moneyType", $type)->where("type", LockerLog::TYPE_MINUS)->sum("amount");
+        }
+
+        $title = $selectedLockerType?->name ?? 'الخزنة';
+        $totalPlus = 0;
+        $totalMinus = 0;
+        $total = 0;
+        $error = null;
+
+        if ($isCashLocker && $moneyType) {
+            $totalPlus = LockerLog::where('moneyType', $moneyType)->where('type', LockerLog::TYPE_PLUS)->sum('amount');
+            $totalMinus = LockerLog::where('moneyType', $moneyType)->where('type', LockerLog::TYPE_MINUS)->sum('amount');
+
             if ($totalPlus < $totalMinus) {
                 $error = 'المجموع الكلي للخارج اكبر من الداخل';
-                $total = 0;
-                return response()->view('admin/lock/stdPage', compact('model', "title", "total", "totalMinus", "totalPlus", "error"));
             } else {
                 $total = $totalPlus - $totalMinus;
             }
-
-
-
-
-            return view('admin/lock/stdPage', compact('model', 'total', "title", "totalMinus", "totalPlus"));
         }
+
+        return view('admin/lock/stdPage', [
+            'lockerTypes' => $lockerTypes,
+            'selectedTypeId' => $selectedTypeId,
+            'title' => $title,
+            'isCashLocker' => $isCashLocker,
+            'total' => $total,
+            'totalMinus' => $totalMinus,
+            'totalPlus' => $totalPlus,
+            'error' => $error,
+        ]);
     }
-
-
 
     /**
      * Show the form for creating a new resource.

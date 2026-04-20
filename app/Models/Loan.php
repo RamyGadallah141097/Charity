@@ -11,6 +11,12 @@ class Loan extends Model
 
     protected $fillable = ['borrower_id', 'borrower_phone', 'loan_amount', 'loan_date' , "type" , "isStarted"];
 
+    protected $casts = [
+        'loan_amount' => 'float',
+        'loan_date' => 'date',
+        'isStarted' => 'bool',
+    ];
+
     public function borrower()
     {
         return $this->belongsTo(Borrower::class);

@@ -12,42 +12,16 @@
             <div class="card">
                 <div class="card-header w-100">
                     <h3 class="card-title">
-                        قائمة بالمستفدين {{ isset($setting) ? isset($setting->title) : '' }}
+                        قائمة بالمستفدين
                     </h3>
 
-
                     <div class="d-flex">
-
-
-                        @php
-                            $status = request()->route('status'); // اسم البراميتر اللى فى route
-                        @endphp
-
-                        <div class="mb-3">
-                            @if ($status == 'new')
-                                <a href="{{ route('PrintUsersNew') }}" class="btn btn-primary">
-                                    <i class="fa fa-print"></i> طباعة المقيدين الجدد
-                                </a>
-                            @elseif($status == 'accepted')
-                                <a href="{{ route('PrintUsersAccepted') }}" class="btn btn-success">
-                                    <i class="fa fa-print"></i> طباعة المقيدين المقبولين
-                                </a>
-                            @elseif($status == 'preparing')
-                                <a href="{{ route('PrintUsersPennding') }}" class="btn btn-warning">
-                                    <i class="fa fa-print"></i> طباعة المقدين قيد الانتظار
-                                </a>
-                            @elseif($status == 'refused')
-                                <a href="{{ route('PrintUsersRefused') }}" class="btn btn-danger">
-                                    <i class="fa fa-print"></i> طباعة المقيدين المرفوضين
-                                </a>
-                            @endif
-                        </div>
 
                         <div class="mr-4">
                             <a href="{{ route('users.create') }}" class="btn btn-secondary btn-icon text-white">
                                 <span>
                                     <i class="fe fe-plus"></i>
-                                </span> استمارة متقدم
+                                </span> مستفيد جديد
                             </a>
                         </div>
                     </div>
@@ -55,36 +29,39 @@
                 <div class="card-body">
                     <div class="row mb-3 w-100">
                         <div class="col-2">
-                            <label for="social_status">الحالة الشخصية </label>
-                            <select id="social_status" class="form-control">
-                                <option value="">اختر </option>
-                                <option value="0">اعزب</option>
-                                <option value="1">متزوج</option>
-                                <option value="2">مطلق</option>
-                                <option value="3">ارمل</option>
+                            <label for="status_filter">حالة المستفيد</label>
+                            <select id="status_filter" class="form-control">
+                                <option value="">الكل</option>
+                                <option value="new" {{ ($selectedStatus ?? null) === 'new' ? 'selected' : '' }}>جديد</option>
+                                <option value="accepted" {{ ($selectedStatus ?? null) === 'accepted' ? 'selected' : '' }}>مقبول</option>
+                                <option value="preparing" {{ ($selectedStatus ?? null) === 'preparing' ? 'selected' : '' }}>قيد الانتظار</option>
+                                <option value="refused" {{ ($selectedStatus ?? null) === 'refused' ? 'selected' : '' }}>مرفوض</option>
                             </select>
                         </div>
+                         <div class="col-2">
+                             <label for="social_status" > الحالة الاجتماعية للمستفيد </label>
+                             <select id="social_status" class="form-control">
+                                 <option value="">اختر </option>
+                                 <option value="0">اعزب</option>
+                                 <option value="1">متزوج</option>
+                                 <option value="2">مطلق</option>
+                                 <option value="3">ارمل</option>
+                             </select>
+                         </div>
+                         <div class="col-2">
+                             <label for="category_filter">تصنيف المستفيد</label>
+                             <select id="category_filter" class="form-control">
+                                 <option value="">الكل</option>
+                                 @foreach ($beneficiaryCategories as $category)
+                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                 @endforeach
+                             </select>
+                         </div>
 
-
-                        <div class="col-2">
-                            <label for="standard_living">مستوى المعيشة </label>
-                            <input id="standard_living" type="number" class="form-control" placeholder=""
-                                name="standard_living">
-                        </div>
-
-
-
-                        <div class="col-2">
-                            <label for="has_patient"> هل لديه مرض ؟ </label>
-                            <select id="has_patient" class="form-control">
-                                <option value="0">لا</option>
-                                <option value="1">نعم</option>
-                            </select>
-                        </div>
-                        <div class="col-2">
-                            <label for="family_number">عدد الاسرة</label>
-                            <input id="family_number" type="number" class="form-control" name="family_number"
-                                placeholder=" ">
+                        <div class="col-2 d-flex align-items-end">
+                            <button type="button" class="btn btn-outline-danger w-100" id="resetFilters">
+                                <i class="fe fe-refresh-ccw"></i> مسح الفلتر
+                            </button>
                         </div>
                     </div>
                     <div class="table-responsive mt-4">
@@ -95,8 +72,7 @@
                                     <th class="min-w-25px">#</th>
                                     <th class="min-w-50px">اسم الزوج</th>
                                     <th class="min-w-50px">اسم الزوجة</th>
-                                    <th class="min-w-50px">الحالة الاجتماعية</th>
-                                    <th class="min-w-50px">الهاتف</th>
+                                    <th class="min-w-50px" >الحالة الاجتماعية </th>
                                     <th class="min-w-50px">اجمالي الدخل</th>
                                     <th class="min-w-50px">اجمالي المصاريف</th>
                                     <th class="min-w-50px">مستوى المعيشة</th>
@@ -193,10 +169,6 @@
                     name: 'social_status'
                 },
                 {
-                    data: 'nearest_phone',
-                    name: 'nearest_phone'
-                },
-                {
                     data: 'gross_income',
                     name: 'gross_income'
                 },
@@ -226,7 +198,7 @@
 
             // Initialize table variable
             var table;
-            var tableUrl = "{{ route('users.index', request()->segment(3)) }}";
+            var tableUrl = "{{ route('users.index') }}";
 
             // Function to initialize/reinitialize DataTable
             function initDataTable() {
@@ -246,10 +218,11 @@
                     ajax: {
                         url: tableUrl,
                         data: function(d) {
-                            d.social_status = $('#social_status').val();
-                            d.standard_living = $('#standard_living').val();
-                            d.has_patient = $('#has_patient').val();
-                            d.family_number = $('#family_number').val();
+                             d.status = $('#status_filter').val();
+                             d.social_status = $('#social_status').val();
+                             d.beneficiary_category_id = $('#category_filter').val();
+                             d.standard_living = $('#standard_living').val();
+                             d.family_number = $('#family_number').val();
                         }
                     },
                     columns: columns,
@@ -273,9 +246,25 @@
             // Initial table load
             initDataTable();
 
-            // Filter change handler
-            $('#social_status, #standard_living, #has_patient, #family_number').change(function() {
-                table.ajax.reload();
+             // Filter change handler
+             $('#status_filter, #social_status, #category_filter, #standard_living, #family_number').change(function() {
+                 table.ajax.reload();
+             });
+
+            $('#resetFilters').on('click', function() {
+                 $('#status_filter').val('').trigger('change');
+                 $('#social_status').val('').trigger('change');
+                 $('#category_filter').val('').trigger('change');
+                 $('#standard_living').val('');
+                 $('#family_number').val('');
+
+                if (table) {
+                    table.search('');
+                    table.columns().search('');
+                    table.ajax.reload();
+                }
+
+                $('#dataTable_filter input').val('');
             });
 
             // Delete button handler

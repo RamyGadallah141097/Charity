@@ -42,49 +42,13 @@
 
         {{-- المستفيدين --}}
         @if (auth()->check() && auth()->user()->can('users.index'))
-            <p>
-                <a class="side-menu__item {{ request()->routeIs('users.index') ? 'active ' : '' }} {{ request()->segment(1) === 'users' ? 'active ' : '' }}"
-                    data-toggle="collapse" href="#sersDropdown" role="button"
-                    aria-expanded="{{ request()->segment(1) === 'users' ? 'true' : 'false' }}"
-                    aria-controls="sersDropdown">
+            <li class="slide">
+                <a class="side-menu__item {{ request()->routeIs('users.index') || request()->routeIs('users.index.status') ? 'active' : '' }}"
+                    href="{{ route('users.index') }}">
                     <i class="fas fa-hand-holding-usd" style="margin-left: 10px;"></i>
                     <span class="side-menu__label"> المستفيدين </span>
                 </a>
-            </p>
-
-            <ul class="collapse {{ request()->segment(1) === 'users' ? 'show' : '' }}" id="sersDropdown">
-                <li>
-                    <a class="dropdown-item-text side-menu__item {{ request()->route('status') == 'new' ? 'active' : '' }}"
-                        href="{{ route('users.index', 'new') }}">
-                        <i class="fas fa-user-plus" style="margin-left: 10px;"></i>
-                        <span class="side-menu__label">المقيدين الجدد</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a class="dropdown-item-text side-menu__item {{ request()->route('status') == 'accepted' ? 'active' : '' }}"
-                        href="{{ route('users.index', 'accepted') }}">
-                        <i class="fe fe-user-check side-menu__icon"></i>
-                        <span class="side-menu__label">قائمة المقبولين</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a class="dropdown-item-text side-menu__item {{ request()->route('status') == 'preparing' ? 'active' : '' }}"
-                        href="{{ route('users.index', 'preparing') }}">
-                        <i class="fe fe-user side-menu__icon"></i>
-                        <span class="side-menu__label">قائمة الانتظار</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a class="dropdown-item-text side-menu__item {{ request()->route('status') == 'refused' ? 'active' : '' }}"
-                        href="{{ route('users.index', 'refused') }}">
-                        <i class="fe fe-user-x side-menu__icon"></i>
-                        <span class="side-menu__label">قائمة المرفوضين</span>
-                    </a>
-                </li>
-            </ul>
+            </li>
         @endif
 
         {{-- التبرعات والمتبرعين --}}
@@ -132,54 +96,12 @@
         {{--        الخزنه     --}}
         @if (auth()->check() && auth()->user()->can('lock.index'))
             <p>
-                <a class="side-menu__item
-                        {{ request()->segment(2) == 'lock' ? 'show active' : '' }} "
-                    data-toggle="collapse" href="#lockDropdown" role="button"
-                    aria-expanded="{{ request()->routeIs('donation.lock') ? 'true' : 'false' }}"
-                    aria-controls="lockDropdown">
+                <a class="side-menu__item {{ request()->segment(2) == 'lock' ? 'active' : '' }}"
+                    href="{{ route('lock') }}">
                     <i class="fas fa-hand-holding-heart" style="margin-left: 10px;"></i>
                     <span class="side-menu__label"> الخزنه </span>
                 </a>
             </p>
-
-
-            <ul class="collapse mb-4 {{ request()->segment(2) == 'lock' ? 'show' : '' }}" id="lockDropdown">
-                <li>
-                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('lock/0') ? 'active' : '' }}"
-                        href="{{ route('lock', 0) }}">
-
-                        <i class="fas fa-money-bill-wave" style="margin-left: 10px;"></i>
-                        <span class="side-menu__label"> خزنة الزكاة </span>
-                    </a>
-                </li>
-
-                <li>
-                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('lock/1') ? 'active' : '' }}"
-                        href="{{ route('lock', 1) }}">
-
-                        <i class="fas fa-coins" style="margin-left: 10px;"></i>
-
-                        <span class="side-menu__label"> خزنة الصدقات </span>
-                    </a>
-                </li>
-                <li>
-                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('lock/2') ? 'active' : '' }}"
-                        href="{{ route('lock', 2) }}">
-
-                        <i class="fas fa-piggy-bank" style="margin-left: 10px;"></i>
-
-                        <span class="side-menu__label"> خزنة القروض الحسنه </span>
-                    </a>
-                </li>
-                <li>
-                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('lock/3') ? 'active' : '' }}"
-                        href="{{ route('lock', 3) }}">
-                        <i class="fas fa-hand-holding-usd" style="margin-left: 10px;"></i>
-                        <span class="side-menu__label"> خزنة العينيات </span>
-                    </a>
-                </li>
-
-            </ul>
         @endif
 
 
@@ -352,6 +274,12 @@
                 <a class="side-menu__item" href="{{ route('setting.index') }}">
                     <i class="fe fe-settings side-menu__icon"></i>
                     <span class="side-menu__label"> الاعدادت </span>
+                </a>
+            </li>
+            <li class="slide">
+                <a class="side-menu__item" href="{{ route('references.dashboard') }}">
+                    <i class="fe fe-database side-menu__icon"></i>
+                    <span class="side-menu__label"> التعريفات العامة </span>
                 </a>
             </li>
         @endif

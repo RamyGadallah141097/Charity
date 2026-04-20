@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DonationsRequest;
-use App\Http\Requests\StoreDonate;
 use App\Models\Asset;
+use App\Models\Admin;
 use App\Models\Donation;
+use App\Models\DonationType;
+use App\Models\DonationUnit;
 use App\Models\Donor;
 use App\Models\LockerLog;
-use App\Models\Subvention;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -19,117 +20,131 @@ class DonationController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $donations = Donation::whereIn("donation_type", [0, 1, 2, 3])->get();
+            $category = $request->get('category', 'cash');
+            $donationsQuery = Donation::with(['donor', 'referenceDonationType', 'unit', 'receivedBy'])->latest();
 
+            if ($category === 'cash') {
+                $donationsQuery
+                    ->whereHas('unit', function ($query) {
+                        $query->where('code', 'egp')->orWhere('name', 'جنيه');
+                    })
+                    ->whereHas('referenceDonationType', function ($query) {
+                        $query->cashLockerTypes();
+                    });
+            } elseif ($category === 'non_cash') {
+                $donationsQuery->where(function ($query) {
+                    $query
+                        ->whereDoesntHave('referenceDonationType', function ($typeQuery) {
+                            $typeQuery->cashLockerTypes();
+                        })
+                        ->orWhereDoesntHave('unit', function ($unitQuery) {
+                            $unitQuery->where('code', 'egp')->orWhere('name', 'جنيه');
+                        });
+                });
+            }
+
+            $donations = $donationsQuery->get();
 
             return Datatables::of($donations)
+                ->addColumn('received_at_display', function ($donation) {
+                    return optional($donation->received_at)->format('d-m-Y') ?: optional($donation->created_at)->format('d-m-Y') ?: 'غير متوفر';
+                })
                 ->addColumn('donor_name', function ($donation) {
                     return $donation->donor->name ?? 'غير معروف';
                 })
                 ->addColumn('donor_phone', function ($donation) {
                     return $donation->donor->phone ?? 'غير متوفر';
-                })->editColumn('created_at', function ($donation) {
-                    return $donation->created_at ? $donation->created_at->format('d-m-y') : 'غير متوفر';
                 })
-                ->editColumn('donation_type', function ($donation) {
-                    switch ($donation->donation_type) {
-                        case 0:
-                            return 'زكاة المال';
-                            break;
-                        case 1:
-                            return 'صدقات';
-                            break;
-                        case 2:
-                            return 'قرض حسن';
-                            break;
-                        default:
-                            return 'تبرع عيني';
-                    }
+                ->addColumn('donation_type_name', function ($donation) {
+                    return optional($donation->referenceDonationType)->name ?? 'غير محدد';
+                })
+                ->addColumn('value_with_unit', function ($donation) {
+                    $value = $donation->amount_value ?? $donation->donation_amount ?? $donation->asset_count ?? '-';
+                    $unit = optional($donation->unit)->name;
+                    return trim($value . ' ' . $unit);
+                })
+                ->addColumn('receipt_number', function ($donation) {
+                    return $donation->receipt_number ?: '--';
+                })
+                ->addColumn('received_by_name', function ($donation) {
+                    return optional($donation->receivedBy)->name ?? 'غير محدد';
+                })
+                ->addColumn('donation_month_name', function ($donation) {
+                    return $donation->month_name;
+                })
+                ->addColumn('occasion_name', function ($donation) {
+                    return $donation->occasion ?: '--';
                 })
                 ->addColumn('action', function ($donation) {
-                    $editButton = '';
-                    $deleteButton = '';
-
-                    // $editButton = '
-                    //     <button type="button" data-id="' . $donation->id . '" class="btn btn-pill btn-info-light editBtn">
-                    //         <i class="fa fa-edit"></i>
-                    //     </button>
-                    // ';
-
-                    // $deleteButton = '
-                    //     <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
-                    //             data-id="' . $donation->id . '">
-                    //         <i class="fas fa-trash"></i>
-                    //     </button>
-                    // ';
-
-                    return '<div class="d-flex">'  . $deleteButton . '</div>';
+                    return '<div class="d-flex"></div>';
                 })
-                ->editColumn('donation_amount', function ($donation) {
-                    if ($donation->donation_type == 3) {
-                        $asset = Asset::where("id", $donation->asset_id)->first();
-                        $asset ? $donation->donation_amount = $asset->name . " : " .  $asset->counter : "-";
-                    } else {
-                        $donation->donation_amount = $donation->donation_amount;
-                    }
-                    return $donation->donation_amount;
-                })
-
-
                 ->escapeColumns([])
                 ->make(true);
-        } else {
-            return view('admin/donations/index');
         }
+
+        $cashTotal = Donation::whereHas('unit', function ($query) {
+            $query->where('code', 'egp')->orWhere('name', 'جنيه');
+        })->whereHas('referenceDonationType', function ($query) {
+            $query->cashLockerTypes();
+        })->sum('amount_value');
+
+        return view('admin/donations/index', compact('cashTotal'));
     }
 
 
     public function create()
     {
-        $donors = Donor::all();
-        $assets = Asset::all();
-
-        return view('admin/donations/parts/create', ["donors" => $donors,  "assets" => $assets]);
+        return view('admin/donations/parts/create', $this->formData());
     }
 
 
     public function store(DonationsRequest $request)
     {
-
         try {
-            if ($request->donation_type != 3) {
-                $donor = Donor::find($request->donor_id);
+            $data = $request->validated();
+            $data['donation_month'] = $data['donation_month'] ?? \Carbon\Carbon::parse($data['received_at'])->month;
+            $data['created_at'] = $data['created_at'] ?? $data['received_at'];
+            $data['donation_amount'] = $data['donation_amount'] ?? $data['amount_value'] ?? null;
+            $data['donation_type'] = $data['donation_type_id'];
+            $data['donation_kind'] = $data['donation_kind'] ?? 'financial';
+
+            $donor = Donor::find($data['donor_id']);
+            $unit = DonationUnit::find($data['donation_unit_id']);
+            $donationType = DonationType::find($data['donation_type_id']);
+            $isCashUnit = $unit && ($unit->code === 'egp' || $unit->name === 'جنيه');
+            $lockerMoneyType = $donationType?->lockerMoneyType();
+            $isCashDonation = $isCashUnit && ! is_null($lockerMoneyType);
+
+            if ($isCashDonation && !empty($data['amount_value'])) {
                 LockerLog::create([
-                    "moneyType" => $request->donation_type == 0 ? LockerLog::moneyTypeZakat : ($request->donation_type == 1 ? LockerLog::moneyTypeSadaka : ($request->donation_type == 2 ? LockerLog::moneyTypeLoans : "subvention")),
-                    "amount" => $request->donation_amount,
-                    //                    "asset_id" =>0,
-                    //                    "asset_count" =>0,
-                    "type" => LockerLog::TYPE_PLUS,
-                    "admin_id" => auth()->id(),
-                    "comment" => "تبرع جديد من " . ($donor ? $donor->name : "مجهول") .
-                        " ورقم هاتفه " . ($donor ? $donor->phone : "غير متوفر"),
-                ]);
-            } else {
-                $donor = Donor::find($request->donor_id);
-                LockerLog::create([
-                    "moneyType" => $request->donation_type == 0 ? LockerLog::moneyTypeZakat : ($request->donation_type == 1 ? LockerLog::moneyTypeSadaka : ($request->donation_type == 2 ? LockerLog::moneyTypeLoans : "subvention")),
-                    "amount" => 0,
-                    "asset_id" => $request->asset_id,
-                    "asset_count" => $request->asset_count,
-                    "type" => LockerLog::TYPE_PLUS,
-                    "admin_id" => auth()->id(),
-                    "comment" => "تبرع جديد من " . ($donor ? $donor->name : "مجهول") .
-                        " ورقم هاتفه " . ($donor ? $donor->phone : "غير متوفر"),
+                    'moneyType' => $lockerMoneyType,
+                    'amount' => $data['amount_value'],
+                    'type' => LockerLog::TYPE_PLUS,
+                    'admin_id' => auth()->id(),
+                    'comment' => 'تبرع وارد جديد من ' . ($donor ? $donor->name : 'مجهول')
+                        . ' ورقم هاتفه ' . ($donor ? $donor->phone : 'غير متوفر'),
                 ]);
             }
 
+            $donation = Donation::create($data);
 
-            $asset = Asset::find($request->asset_id);
-            if (isset($asset)) {
-                $asset->counter += $request->asset_count;
-                $asset->save();
+            if ($donation?->donor_id) {
+                $donor = Donor::find($donation->donor_id);
+
+                Donor::logHistory(
+                    $donation->donor_id,
+                    'donation',
+                    'تسجيل تبرع جديد',
+                    'تم تسجيل تبرع جديد للمتبرع ' . ($donor->name ?? ''),
+                    [
+                        'donation_id' => $donation->id,
+                        'donation_type_id' => $donation->donation_type_id,
+                        'amount' => $donation->amount_value,
+                        'receipt_number' => $donation->receipt_number,
+                    ],
+                    $donation->received_at
+                );
             }
-            Donation::create($request->except('_token'));
 
             return response()->json(['status' => 200]);
         } catch (\Exception $e) {
@@ -147,14 +162,20 @@ class DonationController extends Controller
     public function edit($id)
     {
         $donation = Donation::find($id);
-        return view('admin/donations/parts/edit', ["donation" => $donation, "donors" => Donor::all()]);
+        return view('admin/donations/parts/edit', array_merge(['donation' => $donation], $this->formData()));
     }
 
 
     public function update(DonationsRequest $request, $id)
     {
         $donation = Donation::find($id);
-        if ($donation->update($request->except('_token', '_method'))) {
+        $data = $request->validated();
+        $data['donation_month'] = $data['donation_month'] ?? \Carbon\Carbon::parse($data['received_at'])->month;
+        $data['donation_amount'] = $data['donation_amount'] ?? $data['amount_value'] ?? null;
+        $data['donation_type'] = $data['donation_type_id'];
+        $data['donation_kind'] = $data['donation_kind'] ?? ($donation->donation_kind ?: 'financial');
+
+        if ($donation->update($data)) {
             return response()->json(['status' => 200]);
         } else {
             return response()->json(["status" => 405]);
@@ -201,7 +222,19 @@ class DonationController extends Controller
     }
     public function PrintDonations()
     {
-        $Donations = Donation::get();
+        $Donations = Donation::with(['donor', 'referenceDonationType', 'unit', 'receivedBy'])->get();
         return view('admin/print/PrintDonations', compact('Donations'));
+    }
+
+    protected function formData(): array
+    {
+        return [
+            'donors' => Donor::orderBy('name')->get(),
+            'assets' => Asset::all(),
+            'donationTypes' => DonationType::active()->orderBy('sort_order')->get(),
+            'donationUnits' => DonationUnit::active()->orderBy('sort_order')->get(),
+            'admins' => Admin::orderBy('name')->get(),
+            'occasions' => ['رمضان', 'عيد', 'أضحية', 'كفارة', 'صدقة جارية', 'زكاة', 'موسمية', 'أخرى'],
+        ];
     }
 }

@@ -25,9 +25,17 @@ class StoreDonate extends FormRequest
     {
         return [
             'name'  => 'required|max:255',
-            'phone' => 'required|max:255|digits_between:7,50|max:12|unique:donors,phone',
-            'address' => 'required',
-            'burn_date' => 'required|date',
+            'phone' => 'required|digits_between:7,15|unique:donors,phone',
+            'phone_second' => 'nullable|digits_between:7,15',
+            'relative_phone' => 'nullable|digits_between:7,15',
+            'address' => 'nullable|string',
+            'detailed_address' => 'nullable|string',
+            'burn_date' => 'nullable|date',
+            'governorate_id' => 'nullable|exists:governorates,id',
+            'center_id' => 'nullable|exists:centers,id',
+            'village_id' => 'nullable|exists:villages,id',
+            'preferred_donation_types' => 'nullable|array',
+            'preferred_donation_types.*' => 'exists:donation_types,id',
         ];
     }
 
@@ -36,10 +44,8 @@ class StoreDonate extends FormRequest
         return [
             'name.required'        => 'يرجي ادخال اسم المتبرع',
             'phone.required'       => 'يرجي ادخال هاتف المتبرع',
-            'phone.max'       => 'يرجي ادخال هاتف صالح',
             'phone.digits_between' => 'رقم الهاتف لا يجب ان يقل عن 7 ارقام',
-            'address.required'       => 'يرجي ادخال العنوان',
-            'burn_date.required'       => 'يرجي ادخال تاريخ الميلاد',
+            'preferred_donation_types.*.exists' => 'نوع التبرع المختار غير صحيح',
         ];
     }
 }

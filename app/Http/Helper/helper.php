@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -12,6 +13,10 @@ if (!function_exists('admin')) {
 }
 if (!function_exists('setting')) {
     function setting(){
+        if (!Schema::hasTable('settings')) {
+            return null;
+        }
+
         return \App\Models\Setting::first();
     }
 }

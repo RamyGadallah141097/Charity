@@ -10,6 +10,10 @@ class Subvention extends Model
     use HasFactory;
     protected $guarded = [];
 
+    protected $casts = [
+        'price' => 'float',
+    ];
+
     public function user(){
         return $this->belongsTo(User::class,'user_id');
     }

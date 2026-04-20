@@ -30,14 +30,20 @@
                 <div class="side-app">
 
                     <!-- PAGE-HEADER -->
-                    <div class="page-header">
-                        <div>
+                    <div class="page-header page-header-with-back">
+                        <div class="page-header-title-group">
                             <h1 class="page-title">مرحبا بـك ! <i class="fas fa-heart text-danger"></i></h1>
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('adminHome') }}">لوحة التحكم</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">@yield('page_name')</li>
                             </ol>
                         </div>
+                        <a href="{{ url()->previous() }}"
+                            class="btn btn-outline-primary page-back-button"
+                            onclick="if (window.history.length > 1) { event.preventDefault(); window.history.back(); }">
+                            <i class="fas fa-arrow-right ml-2"></i>
+                            <span>رجوع</span>
+                        </a>
                     </div>
                     <!-- PAGE-HEADER END -->
                     @yield('content')

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class LockerLog extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         "moneyType",
         "type",
@@ -20,6 +21,11 @@ class LockerLog extends Model
         "asset_id",
         "asset_count",
         "donor_id",
+    ];
+
+    protected $casts = [
+        'amount' => 'float',
+        'asset_count' => 'int',
     ];
 
 

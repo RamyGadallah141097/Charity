@@ -10,6 +10,11 @@ class PersonalLoan extends Model
     use HasFactory;
     protected $fillable = ['amount', 'loan_id', 'borrower_id', 'month'];
 
+    protected $casts = [
+        'amount' => 'float',
+        'month' => 'int',
+    ];
+
     public function borrower()
     {
         return $this->belongsTo(Borrower::class, 'borrower_id');

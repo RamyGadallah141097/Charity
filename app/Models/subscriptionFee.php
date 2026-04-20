@@ -8,5 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class subscriptionFee extends Model
 {
     use HasFactory;
+
     protected $fillable = ["title" , "amount"];
+
+    protected $casts = [
+        'amount' => 'float',
+    ];
 }
