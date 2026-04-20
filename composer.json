@@ -33,14 +33,15 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Http/Helper/helper.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        }, "files":[
-            "app/Http/Helper/helper.php"
-        ]
+        }
     },
     "scripts": {
         "post-autoload-dump": [
