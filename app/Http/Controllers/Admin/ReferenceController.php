@@ -14,6 +14,7 @@ use App\Models\Governorate;
 use App\Models\RevenueType;
 use App\Models\Village;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -47,7 +48,11 @@ class ReferenceController extends Controller
                     }
 
                     if ($type === 'donation-units') {
-                        return optional($row->donationCategory)->name ?? '-';
+                        return '-';
+                    }
+
+                    if ($type === 'donation-categories') {
+                        return $row->units->pluck('name')->filter()->implode(' - ') ?: '-';
                     }
 
                     return '-';
@@ -93,7 +98,11 @@ class ReferenceController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        $lookup['model']::create($this->payload($request, $type) + ['is_active' => true]);
+        $item = $lookup['model']::create($this->payload($request, $type) + ['is_active' => true]);
+
+        if ($type === 'donation-categories' && $item) {
+            $item->units()->sync($request->input('donation_unit_ids', []));
+        }
 
         return response()->json(['status' => 200]);
     }
@@ -119,6 +128,10 @@ class ReferenceController extends Controller
         }
 
         $item->update($this->payload($request, $type));
+
+        if ($type === 'donation-categories') {
+            $item->units()->sync($request->input('donation_unit_ids', []));
+        }
 
         return response()->json(['status' => 200]);
     }
@@ -173,6 +186,7 @@ class ReferenceController extends Controller
             'type' => $type,
             'lookup' => $this->lookupOrFail($type),
             'parents' => $this->parentOptions($type),
+            'units' => $this->unitOptions($type),
             'item' => $item,
             'formAction' => $formAction,
             'formMethod' => $formMethod,
@@ -212,10 +226,6 @@ class ReferenceController extends Controller
             $payload['months_interval'] = $request->months_interval;
         }
 
-        if ($type === 'donation-units') {
-            $payload['donation_category_id'] = $request->donation_category_id;
-        }
-
         return $payload;
     }
 
@@ -253,7 +263,12 @@ class ReferenceController extends Controller
         }
 
         if ($type === 'donation-units') {
-            $rules['donation_category_id'] = ['required', 'exists:donation_categories,id'];
+            $rules['name'][] = Rule::unique('donation_units', 'name')->ignore(request()->route('id'));
+        }
+
+        if ($type === 'donation-categories') {
+            $rules['donation_unit_ids'] = ['nullable', 'array'];
+            $rules['donation_unit_ids.*'] = ['exists:donation_units,id'];
         }
 
         return $rules;
@@ -267,8 +282,8 @@ class ReferenceController extends Controller
             'governorate_id.exists' => 'المحافظة المختارة غير موجودة',
             'center_id.required' => 'يرجى اختيار المركز',
             'center_id.exists' => 'المركز المختار غير موجود',
-            'donation_category_id.required' => 'يرجى اختيار صنف التبرع',
-            'donation_category_id.exists' => 'صنف التبرع المختار غير موجود',
+            'name.unique' => 'هذا الاسم مستخدم بالفعل',
+            'donation_unit_ids.*.exists' => 'إحدى وحدات التبرع المختارة غير موجودة',
             'months_interval.integer' => 'الفاصل الزمني يجب أن يكون رقمًا صحيحًا',
         ];
     }
@@ -292,11 +307,13 @@ class ReferenceController extends Controller
                 ->values();
         }
 
-        if ($type === 'donation-units') {
-            return DonationCategory::active()
-                ->orderBy('sort_order')
-                ->orderBy('name')
-                ->get(['id', 'name']);
+        return collect();
+    }
+
+    private function unitOptions(string $type)
+    {
+        if ($type === 'donation-categories') {
+            return DonationUnit::active()->orderBy('name')->get(['id', 'name']);
         }
 
         return collect();
@@ -318,8 +335,8 @@ class ReferenceController extends Controller
             'villages' => ['model' => Village::class, 'title' => 'القرى', 'parent_label' => 'المركز', 'show_code' => false, 'show_sort_order' => false, 'show_notes' => false],
             'beneficiary-categories' => ['model' => BeneficiaryCategory::class, 'title' => 'تصنيفات المعاش والمستفيد', 'parent_label' => null, 'show_code' => false, 'show_sort_order' => false, 'show_notes' => false],
             'donation-types' => ['model' => DonationType::class, 'title' => 'أنواع التبرعات', 'parent_label' => null, 'show_code' => false, 'show_sort_order' => false, 'show_notes' => false],
-            'donation-categories' => ['model' => DonationCategory::class, 'title' => 'أصناف التبرعات العينية', 'parent_label' => null, 'show_code' => false, 'show_sort_order' => false, 'show_notes' => false],
-            'donation-units' => ['model' => DonationUnit::class, 'title' => 'وحدات التبرع', 'parent_label' => 'صنف التبرع', 'show_code' => false, 'show_sort_order' => false, 'show_notes' => false],
+            'donation-categories' => ['model' => DonationCategory::class, 'title' => 'أصناف التبرعات العينية', 'parent_label' => 'وحدات التبرع', 'show_code' => false, 'show_sort_order' => false, 'show_notes' => false],
+            'donation-units' => ['model' => DonationUnit::class, 'title' => 'وحدات التبرع', 'parent_label' => null, 'show_code' => false, 'show_sort_order' => false, 'show_notes' => false],
             'expense-types' => ['model' => ExpenseType::class, 'title' => 'أنواع المصروفات', 'parent_label' => null, 'show_code' => false, 'show_sort_order' => false, 'show_notes' => false],
             'revenue-types' => ['model' => RevenueType::class, 'title' => 'أنواع الإيرادات الأخرى', 'parent_label' => null, 'show_code' => false, 'show_sort_order' => false, 'show_notes' => false],
             'disbursement-frequencies' => ['model' => DisbursementFrequency::class, 'title' => 'توقيتات وأنماط الصرف', 'parent_label' => null, 'show_code' => false, 'show_sort_order' => false, 'show_notes' => false],

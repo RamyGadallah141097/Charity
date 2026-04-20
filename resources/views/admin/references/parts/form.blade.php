@@ -55,17 +55,23 @@
 
         @if ($type === 'donation-units')
             <div class="col-md-12">
+                <small class="text-muted d-block mt-2">أضف اسم الوحدة فقط مثل: قطعة، وجبة، جهاز، شنطة.</small>
+            </div>
+        @endif
+
+        @if ($type === 'donation-categories')
+            <div class="col-md-12">
                 <div class="form-group">
-                    <label class="form-label">صنف التبرع</label>
-                    <select class="form-control" name="donation_category_id">
-                        <option value="">اختر صنف التبرع</option>
-                        @foreach ($parents as $parent)
-                            <option value="{{ $parent->id }}" {{ old('donation_category_id', $item->donation_category_id ?? '') == $parent->id ? 'selected' : '' }}>
-                                {{ $parent->name }}
+                    <label class="form-label">وحدات التبرع</label>
+                    <select class="form-control" name="donation_unit_ids[]" multiple>
+                        @foreach ($units as $unit)
+                            <option value="{{ $unit->id }}"
+                                {{ collect(old('donation_unit_ids', isset($item) ? $item->units->pluck('id')->all() : []))->contains($unit->id) ? 'selected' : '' }}>
+                                {{ $unit->name }}
                             </option>
                         @endforeach
                     </select>
-                    <small class="text-muted">مثال: ملابس، أثاث، موبايلات، وجبات.</small>
+                    <small class="text-muted">اختر وحدة واحدة أو أكثر لهذا الصنف.</small>
                 </div>
             </div>
         @endif

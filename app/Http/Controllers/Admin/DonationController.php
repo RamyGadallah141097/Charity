@@ -234,13 +234,14 @@ class DonationController extends Controller
     {
         $donationTypes = DonationType::active()->orderBy('sort_order')->get();
         $donationUnits = DonationUnit::active()
+            ->with('categories:id')
             ->orderBy('sort_order')
             ->orderBy('name')
             ->get();
 
         return [
             'donors' => Donor::orderBy('name')->get(),
-            'donationCategories' => DonationCategory::active()->orderBy('sort_order')->orderBy('name')->get(),
+            'donationCategories' => DonationCategory::active()->with('units:id,name')->orderBy('sort_order')->orderBy('name')->get(),
             'donationTypes' => $donationTypes,
             'donationUnits' => $donationUnits,
             'cashDonationUnitId' => optional($donationUnits->firstWhere('code', 'egp'))->id,
