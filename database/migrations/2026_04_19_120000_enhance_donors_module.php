@@ -28,7 +28,7 @@ return new class extends Migration
         Schema::create('donor_histories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('donor_id')->constrained('donors')->cascadeOnDelete();
-            $table->foreignId('admin_id')->nullable()->constrained('Admins')->nullOnDelete();
+            $table->foreignId('admin_id')->nullable()->constrained('admins')->nullOnDelete();
             $table->string('event_type');
             $table->string('title');
             $table->text('description')->nullable();
