@@ -8,7 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class AdminSubscription extends Model
 {
     protected $fillable = ["admin_id" , "months_count" , "amount"];
+
     use HasFactory;
+
+    protected $casts = [
+        'months_count' => 'int',
+        'amount' => 'float',
+    ];
 
     public function admin()
     {

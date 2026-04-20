@@ -2,7 +2,8 @@
     {{ isset($setting) ? $setting->title : '' }}
  | تسجيل الدخول
 </title>
-<link rel="shortcut icon" type="image/x-icon" href="#">
+<link rel="shortcut icon" type="image/x-icon"
+    href="{{ !empty($setting?->logo) ? asset($setting->logo) : asset('assets/admin/images/favicon.ico') }}">
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700&display=swap');
 
@@ -208,6 +209,32 @@
         padding: 3.2rem;
         backdrop-filter: blur(18px);
         position: relative;
+    }
+
+    .login-card-back {
+        display: flex;
+        justify-content: flex-start;
+        margin-bottom: 1.8rem;
+    }
+
+    .login-back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.75rem 1.2rem;
+        border-radius: 999px;
+        border: 1px solid rgba(179, 44, 47, 0.15);
+        background: rgba(179, 44, 47, 0.06);
+        color: var(--primary);
+        font-size: 1.45rem;
+        font-weight: 700;
+        transition: all 0.2s ease;
+    }
+
+    .login-back-button:hover {
+        color: var(--primary-dark);
+        background: rgba(179, 44, 47, 0.1);
+        transform: translateY(-1px);
     }
 
     .logo-badge {

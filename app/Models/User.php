@@ -44,8 +44,32 @@ class User extends Authenticatable
        return $this->hasMany(Children::class,'user_id');
    }
 
-    public function patient(){
-        return $this->hasOne(Patient::class,'user_id');
+   public function patient(){
+        return $this->hasOne(Patient::class,'user_id')->latestOfMany();
+    }
+
+   public function patients(){
+        return $this->hasMany(Patient::class,'user_id');
+    }
+
+    public function governorate()
+    {
+        return $this->belongsTo(Governorate::class);
+    }
+
+    public function center()
+    {
+        return $this->belongsTo(Center::class);
+    }
+
+    public function village()
+    {
+        return $this->belongsTo(Village::class);
+    }
+
+    public function beneficiaryCategory()
+    {
+        return $this->belongsTo(BeneficiaryCategory::class);
     }
 
     public function subvention(){

@@ -12,7 +12,7 @@
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"> قائمة تبرعات الصدقات والزكاة </h3>
+                    <h3 class="card-title"> التبرعات المالية الواردة </h3>
                     <div class="">
                         <a href="{{ route('PrintDonations') }}" class="btn btn-warning">
                             <i class="fa fa-print"></i> طباعة التبرعات
@@ -25,18 +25,53 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    <div class="alert alert-success">
+                        إجمالي التبرعات بوحدة الجنيه:
+                        <strong>{{ rtrim(rtrim(number_format((float) ($cashTotal ?? 0), 2, '.', ''), '0'), '.') }} جنيه</strong>
+                    </div>
                     <div class="table-responsive">
                         <!--begin::Table-->
                         <table class="table table-striped table-bordered text-nowrap w-75" id="dataTable">
                             <thead>
                                 <tr class="fw-bolder text-muted bg-light">
                                     <th class="min-w-25px">#</th>
-                                    <th class="min-w-50px"> الاسم المتبرع</th>
-                                    <th class="min-w-125px"> الهاتف المتبرع</th>
-                                    <th class="min-w-125px">تاريخ التبرع</th>
-                                    <th class="min-w-125px">نوع التبرع </th>
-                                    <th class="min-w-125px">قيمه التبرع </th>
-                                    {{-- <th class="min-w-50px rounded-end">العمليات</th> --}}
+                                    <th class="min-w-50px">اسم المتبرع</th>
+                                    <th class="min-w-125px">الهاتف</th>
+                                    <th class="min-w-125px">تاريخ الاستلام</th>
+                                    <th class="min-w-125px">تصنيف التبرع</th>
+                                    <th class="min-w-125px">المبلغ/الكمية</th>
+                                    <th class="min-w-125px">رقم الوصل</th>
+                                    <th class="min-w-125px">المسؤول</th>
+                                    <th class="min-w-125px">شهر التبرع</th>
+                                    <th class="min-w-125px">المناسبة</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 col-lg-12 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"> التبرعات غير النقدية </h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered text-nowrap w-75" id="nonCashTable">
+                            <thead>
+                                <tr class="fw-bolder text-muted bg-light">
+                                    <th class="min-w-25px">#</th>
+                                    <th class="min-w-50px">اسم المتبرع</th>
+                                    <th class="min-w-125px">الهاتف</th>
+                                    <th class="min-w-125px">تاريخ الاستلام</th>
+                                    <th class="min-w-125px">تصنيف التبرع</th>
+                                    <th class="min-w-125px">المبلغ/الكمية</th>
+                                    <th class="min-w-125px">رقم الوصل</th>
+                                    <th class="min-w-125px">المسؤول</th>
+                                    <th class="min-w-125px">شهر التبرع</th>
+                                    <th class="min-w-125px">المناسبة</th>
                                 </tr>
                             </thead>
                         </table>
@@ -115,29 +150,62 @@
                 name: 'donor_phone'
             },
             {
-                data: 'created_at',
-                name: 'created_at'
+                data: 'received_at_display',
+                name: 'received_at_display'
             },
             {
-                data: 'donation_type',
-                name: 'donation_type'
+                data: 'donation_type_name',
+                name: 'donation_type_name'
             },
             {
-                data: 'donation_amount',
-                name: 'donation_amount'
+                data: 'value_with_unit',
+                name: 'value_with_unit'
             },
-            // {
-            //     data: 'action',
-            //     name: 'action',
-            //     orderable: false,
-            //     searchable: false
-            // },
+            {
+                data: 'receipt_number',
+                name: 'receipt_number'
+            },
+            {
+                data: 'received_by_name',
+                name: 'received_by_name'
+            },
+            {
+                data: 'donation_month_name',
+                name: 'donation_month_name'
+            },
+            {
+                data: 'occasion_name',
+                name: 'occasion_name'
+            },
         ]
-        showData('{{ route('Donations.index') }}', columns);
+        showData('{{ route('Donations.index', ['category' => 'cash']) }}', columns);
         deleteScript('{{ route('donations_delete') }}');
         showAddModal('{{ route('Donations.create') }}');
         addScript();
         showEditModal('{{ route('Donations.edit', ':id') }}');
         editScript();
+
+        $('#nonCashTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: '{{ route('Donations.index', ['category' => 'non_cash']) }}',
+            columns: columns,
+            order: [
+                [0, "ASC"]
+            ],
+            language: {
+                sProcessing: "جاري التحميل ..",
+                sLengthMenu: "اظهار _MENU_ سجل",
+                sZeroRecords: "لا يوجد نتائج",
+                sInfo: "اظهار _START_ الى  _END_ من _TOTAL_ سجل",
+                sInfoEmpty: "لا نتائج",
+                sInfoFiltered: "للبحث",
+                sSearch: "بحث :    ",
+                oPaginate: {
+                    sPrevious: "السابق",
+                    sNext: "التالي",
+                }
+            }
+        });
     </script>
 @endsection

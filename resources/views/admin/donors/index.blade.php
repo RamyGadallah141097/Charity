@@ -8,6 +8,21 @@
     المتبرعين
 @endsection
 @section('content')
+    <style>
+        #editOrCreate .modal-dialog {
+            max-width: min(1100px, 96vw);
+            width: 96vw;
+        }
+
+        #editOrCreate .modal-content {
+            max-height: 92vh;
+        }
+
+        #editOrCreate .modal-body {
+            overflow-y: auto;
+        }
+    </style>
+
     <div class="row">
         <div class="col-md-12 col-lg-12">
             <div class="card">
@@ -30,8 +45,13 @@
                                 <tr class="fw-bolder text-muted bg-light">
                                     <th class="min-w-25px">#</th>
                                     <th class="min-w-50px">الاسم</th>
-                                    <th class="min-w-125px">الهاتف</th>
+                                    <th class="min-w-125px">أرقام الهاتف</th>
                                     <th class="min-w-125px">العنوان</th>
+                                    <th class="min-w-125px">أنواع التبرع المفضلة</th>
+                                    <th class="min-w-125px">أول تبرع</th>
+                                    <th class="min-w-125px">آخر تبرع</th>
+                                    <th class="min-w-125px">عدد مرات التبرع</th>
+                                    <th class="min-w-125px">إجمالي التبرعات</th>
                                     <th class="min-w-125px">تاريخ الميلاد</th>
                                     <th class="min-w-125px">ملاحظات</th>
                                     <th class="min-w-125px">وقت التسجيل</th>
@@ -47,7 +67,7 @@
         <!--Delete MODAL -->
         <div class="modal fade" id="delete_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">حذف بيانات</h5>
@@ -151,12 +171,32 @@
                 name: 'name'
             },
             {
-                data: 'phone',
+                data: 'phone_display',
                 name: 'phone'
             },
             {
-                data: 'address',
-                name: 'address'
+                data: 'location_display',
+                name: 'location_display'
+            },
+            {
+                data: 'preferred_types',
+                name: 'preferred_types'
+            },
+            {
+                data: 'first_donation',
+                name: 'first_donation'
+            },
+            {
+                data: 'last_donation',
+                name: 'last_donation'
+            },
+            {
+                data: 'donations_count',
+                name: 'donations_count'
+            },
+            {
+                data: 'total_donations_amount',
+                name: 'total_donations_amount'
             },
             {
                 data: 'burn_date',

@@ -105,7 +105,6 @@
                                 <td>{{ $user->nearest_phone }}</td>
                                 <td>{{ $user->work_type }}</td>
                                 <td>{{ $user->address }}</td>
-
                             </tr>
                         </tbody>
                     </table>
@@ -177,18 +176,22 @@
                 </div>
                 <h3> مستوى المعيشة</h3>
                 <div class="table-responsive">
-                    <table class="table table-striped table-bordered w-100">
-                        <thead>
-                            <tr class="fw-bolder text-muted bg-light">
-                                <th class="min-w-25px">مستوى المعيشة </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>{{ $user->standard_living }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                     <table class="table table-striped table-bordered w-100">
+                         <thead>
+                             <tr class="fw-bolder text-muted bg-light">
+                                 <th class="min-w-25px">مستوى المعيشة </th>
+                                 <th class="min-w-25px">تاريخ الإضافة </th>
+                                 <th class="min-w-25px">آخر تعديل </th>
+                             </tr>
+                         </thead>
+                         <tbody>
+                             <tr>
+                                 <td>{{ $user->standard_living }}</td>
+                                 <td>{{ $user->created_at ? $user->created_at->format('Y-m-d H:i') : '-' }}</td>
+                                 <td>{{ $user->updated_at ? $user->updated_at->format('Y-m-d H:i') : '-' }}</td>
+                             </tr>
+                         </tbody>
+                     </table>
 
 
                     @if ($user->childrens)

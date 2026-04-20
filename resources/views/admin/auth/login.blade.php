@@ -37,7 +37,8 @@
 
         <main class="login-panel">
             <div class="login-card">
-                
+
+
 
                 <div class="login-header">
                     <span class="panel-tag">أهلا بعودتك</span>
@@ -45,6 +46,7 @@
                     <p class="text-mute">أدخل بياناتك للانتقال إلى لوحة تحكم الجمعية.</p>
                 </div>
 
+                
                 <form class="signup-form" action="{{ route('admin.login') }}" method="post" id="LoginForm">
                     @csrf
 

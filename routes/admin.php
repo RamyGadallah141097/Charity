@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\BorrowerController;
+use App\Http\Controllers\Admin\ReferenceController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -28,8 +29,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::resource("SubscriptionFee", "SubscriptionFeeController");
 
     #### Users ####
-    Route::get('users/{status}', 'UserController@index')->name('users.index')->middleware('permission:users.index');
     Route::get('users.create', 'UserController@create')->name('users.create');
+    Route::get('users', 'UserController@index')->name('users.index')->middleware('permission:users.index');
+    Route::get('users/{status}', 'UserController@index')->name('users.index.status')->middleware('permission:users.index');
     Route::get('users/{id}/edit', 'UserController@edit')->name('users.edit');
     Route::POST('users.store', 'UserController@store')->name('users.store');
     Route::put('/users/{id}/update', 'UserController@update')->name('users.update');
@@ -40,6 +42,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('userDetails/{id?}', 'UserController@userDetails')->name('userDetails');
     Route::get('searchNID/{id?}', 'UserController@searchNID')->name('user.searchNID');
     Route::get('DonationDetails/{id}', 'UserController@DonationDetails')->name('DonationDetails');
+    Route::get('attachments/view', 'UserController@viewAttachment')->name('attachments.view');
 
     #### print users ####
     Route::get('PrintUsersNew', 'UserController@PrintUsersNew')->name('PrintUsersNew');
@@ -87,7 +90,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
         Route::get('/get_borrower_phone/{id}', 'BorrowerController@get_borrower_phone')->name("get_borrower_phone");
     });
 
-    Route::get("lock/{lock}", "LockerLogController@index")->name("lock");
+    Route::get("lock/{lock?}", "LockerLogController@index")->name("lock");
 
     #### Tasks ####
     Route::resource("tasks", "TaskController")->middleware('permission:tasks.index');
@@ -155,6 +158,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     #### Setting ####
     Route::get('setting', 'SettingController@index')->name('setting.index')->middleware(['permission:setting.index', 'admin']);
     Route::post('settingUpdate', 'SettingController@update')->name('settingUpdate');
+    Route::get('references', [ReferenceController::class, 'dashboard'])->name('references.dashboard');
+    Route::get('references/{type}', [ReferenceController::class, 'index'])->name('references.index');
+    Route::get('references/{type}/create', [ReferenceController::class, 'create'])->name('references.create');
+    Route::post('references/{type}', [ReferenceController::class, 'store'])->name('references.store');
+    Route::get('references/{type}/{id}/edit', [ReferenceController::class, 'edit'])->name('references.edit');
+    Route::put('references/{type}/{id}', [ReferenceController::class, 'update'])->name('references.update');
+    Route::post('references/{type}/{id}/toggle-status', [ReferenceController::class, 'toggleStatus'])->name('references.toggle-status');
+    Route::post('references/{type}/delete', [ReferenceController::class, 'delete'])->name('references.delete');
     Route::post('borrowerReviewModal', 'BorrowerController@storeReview')->name('BorrowerReview');
     #### Auth ####
     Route::get('logout', 'AuthController@logout')->name('admin.logout');

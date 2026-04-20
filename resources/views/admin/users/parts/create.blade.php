@@ -77,15 +77,55 @@
                                     placeholder="" readonly>
                             </div>
 
-                            <div class="form-group col-md-8">
+                            <div class="form-group col-md-12">
                                 <label class="form-label"> العنوان </label>
                                 <input type="text" value="{{ old('address') }}" class="form-control" name="address"
                                     placeholder="">
                             </div>
 
-                            <div class="form-group col-md-2">
-                                <label class="form-label">الحالة الاجتماعية للاب</label>
-                                <select name="social_status" class="form-control select2"
+                            <div class="form-group col-md-4">
+                                <label class="form-label">المحافظة</label>
+                                <select name="governorate_id" class="form-control" data-placeholder="اختيار المحافظة">
+                                    <option value="">اختر المحافظة</option>
+                                    @foreach ($governorates as $governorate)
+                                        <option value="{{ $governorate->id }}" {{ old('governorate_id') == $governorate->id ? 'selected' : '' }}>
+                                            {{ $governorate->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label class="form-label">المركز</label>
+                                <select name="center_id" class="form-control dependent-center-select" data-placeholder="اختيار المركز">
+                                    <option value="">اختر المركز</option>
+                                    @foreach ($centers as $center)
+                                        <option value="{{ $center->id }}"
+                                            data-governorate-id="{{ $center->governorate_id }}"
+                                            {{ old('center_id') == $center->id ? 'selected' : '' }}>
+                                            {{ $center->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label class="form-label">القرية</label>
+                                <select name="village_id" class="form-control dependent-village-select" data-placeholder="اختيار القرية">
+                                    <option value="">اختر القرية</option>
+                                    @foreach ($villages as $village)
+                                        <option value="{{ $village->id }}"
+                                            data-center-id="{{ $village->center_id }}"
+                                            {{ old('village_id') == $village->id ? 'selected' : '' }}>
+                                            {{ $village->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label class="form-label">الحالة الاجتماعية للمستفيد</label>
+                                <select name="social_status" class="form-control"
                                     data-placeholder="اختيار الحالة الاجتماعية">
                                     <option value="{{ old('social_status') }}">{{ old('social_status') }}</option>
                                     <option value="0" selected>أعزب</option>
@@ -96,16 +136,28 @@
                             </div>
 
 
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-3">
                                 <label class="form-label">نوع العمل</label>
                                 <input type="text" value="{{ old('work_type') }}" class="form-control" name="work_type"
                                     placeholder="">
                             </div>
 
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-3">
                                 <label class="form-label">أقرب تليفون</label>
                                 <input value="{{ old('nearest_phone') }}" type="nubmer" class="form-control"
                                     value="{{ old('nearest_phone') }}" name="nearest_phone" placeholder="">
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label class="form-label">تصنيف المستفيد</label>
+                                <select name="beneficiary_category_id" class="form-control" data-placeholder="اختيار التصنيف">
+                                    <option value="">اختر التصنيف</option>
+                                    @foreach ($beneficiaryCategories as $category)
+                                        <option value="{{ $category->id }}" {{ old('beneficiary_category_id') == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <hr>
@@ -139,17 +191,17 @@
                                     name="dignity" placeholder="">
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label">تجارة</label>
+                                <label class="form-label">دخل اخر (1)</label>
                                 <input type="number" class="form-control income-input" value="{{ old('trade') }}"
                                     name="trade" placeholder="">
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label">سادات</label>
+                                <label class="form-label">دخل اخر (2)</label>
                                 <input type="number" class="form-control income-input" value="{{ old('pillows') }}"
                                     name="pillows" placeholder="">
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label">غير ذلك</label>
+                                <label class="form-label">دخل اخر (3)</label>
                                 <input type="number" class="form-control income-input" value="{{ old('other') }}"
                                     name="other" placeholder="">
                             </div>
@@ -304,6 +356,17 @@
 
                                         <div class="col-2">
                                             <div class="form-group">
+                                                <label class="form-control-label"> النوع </label>
+                                                <select class="form-control" name="child_gender[]">
+                                                    <option value="">اختر</option>
+                                                    <option value="1" {{ (old('child_gender')[$index] ?? '') === '1' ? 'selected' : '' }}>ذكر</option>
+                                                    <option value="0" {{ (old('child_gender')[$index] ?? '') === '0' ? 'selected' : '' }}>أنثى</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-2">
+                                            <div class="form-group">
                                                 <label for="schools" class="form-control-label"> المدرسة </label>
                                                 <input type="text" class="form-control"
                                                     value="{{ old('schools')[$index] ?? '' }}" name="schools[]">
@@ -351,6 +414,17 @@
                                         <div class="form-group">
                                             <label for="age" class="form-control-label"> السن </label>
                                             <input type="text" class="form-control" name="age[]" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <label class="form-control-label"> النوع </label>
+                                            <select class="form-control" name="child_gender[]">
+                                                <option value="">اختر</option>
+                                                <option value="1">ذكر</option>
+                                                <option value="0">أنثى</option>
+                                            </select>
                                         </div>
                                     </div>
 
@@ -571,6 +645,66 @@
         </div>
         <!-- COL END -->
     </form>
+
+    <script>
+        $(function () {
+            var $governorate = $('select[name="governorate_id"]');
+            var $center = $('select[name="center_id"]');
+            var $village = $('select[name="village_id"]');
+            var centerOptions = $center.html();
+            var villageOptions = $village.html();
+
+            function refreshSelect2($select) {
+                $select.trigger('change.select2');
+            }
+
+            function filterCenters(selectedCenterId) {
+                var governorateId = $governorate.val();
+                var filteredCenters = $(centerOptions).filter(function () {
+                    return !this.value || $(this).data('governorate-id') == governorateId;
+                });
+
+                $center.html(filteredCenters);
+
+                if (selectedCenterId && $center.find('option[value="' + selectedCenterId + '"]').length) {
+                    $center.val(selectedCenterId);
+                } else {
+                    $center.val('');
+                }
+
+                refreshSelect2($center);
+            }
+
+            function filterVillages(selectedVillageId) {
+                var centerId = $center.val();
+                var filteredVillages = $(villageOptions).filter(function () {
+                    return !this.value || $(this).data('center-id') == centerId;
+                });
+
+                $village.html(filteredVillages);
+
+                if (selectedVillageId && $village.find('option[value="' + selectedVillageId + '"]').length) {
+                    $village.val(selectedVillageId);
+                } else {
+                    $village.val('');
+                }
+
+                refreshSelect2($village);
+            }
+
+            $governorate.on('change', function () {
+                filterCenters('');
+                filterVillages('');
+            });
+
+            $center.on('change', function () {
+                filterVillages('');
+            });
+
+            filterCenters(@json(old('center_id')));
+            filterVillages(@json(old('village_id')));
+        });
+    </script>
 @endsection
 
 @section('js')
@@ -803,6 +937,17 @@
 
         <div class="col-2">
             <div class="form-group">
+                <label class="form-control-label">النوع</label>
+                <select class="form-control" name="child_gender[]">
+                    <option value="">اختر</option>
+                    <option value="1">ذكر</option>
+                    <option value="0">أنثى</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-2">
+            <div class="form-group">
                 <label for="schools" class="form-control-label">المدرسة</label>
                 <input type="text" class="form-control" name="schools[]">
             </div>
@@ -975,6 +1120,58 @@
             document.querySelectorAll('[name="children_national_id[]"]').forEach(input => {
                 input.addEventListener('input', handleNationalIdInput);
             });
+        });
+    </script>
+
+    <script>
+        $(function () {
+            var $governorate = $('select[name="governorate_id"]');
+            var $center = $('select[name="center_id"]');
+            var $village = $('select[name="village_id"]');
+            var centerOptions = $center.html();
+            var villageOptions = $village.html();
+
+            function filterCenters(selectedCenterId) {
+                var governorateId = $governorate.val();
+                var filteredCenters = $(centerOptions).filter(function () {
+                    return !this.value || $(this).data('governorate-id') == governorateId;
+                });
+
+                $center.html(filteredCenters);
+
+                if (selectedCenterId && $center.find('option[value="' + selectedCenterId + '"]').length) {
+                    $center.val(selectedCenterId);
+                } else {
+                    $center.val('');
+                }
+            }
+
+            function filterVillages(selectedVillageId) {
+                var centerId = $center.val();
+                var filteredVillages = $(villageOptions).filter(function () {
+                    return !this.value || $(this).data('center-id') == centerId;
+                });
+
+                $village.html(filteredVillages);
+
+                if (selectedVillageId && $village.find('option[value="' + selectedVillageId + '"]').length) {
+                    $village.val(selectedVillageId);
+                } else {
+                    $village.val('');
+                }
+            }
+
+            $governorate.on('change', function () {
+                filterCenters('');
+                filterVillages('');
+            });
+
+            $center.on('change', function () {
+                filterVillages('');
+            });
+
+            filterCenters('{{ old('center_id') }}');
+            filterVillages('{{ old('village_id') }}');
         });
     </script>
 @endsection

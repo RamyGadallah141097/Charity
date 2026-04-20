@@ -123,37 +123,88 @@
                                     name="age_wife" placeholder="" readonly>
                             </div>
 
-                            <div class="form-group col-md-8">
+                            <div class="form-group col-md-12">
                                 <label class="form-label"> العنوان </label>
                                 <input type="text" value="{{ old('address', $user->address) }}" class="form-control"
                                     name="address" placeholder="">
                             </div>
 
-                            <div class="form-group col-md-2">
-                                <label class="form-label">الحالة الاجتماعية للاب</label>
-                                <select name="social_status" class="form-control select2"
-                                    data-placeholder="اختيار الحالة الاجتماعية">
-                                    <option value="{{ old('social_status', $user->social_status) }}" selected>
-                                        {{ old('social_status', $user->social_status) }}</option>
-                                    <option value="0">أعزب</option>
-                                    <option value="1">متزوج</option>
-                                    <option value="2">مطلق</option>
-                                    <option value="3">متوفى</option>
+                            <div class="form-group col-md-4">
+                                <label class="form-label">المحافظة</label>
+                                <select name="governorate_id" class="form-control" data-placeholder="اختيار المحافظة">
+                                    <option value="">اختر المحافظة</option>
+                                    @foreach ($governorates as $governorate)
+                                        <option value="{{ $governorate->id }}" {{ old('governorate_id', $user->governorate_id) == $governorate->id ? 'selected' : '' }}>
+                                            {{ $governorate->name }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
 
+                            <div class="form-group col-md-4">
+                                <label class="form-label">المركز</label>
+                                <select name="center_id" class="form-control dependent-center-select" data-placeholder="اختيار المركز">
+                                    <option value="">اختر المركز</option>
+                                    @foreach ($centers as $center)
+                                        <option value="{{ $center->id }}"
+                                            data-governorate-id="{{ $center->governorate_id }}"
+                                            {{ old('center_id', $user->center_id) == $center->id ? 'selected' : '' }}>
+                                            {{ $center->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
 
                             <div class="form-group col-md-4">
+                                <label class="form-label">القرية</label>
+                                <select name="village_id" class="form-control dependent-village-select" data-placeholder="اختيار القرية">
+                                    <option value="">اختر القرية</option>
+                                    @foreach ($villages as $village)
+                                        <option value="{{ $village->id }}"
+                                            data-center-id="{{ $village->center_id }}"
+                                            {{ old('village_id', $user->village_id) == $village->id ? 'selected' : '' }}>
+                                            {{ $village->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label class="form-label">الحالة الاجتماعية للمستفيد</label>
+                                 <select name="social_status" class="form-control"
+                                     data-placeholder="اختيار الحالة الاجتماعية">
+                                     <option value="">اختيار الحالة الاجتماعية</option>
+                                     <option value="0" {{ old('social_status', $user->social_status) == '0' ? 'selected' : '' }}>أعزب</option>
+                                     <option value="1" {{ old('social_status', $user->social_status) == '1' ? 'selected' : '' }}>متزوج</option>
+                                     <option value="2" {{ old('social_status', $user->social_status) == '2' ? 'selected' : '' }}>مطلق</option>
+                                     <option value="3" {{ old('social_status', $user->social_status) == '3' ? 'selected' : '' }}>متوفى</option>
+                                 </select>
+                            </div>
+
+
+                            <div class="form-group col-md-3">
                                 <label class="form-label">نوع العمل</label>
                                 <input type="text" value="{{ old('work_type', $user->work_type) }}" class="form-control"
                                     name="work_type" placeholder="">
                             </div>
 
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-3">
                                 <label class="form-label">أقرب تليفون</label>
                                 <input type="nubmer" class="form-control"
                                     value="{{ old('nearest_phone', $user->nearest_phone) }}" name="nearest_phone"
                                     placeholder="">
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label class="form-label">تصنيف المستفيد</label>
+                                <select name="beneficiary_category_id" class="form-control" data-placeholder="اختيار التصنيف">
+                                    <option value="">اختر التصنيف</option>
+                                    @foreach ($beneficiaryCategories as $category)
+                                        <option value="{{ $category->id }}" {{ old('beneficiary_category_id', $user->beneficiary_category_id) == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <hr>
@@ -338,6 +389,17 @@
 
                                     <div class="col-2">
                                         <div class="form-group">
+                                            <label class="form-control-label"> النوع </label>
+                                            <select class="form-control" name="child_gender[]">
+                                                <option value="">اختر</option>
+                                                <option value="1" {{ (string) old('child_gender.' . $index, $child->gender) === '1' ? 'selected' : '' }}>ذكر</option>
+                                                <option value="0" {{ (string) old('child_gender.' . $index, $child->gender) === '0' ? 'selected' : '' }}>أنثى</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-2">
+                                        <div class="form-group">
                                             <label for="schools" class="form-control-label"> المدرسة </label>
                                             <input type="text" class="form-control"
                                                 value="{{ old('schools.' . $index, $child->school) }}" name="schools[]">
@@ -512,15 +574,10 @@
 
                                 <div class="image-gallery">
                                     @foreach ($attachments as $attachment)
-                                        <img src="{{ asset('storage/' . $attachment) }}" alt="Attachment"
+                                        <img src="{{ route('attachments.view', ['path' => $attachment]) }}" alt="Attachment"
                                             style="max-width: 500px" height="150" class="gallery-image"
-                                            onclick="openModal('{{ asset('storage/' . $attachment) }}')">
+                                            onclick="openModal('{{ route('attachments.view', ['path' => $attachment]) }}')">
                                     @endforeach
-                                </div>
-
-                                <div id="imageModal" class="modal">
-                                    <span class="close" onclick="closeModal()">&times;</span>
-                                    <img class="modal-content" style="width: 500px; height: 500px;" id="modalImage">
                                 </div>
                             @endif
 
@@ -756,6 +813,17 @@
 
                     <div class="col-2">
                         <div class="form-group">
+                            <label class="form-control-label">النوع</label>
+                            <select class="form-control" name="child_gender[]">
+                                <option value="">اختر</option>
+                                <option value="1">ذكر</option>
+                                <option value="0">أنثى</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-2">
+                        <div class="form-group">
                             <label for="schools" class="form-control-label">المدرسة</label>
                             <input type="text" class="form-control" name="schools[]">
                         </div>
@@ -888,6 +956,66 @@
 
 
 
+
+    <script>
+        $(function () {
+            var $governorate = $('select[name="governorate_id"]');
+            var $center = $('select[name="center_id"]');
+            var $village = $('select[name="village_id"]');
+            var centerOptions = $center.html();
+            var villageOptions = $village.html();
+
+            function refreshSelect2($select) {
+                $select.trigger('change.select2');
+            }
+
+            function filterCenters(selectedCenterId) {
+                var governorateId = $governorate.val();
+                var filteredCenters = $(centerOptions).filter(function () {
+                    return !this.value || $(this).data('governorate-id') == governorateId;
+                });
+
+                $center.html(filteredCenters);
+
+                if (selectedCenterId && $center.find('option[value="' + selectedCenterId + '"]').length) {
+                    $center.val(selectedCenterId);
+                } else {
+                    $center.val('');
+                }
+
+                refreshSelect2($center);
+            }
+
+            function filterVillages(selectedVillageId) {
+                var centerId = $center.val();
+                var filteredVillages = $(villageOptions).filter(function () {
+                    return !this.value || $(this).data('center-id') == centerId;
+                });
+
+                $village.html(filteredVillages);
+
+                if (selectedVillageId && $village.find('option[value="' + selectedVillageId + '"]').length) {
+                    $village.val(selectedVillageId);
+                } else {
+                    $village.val('');
+                }
+
+                refreshSelect2($village);
+            }
+
+            $governorate.on('change', function () {
+                filterCenters('');
+                filterVillages('');
+            });
+
+            $center.on('change', function () {
+                filterVillages('');
+            });
+
+            filterCenters(@json(old('center_id', $user->center_id)));
+            filterVillages(@json(old('village_id', $user->village_id)));
+        });
+    </script>
 
     <script>
         function openModal(imageSrc) {
