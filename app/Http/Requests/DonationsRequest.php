@@ -39,7 +39,7 @@ class DonationsRequest extends FormRequest
                 'max:255',
                 Rule::unique('donations', 'receipt_number')->ignore($donationId),
             ],
-            'received_by_admin_id' => 'required|exists:Admins,id',
+            'received_by_admin_id' => 'required|exists:admins,id',
             'donation_month' => 'nullable|integer|between:1,12',
             'occasion' => 'nullable|string|max:255',
             'created_at' => 'nullable|date',
