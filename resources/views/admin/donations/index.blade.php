@@ -25,10 +25,6 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="alert alert-success">
-                        إجمالي التبرعات بوحدة الجنيه:
-                        <strong>{{ rtrim(rtrim(number_format((float) ($cashTotal ?? 0), 2, '.', ''), '0'), '.') }} جنيه</strong>
-                    </div>
                     <div class="table-responsive">
                         <!--begin::Table-->
                         <table class="table table-striped table-bordered text-nowrap w-75" id="dataTable">
@@ -39,7 +35,9 @@
                                     <th class="min-w-125px">الهاتف</th>
                                     <th class="min-w-125px">تاريخ الاستلام</th>
                                     <th class="min-w-125px">تصنيف التبرع</th>
+                                    <th class="min-w-125px">الصنف</th>
                                     <th class="min-w-125px">المبلغ/الكمية</th>
+                                    <th class="min-w-125px">الوحدة</th>
                                     <th class="min-w-125px">رقم الوصل</th>
                                     <th class="min-w-125px">المسؤول</th>
                                     <th class="min-w-125px">شهر التبرع</th>
@@ -67,7 +65,9 @@
                                     <th class="min-w-125px">الهاتف</th>
                                     <th class="min-w-125px">تاريخ الاستلام</th>
                                     <th class="min-w-125px">تصنيف التبرع</th>
+                                    <th class="min-w-125px">الصنف</th>
                                     <th class="min-w-125px">المبلغ/الكمية</th>
+                                    <th class="min-w-125px">الوحدة</th>
                                     <th class="min-w-125px">رقم الوصل</th>
                                     <th class="min-w-125px">المسؤول</th>
                                     <th class="min-w-125px">شهر التبرع</th>
@@ -158,8 +158,16 @@
                 name: 'donation_type_name'
             },
             {
+                data: 'donation_category_name',
+                name: 'donation_category_name'
+            },
+            {
                 data: 'value_with_unit',
                 name: 'value_with_unit'
+            },
+            {
+                data: 'unit_name',
+                name: 'unit_name'
             },
             {
                 data: 'receipt_number',

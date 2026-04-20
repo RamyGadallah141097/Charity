@@ -53,6 +53,23 @@
             </div>
         @endif
 
+        @if ($type === 'donation-units')
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="form-label">صنف التبرع</label>
+                    <select class="form-control" name="donation_category_id">
+                        <option value="">اختر صنف التبرع</option>
+                        @foreach ($parents as $parent)
+                            <option value="{{ $parent->id }}" {{ old('donation_category_id', $item->donation_category_id ?? '') == $parent->id ? 'selected' : '' }}>
+                                {{ $parent->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <small class="text-muted">مثال: ملابس، أثاث، موبايلات، وجبات.</small>
+                </div>
+            </div>
+        @endif
+
         @if ($type === 'disbursement-frequencies')
             <div class="col-md-6">
                 <div class="form-group">

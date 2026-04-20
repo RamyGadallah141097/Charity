@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BeneficiaryCategory;
 use App\Models\Center;
 use App\Models\DisbursementFrequency;
+use App\Models\DonationCategory;
 use App\Models\DonationType;
 use App\Models\DonationUnit;
 use App\Models\ExpenseType;
@@ -43,6 +44,10 @@ class ReferenceController extends Controller
 
                     if ($type === 'villages') {
                         return optional($row->center)->name ?? '-';
+                    }
+
+                    if ($type === 'donation-units') {
+                        return optional($row->donationCategory)->name ?? '-';
                     }
 
                     return '-';
@@ -207,6 +212,10 @@ class ReferenceController extends Controller
             $payload['months_interval'] = $request->months_interval;
         }
 
+        if ($type === 'donation-units') {
+            $payload['donation_category_id'] = $request->donation_category_id;
+        }
+
         return $payload;
     }
 
@@ -243,6 +252,10 @@ class ReferenceController extends Controller
             $rules['months_interval'] = ['nullable', 'integer', 'min:1', 'max:12'];
         }
 
+        if ($type === 'donation-units') {
+            $rules['donation_category_id'] = ['required', 'exists:donation_categories,id'];
+        }
+
         return $rules;
     }
 
@@ -254,6 +267,8 @@ class ReferenceController extends Controller
             'governorate_id.exists' => 'المحافظة المختارة غير موجودة',
             'center_id.required' => 'يرجى اختيار المركز',
             'center_id.exists' => 'المركز المختار غير موجود',
+            'donation_category_id.required' => 'يرجى اختيار صنف التبرع',
+            'donation_category_id.exists' => 'صنف التبرع المختار غير موجود',
             'months_interval.integer' => 'الفاصل الزمني يجب أن يكون رقمًا صحيحًا',
         ];
     }
@@ -277,6 +292,13 @@ class ReferenceController extends Controller
                 ->values();
         }
 
+        if ($type === 'donation-units') {
+            return DonationCategory::active()
+                ->orderBy('sort_order')
+                ->orderBy('name')
+                ->get(['id', 'name']);
+        }
+
         return collect();
     }
 
@@ -296,7 +318,8 @@ class ReferenceController extends Controller
             'villages' => ['model' => Village::class, 'title' => 'القرى', 'parent_label' => 'المركز', 'show_code' => false, 'show_sort_order' => false, 'show_notes' => false],
             'beneficiary-categories' => ['model' => BeneficiaryCategory::class, 'title' => 'تصنيفات المعاش والمستفيد', 'parent_label' => null, 'show_code' => false, 'show_sort_order' => false, 'show_notes' => false],
             'donation-types' => ['model' => DonationType::class, 'title' => 'أنواع التبرعات', 'parent_label' => null, 'show_code' => false, 'show_sort_order' => false, 'show_notes' => false],
-            'donation-units' => ['model' => DonationUnit::class, 'title' => 'وحدات التبرع', 'parent_label' => null, 'show_code' => false, 'show_sort_order' => false, 'show_notes' => false],
+            'donation-categories' => ['model' => DonationCategory::class, 'title' => 'أصناف التبرعات العينية', 'parent_label' => null, 'show_code' => false, 'show_sort_order' => false, 'show_notes' => false],
+            'donation-units' => ['model' => DonationUnit::class, 'title' => 'وحدات التبرع', 'parent_label' => 'صنف التبرع', 'show_code' => false, 'show_sort_order' => false, 'show_notes' => false],
             'expense-types' => ['model' => ExpenseType::class, 'title' => 'أنواع المصروفات', 'parent_label' => null, 'show_code' => false, 'show_sort_order' => false, 'show_notes' => false],
             'revenue-types' => ['model' => RevenueType::class, 'title' => 'أنواع الإيرادات الأخرى', 'parent_label' => null, 'show_code' => false, 'show_sort_order' => false, 'show_notes' => false],
             'disbursement-frequencies' => ['model' => DisbursementFrequency::class, 'title' => 'توقيتات وأنماط الصرف', 'parent_label' => null, 'show_code' => false, 'show_sort_order' => false, 'show_notes' => false],

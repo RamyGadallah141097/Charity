@@ -2,15 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasActiveScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Asset extends Model
+class DonationCategory extends Model
 {
-    use HasFactory;
-    protected $fillable = ["name" , "description" ];
+    use HasFactory, HasActiveScope;
 
-    public function donationUnits()
+    protected $guarded = [];
+
+    public function units()
     {
         return $this->hasMany(DonationUnit::class);
     }

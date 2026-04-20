@@ -14,6 +14,7 @@ class Donation extends Model
         'received_at',
         'donation_kind',
         'donation_type_id',
+        'donation_category_id',
         'donation_type',
         'donation_amount',
         'amount_value',
@@ -48,6 +49,11 @@ class Donation extends Model
     public function unit()
     {
         return $this->belongsTo(DonationUnit::class, 'donation_unit_id');
+    }
+
+    public function donationCategory()
+    {
+        return $this->belongsTo(DonationCategory::class, 'donation_category_id');
     }
 
     public function receivedBy()
@@ -114,5 +120,10 @@ class Donation extends Model
         }
 
         return (string) ($this->donation_amount ?? '--');
+    }
+
+    public function getDisplayUnitNameAttribute(): string
+    {
+        return optional($this->unit)->name ?? '--';
     }
 }

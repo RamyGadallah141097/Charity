@@ -69,7 +69,7 @@
                     <select name="donation_type_id" id="donation_type_id" class="form-control">
                         <option value="">اختر التصنيف</option>
                         @foreach ($donationTypes as $type)
-                            <option value="{{ $type->id }}" {{ $donation->donation_type_id == $type->id ? 'selected' : '' }}>{{ $type->name }}</option>
+                            <option value="{{ $type->id }}" data-code="{{ $type->code }}" {{ $donation->donation_type_id == $type->id ? 'selected' : '' }}>{{ $type->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -87,6 +87,18 @@
                 </div>
             </div>
 
+            <div class="col-md-4 d-none" id="donation-category-wrapper">
+                <div class="form-group">
+                    <label for="donation_category_id" class="form-control-label">صنف التبرع العيني</label>
+                    <select name="donation_category_id" id="donation_category_id" class="form-control">
+                        <option value="">اختر الصنف</option>
+                        @foreach ($donationCategories as $category)
+                            <option value="{{ $category->id }}" {{ $donation->donation_category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="amount_value" class="form-control-label">مبلغ/كمية التبرع</label>
@@ -94,15 +106,16 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4" id="donation-unit-wrapper">
                 <div class="form-group">
                     <label for="donation_unit_id" class="form-control-label">وحدة التبرع</label>
                     <select name="donation_unit_id" id="donation_unit_id" class="form-control">
                         <option value="">اختر الوحدة</option>
                         @foreach ($donationUnits as $unit)
-                            <option value="{{ $unit->id }}" {{ $donation->donation_unit_id == $unit->id ? 'selected' : '' }}>{{ $unit->name }}</option>
+                            <option value="{{ $unit->id }}" data-category-id="{{ $unit->donation_category_id }}" data-code="{{ $unit->code }}" {{ $donation->donation_unit_id == $unit->id ? 'selected' : '' }}>{{ $unit->name }}</option>
                         @endforeach
                     </select>
+                    <small class="text-muted d-none" id="cash-unit-note">سيتم اعتماد وحدة "جنيه" تلقائيًا لهذا النوع.</small>
                 </div>
             </div>
 
@@ -125,6 +138,14 @@
     $(function() {
         const $receivedAt = $('#received_at');
         const $donationMonth = $('#donation_month');
+        const $donationType = $('#donation_type_id');
+        const $donationCategory = $('#donation_category_id');
+        const $donationCategoryWrapper = $('#donation-category-wrapper');
+        const $donationUnit = $('#donation_unit_id');
+        const $donationUnitWrapper = $('#donation-unit-wrapper');
+        const $cashUnitNote = $('#cash-unit-note');
+        const cashUnitId = @json($cashDonationUnitId);
+        const originalUnitOptions = $donationUnit.html();
 
         function syncDonationMonth() {
             const value = $receivedAt.val();
@@ -139,6 +160,62 @@
 
         syncDonationMonth();
         $receivedAt.on('change', syncDonationMonth);
+
+        function syncDonationUnits() {
+            const selectedOption = $donationType.find('option:selected');
+            const selectedTypeCode = selectedOption.data('code');
+            const selectedCategoryId = $donationCategory.val();
+            const isCashType = selectedTypeCode === 'cash' || selectedTypeCode === 'good_loan';
+            const previousValue = $donationUnit.val();
+
+            $donationUnit.html(originalUnitOptions);
+
+            $donationUnit.find('option').each(function() {
+                const $option = $(this);
+                const optionCategoryId = ($option.data('category-id') || '').toString();
+                const optionCode = $option.data('code');
+                const shouldKeep = !$option.val()
+                    || (isCashType && optionCode === 'egp')
+                    || (!isCashType && selectedCategoryId && optionCategoryId === selectedCategoryId);
+
+                if (!shouldKeep) {
+                    $option.remove();
+                }
+            });
+
+            if (isCashType) {
+                $donationCategory.val('');
+                $donationCategoryWrapper.addClass('d-none');
+                $donationUnit.val(cashUnitId || '');
+                $donationUnitWrapper.addClass('d-none');
+                $cashUnitNote.removeClass('d-none');
+            } else {
+                $donationCategoryWrapper.removeClass('d-none');
+                $donationUnitWrapper.removeClass('d-none');
+                $cashUnitNote.addClass('d-none');
+
+                if (!selectedCategoryId) {
+                    $donationUnit.val('');
+                    $donationUnit.prop('disabled', true);
+                    return;
+                }
+
+                $donationUnit.prop('disabled', false);
+
+                if (previousValue && $donationUnit.find('option[value="' + previousValue + '"]').length) {
+                    $donationUnit.val(previousValue);
+                } else {
+                    $donationUnit.val('');
+                }
+
+            }
+
+            $donationUnit.trigger('change');
+        }
+
+        syncDonationUnits();
+        $donationType.on('change', syncDonationUnits);
+        $donationCategory.on('change', syncDonationUnits);
 
         $('#search_donor').on('keyup', function() {
             let query = $(this).val();

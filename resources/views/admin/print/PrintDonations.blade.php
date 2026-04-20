@@ -92,7 +92,9 @@
                             <th> هاتف المتبرع</th>
                             <th> تاريخ التبرع</th>
                             <th> نوع التبرع</th>
+                            <th> الصنف</th>
                             <th> قيمة التبرع</th>
+                            <th> الوحدة</th>
                             <th>التوقيع</th>
                         </tr>
                     </thead>
@@ -104,15 +106,11 @@
                                 <td>{{ @$Donations->donor->phone }}</td>
                                 <td>{{ Carbon::parse($Donations->created_at)->format('Y-m-d') }}</td>
                                 <td>
-                                    @if (@$Donations->donation_type == '0')
-                                        زكاة مال
-                                    @elseif(@$Donations->donation_type == '1')
-                                        صدقات
-                                    @elseif(@$Donations->donation_type == '2')
-                                        قرض حسن
-                                    @endif
+                                    {{ $Donations->display_type_name }}
                                 </td>
-                                <td>{{ @$Donations->donation_amount }}</td>
+                                <td>{{ optional($Donations->donationCategory)->name ?? '--' }}</td>
+                                <td>{{ $Donations->amount_value ?? $Donations->donation_amount ?? '--' }}</td>
+                                <td>{{ $Donations->display_unit_name }}</td>
                                 <td></td>
                             </tr>
                         @endforeach
