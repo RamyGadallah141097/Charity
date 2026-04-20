@@ -113,7 +113,7 @@
                     <select name="donation_unit_id" id="donation_unit_id" class="form-control">
                         <option value="">اختر الوحدة</option>
                         @foreach ($donationUnits as $unit)
-                            <option value="{{ $unit->id }}" data-category-id="{{ $unit->donation_category_id }}" data-code="{{ $unit->code }}">{{ $unit->name }}</option>
+                            <option value="{{ $unit->id }}" data-category-ids="{{ $unit->categories->pluck('id')->implode(',') }}" data-code="{{ $unit->code }}">{{ $unit->name }}</option>
                         @endforeach
                     </select>
                     <small class="text-muted d-none" id="cash-unit-note">سيتم اعتماد وحدة "جنيه" تلقائيًا لهذا النوع.</small>
@@ -180,11 +180,11 @@
 
             $donationUnit.find('option').each(function() {
                 const $option = $(this);
-                const optionCategoryId = ($option.data('category-id') || '').toString();
+                const optionCategoryIds = (($option.data('category-ids') || '') + '').split(',').filter(Boolean);
                 const optionCode = $option.data('code');
                 const shouldKeep = !$option.val()
                     || (isCashType && optionCode === 'egp')
-                    || (!isCashType && selectedCategoryId && optionCategoryId === selectedCategoryId);
+                    || (!isCashType && selectedCategoryId && optionCategoryIds.includes(selectedCategoryId));
 
                 if (!shouldKeep) {
                     $option.remove();

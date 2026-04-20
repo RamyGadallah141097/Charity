@@ -12,9 +12,9 @@ class DonationUnit extends Model
 
     protected $guarded = [];
 
-    public function donationCategory()
+    public function categories()
     {
-        return $this->belongsTo(DonationCategory::class);
+        return $this->belongsToMany(DonationCategory::class, 'donation_category_unit')->withTimestamps();
     }
 
     public function donationType()

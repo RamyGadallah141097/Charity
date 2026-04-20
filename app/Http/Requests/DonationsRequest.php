@@ -62,7 +62,7 @@ class DonationsRequest extends FormRequest
                         $fail('يجب أن تكون وحدة التبرع جنيه للتبرعات المالية أو القرض الحسن.');
                     }
 
-                    if ($requiresUnitSelection && (int) $unit->donation_category_id !== (int) $donationCategoryId) {
+                    if ($requiresUnitSelection && ! $unit->categories()->whereKey($donationCategoryId)->exists()) {
                         $fail('وحدة التبرع المختارة لا تتبع صنف التبرع المحدد.');
                     }
                 },
