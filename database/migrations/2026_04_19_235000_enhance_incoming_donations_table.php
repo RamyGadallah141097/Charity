@@ -15,7 +15,7 @@ return new class extends Migration
             $table->decimal('amount_value', 12, 2)->nullable()->after('donation_type_id');
             $table->foreignId('donation_unit_id')->nullable()->after('amount_value')->constrained('donation_units')->nullOnDelete();
             $table->string('receipt_number')->nullable()->after('donation_unit_id');
-            $table->foreignId('received_by_admin_id')->nullable()->after('receipt_number')->constrained('Admins')->nullOnDelete();
+            $table->foreignId('received_by_admin_id')->nullable()->after('receipt_number')->constrained('admins')->nullOnDelete();
             $table->unsignedTinyInteger('donation_month')->nullable()->after('received_by_admin_id');
             $table->string('occasion')->nullable()->after('donation_month');
             $table->unique('receipt_number');

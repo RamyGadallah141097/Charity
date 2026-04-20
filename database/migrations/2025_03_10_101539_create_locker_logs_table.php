@@ -15,7 +15,7 @@ class CreateLockerLogsTable extends Migration
     {
         Schema::create('locker_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("admin_id")->constrained("Admins")->cascadeOnDelete();
+            $table->foreignId("admin_id")->constrained("admins")->cascadeOnDelete();
             $table->enum("moneyType" , ["zakat","sadaka","loan"]);
             $table->integer("amount")->nullable();
             $table->enum("type" , ["plus","minus"]);
