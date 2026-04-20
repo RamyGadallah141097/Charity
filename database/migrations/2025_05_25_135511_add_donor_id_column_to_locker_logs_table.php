@@ -14,7 +14,7 @@ class AddDonorIdColumnToLockerLogsTable extends Migration
     public function up()
     {
         Schema::table('locker_logs', function (Blueprint $table) {
-            $table->foreignId("donor_id")->constrained("donors")->cascadeOnDelete()->nullable();
+            $table->foreignId('donor_id')->nullable()->constrained('donors')->cascadeOnDelete();
         });
     }
 
@@ -26,7 +26,7 @@ class AddDonorIdColumnToLockerLogsTable extends Migration
     public function down()
     {
         Schema::table('locker_logs', function (Blueprint $table) {
-            $table->foreignId("donor_id")->constrained("donors")->cascadeOnDelete()->nullable();
+            $table->dropConstrainedForeignId('donor_id');
         });
     }
 }
