@@ -129,7 +129,7 @@
                             <tr>
                                 <td>{{ $user->salary }}</td>
                                 <td>{{ $user->pension }}</td>
-                                <td>{{ $user->insurance }}</td>
+                                <td>{{ $user->monthly_subvention_amount ?? 0 }}</td>
                                 <td>{{ $user->dignity }}</td>
                                 <td>{{ $user->trade }}</td>
                                 <td>{{ $user->pillows }}</td>
@@ -332,7 +332,6 @@
                                         <th class="min-w-20px">نوع المريض</th>
                                         <th class="min-w-20px">الدواء</th>
                                         <th class="min-w-20px">وسيلة صرف الدواء</th>
-                                        <th class="min-w-20px">هل تأمين ؟</th>
                                         <th class="min-w-20px">الطبيب المعالج</th>
                                     </tr>
                                 </thead>
@@ -342,7 +341,6 @@
                                         <td>{{ $user->patient->type == 1 ? 'ذكر' : 'أنثي' }}</td>
                                         <td>{{ $user->patient->treatment }}</td>
                                         <td>{{ $user->patient->treatment_pay_by }}</td>
-                                        <td>{{ $user->patient->is_insurance == 0 ? 'لا' : 'نعم' }}</td>
                                         <td>{{ $user->patient->doctor_name }}</td>
                                     </tr>
                                 </tbody>

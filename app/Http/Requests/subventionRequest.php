@@ -16,62 +16,25 @@ class SubventionRequest extends FormRequest
 
     public function rules(): array
     {
-        if (request()->sub_type == 1) {
-            return [
-                "user_id" => "required|exists:users,id",
-                "asset_id" => "required|exists:assets,id",
-                "asset_count" => [
-                    "required",
-                    "numeric",
-                    "min:1",
-                    function ($attribute, $value, $fail) {
-                        $asset = Asset::find(request()->input('asset_id'));
-
-                        if (!$asset) {
-                            $fail("The selected asset does not exist.");
-                            return;
-                        }
-
-                        if ($value > $asset->counter) {
-                            toastr()->error("عدد العينيه غير كافيه");
-                            $fail("عدد العينيه غير كافيه");
-                        }
-                    },
-                ],
-                "type" => [],
-            ];
-        }
-
         return [
-            "user_id" => "required|exists:users,id",
-            "price" => [
-                "required",
-                "numeric",
-                "min:1",
-                function ($attribute, $value, $fail) {
-                    $maxLoan = Setting::latest()->first()?->maxSubvention ?? 0;
-                    $currentYear = now()->year;
-                    $totalSubvention = $value + Subvention::where("user_id", request()->input('user_id'))
-                            ->whereYear('created_at', $currentYear)
-                            ->sum("price");
-
-                    if ($totalSubvention > $maxLoan) {
-                        toastr()->error("مبلغ الاعانه يجب ألا يتجاوز في السنه $maxLoan.");
-                        $fail("مبلغ الاعانه يجب ألا يتجاوز في السنه $maxLoan.");
-                    }
-                }
-            ],
-            "type" => [],
+            "user_ids" => ['required', 'array', 'min:1'],
+            "user_ids.*" => 'exists:users,id',
+            "donation_type_id" => 'required|exists:donation_types,id',
+            "type" => ['required', 'in:monthly'],
+            "comment" => ['nullable', 'string'],
         ];
     }
 
     public function messages()
     {
         return [
-            'price.min' => 'مبلغ الاعانة يجب أن يكون على الأقل 1.',
-            'price.required' => 'مبلغ الاعانة مطلوب.',
-            'price.numeric' => 'مبلغ الاعانة يجب أن يكون رقماً.',
-            'asset_count.min' => 'عدد العينية يجب أن يكون على الأقل 1.',
+            'user_ids.required' => 'يرجى اختيار مستفيد واحد على الأقل.',
+            'user_ids.array' => 'المستفيدين يجب أن يكونوا في صورة قائمة.',
+            'user_ids.min' => 'يرجى اختيار مستفيد واحد على الأقل.',
+            'user_ids.*.exists' => 'أحد المستفيدين المختارين غير موجود.',
+            'donation_type_id.required' => 'يرجى اختيار الخزنة التي سيتم الصرف منها.',
+            'donation_type_id.exists' => 'الخزنة المختارة غير موجودة.',
+            'type.in' => 'نوع الصرف غير صحيح.',
         ];
     }
 }

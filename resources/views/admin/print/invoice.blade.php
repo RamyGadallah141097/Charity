@@ -1,174 +1,218 @@
-@php use Carbon\Carbon; @endphp
-<!DOCTYPE html>
-<html lang="en">
 @php
-    $total = 0;
-    $chunks = $subventions->chunk(13);
-    $grandTotal = 0;
-@endphp
+    use Carbon\Carbon;
 
+    $chunks = $subventions->values()->chunk(18);
+    $grandTotal = $subventions->sum('price');
+    $printDate = Carbon::now()->format('Y/m/d');
+    $printMonth = Carbon::now()->translatedFormat('F Y');
+    $isPdfDownload = request()->get('download') === 'pdf';
+@endphp
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice</title>
-    <!-- bootstrap -->
-    <link rel="stylesheet" href="{{ asset('invoices/css/all.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('invoices/css/bootstrap.min.css') }}">
-
+    <title>كشف صرف الإعانات الشهرية</title>
     <style>
+        @page {
+            size: A4 portrait;
+            margin: 14mm 10mm;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-weight: bold;
+            margin: 0;
+            color: #111;
+            background: #fff;
+            font-family: "DejaVu Sans", Tahoma, Arial, sans-serif;
             direction: rtl;
         }
 
-        .header {
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .logo {
-            width: 300px;
-            height: 80px;
-        }
-
-        table,
-        td,
-        th {
-            border: 1px solid black !important;
-        }
-
-        .scroll {
-            overflow-y: auto;
-            margin-bottom: 10px;
-        }
-
-        .blue-color {
-            background-color: gray;
-            color: white;
-        }
-
-        .border-color {
-            border: 1px solid white !important;
-        }
-
-        .print-section {
+        .page {
             page-break-after: always;
         }
 
-        .print-section:last-child {
+        .page:last-child {
             page-break-after: auto;
         }
 
+        .sheet {
+            width: 100%;
+        }
+
+        .sheet-header {
+            text-align: right;
+            margin-bottom: 12px;
+            line-height: 1.8;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .sheet-header__meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .sheet-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 800;
+            text-decoration: underline;
+            margin: 8px 0 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        th,
+        td {
+            border: 1px solid #111;
+            padding: 7px 6px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 15px;
+        }
+
+        thead th {
+            font-weight: 800;
+        }
+
+        .col-serial { width: 6%; }
+        .col-code { width: 11%; }
+        .col-name { width: 31%; }
+        .col-card { width: 22%; }
+        .col-amount { width: 12%; }
+        .col-sign { width: 18%; }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .total-row th,
+        .total-row td {
+            font-weight: 800;
+            background: #f4f4f4;
+        }
+
+        .signatures {
+            display: flex;
+            justify-content: space-between;
+            gap: 24px;
+            margin-top: 28px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .signature-box {
+            flex: 1;
+            text-align: center;
+        }
+
+        .signature-line {
+            margin-top: 46px;
+        }
+
         @media print {
-            .signature-section {
-                position: relative;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                text-align: center;
-            }
-
-            .print-section {
-                page-break-after: always;
-                margin-bottom: 50px;
-            }
-
-            .print-section:last-child {
-                page-break-after: auto;
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
         }
     </style>
 </head>
-
 <body>
-    @foreach ($chunks as $chunk)
-        <div class="print-section" id="content">
-            <div class="pt-5 ">
-                <div class="container-fluid">
-                    <h4 class="text-center mt-1 mb-3">قطاع التكافل / الادارة العامة للزكاة(فرع شبين الكوم)</h4>
-                    <h4 class="text-center mt-1 mb-3">بيان باسماء الحالات المطلوبة تقرير / صرف / زكاة لهم</h4>
-                    <h5 class="text-center mt-1 mb-3">بيان باسماء حالات الاعانه الشهريه /
-                        {{ isset($setting) ? $setting->title : '' }}</h5>
-                    <h5 class="text-center mt-1 mb-3">وعنوانها كفر طنبدى -شارع البحر بعد صيدلية ناصف بجوار الاستاذ على
-                        داود المحامى</h5>
-                    <div style="display: flex; justify-content: space-between;">
-                        <p>شبين الكوم - محافظة المنوفية</p>
-                        <p>بتاريخ {{ \Carbon\Carbon::now()->format('Y-m-d') }}</p>
+    @foreach ($chunks as $chunkIndex => $chunk)
+        @php
+            $chunkTotal = $chunk->sum('price');
+            $startSerial = ($chunkIndex * 18) + 1;
+        @endphp
+        <section class="page">
+            <div class="sheet">
+                <div class="sheet-header">
+                    <div>جمعية أنصار السنة المحمدية</div>
+                    <div>فرع شبين الكوم</div>
+                    <div>كشف صرف الإعانات الشهرية عن شهر {{ $printMonth }}</div>
+                </div>
+
+                <div class="sheet-header__meta">
+                    <div>التاريخ: {{ $printDate }}</div>
+                    <div>عدد الحالات: {{ $chunk->count() }}</div>
+                </div>
+
+                <div class="sheet-title">كشف صرف الإعانات الشهرية</div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="col-serial">م</th>
+                            <th class="col-code">كود الحالة</th>
+                            <th class="col-name">الاسم</th>
+                            <th class="col-card">رقم البطاقة</th>
+                            <th class="col-amount">المبلغ</th>
+                            <th class="col-sign">التوقيع بالاستلام</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($chunk as $index => $subvention)
+                            @php
+                                $user = optional($subvention)->user;
+                                $name = $user?->wife_name ?: ($user?->husband_name ?: '---');
+                                $nationalId = $user?->wife_national_id ?: ($user?->husband_national_id ?: '---');
+                            @endphp
+                            <tr>
+                                <td>{{ $startSerial + $index }}</td>
+                                <td>{{ $user?->beneficiary_code ?: '-' }}</td>
+                                <td class="text-right">{{ $name }}</td>
+                                <td>{{ $nationalId }}</td>
+                                <td>{{ number_format((float) $subvention->price, 0) }}</td>
+                                <td></td>
+                            </tr>
+                        @endforeach
+
+                        <tr class="total-row">
+                            <th colspan="4">إجمالي الصفحة</th>
+                            <td>{{ number_format((float) $chunkTotal, 0) }}</td>
+                            <td></td>
+                        </tr>
+
+                        @if ($loop->last)
+                            <tr class="total-row">
+                                <th colspan="4">إجمالي المبلغ</th>
+                                <td>{{ number_format((float) $grandTotal, 0) }}</td>
+                                <td></td>
+                            </tr>
+                        @endif
+                    </tbody>
+                </table>
+
+                <div class="signatures">
+                    <div class="signature-box">
+                        <div>القائم بالصرف</div>
+                        <div class="signature-line">......................</div>
                     </div>
-                    <div class="scroll">
-                        <table class="table">
-                            <thead>
-                                <tr class="blue-color">
-                                    {{--                            <th scope="col" class="border-color text-center">#</th> --}}
-                                    <th scope="col" class="border-color text-center">الاسم</th>
-                                    <th scope="col" class="border-color text-center">الرقم القومى</th>
-                                    <th scope="col" class="border-color text-center">المبلغ</th>
-                                    <th scope="col" class="border-color text-center">التوقيع</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @php
-                                    $chunkTotal = 0;
-                                    //                            $startNumber = ($loop->index * 10) + 1;
-                                @endphp
-                                @foreach ($chunk as $subvention)
-                                    <tr>
-                                        {{--                                <td>{{ $startNumber + $loop->index }}</td> --}}
-                                        <td class="text-sm font-weight-600">
-                                            {{ optional($subvention)->user->wife_name ?? '---' }}</td>
-                                        <td class="text-sm font-weight-600">
-                                            {{ optional($subvention)->user->wife_national_id ?? '---' }}</td>
-                                        <td>{{ optional($subvention)->price }}</td>
-                                        @php
-                                            $chunkTotal += optional($subvention)->price;
-                                            $grandTotal += optional($subvention)->price;
-                                        @endphp
-                                        <td style="width: 30%"></td>
-                                    </tr>
-                                @endforeach
-                                <tr>
-                                    <th class="text-center" scope="row" colspan="3">الاجمالى الجزئى</th>
-                                    <td>{{ $chunkTotal }}</td>
-                                    <td></td>
-                                </tr>
-                                @if ($loop->last)
-                                    <tr>
-                                        <th class="text-center" scope="row" colspan="3">الاجمالى الكلى</th>
-                                        <td>{{ $grandTotal }}</td>
-                                        <td></td>
-                                    </tr>
-                                @endif
-                            </tbody>
-                        </table>
+                    <div class="signature-box">
+                        <div>أمين الصندوق</div>
+                        <div class="signature-line">......................</div>
+                    </div>
+                    <div class="signature-box">
+                        <div>رئيس مجلس الإدارة</div>
+                        <div class="signature-line">......................</div>
                     </div>
                 </div>
             </div>
-
-            <div class="d-flex justify-content-center fw-normal  pb-5 signature-section">
-                <p>عضو له حق التوقيع</p>
-                <p>-----------</p>
-                <p>امين الصندوق</p>
-                <p>-----------</p>
-                <p>مقر اللجنة</p>
-                <p>-----------</p>
-            </div>
-        </div>
+        </section>
     @endforeach
 
-    <script src="{{ asset('invoices/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('invoices/js/feather.min.js') }}"></script>
-    <script>
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                window.print();
-
-                setTimeout(function() {
-                    window.close();
-                }, 1000);
-            }, 500);
-        });
-    </script>
 </body>
-
 </html>

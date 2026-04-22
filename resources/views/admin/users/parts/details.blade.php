@@ -1,9 +1,4 @@
-@extends('admin/layouts/master')
-@section('title') {{ $setting->title ?? '' }} | المستفيدين @endsection
-@section('page_name') المستفيدين @endsection
-
-@section('content')
-    <div class="card bg-white p-3 shadow-sm">
+<div class="card bg-white p-3 shadow-sm">
         <style>
             .gallery-image {
                 cursor: pointer;
@@ -54,6 +49,7 @@
                 <table class="table table-striped table-bordered w-100">
                     <thead>
                         <tr class="fw-bolder text-muted bg-light">
+                            <th>كود المستفيد</th>
                             <th>اسم الزوج</th>
                             <th>اسم الزوجة</th>
                             <th>الرقم القومى للزوج</th>
@@ -72,6 +68,7 @@
                      </thead>
                     <tbody>
                         <tr>
+                            <td>{{ $user->beneficiary_code ?: '-' }}</td>
                             <td>{{ $user->husband_name ?: '-' }}</td>
                             <td>{{ $user->wife_name ?: '-' }}</td>
                             <td>{{ $user->husband_national_id ?: '-' }}</td>
@@ -102,7 +99,6 @@
                         <tr class="fw-bolder text-muted bg-light">
                             <th>الراتب</th>
                             <th>معاش</th>
-                            <th>تامين</th>
                             <th>كرامة</th>
                             <th>تجارة</th>
                             <th>الوسائد</th>
@@ -114,12 +110,33 @@
                         <tr>
                             <td>{{ $user->salary ?? 0 }}</td>
                             <td>{{ $user->pension ?? 0 }}</td>
-                            <td>{{ $user->insurance ?? 0 }}</td>
                             <td>{{ $user->dignity ?? 0 }}</td>
                             <td>{{ $user->trade ?? 0 }}</td>
                             <td>{{ $user->pillows ?? 0 }}</td>
                             <td>{{ $user->other ?? 0 }}</td>
                             <td>{{ $user->gross_income ?? 0 }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3 class="card-title mb-0">الإعانة الشهرية</h3>
+            </div>
+            <div class="card-body table-responsive">
+                <table class="table table-striped table-bordered w-100">
+                    <thead>
+                        <tr class="fw-bolder text-muted bg-light">
+                            <th>له إعانة شهرية</th>
+                            <th>مبلغ الإعانة الشهرية</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ $user->has_monthly_subvention ? 'نعم' : 'لا' }}</td>
+                            <td>{{ $user->monthly_subvention_amount ?? 0 }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -240,7 +257,6 @@
                                 <th>الطبيب المعالج</th>
                                 <th>نوع المريض</th>
                                 <th>وسيلة صرف الدواء</th>
-                                <th>هل له تأمين</th>
                                 <th>الدواء</th>
                             </tr>
                         </thead>
@@ -252,7 +268,6 @@
                                     <td>{{ $patient->doctor_name ?: '-' }}</td>
                                     <td>{{ $patient->type == 0 ? 'انثى' : 'ذكر' }}</td>
                                     <td>{{ $patient->treatment_pay_by ?: '-' }}</td>
-                                    <td>{{ $patient->is_insurance == 0 ? 'لا' : 'نعم' }}</td>
                                     <td>{{ $patient->treatment ?: '-' }}</td>
                                 </tr>
                             @endforeach
@@ -304,21 +319,20 @@
         </div>
     </div>
 
-    <script>
-        function openModal(imageSrc) {
-            document.getElementById('modalImage').src = imageSrc;
-            document.getElementById('imageModal').style.display = "block";
-        }
+<script>
+    function openModal(imageSrc) {
+        document.getElementById('modalImage').src = imageSrc;
+        document.getElementById('imageModal').style.display = "block";
+    }
 
-        function closeModal() {
-            document.getElementById('imageModal').style.display = "none";
-        }
+    function closeModal() {
+        document.getElementById('imageModal').style.display = "none";
+    }
 
-        window.onclick = function(event) {
-            const modal = document.getElementById('imageModal');
-            if (event.target === modal) {
-                closeModal();
-            }
+    window.onclick = function(event) {
+        const modal = document.getElementById('imageModal');
+        if (event.target === modal) {
+            closeModal();
         }
-    </script>
-@endsection
+    }
+</script>

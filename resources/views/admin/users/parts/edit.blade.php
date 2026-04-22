@@ -3,1036 +3,574 @@
     {{ isset($setting->title) ? $setting->title : '' }} | تعديل مستفيد
 @endsection
 @section('page_name')
-    تعديل مستفيد
+    تعديل بيانات: {{ $user->husband_name }} / {{ $user->wife_name }}
 @endsection
+
 @section('content')
     <style>
-        .gallery-image {
-            cursor: pointer;
-            transition: 0.3s;
-            margin: 5px;
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
         }
-
-        .gallery-image:hover {
-            opacity: 0.5;
+        .gallery-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            height: 120px;
         }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            padding-top: 50px;
-            left: 0;
-            top: 0;
+        .gallery-item:hover {
+            transform: translateY(-5px);
+        }
+        .gallery-item img {
             width: 100%;
             height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.9);
+            object-fit: cover;
+            cursor: pointer;
         }
-
-
-        .modal-content {
-            margin: auto;
-            display: block;
-            max-width: 80%;
-            max-height: 80%;
-            top: 10%;
-            /*    // make image in semi center */
-        }
-
-
-        .close {
+        .gallery-item .overlay {
             position: absolute;
-            top: 15px;
-            right: 35px;
-            color: #f1f1f1;
-            font-size: 40px;
-            font-weight: bold;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
             transition: 0.3s;
         }
-
-        .close:hover,
-        .close:focus {
-            color: #bbb;
-            text-decoration: none;
-            cursor: pointer;
+        .gallery-item:hover .overlay {
+            opacity: 1;
+        }
+        .modal-img-container {
+            text-align: center;
+            padding: 20px;
+        }
+        .modal-img-container img {
+            max-width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
     </style>
 
-
-
-
-
-    @if (count($errors) > 0)
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    @if ($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <ul class="p-0 m-0" style="list-style: none;">
-                @foreach ($errors->all() as $error)
-                    <li><i class="fa fa-times-circle"></i> {{ $error }}</li>
-                @endforeach
-            </ul>
         </div>
     @endif
+
     <form id="editForm" action="{{ route('users.update', $user->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
-
+        
         <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">تعديل بيانات
-                            مستفيد</h2>
+            <div class="col-lg-8 col-md-12">
+                <!-- Core Info -->
+                <div class="card custom-card">
+                    <div class="card-header border-bottom">
+                        <h3 class="card-title text-primary"><i class="fe fe-user mr-2"></i>البيانات الأساسية</h3>
                     </div>
-
                     <div class="card-body">
                         <div class="row">
-
                             <div class="form-group col-md-6">
-                                <label class="form-label">اسم الزوج</label>
-                                <input type="text" value="{{ old('husband_name', $user->husband_name) }}"
-                                    class="form-control" name="husband_name" placeholder="">
+                                <label class="form-label font-weight-bold">كود المستفيد</label>
+                                <input type="text" value="{{ old('beneficiary_code', $user->beneficiary_code) }}" class="form-control rounded-pill" name="beneficiary_code" placeholder="أدخل كود المستفيد">
                             </div>
                             <div class="form-group col-md-6">
-                                <label class="form-label ">اسم الزوجة</label>
-                                <input type="text" value="{{ old('wife_name', $user->wife_name) }}" class="form-control"
-                                    name="wife_name" placeholder="">
+                                <label class="form-label font-weight-bold">اسم الزوج <span class="text-danger">*</span></label>
+                                <input type="text" value="{{ old('husband_name', $user->husband_name) }}" class="form-control rounded-pill" name="husband_name" required>
                             </div>
                             <div class="form-group col-md-6">
-                                <label class="form-label "> الرقم القومى للزوج</label>
-                                <input type="number" value="{{ old('husband_national_id', $user->husband_national_id) }}"
-                                    class="form-control" name="husband_national_id" placeholder="">
+                                <label class="form-label font-weight-bold">اسم الزوجة <span class="text-danger">*</span></label>
+                                <input type="text" value="{{ old('wife_name', $user->wife_name) }}" class="form-control rounded-pill" name="wife_name" required>
                             </div>
                             <div class="form-group col-md-6">
-                                <label class="form-label "> الرقم القومى للزوجة</label>
-                                <input type="number" value="{{ old('wife_national_id', $user->wife_national_id) }}"
-                                    class="form-control" name="wife_national_id" placeholder="">
+                                <label class="form-label font-weight-bold">الرقم القومى للزوج</label>
+                                <input type="number" value="{{ old('husband_national_id', $user->husband_national_id) }}" class="form-control rounded-pill" name="husband_national_id">
                             </div>
-
-                            <div class="form-group col-md-2">
-                                <label class="form-label"> عمر الزوج</label>
-                                <input type="number" value="{{ old('age_husband', $user->age_husband) }}"
-                                    class="form-control" name="age_husband" placeholder="" readonly>
+                            <div class="form-group col-md-6">
+                                <label class="form-label font-weight-bold">الرقم القومى للزوجة</label>
+                                <input type="number" value="{{ old('wife_national_id', $user->wife_national_id) }}" class="form-control rounded-pill" name="wife_national_id">
                             </div>
-
-                            <div class="form-group col-md-2">
-                                <label class="form-label"> عمر الزوجة</label>
-                                <input type="number" value="{{ old('age_wife', $user->age_wife) }}" class="form-control"
-                                    name="age_wife" placeholder="" readonly>
+                            <div class="form-group col-md-3">
+                                <label class="form-label">عمر الزوج</label>
+                                <input type="number" value="{{ old('age_husband', $user->age_husband) }}" class="form-control bg-light" name="age_husband" readonly>
                             </div>
-
-                            <div class="form-group col-md-12">
-                                <label class="form-label"> العنوان </label>
-                                <input type="text" value="{{ old('address', $user->address) }}" class="form-control"
-                                    name="address" placeholder="">
+                            <div class="form-group col-md-3">
+                                <label class="form-label">عمر الزوجة</label>
+                                <input type="number" value="{{ old('age_wife', $user->age_wife) }}" class="form-control bg-light" name="age_wife" readonly>
                             </div>
-
-                            <div class="form-group col-md-4">
-                                <label class="form-label">المحافظة</label>
-                                <select name="governorate_id" class="form-control" data-placeholder="اختيار المحافظة">
-                                    <option value="">اختر المحافظة</option>
-                                    @foreach ($governorates as $governorate)
-                                        <option value="{{ $governorate->id }}" {{ old('governorate_id', $user->governorate_id) == $governorate->id ? 'selected' : '' }}>
-                                            {{ $governorate->name }}
-                                        </option>
-                                    @endforeach
+                            <div class="form-group col-md-3">
+                                <label class="form-label">الحالة الاجتماعية</label>
+                                <select name="social_status" class="form-control select2">
+                                    <option value="0" {{ old('social_status', $user->social_status) == '0' ? 'selected' : '' }}>أعزب</option>
+                                    <option value="1" {{ old('social_status', $user->social_status) == '1' ? 'selected' : '' }}>متزوج</option>
+                                    <option value="2" {{ old('social_status', $user->social_status) == '2' ? 'selected' : '' }}>مطلق</option>
+                                    <option value="3" {{ old('social_status', $user->social_status) == '3' ? 'selected' : '' }}>أرمل</option>
                                 </select>
                             </div>
-
-                            <div class="form-group col-md-4">
-                                <label class="form-label">المركز</label>
-                                <select name="center_id" class="form-control dependent-center-select" data-placeholder="اختيار المركز">
-                                    <option value="">اختر المركز</option>
-                                    @foreach ($centers as $center)
-                                        <option value="{{ $center->id }}"
-                                            data-governorate-id="{{ $center->governorate_id }}"
-                                            {{ old('center_id', $user->center_id) == $center->id ? 'selected' : '' }}>
-                                            {{ $center->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="form-group col-md-4">
-                                <label class="form-label">القرية</label>
-                                <select name="village_id" class="form-control dependent-village-select" data-placeholder="اختيار القرية">
-                                    <option value="">اختر القرية</option>
-                                    @foreach ($villages as $village)
-                                        <option value="{{ $village->id }}"
-                                            data-center-id="{{ $village->center_id }}"
-                                            {{ old('village_id', $user->village_id) == $village->id ? 'selected' : '' }}>
-                                            {{ $village->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="form-group col-md-3">
-                                <label class="form-label">الحالة الاجتماعية للمستفيد</label>
-                                 <select name="social_status" class="form-control"
-                                     data-placeholder="اختيار الحالة الاجتماعية">
-                                     <option value="">اختيار الحالة الاجتماعية</option>
-                                     <option value="0" {{ old('social_status', $user->social_status) == '0' ? 'selected' : '' }}>أعزب</option>
-                                     <option value="1" {{ old('social_status', $user->social_status) == '1' ? 'selected' : '' }}>متزوج</option>
-                                     <option value="2" {{ old('social_status', $user->social_status) == '2' ? 'selected' : '' }}>مطلق</option>
-                                     <option value="3" {{ old('social_status', $user->social_status) == '3' ? 'selected' : '' }}>متوفى</option>
-                                 </select>
-                            </div>
-
-
-                            <div class="form-group col-md-3">
-                                <label class="form-label">نوع العمل</label>
-                                <input type="text" value="{{ old('work_type', $user->work_type) }}" class="form-control"
-                                    name="work_type" placeholder="">
-                            </div>
-
-                            <div class="form-group col-md-3">
-                                <label class="form-label">أقرب تليفون</label>
-                                <input type="nubmer" class="form-control"
-                                    value="{{ old('nearest_phone', $user->nearest_phone) }}" name="nearest_phone"
-                                    placeholder="">
-                            </div>
-
                             <div class="form-group col-md-3">
                                 <label class="form-label">تصنيف المستفيد</label>
-                                <select name="beneficiary_category_id" class="form-control" data-placeholder="اختيار التصنيف">
+                                <select name="beneficiary_category_id" class="form-control select2">
                                     <option value="">اختر التصنيف</option>
                                     @foreach ($beneficiaryCategories as $category)
-                                        <option value="{{ $category->id }}" {{ old('beneficiary_category_id', $user->beneficiary_category_id) == $category->id ? 'selected' : '' }}>
-                                            {{ $category->name }}
-                                        </option>
+                                        <option value="{{ $category->id }}" {{ old('beneficiary_category_id', $user->beneficiary_category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="form-group col-md-6">
+                                <label class="form-label">نوع العمل</label>
+                                <input type="text" value="{{ old('work_type', $user->work_type) }}" class="form-control" name="work_type">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="form-label">أقرب تليفون</label>
+                                <input type="number" value="{{ old('nearest_phone', $user->nearest_phone) }}" class="form-control" name="nearest_phone">
+                            </div>
                         </div>
-                        <hr>
-                        {{-- ______________________________________________________________________________________________________________________________ --}}
+                    </div>
+                </div>
 
-                        <div class="card-header">
-                            <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">
-                                إجمالى الدخل
-                            </h2>
-                        </div>
-
+                <!-- Location -->
+                <div class="card custom-card">
+                    <div class="card-header border-bottom">
+                        <h3 class="card-title text-info"><i class="fe fe-map-pin mr-2"></i>العنوان والمكان</h3>
+                    </div>
+                    <div class="card-body">
                         <div class="row">
-                            <div class="col-md-3">
-                                <label class="form-label">مرتب</label>
-                                <input type="number" class="form-control income-input"
-                                    value="{{ old('salary', $user->salary) }}" name="salary" placeholder="">
+                            <div class="form-group col-md-4">
+                                <label class="form-label">المحافظة</label>
+                                <select name="governorate_id" class="form-control select2">
+                                    <option value="">اختر المحافظة</option>
+                                    @foreach ($governorates as $governorate)
+                                        <option value="{{ $governorate->id }}" {{ old('governorate_id', $user->governorate_id) == $governorate->id ? 'selected' : '' }}>{{ $governorate->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <div class="col-md-3">
-                                <label class="form-label">معاش</label>
-                                <input type="number" class="form-control income-input"
-                                    value="{{ old('pension', $user->pension) }}" name="pension" placeholder="">
+                            <div class="form-group col-md-4">
+                                <label class="form-label">المركز</label>
+                                <select name="center_id" class="form-control select2">
+                                    <option value="">اختر المركز</option>
+                                    @foreach ($centers as $center)
+                                        <option value="{{ $center->id }}" data-governorate-id="{{ $center->governorate_id }}" {{ old('center_id', $user->center_id) == $center->id ? 'selected' : '' }}>{{ $center->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <div class="col-md-3">
-                                <label class="form-label">تأمين</label>
-                                <input type="number" class="form-control income-input"
-                                    value="{{ old('insurance', $user->insurance) }}" name="insurance" placeholder="">
+                            <div class="form-group col-md-4">
+                                <label class="form-label">القرية</label>
+                                <select name="village_id" class="form-control select2">
+                                    <option value="">اختر القرية</option>
+                                    @foreach ($villages as $village)
+                                        <option value="{{ $village->id }}" data-center-id="{{ $village->center_id }}" {{ old('village_id', $user->village_id) == $village->id ? 'selected' : '' }}>{{ $village->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <div class="col-md-3">
-                                <label class="form-label">كرامة</label>
-                                <input type="number" class="form-control income-input"
-                                    value="{{ old('dignity', $user->dignity) }}" name="dignity" placeholder="">
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">تجارة</label>
-                                <input type="number" class="form-control income-input"
-                                    value="{{ old('trade', $user->trade) }}" name="trade" placeholder="">
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">سادات</label>
-                                <input type="number" class="form-control income-input"
-                                    value="{{ old('pillows', $user->pillows) }}" name="pillows" placeholder="">
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">غير ذلك</label>
-                                <input type="number" class="form-control income-input"
-                                    value="{{ old('other', $user->other) }}" name="other" placeholder="">
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">إجمالى الدخل</label>
-                                <input type="number" class="form-control"
-                                    value="{{ old('gross_income', $user->gross_income) }}" name="gross_income"
-                                    id="gross_income" placeholder="" readonly>
+                            <div class="form-group col-md-12">
+                                <label class="form-label">العنوان بالتفصيل</label>
+                                <input type="text" value="{{ old('address', $user->address) }}" class="form-control" name="address">
                             </div>
                         </div>
-                        {{-- ______________________________________________________________________________________________________________________________ --}}
-                        <hr>
-                        <div class="card-header">
-                            <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">
-                                اجمالى النفقات
-                            </h2>
-                        </div>
+                    </div>
+                </div>
 
+                <!-- Financials -->
+                <div class="card custom-card">
+                    <div class="card-header border-bottom">
+                        <h3 class="card-title text-success"><i class="fe fe-dollar-sign mr-2"></i>البيانات المالية</h3>
+                    </div>
+                    <div class="card-body">
                         <div class="row">
-                            <div class="col-md-2">
-                                <label class="form-label">إيجار</label>
-                                <input type="number" class="form-control expense-input"
-                                    value="{{ old('rent', $user->rent) }}" name="rent" placeholder="">
+                            <!-- Income -->
+                            <div class="col-md-6 border-left">
+                                <p class="font-weight-bold text-muted mb-4 border-bottom pb-2">تفاصيل الدخل</p>
+                                <div class="form-group row">
+                                    <label class="col-md-4 form-label">مرتب</label>
+                                    <div class="col-md-8"><input type="number" class="form-control income-input" name="salary" value="{{ old('salary', $user->salary ?: 0) }}"></div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 form-label">معاش</label>
+                                    <div class="col-md-8"><input type="number" class="form-control income-input" name="pension" value="{{ old('pension', $user->pension ?: 0) }}"></div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 form-label">كرامة/تكافل</label>
+                                    <div class="col-md-8"><input type="number" class="form-control income-input" name="dignity" value="{{ old('dignity', $user->dignity ?: 0) }}"></div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 form-label">إيراد آخر (1)</label>
+                                    <div class="col-md-8"><input type="number" class="form-control income-input" name="trade" value="{{ old('trade', $user->trade ?: 0) }}"></div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 form-label">إيراد آخر (2)</label>
+                                    <div class="col-md-8"><input type="number" class="form-control income-input" name="pillows" value="{{ old('pillows', $user->pillows ?: 0) }}"></div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 form-label font-weight-bold text-primary">إجمالي الدخل</label>
+                                    <div class="col-md-8"><input type="number" id="gross_income" name="gross_income" class="form-control bg-primary-transparent font-weight-bold" value="{{ old('gross_income', $user->gross_income ?: 0) }}" readonly></div>
+                                </div>
                             </div>
-                            <div class="col-md-2">
-                                <label class="form-label">غاز</label>
-                                <input type="number" class="form-control expense-input"
-                                    value="{{ old('gas', $user->gas) }}" name="gas" placeholder="">
-                            </div>
-                            <div class="col-md-2">
-                                <label class="form-label">ديون</label>
-                                <input type="number" class="form-control expense-input"
-                                    value="{{ old('debt', $user->debt) }}" name="debt" placeholder="">
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">مياه</label>
-                                <input type="number" class="form-control expense-input"
-                                    value="{{ old('water', $user->water) }}" name="water" placeholder="">
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">كهرباء</label>
-                                <input type="number" class="form-control expense-input"
-                                    value="{{ old('electricity', $user->electricity) }}" name="electricity"
-                                    placeholder="">
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">جمعية</label>
-                                <input type="number" class="form-control expense-input"
-                                    value="{{ old('association', $user->association) }}" name="association"
-                                    placeholder="">
-                            </div>
-                            <div class="col-md-2">
-                                <label class="form-label">طعام</label>
-                                <input type="number" class="form-control expense-input"
-                                    value="{{ old('food', $user->food) }}" name="food" placeholder="">
-                            </div>
-                            <div class="col-md-2">
-                                <label class="form-label">دراسة</label>
-                                <input type="number" class="form-control expense-input"
-                                    value="{{ old('study', $user->study) }}" name="study" placeholder="">
-                            </div>
-                            <div class="col-md-2 ">
-                                <label class="form-label"> مصاريف العلاج</label>
-                                <input type="text" class="form-control"
-                                    value="{{ old('medical_expenses', $user->medical_expenses) }}"
-                                    name="medical_expenses" placeholder="">
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">إجمالى النفقات</label>
-                                <input type="number" class="form-control"
-                                    value="{{ old('gross_expenses', $user->gross_expenses) }}" name="gross_expenses"
-                                    id="gross_expenses" placeholder="" readonly>
+
+                            <!-- Expenses -->
+                            <div class="col-md-6">
+                                <p class="font-weight-bold text-muted mb-4 border-bottom pb-2">تفاصيل المصروفات</p>
+                                <div class="form-group row">
+                                    <label class="col-md-4 form-label">إيجار</label>
+                                    <div class="col-md-8"><input type="number" class="form-control expense-input" name="rent" value="{{ old('rent', $user->rent ?: 0) }}"></div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 form-label">مرافق</label>
+                                    <div class="col-md-8">
+                                        <div class="input-group input-group-sm">
+                                            <input type="number" class="form-control expense-input" name="gas" value="{{ old('gas', $user->gas ?: 0) }}" placeholder="غاز">
+                                            <input type="number" class="form-control expense-input" name="water" value="{{ old('water', $user->water ?: 0) }}" placeholder="مياه">
+                                            <input type="number" class="form-control expense-input" name="electricity" value="{{ old('electricity', $user->electricity ?: 0) }}" placeholder="كهرباء">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 form-label">طعام</label>
+                                    <div class="col-md-8"><input type="number" class="form-control expense-input" name="food" value="{{ old('food', $user->food ?: 0) }}"></div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 form-label">تعليم/طبية</label>
+                                    <div class="col-md-8">
+                                        <div class="input-group input-group-sm">
+                                            <input type="number" class="form-control expense-input" name="study" value="{{ old('study', $user->study ?: 0) }}" placeholder="تعليم">
+                                            <input type="number" class="form-control expense-input" name="medical_expenses" value="{{ old('medical_expenses', $user->medical_expenses ?: 0) }}" placeholder="طبية">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 form-label">ديون/جمعيات</label>
+                                    <div class="col-md-8">
+                                        <div class="input-group input-group-sm">
+                                            <input type="number" class="form-control expense-input" name="debt" value="{{ old('debt', $user->debt ?: 0) }}" placeholder="ديون">
+                                            <input type="number" class="form-control expense-input" name="association" value="{{ old('association', $user->association ?: 0) }}" placeholder="جمعية">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 form-label font-weight-bold text-danger">إجمالي المصاريف</label>
+                                    <div class="col-md-8"><input type="number" id="gross_expenses" name="gross_expenses" class="form-control bg-danger-transparent font-weight-bold" value="{{ old('gross_expenses', $user->gross_expenses ?: 0) }}" readonly></div>
+                                </div>
                             </div>
                         </div>
-
-                        <hr>
-                        {{-- ______________________________________________________________________________________________________________________________ --}}
-                        <div>
-                            <h2 class="mb-0 btn btn-success mb-3" style="pointer-events: none; user-select: none;">
-                                مستوى المعيشة
-                            </h2>
+                        <div class="mt-4 bg-light p-3 rounded-lg d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0 font-weight-bold">مستوى المعيشة التقديري</h5>
+                            <input type="number" id="standard_living" name="standard_living" class="form-control text-center font-weight-bold bg-white" style="width: 150px;" value="{{ old('standard_living', $user->standard_living ?: 0) }}" readonly>
                         </div>
-                        <input type="nubmer" class="form-control col-md-3 "
-                            value="{{ old('standard_living', $user->standard_living) }}" name="standard_living"
-                            id="standard_living"readonly>
-                        <hr>
-                        {{-- ______________________________________________________________________________________________________________________________ --}}
+                    </div>
+                </div>
 
-                        <div class="d-flex justify-content-between mt-3">
-                            <div>
-                                <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">الابناء
-                                </h2>
-                            </div>
-                            <div class="d-flex justify-content-end mb-3" style="cursor: pointer;">
-                                <button type="button" id="addChild" class="btn btn-primary">
-                                    <i class="fe fe-plus"></i> اضافة ابن
-                                </button>
-                            </div>
-
-
-                        </div>
-                        <hr>
-
-                        {{-- ______________________________________________________________________________________________________________________________ --}}
+                <!-- Children -->
+                <div class="card custom-card">
+                    <div class="card-header border-bottom d-flex justify-content-between">
+                        <h3 class="card-title text-info"><i class="fe fe-users mr-2"></i>الأبناء والأسرة</h3>
+                        <button type="button" class="btn btn-info btn-sm btn-pill" id="add"><i class="fe fe-plus mr-1"></i> إضافة ابن</button>
+                    </div>
+                    <div class="card-body">
                         <div id="child_container">
                             @foreach ($user->childrens as $index => $child)
-                                <div class="child-row row">
-                                    <div class="col-12">
-                                        <h4 class="bg-danger text-white" style="width: max-content; padding: 8px 15px;">
-                                            الابن <span class="child_number">{{ $index + 1 }}</span>
-                                        </h4>
-                                    </div>
-
-                                    <div class="col-3">
-                                        <label for="child_names" class="form-control-label"> اسم الابن </label>
-                                        <input type="text" class="form-control"
-                                            value="{{ old('child_names.' . $index, $child->child_name) }}"
-                                            name="child_names[]">
-                                    </div>
-
-                                    <div class="col-3">
-                                        <div class="form-group">
-                                            <label for="children_national_id" class="form-control-label"> الرقم القومي
-                                            </label>
-                                            <input type="number" class="form-control"
-                                                value="{{ old('children_national_id.' . $index, $child->children_national_id) }}"
-                                                name="children_national_id[]">
+                                <div class="bg-light p-3 rounded mb-3 child-row border position-relative">
+                                    <button type="button" class="btn btn-danger btn-sm position-absolute" style="top: 10px; left: 10px; z-index: 10" onclick="$(this).closest('.child-row').remove()">
+                                        <i class="fe fe-trash"></i>
+                                    </button>
+                                    <div class="row align-items-end">
+                                        <div class="col-md-4">
+                                            <label class="form-label font-weight-bold small">اسم الابن</label>
+                                            <input type="text" class="form-control form-control-sm" name="child_names[]" value="{{ $child->child_name }}">
                                         </div>
-                                    </div>
-
-                                    <div class="col-3">
-                                        <div class="form-group">
-                                            <label for="age" class="form-control-label"> السن </label>
-                                            <input type="text" class="form-control"
-                                                value="{{ old('age.' . $index, $child->age) }}" name="age[]" readonly>
+                                        <div class="col-md-4">
+                                            <label class="form-label font-weight-bold small">الرقم القومي</label>
+                                            <input type="number" class="form-control form-control-sm" name="children_national_id[]" value="{{ $child->children_national_id }}">
                                         </div>
-                                    </div>
-
-                                    <div class="col-2">
-                                        <div class="form-group">
-                                            <label class="form-control-label"> النوع </label>
-                                            <select class="form-control" name="child_gender[]">
-                                                <option value="">اختر</option>
-                                                <option value="1" {{ (string) old('child_gender.' . $index, $child->gender) === '1' ? 'selected' : '' }}>ذكر</option>
-                                                <option value="0" {{ (string) old('child_gender.' . $index, $child->gender) === '0' ? 'selected' : '' }}>أنثى</option>
+                                        <div class="col-md-2">
+                                            <label class="form-label font-weight-bold small">السن</label>
+                                            <input type="number" class="form-control form-control-sm bg-white" name="age[]" value="{{ $child->age }}" readonly>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label font-weight-bold small">النوع</label>
+                                            <select class="form-control form-control-sm" name="child_gender[]">
+                                                <option value="1" {{ $child->gender == 1 ? 'selected' : '' }}>ذكر</option>
+                                                <option value="0" {{ $child->gender == 0 ? 'selected' : '' }}>أنثى</option>
                                             </select>
                                         </div>
-                                    </div>
-
-                                    <div class="col-2">
-                                        <div class="form-group">
-                                            <label for="schools" class="form-control-label"> المدرسة </label>
-                                            <input type="text" class="form-control"
-                                                value="{{ old('schools.' . $index, $child->school) }}" name="schools[]">
+                                        <div class="col-md-4 mt-3">
+                                            <label class="form-label font-weight-bold small">المدرسة/الكلية</label>
+                                            <input type="text" class="form-control form-control-sm" name="schools[]" value="{{ $child->school }}">
+                                        </div>
+                                        <div class="col-md-2 mt-3">
+                                            <label class="form-label font-weight-bold small">التكلفة (ج.م)</label>
+                                            <input type="number" class="form-control form-control-sm" name="monthly_cost[]" value="{{ $child->monthly_cost }}">
+                                        </div>
+                                        <div class="col-md-6 mt-3">
+                                            <label class="form-label font-weight-bold small">ملاحظات</label>
+                                            <input type="text" class="form-control form-control-sm" name="notes[]" value="{{ $child->notes }}">
                                         </div>
                                     </div>
-
-                                    <div class="col-2">
-                                        <div class="form-group">
-                                            <label for="monthly_cost" class="form-control-label"> التكلفة الشهرية </label>
-                                            <input type="text" class="form-control"
-                                                value="{{ old('monthly_cost.' . $index, $child->monthly_cost) }}"
-                                                name="monthly_cost[]">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-4">
-                                        <div class="form-group">
-                                            <label for="notes" class="form-control-label"> ملاحظات </label>
-                                            <input type="text" class="form-control"
-                                                value="{{ old('notes.' . $index, $child->notes) }}" name="notes[]">
-                                        </div>
-                                    </div>
-
-                                    @if ($index >= 0)
-                                        <div class="col-1">
-                                            <button type="button" class="btn btn-danger mt-5 removeColor">
-                                                <i class="fe fe-trash"></i>
-                                            </button>
-                                        </div>
-                                    @endif
-                                </div>
-                            @endforeach
-
-                        </div>
-                        {{-- ______________________________________________________________________________________________________________________________ --}}
-                        <hr>
-
-                        <div class="d-flex justify-content-between mt-3">
-                            <div>
-                                <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;"> الحالة
-                                    الصحية</h2>
-                            </div>
-                            <div class="d-flex justify-content-end mb-3">
-                                <button type="button" class="btn btn-primary" id="add_patient">
-                                    <i class="fe fe-plus"></i> {{ 'اضافة حالة ' }}
-                                </button>
-                            </div>
-                        </div>
-                        <hr>
-
-                        <div id="patient_container">
-                            @foreach ($patients as $index => $patient)
-                                <div class="patient-row row">
-                                    <div class="col-12">
-                                        <h4 class="bg-danger text-white"
-                                            style="width: max-content;
-                                       padding: 8px 15px;
-                                       border-radius: 5px;">
-                                            الحالة
-                                            <span class="patient_number">{{ $index + 1 }}</span>
-                                        </h4>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label">اسم المريض</label>
-                                            <input type="text" class="form-control"
-                                                value="{{ old('patient_name.' . $index, $patient->patient_name) }}"
-                                                name="patient_name[]" placeholder="">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label">وسيلة صرف العلاج</label>
-                                            <input type="text" class="form-control"
-                                                value="{{ old('treatment_pay_by.' . $index, $patient->treatment_pay_by) }}"
-                                                name="treatment_pay_by[]" placeholder="">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="form-label">الدواء</label>
-                                            <input type="text" class="form-control"
-                                                value="{{ old('treatment.' . $index, $patient->treatment) }}"
-                                                name="treatment[]" placeholder="">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4 col-12">
-                                        <div class="form-group">
-                                            <label class="form-label">نوع المريض</label>
-                                            <select class="form-control select2" name="type[]"
-                                                data-placeholder="اختيار نوع المريض">
-                                                <option value="1"
-                                                    {{ old('type.' . $index, $patient->type) == '1' ? 'selected' : '' }}>
-                                                    ذكر
-                                                </option>
-                                                <option value="0"
-                                                    {{ old('type.' . $index, $patient->type) == '0' ? 'selected' : '' }}>
-                                                    أنثي
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4 col-12">
-                                        <div class="form-group">
-                                            <label class="form-label">الطبيب المعالج</label>
-                                            <input type="text" class="form-control"
-                                                value="{{ old('doctor_name.' . $index, $patient->doctor_name) }}"
-                                                name="doctor_name[]" placeholder="">
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-md-3 col-12">
-                                        <div class="form-group">
-                                            <label class="form-label mb-4">هل له تأمين</label>
-                                            <div class="material-switch pull-left mb-5">
-                                                <input id="is_insurance{{ $index }}" name="is_insurance[]"
-                                                    type="checkbox" value="1"
-                                                    {{ old('is_insurance.' . $index, $patient->is_insurance) == '1' ? 'checked' : '' }}>
-                                                <label for="is_insurance{{ $index }}"
-                                                    class="label-success"></label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    @if ($index > 0)
-                                        <div class="col-md-1">
-                                            <button type="button" class="btn btn-danger mt-5 removepatient">
-                                                <i class="fe fe-trash"></i>
-                                            </button>
-                                        </div>
-                                    @endif
-                                    <hr>
                                 </div>
                             @endforeach
                         </div>
-
-                        <hr>
-
-                        <div class="card-header">
-                            <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">
-                                ممتلكات المتقدم وقرار اللجنة </h2>
-
-                        </div>
-
-                        <textarea rows="5" class="form-control" name="Case_evaluation" id="Case_evaluation">{{ old('Case_evaluation', $user->Case_evaluation) }}</textarea>
-
-                        <div class="card-header">
-                            <h2 class="mb-0 btn btn-success" style="pointer-events: none; user-select: none;">
-                                المرفقات </h2>
-                        </div>
-
-
-
-
-
-                        <div class="col-12">
-
-
-                            @if ($user->attachments)
-                                @php
-                                    $attachments = is_string($user->attachments)
-                                        ? json_decode($user->attachments, true)
-                                        : $user->attachments;
-
-                                @endphp
-
-                                <div class="image-gallery">
-                                    @foreach ($attachments as $attachment)
-                                        <img src="{{ route('attachments.view', ['path' => $attachment]) }}" alt="Attachment"
-                                            style="max-width: 500px" height="150" class="gallery-image"
-                                            onclick="openModal('{{ route('attachments.view', ['path' => $attachment]) }}')">
-                                    @endforeach
-                                </div>
-                            @endif
-
-                            <div id="imageModal" class="modal">
-                                <span class="close" onclick="closeModal()">&times;</span>
-                                <img class="modal-content" style="width: 500px; height: 500px;" id="modalImage">
-                            </div>
-
-
-
-                        </div>
-                        <input type="file" class="dropify" name="attachments[]"
-                            accept="image/png, image/gif, image/jpeg, image/jpg" multiple>
-
+                        <div id="child_containerN"></div>
                     </div>
+                </div>
 
-                    <div class="col-12 text-center">
-                        <button class="btn btn-lg btn-outline-primary mt-2 mb-2">تحديث البيانات</button>
+                <!-- Health Status -->
+                <div class="card custom-card">
+                    <div class="card-header border-bottom d-flex justify-content-between">
+                        <h3 class="card-title text-danger"><i class="fe fe-heart mr-2"></i>الحالات الصحية</h3>
+                        <button type="button" class="btn btn-danger btn-sm btn-pill" id="add_patient"><i class="fe fe-plus mr-1"></i> إضافة حالة</button>
+                    </div>
+                    <div class="card-body">
+                        <div id="patient_container">
+                            @foreach ($user->patients as $index => $patient)
+                                <div class="bg-light p-3 rounded mb-3 patient-row border border-danger-transparent position-relative">
+                                    <button type="button" class="btn btn-danger btn-sm position-absolute" style="top: 10px; left: 10px; z-index: 10" onclick="$(this).closest('.patient-row').remove()">
+                                        <i class="fe fe-trash"></i>
+                                    </button>
+                                    <div class="row align-items-end">
+                                        <div class="col-md-4">
+                                            <label class="form-label font-weight-bold small">اسم المريض</label>
+                                            <input type="text" class="form-control form-control-sm" name="patient_name[]" value="{{ $patient->patient_name }}">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label font-weight-bold small">وسيلة صرف العلاج</label>
+                                            <input type="text" class="form-control form-control-sm" name="treatment_pay_by[]" value="{{ $patient->treatment_pay_by }}">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label font-weight-bold small">الطبيب المعالج</label>
+                                            <input type="text" class="form-control form-control-sm" name="doctor_name[]" value="{{ $patient->doctor_name }}">
+                                        </div>
+                                        <div class="col-md-8 mt-3">
+                                            <label class="form-label font-weight-bold small">تفاصيل العلاج</label>
+                                            <input type="text" class="form-control form-control-sm" name="treatment[]" value="{{ $patient->treatment }}">
+                                        </div>
+                                        <div class="col-md-4 mt-3">
+                                            <label class="form-label font-weight-bold small">النوع</label>
+                                            <select class="form-control form-control-sm" name="type[]">
+                                                <option value="1" {{ $patient->type == 1 ? 'selected' : '' }}>ذكر</option>
+                                                <option value="0" {{ $patient->type == 0 ? 'selected' : '' }}>أنثى</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-12">
+                <!-- Subvention -->
+                <div class="card custom-card">
+                    <div class="card-header border-bottom">
+                        <h3 class="card-title"><i class="fe fe-check-circle mr-2"></i>الإعانة والقرار</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <label class="form-label font-weight-bold mb-0">إعانة شهرية</label>
+                                <label class="custom-switch">
+                                    <input type="checkbox" id="has_monthly_subvention" name="has_monthly_subvention" value="1" class="custom-switch-input" {{ old('has_monthly_subvention', $user->has_monthly_subvention) ? 'checked' : '' }}>
+                                    <span class="custom-switch-indicator custom-switch-indicator-lg custom-switch-indicator-success"></span>
+                                </label>
+                            </div>
+                            <div class="mt-3">
+                                <label class="form-label small">المبلغ الحالي (ج.م)</label>
+                                <input type="number" id="monthly_subvention_amount" name="monthly_subvention_amount" class="form-control form-control-lg font-weight-bold text-success border-success" value="{{ old('monthly_subvention_amount', $user->monthly_subvention_amount) }}">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <label class="form-label font-weight-bold">قرار اللجنة والتقييم</label>
+                            <textarea rows="6" class="form-control" name="Case_evaluation" placeholder="...">{{ old('Case_evaluation', $user->Case_evaluation) }}</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Attachments Gallery -->
+                <div class="card custom-card">
+                    <div class="card-header border-bottom">
+                        <h3 class="card-title"><i class="fe fe-paperclip mr-2"></i>المرفقات الحالية</h3>
+                    </div>
+                    <div class="card-body">
+                        @php
+                            $attachments = is_string($user->attachments) ? json_decode($user->attachments, true) : $user->attachments;
+                        @endphp
+                        
+                        @if ($attachments && count($attachments) > 0)
+                            <div class="gallery-container">
+                                @foreach ($attachments as $attachment)
+                                    <div class="gallery-item" onclick="showImage('{{ route('attachments.view', ['path' => $attachment]) }}')">
+                                        <img src="{{ route('attachments.view', ['path' => $attachment]) }}" alt="Doc">
+                                        <div class="overlay"><i class="fe fe-maximize text-white"></i></div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="text-center py-4 bg-light rounded">
+                                <i class="fe fe-image text-muted" style="font-size: 2rem;"></i>
+                                <p class="text-muted mb-0">لا توجد مرفقات حالياً</p>
+                            </div>
+                        @endif
+                        
+                        <div class="mt-4">
+                            <label class="form-label font-weight-bold">إضافة مرفقات جديدة</label>
+                            <input type="file" class="dropify" name="attachments[]" data-height="100" multiple>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <div class="card custom-card border-primary shadow-sm">
+                    <div class="card-body">
+                        <button type="submit" class="btn btn-primary btn-block btn-lg btn-pill shadow">
+                            <i class="fe fe-save mr-2"></i> تحديث والحفظ
+                        </button>
+                        <a href="{{ route('users.index') }}" class="btn btn-light btn-block mt-3">إلغاء</a>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- COL END -->
     </form>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content bg-transparent border-0">
+                <div class="modal-img-container text-right">
+                    <button type="button" class="btn btn-light btn-sm mb-2" data-dismiss="modal"><i class="fe fe-x"></i> اغلاق</button>
+                    <img id="modalImage" src="" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
+
 @section('js')
     <script>
-        $('.dropify').dropify()
-    </script>
-
-    <script>
-        // Calculate income, expenses and standard living
-        function calculateIncome() {
-            let total = 0;
-            document.querySelectorAll('.income-input').forEach(input => {
-                let value = parseFloat(input.value) || 0;
-                total += value;
-            });
-            document.getElementById('gross_income').value = total % 1 === 0 ? total : total.toFixed(1);
-            calculateStandardLiving();
-        }
-
-        function calculateExpenses() {
-            let total = 0;
-            document.querySelectorAll('.expense-input').forEach(input => {
-                let value = parseFloat(input.value) || 0;
-                total += value;
-            });
-            document.getElementById('gross_expenses').value = total % 1 === 0 ? total : total.toFixed(1);
-            calculateStandardLiving();
-        }
-
-        function calculateStandardLiving() {
-            let income = parseFloat(document.getElementById('gross_income').value) || 0;
-            let expenses = parseFloat(document.getElementById('gross_expenses').value) || 0;
-            let standardLiving = income - expenses;
-            document.getElementById('standard_living').value = standardLiving % 1 === 0 ? standardLiving : standardLiving
-                .toFixed(1);
-        }
-
-        // Set up event listeners for income and expenses
-        document.querySelectorAll('.income-input').forEach(input => {
-            input.addEventListener('input', calculateIncome);
-        });
-
-        document.querySelectorAll('.expense-input').forEach(input => {
-            input.addEventListener('input', calculateExpenses);
-        });
-
-        // Initialize calculations on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            calculateIncome();
-            calculateExpenses();
-            calculateStandardLiving();
-        });
-    </script>
-
-    <script>
-        // Calculate age from national ID
-        function calculateAge(nationalIdField, ageField) {
-            const nationalId = document.querySelector(nationalIdField).value;
-            const currentYear = new Date().getFullYear();
-
-            if (nationalId.length === 14) {
-                const yearPrefix = nationalId.charAt(0) === '2' ? 1900 : 2000;
-                const year = yearPrefix + parseInt(nationalId.substring(1, 3));
-                let age = currentYear - year;
-                document.querySelector(ageField).value = age;
-            }
-        }
-
-        // Set up event listeners for husband and wife national IDs
-        document.querySelector('[name="husband_national_id"]')?.addEventListener('input', function() {
-            calculateAge('[name="husband_national_id"]', '[name="age_husband"]');
-        });
-
-        document.querySelector('[name="wife_national_id"]')?.addEventListener('input', function() {
-            calculateAge('[name="wife_national_id"]', '[name="age_wife"]');
-        });
-    </script>
-
-    <script>
-        // Function to calculate age from national ID
-        function calculateAgeFromNationalId(nationalId) {
-            if (!nationalId || nationalId.length !== 14) return null;
-
-            const currentDate = new Date();
-            const currentYear = currentDate.getFullYear();
-            const currentMonth = currentDate.getMonth() + 1;
-
-            const yearPrefix = nationalId.charAt(0) === '2' ? 1900 : 2000;
-            const birthYear = yearPrefix + parseInt(nationalId.substring(1, 3), 10);
-            const birthMonth = parseInt(nationalId.substring(3, 5), 10);
-
-            let ageYears = currentYear - birthYear;
-            let ageMonths = currentMonth - birthMonth;
-
-            if (ageMonths < 0) {
-                ageYears -= 1;
-                ageMonths += 12;
-            }
-
-            return ageYears;
-        }
-
-        // Function to handle national ID input changes
-        function handleNationalIdInput(event) {
-            const nationalIdInput = event.target;
-            const row = nationalIdInput.closest('.child-row');
-            if (!row) return;
-
-            const ageInput = row.querySelector('[name="age[]"]');
-            if (ageInput) {
-                const age = calculateAgeFromNationalId(nationalIdInput.value);
-                ageInput.value = age || '';
-            }
-        }
-
-        // Add event delegation for dynamically added children
-        document.getElementById('child_container').addEventListener('input', function(e) {
-            if (e.target.matches('[name="children_national_id[]"]')) {
-                handleNationalIdInput(e);
-            }
-        });
-
-        // Initialize existing inputs on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('[name="children_national_id[]"]').forEach(input => {
-                input.addEventListener('input', handleNationalIdInput);
-            });
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            function calculateAgeFromNationalId(nationalId) {
-                if (nationalId.length !== 14) return '';
-
-                const currentDate = new Date();
-                const currentYear = currentDate.getFullYear();
-                const currentMonth = currentDate.getMonth() + 1;
-
-                const yearPrefix = nationalId.charAt(0) === '2' ? 1900 : 2000;
-                const birthYear = yearPrefix + parseInt(nationalId.substring(1, 3), 10);
-                const birthMonth = parseInt(nationalId.substring(3, 5), 10);
-
-                let ageYears = currentYear - birthYear;
-                let ageMonths = currentMonth - birthMonth;
-
-                if (ageMonths < 0) {
-                    ageYears -= 1;
-                    ageMonths += 12;
-                }
-
-                return ageYears;
-            }
-
-            function updateAgeField(event) {
-                const nationalIdField = event.target;
-                const ageField = nationalIdField.closest('tr')?.querySelector('[name="age[]"]');
-
-                if (ageField) {
-                    ageField.value = calculateAgeFromNationalId(nationalIdField.value);
-                }
-            }
-
-            function addEventListeners() {
-                document.querySelectorAll('[name="children_national_id[]"]').forEach(input => {
-                    input.removeEventListener('input', updateAgeField);
-                    input.addEventListener('input', updateAgeField);
-                });
-            }
-
-            addEventListeners();
-        });
-    </script>
-
-    <script>
-        // Children management
-        let childNumber = {{ count($user->childrens ?? []) }};
-
-        $('#addChild').on('click', function() {
-            childNumber++;
-
-            let newRow = `
-                <div class="child-row row">
-                    <div class="col-12">
-                        <h4 class="bg-danger text-white" style="width: max-content; padding: 8px 15px;">
-                            الابن <span class="child_number">${childNumber}</span>
-                        </h4>
-                    </div>
-
-                    <div class="col-3">
-                        <div class="form-group">
-                            <label for="name" class="form-control-label">الاسم</label>
-                            <input type="text" class="form-control" name="child_names[]">
-                        </div>
-                    </div>
-
-                    <div class="col-3">
-                        <div class="form-group">
-                            <label for="children_national_id" class="form-control-label">الرقم القومي</label>
-                            <input type="text" class="form-control" name="children_national_id[]">
-                        </div>
-                    </div>
-
-                    <div class="col-3">
-                        <div class="form-group">
-                            <label for="age" class="form-control-label">السن</label>
-                            <input type="text" class="form-control" name="age[]">
-                        </div>
-                    </div>
-
-                    <div class="col-2">
-                        <div class="form-group">
-                            <label class="form-control-label">النوع</label>
-                            <select class="form-control" name="child_gender[]">
-                                <option value="">اختر</option>
-                                <option value="1">ذكر</option>
-                                <option value="0">أنثى</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-2">
-                        <div class="form-group">
-                            <label for="schools" class="form-control-label">المدرسة</label>
-                            <input type="text" class="form-control" name="schools[]">
-                        </div>
-                    </div>
-
-                    <div class="col-2">
-                        <div class="form-group">
-                            <label for="monthly_cost" class="form-control-label">التكلفة الشهرية</label>
-                            <input type="text" class="form-control" name="monthly_cost[]">
-                        </div>
-                    </div>
-
-                    <div class="col-3">
-                        <div class="form-group">
-                            <label for="notes" class="form-control-label">ملاحظات</label>
-                            <input type="text" class="form-control" name="notes[]">
-                        </div>
-                    </div>
-
-                    <div class="col-1">
-                        <button type="button" class="btn btn-danger mt-5 removeColor">
-                            <i class="fe fe-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
-
-            $('#child_container').append(newRow);
-            addAgeCalculationListener(); // تأكد أن هذه الدالة معرفة في مكان ما
-        });
-
-        // Remove child
-        $('#child_container').on('click', '.removeColor', function() {
-            $(this).closest('.child-row').remove();
-            $('.child_number').each(function(index) {
-                $(this).text(index + 1);
-            });
-        });
-
-
-        // Patient management
-        let patientNumber = {{ count($patients ?? []) }};
-        $('#add_patient').on('click', function() {
-
-            patientNumber++;
-
-            let newRowPatient = `
-                <hr>
-                <div class="patient-row row">
-                    <div class="col-12">
-                        <h4 class="bg-danger text-white" style="width: max-content; padding: 8px 15px; border-radius: 5px;">
-                            الحالة <span class="patient_number">${patientNumber}</span>
-                        </h4>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="form-label">اسم المريض</label>
-                            <input type="text" class="form-control" name="patient_name[]" placeholder="">
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="form-label">وسيلة صرف العلاج</label>
-                            <input type="text" class="form-control" name="treatment_pay_by[]" placeholder="">
-                        </div>
-                    </div>
-
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label class="form-label">الدواء</label>
-                            <input type="text" class="form-control" name="treatment[]" placeholder="">
-                        </div>
-                    </div>
-
-                    <div class="col-md-4 col-12">
-                        <div class="form-group">
-                            <label class="form-label">نوع المريض</label>
-                            <select class="form-control select2" name="type[]" data-placeholder="اختيار نوع المريض">
-                                <option value="1">ذكر</option>
-                                <option value="0">أنثي</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4 col-12">
-                        <div class="form-group">
-                            <label class="form-label">الطبيب المعالج</label>
-                            <input type="text" class="form-control" name="doctor_name[]" placeholder="">
-                        </div>
-                    </div>
-
-                    <div class="col-md-3 col-12">
-                        <div class="form-group">
-                            <label class="form-label mb-4">هل له تأمين</label>
-                            <div class="material-switch pull-left mb-5">
-                                <input id="is_insurance${patientNumber}" name="is_insurance[]" type="checkbox" value="1">
-                                <label for="is_insurance${patientNumber}" class="label-success"></label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-1">
-                        <button type="button" class="btn btn-danger mt-5 removepatient">
-                            <i class="fe fe-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
-
-            $('#patient_container').append(newRowPatient);
-        });
-
-        // Remove patient
-        $('#patient_container').on('click', '.removepatient', function() {
-            $(this).closest('.patient-row').remove();
-            $('.patient_number').each(function(index) {
-                $(this).text(index + 1);
-            });
-        });
-
-        // Delete attachment (commented out as per your original code)
-        $('.delete-attachment').on('click', function() {
-            const attachmentId = $(this).data('id');
-            const button = $(this);
-            // Your AJAX code here if needed
-        });
-    </script>
-
-
-
-
-    <script>
         $(function () {
-            var $governorate = $('select[name="governorate_id"]');
-            var $center = $('select[name="center_id"]');
-            var $village = $('select[name="village_id"]');
-            var centerOptions = $center.html();
-            var villageOptions = $village.html();
+            // Dropdown Filtering
+            const $governorate = $('select[name="governorate_id"]');
+            const $center = $('select[name="center_id"]');
+            const $village = $('select[name="village_id"]');
+            const centerOptions = $center.html();
+            const villageOptions = $village.html();
 
             function refreshSelect2($select) {
-                $select.trigger('change.select2');
+                if ($select.hasClass('select2-hidden-accessible')) $select.trigger('change.select2');
             }
 
             function filterCenters(selectedCenterId) {
-                var governorateId = $governorate.val();
-                var filteredCenters = $(centerOptions).filter(function () {
-                    return !this.value || $(this).data('governorate-id') == governorateId;
-                });
-
-                $center.html(filteredCenters);
-
-                if (selectedCenterId && $center.find('option[value="' + selectedCenterId + '"]').length) {
-                    $center.val(selectedCenterId);
-                } else {
-                    $center.val('');
-                }
-
+                const govId = $governorate.val();
+                $center.html($(centerOptions).filter(function() { return !this.value || $(this).data('governorate-id') == govId; })).val(selectedCenterId);
                 refreshSelect2($center);
             }
 
             function filterVillages(selectedVillageId) {
-                var centerId = $center.val();
-                var filteredVillages = $(villageOptions).filter(function () {
-                    return !this.value || $(this).data('center-id') == centerId;
-                });
-
-                $village.html(filteredVillages);
-
-                if (selectedVillageId && $village.find('option[value="' + selectedVillageId + '"]').length) {
-                    $village.val(selectedVillageId);
-                } else {
-                    $village.val('');
-                }
-
+                const cId = $center.val();
+                $village.html($(villageOptions).filter(function() { return !this.value || $(this).data('center-id') == cId; })).val(selectedVillageId);
                 refreshSelect2($village);
             }
 
-            $governorate.on('change', function () {
-                filterCenters('');
-                filterVillages('');
-            });
+            $governorate.on('change', () => { filterCenters(''); filterVillages(''); });
+            $center.on('change', () => { filterVillages(''); });
 
-            $center.on('change', function () {
-                filterVillages('');
-            });
+            // Initial Filter load
+            filterCenters('{{ $user->center_id }}');
+            filterVillages('{{ $user->village_id }}');
 
-            filterCenters(@json(old('center_id', $user->center_id)));
-            filterVillages(@json(old('village_id', $user->village_id)));
-        });
-    </script>
-
-    <script>
-        function openModal(imageSrc) {
-            document.getElementById('modalImage').src = imageSrc;
-            document.getElementById('imageModal').style.display = "block";
-        }
-
-        function closeModal() {
-            document.getElementById('imageModal').style.display = "none";
-        }
-
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('imageModal');
-            if (event.target == modal) {
-                closeModal();
+            // Financials
+            function calculateFinancials() {
+                let income = 0, expenses = 0;
+                $('.income-input').each(function() { income += parseFloat($(this).val()) || 0; });
+                $('.expense-input').each(function() { expenses += parseFloat($(this).val()) || 0; });
+                $('#gross_income').val(income.toFixed(0));
+                $('#gross_expenses').val(expenses.toFixed(0));
+                $('#standard_living').val((income - expenses).toFixed(0));
             }
-        }
+            $(document).on('input', '.income-input, .expense-input', calculateFinancials);
+            calculateFinancials();
+
+            // National ID Age
+            function getAge(nid) {
+                if (!nid || nid.length !== 14) return '';
+                const year = (nid.charAt(0) === '2' ? 1900 : 2000) + parseInt(nid.substring(1, 3));
+                return new Date().getFullYear() - year;
+            }
+            $(document).on('input', '[name="husband_national_id"]', function() { $('[name="age_husband"]').val(getAge($(this).val())); });
+            $(document).on('input', '[name="wife_national_id"]', function() { $('[name="age_wife"]').val(getAge($(this).val())); });
+            $(document).on('input', '[name="children_national_id[]"]', function() { $(this).closest('.row').find('[name="age[]"]').val(getAge($(this).val())); });
+
+            // Dynamic Rows
+            $('#add').on('click', () => {
+                $('#child_containerN').append(`
+                    <div class="bg-light p-3 rounded mb-3 child-row border position-relative">
+                        <button type="button" class="btn btn-danger btn-sm position-absolute" style="top: 10px; left: 10px; z-index: 10" onclick="$(this).closest('.child-row').remove()">
+                            <i class="fe fe-trash"></i>
+                        </button>
+                        <div class="row align-items-end">
+                            <div class="col-md-4">
+                                <label class="form-label font-weight-bold small">اسم الابن</label>
+                                <input type="text" class="form-control form-control-sm" name="child_names[]">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label font-weight-bold small">الرقم القومي</label>
+                                <input type="number" class="form-control form-control-sm" name="children_national_id[]">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label font-weight-bold small">السن</label>
+                                <input type="number" class="form-control form-control-sm bg-white" name="age[]" readonly>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label font-weight-bold small">النوع</label>
+                                <select class="form-control form-control-sm" name="child_gender[]"><option value="1">ذكر</option><option value="0">أنثى</option></select>
+                            </div>
+                            <div class="col-md-4 mt-3"><label class="form-label font-weight-bold small">المدرسة</label><input type="text" class="form-control form-control-sm" name="schools[]"></div>
+                            <div class="col-md-2 mt-3"><label class="form-label font-weight-bold small">التكلفة</label><input type="number" class="form-control form-control-sm" name="monthly_cost[]"></div>
+                            <div class="col-md-6 mt-3"><label class="form-label font-weight-bold small">ملاحظات</label><input type="text" class="form-control form-control-sm" name="notes[]"></div>
+                        </div>
+                    </div>`);
+            });
+
+            $('#add_patient').on('click', () => {
+                $('#patient_container').append(`
+                    <div class="bg-light p-3 rounded mb-3 patient-row border border-danger-transparent position-relative">
+                        <button type="button" class="btn btn-danger btn-sm position-absolute" style="top: 10px; left: 10px; z-index: 10" onclick="$(this).closest('.patient-row').remove()">
+                            <i class="fe fe-trash"></i>
+                        </button>
+                        <div class="row align-items-end">
+                            <div class="col-md-4"><label class="form-label font-weight-bold small">المريض</label><input type="text" class="form-control form-control-sm" name="patient_name[]"></div>
+                            <div class="col-md-4"><label class="form-label font-weight-bold small">وسيلة الصرف</label><input type="text" class="form-control form-control-sm" name="treatment_pay_by[]"></div>
+                            <div class="col-md-4"><label class="form-label font-weight-bold small">الطبيب</label><input type="text" class="form-control form-control-sm" name="doctor_name[]"></div>
+                            <div class="col-md-8 mt-3"><label class="form-label font-weight-bold small">العلاج</label><input type="text" class="form-control form-control-sm" name="treatment[]"></div>
+                            <div class="col-md-4 mt-3"><label class="form-label font-weight-bold small">النوع</label><select class="form-control form-control-sm" name="type[]"><option value="1">ذكر</option><option value="0">أنثى</option></select></div>
+                        </div>
+                    </div>`);
+            });
+
+            $('#has_monthly_subvention').on('change', function() {
+                const isChecked = $(this).is(':checked');
+                $('#monthly_subvention_amount').prop('readonly', !isChecked);
+                if (!isChecked) $('#monthly_subvention_amount').val('');
+            }).trigger('change');
+
+            $('.dropify').dropify();
+            $('.select2').select2({ width: '100%', minimumResultsForSearch: 10 });
+            
+            // Image viewer
+            window.showImage = function(src) {
+                $('#modalImage').attr('src', src);
+                $('#imageModal').modal('show');
+            };
+        });
     </script>
 @endsection
