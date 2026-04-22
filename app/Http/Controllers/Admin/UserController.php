@@ -45,6 +45,10 @@ class UserController extends Controller
                 $query->where('social_status', $request->social_status);
             }
 
+            if ($request->filled('has_monthly_subvention')) {
+                $query->where('has_monthly_subvention', $request->has_monthly_subvention);
+            }
+
 
 
             if ($request->filled('standard_living')) {
@@ -87,39 +91,65 @@ class UserController extends Controller
             return Datatables::of($users)
                 ->addColumn('action', function ($users) {
                     return '
-                        <div class="d-flex align-items-center justify-content-center flex-wrap" style="gap: 8px;">
-                            <a class="btn btn-sm btn-success-light" href="' . route('userDetails', $users->id) . '" title="عرض التفاصيل">
-                                <i class="fas fa-eye"></i>
+                        <div class="btn-list d-flex justify-content-center align-items-center" style="gap: 8px;">
+                            <button class="btn btn-sm btn-primary-light detailsBtn px-3 py-2" data-id="' . $users->id . '" title="عرض التفاصيل">
+                                <i class="fe fe-eye"></i>
+                            </button>
+                            <a href="' . route("users.edit", $users->id) . '" class="btn btn-sm btn-info-light px-3 py-2" title="تعديل">
+                                <i class="fe fe-edit"></i>
                             </a>
-                            <a href="' . route("users.edit", $users->id) . '" class="btn btn-sm btn-primary-light" title="تعديل">
-                                <i class="fas fa-edit"></i>
-                            </a>
+                            <button class="btn btn-sm btn-danger-light delete_button px-3 py-2" data-id="' . $users->id . '" data-title="' . e($users->husband_name) . '" title="حذف">
+                                <i class="fe fe-trash"></i>
+                            </button>
                         </div>
                     ';
                 })
-                ->editColumn('work_type', function ($users) {
-                    return '<span title="' . e($users->work_type) . '">' . Str::limit($users->work_type, 20, '...') . '</span>';
-                })->editColumn('address', function ($users) {
-                    return '<span title="' . e($users->address) . '">' . Str::limit($users->address, 20, '...') . '</span>';
+                ->addColumn('beneficiary', function ($user) {
+                    $husband = $user->husband_name ?: '<span class="text-muted">نقص</span>';
+                    $wife = $user->wife_name ?: '<span class="text-muted">نقص</span>';
+                    $codeHtml = $user->beneficiary_code
+                        ? '<span class="badge badge-light text-dark border">الكود: ' . e($user->beneficiary_code) . '</span>'
+                        : '<span class="badge badge-light text-muted border">الكود: -</span>';
+                    return '<div class="d-flex align-items-center">
+                                <div class="ml-3 text-right">
+                                    <div class="mb-1">' . $codeHtml . '</div>
+                                    <h6 class="mb-0 font-weight-bold text-primary">' . $husband . '</h6>
+                                    <small class="text-muted"><i class="fe fe-user mr-1"></i>الزوجة: ' . $wife . '</small>
+                                </div>
+                            </div>';
                 })
-                ->editColumn('social_status', function ($users) {
-                    if ($users->social_status == 0)
-                        return 'أعزب';
-                    elseif ($users->social_status == 1)
-                        return 'متزوج';
-                    elseif ($users->social_status == 2)
-                        return 'مطلق';
-                    else
-                        return 'أرمل';
+                ->addColumn('financials', function ($user) {
+                    return '<div class="small">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="text-muted">الدخل:</span>
+                                    <span class="text-success font-weight-bold">' . number_format($user->gross_income) . '</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="text-muted">المصاريف:</span>
+                                    <span class="text-danger font-weight-bold">' . number_format($user->gross_expenses) . '</span>
+                                </div>
+                                <div class="border-top pt-1 d-flex justify-content-between">
+                                    <span class="font-weight-bold">المستوى:</span>
+                                    <span class="badge badge-primary-light">' . number_format($user->standard_living) . '</span>
+                                </div>
+                            </div>';
                 })
-                ->editColumn('gross_income', function ($users) {
-                    return '<span class="badge badge-success p-2" style="font-size: 12px;">' . number_format($users->gross_income, 0) . ' EGP</span>';
+                ->addColumn('monthlySubventionToggle', function ($users) {
+                    $checked = $users->has_monthly_subvention ? 'checked' : '';
+
+                    return '
+                        <div class="d-flex justify-content-center">
+                            <label class="custom-switch mb-0">
+                                <input type="checkbox" class="custom-switch-input monthly-subvention-toggle" data-id="' . $users->id . '" ' . $checked . '>
+                                <span class="custom-switch-indicator custom-switch-indicator-lg custom-switch-indicator-success"></span>
+                            </label>
+                        </div>
+                    ';
                 })
-                ->editColumn('gross_expenses', function ($users) {
-                    return '<span class="badge badge-success p-2" style="font-size: 12px;">' . number_format($users->gross_expenses, 0) . ' EGP</span>';
-                })->editColumn('standard_living', function ($users) {
-                    return '<span class="badge badge-danger p-2" style="font-size: 12px;">' . number_format($users->standard_living, 0) . ' EGP</span>';
-                })->addColumn('statusChange', function ($users) {
+                ->editColumn('monthly_subvention_amount', function ($users) {
+                    return '<span class="text-dark font-weight-bold">' . number_format($users->monthly_subvention_amount ?? 0, 0) . ' <small>ج.م</small></span>';
+                })
+                ->addColumn('statusChange', function ($users) {
                     if ($users->status == 'new') {
                         $available_actions = '
                                 <li><a data-id="' . $users->id . '" data-status="accepted" href="#" class="statusBtn ">قبول</a></li>
@@ -176,7 +206,19 @@ class UserController extends Controller
                 ->make(true);
         } else {
             $beneficiaryCategories = BeneficiaryCategory::active()->orderBy('sort_order')->orderBy('name')->get();
-            return view('admin/users/index', compact('selectedStatus', 'beneficiaryCategories'));
+            $totalUsers = User::count();
+            $acceptedUsers = User::where('status', 'accepted')->count();
+            $preparingUsers = User::where('status', 'preparing')->count();
+            $refusedUsers = User::where('status', 'refused')->count();
+
+            return view('admin/users/index', compact(
+                'selectedStatus',
+                'beneficiaryCategories',
+                'totalUsers',
+                'acceptedUsers',
+                'preparingUsers',
+                'refusedUsers'
+            ));
         }
     }
 
@@ -276,6 +318,34 @@ class UserController extends Controller
         }
     }
 
+    public function toggleMonthlySubvention(Request $request)
+    {
+        try {
+            $request->validate([
+                'id' => 'required|exists:users,id',
+                'has_monthly_subvention' => 'required|boolean',
+            ]);
+
+            $user = User::findOrFail($request->id);
+            $isActive = $request->boolean('has_monthly_subvention');
+
+            $user->update([
+                'has_monthly_subvention' => $isActive,
+            ]);
+
+            return response([
+                'status' => true,
+                'message' => 'تم تحديث حالة الإعانة الشهرية بنجاح',
+                'data' => [
+                    'has_monthly_subvention' => $user->has_monthly_subvention,
+                    'monthly_subvention_amount' => $user->monthly_subvention_amount,
+                ],
+            ], 200);
+        } catch (\Exception $ex) {
+            return response(['message' => $ex->getMessage(), 'status' => false], 200);
+        }
+    }
+
 
 
     public function create()
@@ -289,10 +359,8 @@ class UserController extends Controller
     public function store(StoreUser $request)
     {
 
-        $userData = $request->except('_token', 'attachments', 'child_names',  'children_national_id',  'age', 'child_gender', 'schools', 'monthly_cost', 'notes', 'patient_name',  'treatment_pay_by', 'type', 'doctor_name', 'treatment');
-
-
         $user = User::create([
+            'beneficiary_code' => @$request->beneficiary_code,
             'husband_name' => @$request->husband_name,
             'wife_name' => @$request->wife_name,
             'husband_national_id' => @$request->husband_national_id,
@@ -309,7 +377,10 @@ class UserController extends Controller
             'beneficiary_category_id' => $request->beneficiary_category_id,
             'salary' => @$request->salary,
             'pension' => @$request->pension,
-            'insurance' => @$request->insurance,
+            'has_monthly_subvention' => $request->boolean('has_monthly_subvention'),
+            'monthly_subvention_amount' => $request->boolean('has_monthly_subvention')
+                ? ($request->monthly_subvention_amount ?? 0)
+                : ($request->monthly_subvention_amount ?? 0),
             'dignity' => @$request->dignity,
             'trade' => @$request->trade,
             'pillows' => @$request->pillows,
@@ -356,7 +427,6 @@ class UserController extends Controller
                     'treatment_pay_by' => $request->treatment_pay_by[$index] ?? null,
                     'type' => $request->type[$index] ?? null,
                     'doctor_name' => $request->doctor_name[$index] ?? null,
-                    'is_insurance' => isset($request->is_insurance[$index]) ? '1' : '0',
                     'notes' => $request->notes[$index] ?? null,
                 ]);
             }
@@ -397,6 +467,7 @@ class UserController extends Controller
 
             $user = User::findOrFail($id);
             $user->update([
+                'beneficiary_code' => $request->beneficiary_code,
                 'husband_name' => $request['husband_name'],
                 'wife_name' => $request['wife_name'],
                 'husband_national_id' => $request['husband_national_id'],
@@ -413,7 +484,10 @@ class UserController extends Controller
                 'beneficiary_category_id' => $request->beneficiary_category_id,
                 'salary' => $request['salary'] ?? 0,
                 'pension' => $request['pension'] ?? 0,
-                'insurance' => $request['insurance'] ?? 0,
+                'has_monthly_subvention' => $request->boolean('has_monthly_subvention'),
+                'monthly_subvention_amount' => $request->boolean('has_monthly_subvention')
+                    ? ($request->monthly_subvention_amount ?? 0)
+                    : ($request->monthly_subvention_amount ?? 0),
                 'dignity' => $request['dignity'] ?? 0,
                 'trade' => $request['trade'] ?? 0,
                 'pillows' => $request['pillows'] ?? 0,
@@ -464,7 +538,6 @@ class UserController extends Controller
                             'treatment' => $request['treatment'][$index] ?? null,
                             'type' => $request['type'][$index] ?? 1,
                             'doctor_name' => $request['doctor_name'][$index] ?? null,
-                            'is_insurance' => isset($request['is_insurance'][$index]) ? 1 : 0,
                         ]);
                     }
                 }

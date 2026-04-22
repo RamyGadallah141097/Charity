@@ -99,7 +99,7 @@
                 <a class="side-menu__item {{ request()->segment(2) == 'lock' ? 'active' : '' }}"
                     href="{{ route('lock') }}">
                     <i class="fas fa-hand-holding-heart" style="margin-left: 10px;"></i>
-                    <span class="side-menu__label"> الخزنه </span>
+                    <span class="side-menu__label"> الخزنة </span>
                 </a>
             </p>
         @endif
@@ -190,84 +190,40 @@
 
 
 
-        {{-- الإعانات الشهرية --}}
+        {{-- الإعانات --}}
         @if (auth()->check() && auth()->user()->can('subventions.index'))
             <p>
-                <a class="side-menu__item {{ request()->routeIs('subventions.*') ? 'active' : '' }} {{ request()->routeIs('assets.*') ? 'active' : '' }} "
+                <a class="side-menu__item {{ request()->routeIs('subventions.*') ? 'active' : '' }} {{ request()->routeIs('SubventionsLoans.*') ? 'active' : '' }}"
                     data-toggle="collapse" href="#subventionsDropdown" role="button"
-                    aria-expanded="{{ request()->routeIs('subventions.*') ? 'true' : 'false' }} {{ request()->routeIs('assets.*') ? 'active' : '' }}"
+                    aria-expanded="{{ request()->routeIs('subventions.*') || request()->routeIs('SubventionsLoans.*') ? 'true' : 'false' }}"
                     aria-controls="subventionsDropdown">
                     <i class="fe fe-credit-card side-menu__icon"></i>
-                    <span class="side-menu__label"> الإعانات الشهرية </span>
+                    <span class="side-menu__label"> الإعانات </span>
                 </a>
             </p>
 
 
-            <ul class="collapse {{ request()->routeIs('subventions.*') ? 'show' : '' }} {{ request()->routeIs('assets.*') ? 'show' : '' }}"
+            <ul class="collapse {{ request()->routeIs('subventions.*') || request()->routeIs('SubventionsLoans.*') ? 'show' : '' }}"
                 id="subventionsDropdown">
                 <li>
                     <a class="dropdown-item-text side-menu__item {{ request()->routeIs('subventions.index') ? 'active' : '' }}"
                         href="{{ route('subventions.index') }}">
                         <i class="fas fa-hand-holding-heart" style="margin-left: 10px;"></i>
-                        <span class="side-menu__label"> الإعانات الشهرية للمستفيدين </span>
+                        <span class="side-menu__label"> الإعانات الشهرية </span>
                     </a>
                 </li>
 
                 <li>
-                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('assets.index') ? 'active' : '' }}"
-                        href="{{ route('assets.index') }}">
-                        <i class="fe fe-users" style="margin-left: 10px;"></i>
-                        <span class="side-menu__label"> خزنة التبرعات العينيه </span>
+                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('SubventionsLoans.index') ? 'active' : '' }}"
+                        href="{{ route('SubventionsLoans.index') }}">
+                        <i class="fas fa-user-friends" style="margin-left: 10px;"></i>
+                        <span class="side-menu__label"> الإعانات الفردية </span>
                     </a>
                 </li>
             </ul>
         @endif
 
 
-
-        {{-- بنك الافكار --}}
-        @if (auth()->check() && auth()->user()->can('tasks.index'))
-            <li class="slide">
-                <a class="side-menu__item" href="{{ route('tasks.index') }}">
-                    <i class="fe fe-file-text side-menu__icon"></i>
-                    <span class="side-menu__label"> بنك الافكار </span>
-                </a>
-            </li>
-        @endif
-
-        {{--        admin supscriptions --}}
-        @if (auth()->check() && auth()->user()->can('subscription.index'))
-            <p>
-                <a class="side-menu__item {{ request()->routeIs('adminSubscription.*') || request()->routeIs('SubscriptionFee.*') ? 'active' : '' }}  "
-                    data-toggle="collapse" href="#adminSubscriptions" role="button"
-                    aria-expanded="{{ request()->routeIs('adminSubscription.*') || request()->routeIs('SubscriptionFee.*') ? 'true' : 'false' }} {{ request()->routeIs('adminSubscription.*') || request()->routeIs('SubscriptionFee.*') ? 'active' : '' }}"
-                    aria-controls="adminSubscriptions">
-                    <i class="fe fe-credit-card side-menu__icon"></i>
-                    <span class="side-menu__label"> الاشتراكات الشهريه للاعضاء </span>
-                </a>
-            </p>
-
-
-            <ul class="collapse {{ request()->routeIs('adminSubscription.*') || request()->routeIs('SubscriptionFee.*') ? 'show' : '' }} "
-                id="adminSubscriptions">
-                <li>
-                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('adminSubscription.index') ? 'active' : '' }}"
-                        href="{{ route('adminSubscription.index') }}">
-                        <i class="fas fa-hand-holding-heart" style="margin-left: 10px;"></i>
-                        <span class="side-menu__label"> الاشتراكات الشهريه للاعضاء </span>
-                    </a>
-                </li>
-
-                <li>
-                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('SubscriptionFee.index') ? 'active' : '' }}"
-                        href="{{ route('SubscriptionFee.index') }}">
-                        <i class="fe fe-users" style="margin-left: 10px;"></i>
-                        <span class="side-menu__label"> مصروفات الاعضاء </span>
-                    </a>
-                </li>
-            </ul>
-        @endif
-        {{--        admin supscriptions --}}
         {{-- الإعدادات --}}
         @if (auth()->check() && auth()->user()->can('setting.index'))
             <li class="slide">

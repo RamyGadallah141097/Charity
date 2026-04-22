@@ -3,41 +3,62 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\DonationType;
+use App\Models\LockerLog;
 use App\Models\Subvention;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
 class SubventionsLoansController extends Controller
 {
     public function index(request $request)
     {
+        $fromDate = $request->filled('from')
+            ? Carbon::parse($request->from)->startOfDay()
+            : now()->startOfMonth();
+        $toDate = $request->filled('to')
+            ? Carbon::parse($request->to)->endOfDay()
+            : now()->endOfMonth();
 
         if ($request->ajax()) {
-            $data = Subvention::latest()->get();
+            $data = Subvention::query()
+                ->where('type', 'once')
+                ->with('user')
+                ->whereBetween('created_at', [$fromDate, $toDate])
+                ->latest()
+                ->get();
+
             return Datatables::of($data)
-                ->addColumn('action', function ($data) {
-                    return '
-                            <button type="button" data-id="' . $data->id . '" class="btn btn-pill btn-info-light editBtn"><i class="fa fa-edit"></i></button>
-                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
-                                    data-id="' . $data->id . '" data-title="' . $data->user->name . '">
-                                    <i class="fas fa-trash"></i>
-                            </button>
-                       ';
+                ->addColumn('beneficiary_code', function ($data) {
+                    return $data->user->beneficiary_code ?? '-';
                 })
                 ->editColumn('user_id', function ($data) {
-                    return ($data->user->husband_name) ?? 'تم حذفه';
+                    return ($data->user->wife_name ?: $data->user->husband_name) ?? 'تم حذفه';
+                })
+                ->editColumn('price', function ($data) {
+                    return " مبلغ قدره : " . $data->price . " جنيه ";
                 })
                 ->editColumn('type', function ($data) {
-                    if ($data->type == 'once')
-                        return 'مرة واحدة';
-                    else
-                        return 'إعانة شهرية';
+                    return 'إعانة فردية';
+                })
+                ->editColumn('created_at', function ($data) {
+                    return $data->created_at->format('d/m/Y');
                 })
                 ->escapeColumns([])
                 ->make(true);
         } else {
-            return view('admin/SubventionsLoans/index');
+            $totalSpent = Subvention::where('type', 'once')
+                ->whereBetween('created_at', [$fromDate, $toDate])
+                ->sum('price');
+
+            $periodLabel = $request->filled('from') && $request->filled('to')
+                ? 'إجمالي المنصرف خلال الفترة من ' . $fromDate->format('Y-m-d') . ' إلى ' . $toDate->format('Y-m-d')
+                : 'إجمالي المنصرف خلال الشهر الحالي';
+
+            return view('admin/SubventionsLoans/index', compact('fromDate', 'toDate', 'totalSpent', 'periodLabel'));
         }
     }
 
@@ -45,17 +66,89 @@ class SubventionsLoansController extends Controller
 
     public function create()
     {
-        $users = User::where('status', 'accepted')->whereDoesntHave('subvention')->select('id', 'husband_name')->latest()->get();
-        return view('admin/subventions/parts/create', compact('users'));
+        $users = User::where('status', 'accepted')
+            ->select('id', 'beneficiary_code', 'husband_name', 'wife_name')
+            ->latest()
+            ->get();
+        $lockerTypes = DonationType::cashLockerTypes()->active()->orderBy('sort_order')->get();
+
+        return view('admin/SubventionsLoans/create', compact('users', 'lockerTypes'));
     }
 
 
     public function store(Request $request)
     {
-        if (Subvention::create($request->except('_token')))
-            return response()->json(['status' => 200]);
-        else
-            return response()->json(['status' => 405]);
+        $validated = $request->validate([
+            'user_ids' => ['required', 'array', 'min:1'],
+            'user_ids.*' => ['required', 'exists:users,id'],
+            'donation_type_id' => ['required', 'exists:donation_types,id'],
+            'price' => ['required', 'numeric', 'min:0.01'],
+            'comment' => ['nullable', 'string'],
+        ], [
+            'user_ids.required' => 'يرجى اختيار مستفيد واحد على الأقل.',
+            'user_ids.min' => 'يرجى اختيار مستفيد واحد على الأقل.',
+            'user_ids.*.exists' => 'أحد المستفيدين المختارين غير موجود.',
+            'donation_type_id.required' => 'يرجى اختيار الخزنة التي سيتم الصرف منها.',
+            'price.required' => 'يرجى إدخال مبلغ الإعانة الفردية.',
+            'price.numeric' => 'مبلغ الإعانة الفردية يجب أن يكون رقمًا.',
+            'price.min' => 'مبلغ الإعانة الفردية يجب أن يكون أكبر من صفر.',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $userIds = collect($validated['user_ids'])->filter()->unique()->values();
+            $users = User::whereIn('id', $userIds)->get()->keyBy('id');
+
+            $lockerType = DonationType::cashLockerTypes()->find($validated['donation_type_id']);
+            $lockerMoneyType = $lockerType?->lockerMoneyType();
+
+            if (!$lockerType || !$lockerMoneyType) {
+                toastr()->error('الخزنة المختارة غير صالحة للصرف المالي.');
+                return redirect()->back()->withInput();
+            }
+
+            $pricePerUser = (float) $validated['price'];
+            $totalRequiredAmount = $pricePerUser * $userIds->count();
+
+            $availableBalance =
+                LockerLog::where('moneyType', $lockerMoneyType)->where('type', LockerLog::TYPE_PLUS)->sum('amount')
+                - LockerLog::where('moneyType', $lockerMoneyType)->where('type', LockerLog::TYPE_MINUS)->sum('amount');
+
+            if ($availableBalance < $totalRequiredAmount) {
+                toastr()->error('رصيد الخزنة المختارة لا يكفي لصرف الإعانات الفردية.');
+                return redirect()->back()->withInput();
+            }
+
+            foreach ($userIds as $userId) {
+                $user = $users->get($userId);
+
+                $subvention = Subvention::create([
+                    'user_id' => $userId,
+                    'price' => $pricePerUser,
+                    'type' => 'once',
+                    'comment' => $validated['comment'] ?? null,
+                ]);
+
+                LockerLog::create([
+                    "moneyType" => $lockerMoneyType,
+                    "amount" => $pricePerUser,
+                    "type" => LockerLog::TYPE_MINUS,
+                    "admin_id" => auth()->id(),
+                    "subvention_id" => $subvention->id,
+                    "comment" => "صرف إعانة فردية من خزنة " . $lockerType->name . " إلى " . ($user ? ($user->husband_name ?: $user->wife_name) : "مجهول")
+                        . " ورقم هاتفه " . ($user ? $user->nearest_phone : "غير متوفر"),
+                ]);
+            }
+
+            DB::commit();
+            toastr()->success('تمت إضافة الإعانة الفردية بنجاح');
+            return redirect()->route('SubventionsLoans.index');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            toastr()->error($e->getMessage());
+            return redirect()->back()->withInput();
+        }
     }
 
     /**
@@ -72,21 +165,13 @@ class SubventionsLoansController extends Controller
 
     public function edit(Subvention $subvention)
     {
-        $users = User::where('status', 'accepted')
-            ->whereDoesntHave('subvention')
-            ->orWhere('id', $subvention->user_id)
-            ->select('id', 'husband_name')
-            ->latest()->get();
-        return view('admin/subventions/parts/edit', compact('users', 'subvention'));
+        abort(404);
     }
 
 
     public function update(Request $request, $id)
     {
-        if (Subvention::find($id)->update($request->except('_token')))
-            return response()->json(['status' => 200]);
-        else
-            return response()->json(['status' => 405]);
+        abort(404);
     }
 
     /**
@@ -103,7 +188,11 @@ class SubventionsLoansController extends Controller
     public function delete(Request $request)
     {
         try {
-            Subvention::destroy($request->id);
+            $subvention = Subvention::findOrFail($request->id);
+            LockerLog::where('subvention_id', $subvention->id)
+                ->where('type', LockerLog::TYPE_MINUS)
+                ->delete();
+            $subvention->delete();
             return redirect()->back();
             //            return response(['message'=>'تم الحذف بنجاح','status'=>200],200);
         } catch (\Exception $ex) {
@@ -113,7 +202,7 @@ class SubventionsLoansController extends Controller
 
     public function showSubventions()
     {
-        $subventions = Subvention::where('type', 'monthly')->latest()->get();
+        $subventions = Subvention::where('type', 'once')->latest()->get();
         return view('admin/print/subvention-print', compact('subventions'));
     }
 }

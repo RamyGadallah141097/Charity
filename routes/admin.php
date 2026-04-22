@@ -39,6 +39,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::delete('/users/delete', [UserController::class, 'destroy'])->name('delete_users');
 
     Route::POST('updateUserStatus', 'UserController@updateUserStatus')->name('updateUserStatus');
+    Route::post('users/toggle-monthly-subvention', 'UserController@toggleMonthlySubvention')->name('users.toggleMonthlySubvention');
     Route::get('userDetails/{id?}', 'UserController@userDetails')->name('userDetails');
     Route::get('searchNID/{id?}', 'UserController@searchNID')->name('user.searchNID');
     Route::get('DonationDetails/{id}', 'UserController@DonationDetails')->name('DonationDetails');
@@ -129,6 +130,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 
     // اعانات القرض الحسن
     Route::get('SubventionsLoans/index', 'SubventionsLoansController@index')->name('SubventionsLoans.index');
+    Route::get('SubventionsLoans/create', 'SubventionsLoansController@create')->name('SubventionsLoans.create');
+    Route::post('SubventionsLoans/store', 'SubventionsLoansController@store')->name('SubventionsLoans.store');
     #### Safer ####
 
     #### Subventions ####

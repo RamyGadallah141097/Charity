@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreUser extends FormRequest
 {
@@ -23,11 +24,27 @@ class StoreUser extends FormRequest
      */
     public function rules()
     {
+        $userId = $this->route('id');
+
         return [
+            'beneficiary_code'      => [
+                'nullable',
+                'string',
+                'max:255',
+                Rule::unique('users', 'beneficiary_code')->ignore($userId),
+            ],
             'husband_name'          => 'nullable',
             'wife_name'             => 'nullable',
-            'husband_national_id'   => 'nullable|numeric',
-            'wife_national_id'      => 'nullable|numeric',
+            'husband_national_id'   => [
+                'nullable',
+                'numeric',
+                Rule::unique('users', 'husband_national_id')->ignore($userId),
+            ],
+            'wife_national_id'      => [
+                'nullable',
+                'numeric',
+                Rule::unique('users', 'wife_national_id')->ignore($userId),
+            ],
             'governorate_id'        => 'nullable|exists:governorates,id',
             'center_id'             => 'nullable|exists:centers,id',
             'village_id'            => 'nullable|exists:villages,id',
@@ -37,7 +54,8 @@ class StoreUser extends FormRequest
             'nearest_phone'         => 'nullable|string',
             'salary'                => 'nullable|numeric',
             'pension'               => 'nullable|numeric',
-            'insurance'             => 'nullable|numeric',
+            'has_monthly_subvention' => 'nullable|boolean',
+            'monthly_subvention_amount' => 'nullable|numeric',
             'dignity'               => 'nullable|numeric',
             'trade'                 => 'nullable|numeric',
             'pillows'               => 'nullable|numeric',
@@ -98,6 +116,7 @@ class StoreUser extends FormRequest
         return [
             'husband_name.required'     => 'يرجي ادخال اسم الزوج',
             'wife_name.required'        => 'يرجي ادخال اسم الزوجة',
+            'beneficiary_code.unique' => 'كود المستفيد موجود بالفعل',
             'husband_national_id.required' => 'يرجي ادخال الرقم القومى للزوج',
             'husband_national_id.numeric' => 'الرقم القومى للزوج يجب أن يكون رقمًا',
             'husband_national_id.digits' => 'الرقم القومى للزوج يجب أن يتكون من 14 رقمًا',
@@ -119,7 +138,7 @@ class StoreUser extends FormRequest
             'nearest_phone.max'         => 'رقم الهاتف يجب ألا يتجاوز 11 رقمًا',
             'salary.numeric'            => 'الراتب يجب أن يكون رقمًا',
             'pension.numeric'           => 'المعاش يجب أن يكون رقمًا',
-            'insurance.numeric'         => 'التأمين يجب أن يكون رقمًا',
+            'monthly_subvention_amount.numeric' => 'مبلغ الإعانة الشهرية يجب أن يكون رقمًا',
             'dignity.numeric'           => 'كرامة يجب أن يكون رقمًا',
             'trade.numeric'             => 'التجارة يجب أن يكون رقمًا',
             'pillows.numeric'           => 'سادات يجب أن يكون رقمًا',
