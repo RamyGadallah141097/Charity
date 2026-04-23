@@ -45,6 +45,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('searchNID/{id?}', 'UserController@searchNID')->name('user.searchNID');
     Route::get('DonationDetails/{id}', 'UserController@DonationDetails')->name('DonationDetails');
     Route::get('attachments/view', 'UserController@viewAttachment')->name('attachments.view');
+    Route::get('users/export/excel', 'UserController@exportExcel')->name('users.export.excel');
+    Route::post('users/import/excel', 'UserController@importExcel')->name('users.import.excel');
 
     #### print users ####
     Route::get('PrintUsersNew', 'UserController@PrintUsersNew')->name('PrintUsersNew');
@@ -93,6 +95,19 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     });
 
     Route::get("lock/{lock?}", "LockerLogController@index")->name("lock");
+    Route::get('association-revenues', 'AssociationRevenueController@index')->name('association-revenues.index');
+    Route::get('association-revenues/create', 'AssociationRevenueController@create')->name('association-revenues.create');
+    Route::post('association-revenues/store', 'AssociationRevenueController@store')->name('association-revenues.store');
+    Route::get('association-revenues/{associationRevenue}/edit', 'AssociationRevenueController@edit')->name('association-revenues.edit');
+    Route::put('association-revenues/{associationRevenue}', 'AssociationRevenueController@update')->name('association-revenues.update');
+    Route::post('association-revenues/delete', 'AssociationRevenueController@delete')->name('association-revenues.delete');
+
+    Route::get('association-expenses', 'AssociationExpenseController@index')->name('association-expenses.index');
+    Route::get('association-expenses/create', 'AssociationExpenseController@create')->name('association-expenses.create');
+    Route::post('association-expenses/store', 'AssociationExpenseController@store')->name('association-expenses.store');
+    Route::get('association-expenses/{associationExpense}/edit', 'AssociationExpenseController@edit')->name('association-expenses.edit');
+    Route::put('association-expenses/{associationExpense}', 'AssociationExpenseController@update')->name('association-expenses.update');
+    Route::post('association-expenses/delete', 'AssociationExpenseController@delete')->name('association-expenses.delete');
 
     #### Tasks ####
     Route::resource("tasks", "TaskController")->middleware('permission:tasks.index');

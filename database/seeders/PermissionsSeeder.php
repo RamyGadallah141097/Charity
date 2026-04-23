@@ -52,6 +52,8 @@ class PermissionsSeeder extends Seeder
 
 
         "lock.index",
+            'association.expenses.index',
+            'association.revenues.index',
             // Tasks
             'tasks.index',
 //            'tasks.create',

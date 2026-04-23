@@ -81,9 +81,17 @@
                         <h3 class="card-title">
                             <i class="fe fe-list mr-2"></i> إدارة المستفيدين
                         </h3>
-                        <a href="{{ route('users.create') }}" class="btn btn-primary btn-pill">
-                            <i class="fe fe-plus mr-1"></i> إضافة مستفيد جديد
-                        </a>
+                        <div class="d-flex align-items-center" style="gap: 10px;">
+                            <button type="button" class="btn btn-outline-success btn-pill" data-toggle="modal" data-target="#importExcelModal">
+                                <i class="fe fe-upload mr-1"></i> استيراد Excel
+                            </button>
+                            <a href="{{ route('users.export.excel') }}" class="btn btn-outline-info btn-pill">
+                                <i class="fe fe-download mr-1"></i> تصدير Excel
+                            </a>
+                            <a href="{{ route('users.create') }}" class="btn btn-primary btn-pill">
+                                <i class="fe fe-plus mr-1"></i> إضافة مستفيد جديد
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -151,6 +159,36 @@
                             </thead>
                         </table>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="importExcelModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">استيراد المستفيدين من Excel</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="{{ route('users.import.excel') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="font-weight-bold">ملف Excel</label>
+                                <input type="file" name="excel_file" class="form-control" accept=".xlsx,.xls,.csv" required>
+                                <small class="text-muted d-block mt-2">
+                                    الأعمدة المعتمدة: `beneficiary_code`, `husband_name`, `wife_name`, `husband_national_id`, `wife_national_id`,
+                                    `social_status`, `beneficiary_category`, `governorate`, `center`, `village`, وباقي الحقول المالية كما في ملف التصدير.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-dismiss="modal">إغلاق</button>
+                            <button type="submit" class="btn btn-success">استيراد</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

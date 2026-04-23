@@ -89,25 +89,14 @@
             @endif
         @endif
 
+        @php
+            $associationLockerId = \App\Models\DonationType::query()->where('code', \App\Models\DonationType::ASSOCIATION_CODE)->value('id');
+            $associationMenuOpen = request()->routeIs('association-expenses.*')
+                || request()->routeIs('association-revenues.*')
+                || (request()->routeIs('lock') && request('locker_type') == $associationLockerId)
+                || (request()->segment(2) === 'lock' && request()->segment(3) == $associationLockerId);
+        @endphp
         {{--    القروض الحسنة   --}}
-
-
-
-        {{--        الخزنه     --}}
-        @if (auth()->check() && auth()->user()->can('lock.index'))
-            <p>
-                <a class="side-menu__item {{ request()->segment(2) == 'lock' ? 'active' : '' }}"
-                    href="{{ route('lock') }}">
-                    <i class="fas fa-hand-holding-heart" style="margin-left: 10px;"></i>
-                    <span class="side-menu__label"> الخزنة </span>
-                </a>
-            </p>
-        @endif
-
-
-
-
-
 
         @if (auth()->check())
             @if (auth()->user()->can('goodLoans.index') || auth()->user()->can('borrower.index'))
@@ -226,6 +215,56 @@
                         href="{{ route('in-kind-disbursements.index') }}">
                         <i class="fas fa-box-open" style="margin-left: 10px;"></i>
                         <span class="side-menu__label"> صرف التبرعات العينية </span>
+                    </a>
+                </li>
+            </ul>
+        @endif
+
+        @if (auth()->check() && auth()->user()->can('lock.index'))
+            <p>
+                <a class="side-menu__item {{ $associationMenuOpen ? 'active' : '' }}"
+                    data-toggle="collapse" href="#associationDropdown" role="button"
+                    aria-expanded="{{ $associationMenuOpen ? 'true' : 'false' }}"
+                    aria-controls="associationDropdown">
+                    <i class="fas fa-building" style="margin-left: 10px;"></i>
+                    <span class="side-menu__label"> الجمعية </span>
+                </a>
+            </p>
+
+            <ul class="collapse {{ $associationMenuOpen ? 'show' : '' }}" id="associationDropdown">
+                <li>
+                    <a class="dropdown-item-text side-menu__item {{ (request()->routeIs('lock') && request('locker_type') == $associationLockerId) || (request()->segment(2) === 'lock' && request()->segment(3) == $associationLockerId) ? 'active' : '' }}"
+                        href="{{ $associationLockerId ? route('lock', ['lock' => $associationLockerId]) : route('lock') }}">
+                        <i class="fas fa-wallet" style="margin-left: 10px;"></i>
+                        <span class="side-menu__label"> خزنة الجمعية </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('association-expenses.*') ? 'active' : '' }}"
+                        href="{{ route('association-expenses.index') }}">
+                        <i class="fas fa-file-invoice-dollar" style="margin-left: 10px;"></i>
+                        <span class="side-menu__label"> المصروفات </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('association-revenues.*') ? 'active' : '' }}"
+                        href="{{ route('association-revenues.index') }}">
+                        <i class="fas fa-coins" style="margin-left: 10px;"></i>
+                        <span class="side-menu__label"> الإيرادات </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('references.index') && request()->route('type') === 'expense-types' ? 'active' : '' }}"
+                        href="{{ route('references.index', 'expense-types') }}">
+                        <i class="fas fa-tags" style="margin-left: 10px;"></i>
+                        <span class="side-menu__label"> أنواع المصروفات </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('references.index') && request()->route('type') === 'revenue-types' ? 'active' : '' }}"
+                        href="{{ route('references.index', 'revenue-types') }}">
+                        <i class="fas fa-layer-group" style="margin-left: 10px;"></i>
+                        <span class="side-menu__label"> أنواع الإيرادات </span>
                     </a>
                 </li>
             </ul>
