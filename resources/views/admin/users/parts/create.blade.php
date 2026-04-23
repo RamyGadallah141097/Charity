@@ -7,7 +7,7 @@
 @endsection
 @section('content')
 
-    @if ($errors->any())
+@if ($errors->any())
         <div class="alert alert-danger">
             <ul>
                 @foreach ($errors->all() as $error)
@@ -16,10 +16,6 @@
             </ul>
         </div>
     @endif
-
-
-
-@section('content')
     <form id="addForm" action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="row">
@@ -242,7 +238,7 @@
                                     </div>
                                     <div class="col-md-2">
                                         <label class="form-label font-weight-bold small">النوع</label>
-                                        <select class="form-control form-control-sm" name="child_gender[]">
+                                        <select class="form-control form-control-sm no-select2" name="child_gender[]">
                                             <option value="">اختر</option>
                                             <option value="1">ذكر</option>
                                             <option value="0">أنثى</option>
@@ -297,7 +293,7 @@
                                     </div>
                                     <div class="col-md-4 mt-3">
                                         <label class="form-label font-weight-bold small">نوع المريض</label>
-                                        <select class="form-control form-control-sm" name="type[]">
+                                        <select class="form-control form-control-sm no-select2" name="type[]">
                                             <option value="1">ذكر</option>
                                             <option value="0">أنثى</option>
                                         </select>
@@ -365,6 +361,9 @@
     </form>
 
 
+@endsection
+
+@section('js')
     <script>
         $(function () {
             // Governorate/Center/Village Filtering
@@ -430,6 +429,13 @@
                 return currentYear - birthYear;
             }
 
+            function getGenderFromNationalId(nationalId) {
+                if (!nationalId || nationalId.length !== 14) return '';
+                const genderDigit = parseInt(nationalId.charAt(12), 10);
+                if (Number.isNaN(genderDigit)) return '';
+                return genderDigit % 2 === 0 ? '0' : '1';
+            }
+
             $(document).on('input', '[name="husband_national_id"]', function() {
                 $('[name="age_husband"]').val(getAgeFromNationalId($(this).val()));
             });
@@ -439,8 +445,15 @@
             });
 
             $(document).on('input', '[name="children_national_id[]"]', function() {
+                const nationalId = $(this).val();
                 const age = getAgeFromNationalId($(this).val());
-                $(this).closest('.row').find('[name="age[]"]').val(age);
+                const gender = getGenderFromNationalId(nationalId);
+                const $row = $(this).closest('.row');
+
+                $row.find('[name="age[]"]').val(age);
+                if (gender !== '') {
+                    $row.find('[name="child_gender[]"]').val(gender);
+                }
             });
 
             // Dynamic Rows: Children
@@ -465,7 +478,7 @@
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label font-weight-bold small">النوع</label>
-                                <select class="form-control form-control-sm" name="child_gender[]">
+                                <select class="form-control form-control-sm no-select2" name="child_gender[]">
                                     <option value="">اختر</option>
                                     <option value="1">ذكر</option>
                                     <option value="0">أنثى</option>
@@ -514,7 +527,7 @@
                             </div>
                             <div class="col-md-4 mt-3">
                                 <label class="form-label font-weight-bold small">نوع المريض</label>
-                                <select class="form-control form-control-sm" name="type[]">
+                                <select class="form-control form-control-sm no-select2" name="type[]">
                                     <option value="1">ذكر</option>
                                     <option value="0">أنثى</option>
                                 </select>

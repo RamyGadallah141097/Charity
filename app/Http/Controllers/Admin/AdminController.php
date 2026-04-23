@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
-use App\Models\Product;
+use App\Models\Center;
+use App\Models\Governorate;
+use App\Models\Village;
 use App\Traits\PhotoTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\DataTables;
 
@@ -18,7 +19,7 @@ class AdminController extends Controller
     public function index(request $request)
     {
         if($request->ajax()) {
-            $admins = Admin::latest()->get();
+            $admins = Admin::with(['governorate', 'center', 'village', 'roles'])->latest()->get();
 
             return Datatables::of($admins)
                 ->addColumn('action', function ($admins) {
@@ -41,11 +42,36 @@ class AdminController extends Controller
                     })
 
                 ->addColumn("select_role", function ($admin) {
-                    return $admin->roles->pluck('name')->implode(', ') ?: 'No Role';
+                    return $admin->is_system_user
+                        ? ($admin->roles->pluck('name')->implode(', ') ?: '-')
+                        : 'غير مستخدم للنظام';
+                })
+                ->addColumn('job_title', function ($admin) {
+                    return $admin->job_title ?: '-';
+                })
+                ->addColumn('phone', function ($admin) {
+                    return $admin->phone ?: '-';
+                })
+                ->addColumn('system_user', function ($admin) {
+                    return $admin->is_system_user
+                        ? '<span class="badge badge-success">نعم</span>'
+                        : '<span class="badge badge-secondary">لا</span>';
+                })
+                ->addColumn('location', function ($admin) {
+                    $parts = array_filter([
+                        optional($admin->governorate)->name,
+                        optional($admin->center)->name,
+                        optional($admin->village)->name,
+                    ]);
+
+                    return count($parts) ? implode(' / ', $parts) : '-';
                 })
 
                 ->editColumn('created_at', function ($admins) {
                     return $admins->created_at->diffForHumans();
+                })
+                ->editColumn('email', function ($admin) {
+                    return $admin->email ?: '-';
                 })
                 ->editColumn('image', function ($admins) {
                     return '
@@ -85,33 +111,68 @@ class AdminController extends Controller
 
     public function create(){
         $roles = Role::all();
-        return view('admin/admin/parts/create' , ["roles" => $roles]);
+        return view('admin/admin/parts/create' , [
+            "roles" => $roles,
+            'governorates' => Governorate::active()->orderBy('name')->get(),
+            'centers' => Center::active()->orderBy('name')->get(),
+            'villages' => Village::active()->orderBy('name')->get(),
+        ]);
     }
 
     public function store(request $request): \Illuminate\Http\JsonResponse
     {
+            $isSystemUser = $request->boolean('is_system_user');
+
             $inputs = $request->validate([
-                'email'     => 'required|unique:admins',
-                'name'      => 'required',
-                'password'  => 'required|min:6',
-                'image'     => 'nullable|mimes:jpeg,jpg,png,gif',
+                'name' => 'required|string|max:255',
+                'job_title' => 'nullable|string|max:255',
+                'phone' => 'nullable|string|max:30',
+                'national_id' => 'nullable|digits:14|unique:admins,national_id',
+                'address' => 'nullable|string',
+                'governorate_id' => 'nullable|exists:governorates,id',
+                'center_id' => 'nullable|exists:centers,id',
+                'village_id' => 'nullable|exists:villages,id',
+                'notes' => 'nullable|string',
+                'is_system_user' => 'nullable|boolean',
+                'email' => ($isSystemUser ? 'required' : 'nullable') . '|email|unique:admins,email',
+                'password' => ($isSystemUser ? 'required' : 'nullable') . '|min:6',
+                'adminRole' => $isSystemUser ? 'required|exists:roles,name' : 'nullable',
+                'image' => 'nullable|mimes:jpeg,jpg,png,gif',
+                'documents.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,gif,webp',
             ]);
-            if($request->has('image')){
-                $file_name = $this->saveImage($request->image,'assets/uploads/admins');
+
+            $inputs['is_system_user'] = $isSystemUser;
+
+            if($request->hasFile('image')){
+                $file_name = $this->saveImage($request->file('image'),'assets/uploads/admins');
                 $inputs['image'] = 'assets/uploads/admins/'.$file_name;
             }
-            // $inputs['password'] = Hash::make($request->password);
-            
-            if(Admin::create($inputs)->assignRole($request->adminRole))
 
-                return response()->json(['status'=>200]);
-            else
-                return response()->json(['status'=>405]);
+            $inputs['documents'] = $this->storeDocuments($request);
+
+            if (!$isSystemUser) {
+                $inputs['email'] = null;
+                $inputs['password'] = Str::random(16);
+            }
+
+            $admin = Admin::create($inputs);
+
+            if ($isSystemUser && $request->filled('adminRole')) {
+                $admin->assignRole($request->adminRole);
+            }
+
+            return response()->json(['status'=>200]);
     }
 
     public function edit(Admin $admin){
         $roles = Role::all();
-        return view('admin/admin/parts/edit',compact('admin' , "roles"));
+        return view('admin/admin/parts/edit',[
+            'admin' => $admin,
+            'roles' => $roles,
+            'governorates' => Governorate::active()->orderBy('name')->get(),
+            'centers' => Center::active()->orderBy('name')->get(),
+            'villages' => Village::active()->orderBy('name')->get(),
+        ]);
     }
 
 
@@ -158,28 +219,52 @@ class AdminController extends Controller
 
     public function update(Request $request, $id)
     {
+        $isSystemUser = $request->boolean('is_system_user');
+
         $inputs = $request->validate([
-            'email'    => 'required|email|unique:admins,email,' . $id . ',id',
-            'name'     => 'required|string|max:255',
-            'image'    => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'name' => 'required|string|max:255',
+            'job_title' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:30',
+            'national_id' => 'nullable|digits:14|unique:admins,national_id,' . $id . ',id',
+            'address' => 'nullable|string',
+            'governorate_id' => 'nullable|exists:governorates,id',
+            'center_id' => 'nullable|exists:centers,id',
+            'village_id' => 'nullable|exists:villages,id',
+            'notes' => 'nullable|string',
+            'is_system_user' => 'nullable|boolean',
+            'email' => ($isSystemUser ? 'required' : 'nullable') . '|email|unique:admins,email,' . $id . ',id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'password' => 'nullable|min:6',
+            'adminRole' => $isSystemUser ? 'required|exists:roles,name' : 'nullable',
+            'documents.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,gif,webp',
         ]);
+
+        $inputs['is_system_user'] = $isSystemUser;
 
         if ($request->hasFile('image')) {
             $file_name = $this->saveImage($request->file('image'), 'assets/uploads/admins');
-            $inputs['image'] = $file_name;
+            $inputs['image'] = 'assets/uploads/admins/' . $file_name;
         }
-
-        // if (!empty($request->password)) {
-        //     $inputs['password'] = Hash::make($request->password);
-        // } else {
-        //     unset($inputs['password']);
-        // }
 
         $admin = Admin::findOrFail($id);
 
-        if ($request->has('adminRole')) {
+        if (!empty($request->password)) {
+            $inputs['password'] = $request->password;
+        } else {
+            unset($inputs['password']);
+        }
+
+        if ($request->hasFile('documents')) {
+            $existingDocuments = is_array($admin->documents) ? $admin->documents : [];
+            $inputs['documents'] = array_merge($existingDocuments, $this->storeDocuments($request));
+        }
+
+        if ($isSystemUser && $request->has('adminRole')) {
             $admin->syncRoles($request->adminRole);
+        } elseif (! $isSystemUser) {
+            $admin->syncRoles([]);
+            $inputs['email'] = null;
+            $inputs['password'] = !empty($request->password) ? $request->password : Str::random(16);
         }
 
         if ($admin->update($inputs)) {
@@ -190,6 +275,28 @@ class AdminController extends Controller
         }
 
         return redirect()->route('admins.index');
+    }
+
+    private function storeDocuments(Request $request): array
+    {
+        $documents = [];
+        $targetPath = 'assets/uploads/admins/documents';
+
+        if (! $request->hasFile('documents')) {
+            return $documents;
+        }
+
+        if (! file_exists($targetPath)) {
+            mkdir($targetPath, 0777, true);
+        }
+
+        foreach ($request->file('documents') as $document) {
+            $fileName = rand(1, 9999) . time() . '_' . $document->getClientOriginalName();
+            $document->move($targetPath, $fileName);
+            $documents[] = $targetPath . '/' . $fileName;
+        }
+
+        return $documents;
     }
 
 //    public function showChangeRole(Request $request){
