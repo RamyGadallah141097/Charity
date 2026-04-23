@@ -21,6 +21,8 @@ class LockerLog extends Model
         "asset_id",
         "asset_count",
         "donor_id",
+        "revenue_id",
+        "expense_id",
     ];
 
     protected $casts = [
@@ -35,6 +37,7 @@ class LockerLog extends Model
     const moneyTypeZakat  ="zakat";
     const moneyTypeSadaka  ="sadaka";
     const moneyTypeLoans  ="loan";
+    const moneyTypeAssociation  ="association";
     const moneyTypeSubvention ="subvention";
 
 

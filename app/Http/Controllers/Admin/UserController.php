@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Exports\UsersExport;
 use App\Http\Requests\StoreUser;
+use App\Imports\UsersImport;
 use App\Models\BeneficiaryCategory;
 use App\Models\Borrower;
 use App\Models\Center;
@@ -20,6 +22,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\DataTables;
 //solve path
 class UserController extends Controller
@@ -639,6 +642,25 @@ class UserController extends Controller
     {
         $users = User::where('status', 'refused')->get();
         return view('admin/print/PrintUsersRefused', compact('users'));
+    }
+
+    public function exportExcel()
+    {
+        return Excel::download(new UsersExport(), 'users.xlsx');
+    }
+
+    public function importExcel(Request $request)
+    {
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls,csv',
+        ], [
+            'excel_file.required' => 'يرجى اختيار ملف Excel.',
+            'excel_file.mimes' => 'الملف يجب أن يكون بصيغة xlsx أو xls أو csv.',
+        ]);
+
+        Excel::import(new UsersImport(), $request->file('excel_file'));
+
+        return redirect()->route('users.index')->with('success', 'تم استيراد المستفيدين بنجاح');
     }
 
     private function referenceViewData(): array

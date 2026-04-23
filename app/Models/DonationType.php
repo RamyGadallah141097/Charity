@@ -15,10 +15,12 @@ class DonationType extends Model
 
     public const CASH_CODE = 'cash';
     public const GOOD_LOAN_CODE = 'good_loan';
+    public const ASSOCIATION_CODE = 'association';
 
     public const PROTECTED_CODES = [
         self::CASH_CODE,
         self::GOOD_LOAN_CODE,
+        self::ASSOCIATION_CODE,
     ];
 
     public function units()
@@ -51,6 +53,7 @@ class DonationType extends Model
         return match ($this->code) {
             self::CASH_CODE => LockerLog::moneyTypeSadaka,
             self::GOOD_LOAN_CODE => LockerLog::moneyTypeLoans,
+            self::ASSOCIATION_CODE => LockerLog::moneyTypeAssociation,
             default => null,
         };
     }
