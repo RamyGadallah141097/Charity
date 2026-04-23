@@ -297,7 +297,7 @@
                                         </div>
                                         <div class="col-md-2">
                                             <label class="form-label font-weight-bold small">النوع</label>
-                                            <select class="form-control form-control-sm" name="child_gender[]">
+                                            <select class="form-control form-control-sm no-select2" name="child_gender[]">
                                                 <option value="1" {{ $child->gender == 1 ? 'selected' : '' }}>ذكر</option>
                                                 <option value="0" {{ $child->gender == 0 ? 'selected' : '' }}>أنثى</option>
                                             </select>
@@ -354,7 +354,7 @@
                                         </div>
                                         <div class="col-md-4 mt-3">
                                             <label class="form-label font-weight-bold small">النوع</label>
-                                            <select class="form-control form-control-sm" name="type[]">
+                                            <select class="form-control form-control-sm no-select2" name="type[]">
                                                 <option value="1" {{ $patient->type == 1 ? 'selected' : '' }}>ذكر</option>
                                                 <option value="0" {{ $patient->type == 0 ? 'selected' : '' }}>أنثى</option>
                                             </select>
@@ -506,9 +506,23 @@
                 const year = (nid.charAt(0) === '2' ? 1900 : 2000) + parseInt(nid.substring(1, 3));
                 return new Date().getFullYear() - year;
             }
+            function getGender(nid) {
+                if (!nid || nid.length !== 14) return '';
+                const genderDigit = parseInt(nid.charAt(12), 10);
+                if (Number.isNaN(genderDigit)) return '';
+                return genderDigit % 2 === 0 ? '0' : '1';
+            }
             $(document).on('input', '[name="husband_national_id"]', function() { $('[name="age_husband"]').val(getAge($(this).val())); });
             $(document).on('input', '[name="wife_national_id"]', function() { $('[name="age_wife"]').val(getAge($(this).val())); });
-            $(document).on('input', '[name="children_national_id[]"]', function() { $(this).closest('.row').find('[name="age[]"]').val(getAge($(this).val())); });
+            $(document).on('input', '[name="children_national_id[]"]', function() {
+                const nationalId = $(this).val();
+                const $row = $(this).closest('.row');
+                $row.find('[name="age[]"]').val(getAge(nationalId));
+                const gender = getGender(nationalId);
+                if (gender !== '') {
+                    $row.find('[name="child_gender[]"]').val(gender);
+                }
+            });
 
             // Dynamic Rows
             $('#add').on('click', () => {
@@ -532,7 +546,7 @@
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label font-weight-bold small">النوع</label>
-                                <select class="form-control form-control-sm" name="child_gender[]"><option value="1">ذكر</option><option value="0">أنثى</option></select>
+                                <select class="form-control form-control-sm no-select2" name="child_gender[]"><option value="1">ذكر</option><option value="0">أنثى</option></select>
                             </div>
                             <div class="col-md-4 mt-3"><label class="form-label font-weight-bold small">المدرسة</label><input type="text" class="form-control form-control-sm" name="schools[]"></div>
                             <div class="col-md-2 mt-3"><label class="form-label font-weight-bold small">التكلفة</label><input type="number" class="form-control form-control-sm" name="monthly_cost[]"></div>
@@ -552,7 +566,7 @@
                             <div class="col-md-4"><label class="form-label font-weight-bold small">وسيلة الصرف</label><input type="text" class="form-control form-control-sm" name="treatment_pay_by[]"></div>
                             <div class="col-md-4"><label class="form-label font-weight-bold small">الطبيب</label><input type="text" class="form-control form-control-sm" name="doctor_name[]"></div>
                             <div class="col-md-8 mt-3"><label class="form-label font-weight-bold small">العلاج</label><input type="text" class="form-control form-control-sm" name="treatment[]"></div>
-                            <div class="col-md-4 mt-3"><label class="form-label font-weight-bold small">النوع</label><select class="form-control form-control-sm" name="type[]"><option value="1">ذكر</option><option value="0">أنثى</option></select></div>
+                            <div class="col-md-4 mt-3"><label class="form-label font-weight-bold small">النوع</label><select class="form-control form-control-sm no-select2" name="type[]"><option value="1">ذكر</option><option value="0">أنثى</option></select></div>
                         </div>
                     </div>`);
             });
