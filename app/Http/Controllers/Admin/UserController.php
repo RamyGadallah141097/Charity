@@ -90,6 +90,13 @@ class UserController extends Controller
             $users = $query->get();
             return Datatables::of($users)
                 ->addColumn('action', function ($users) {
+                    $canDelete = $this->canDeleteUser($users);
+                    $deleteButton = $canDelete
+                        ? '<button class="btn btn-sm btn-danger-light delete_button px-3 py-2" data-id="' . $users->id . '" data-title="' . e($users->husband_name) . '" title="حذف">
+                                <i class="fe fe-trash"></i>
+                            </button>'
+                        : '';
+
                     return '
                         <div class="btn-list d-flex justify-content-center align-items-center" style="gap: 8px;">
                             <button class="btn btn-sm btn-primary-light detailsBtn px-3 py-2" data-id="' . $users->id . '" title="عرض التفاصيل">
@@ -98,9 +105,7 @@ class UserController extends Controller
                             <a href="' . route("users.edit", $users->id) . '" class="btn btn-sm btn-info-light px-3 py-2" title="تعديل">
                                 <i class="fe fe-edit"></i>
                             </a>
-                            <button class="btn btn-sm btn-danger-light delete_button px-3 py-2" data-id="' . $users->id . '" data-title="' . e($users->husband_name) . '" title="حذف">
-                                <i class="fe fe-trash"></i>
-                            </button>
+                            ' . $deleteButton . '
                         </div>
                     ';
                 })
@@ -579,9 +584,21 @@ class UserController extends Controller
     public function destroy(Request $request)
     {
         $user = User::findOrFail($request->id);
+
+        if (! $this->canDeleteUser($user)) {
+            return redirect()
+                ->back()
+                ->with('error', 'لا يمكن حذف هذا المستفيد لأنه مقبول أو تمت عليه عمليات إعانة.');
+        }
+
         $user->delete();
 
         return redirect()->back()->with('success', 'تم الحذف بنجاح!');
+    }
+
+    private function canDeleteUser(User $user): bool
+    {
+        return $user->status !== 'accepted' && ! $user->subventions()->exists();
     }
 
 

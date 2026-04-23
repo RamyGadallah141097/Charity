@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Donation;
+use App\Models\DonationCategory;
 use App\Models\DonationType;
 use App\Models\LockerLog;
+use App\Models\Subvention;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -74,7 +76,7 @@ class LockerLogController extends Controller
                     ->make(true);
             }
 
-            $donations = Donation::with(['donor', 'unit', 'referenceDonationType'])
+            $donations = Donation::with(['donor', 'unit', 'referenceDonationType', 'donationCategory'])
                 ->where('donation_type_id', $selectedTypeId);
 
             if ($request->filled('from') && $request->filled('to')) {
@@ -84,22 +86,49 @@ class LockerLogController extends Controller
                 ]);
             }
 
-            return DataTables::of($donations->latest()->get())
-                ->addColumn('name', function ($donation) {
-                    return optional($donation->donor)->name ?? 'غير معروف';
-                })
-                ->editColumn('amount', function ($donation) {
-                    return $donation->display_value ?: '---';
-                })
-                ->editColumn('comment', function ($donation) {
-                    $typeName = optional($donation->referenceDonationType)->name ?: $donation->display_type_name;
-                    $unitName = optional($donation->unit)->name;
+            $incomingRows = $donations->latest()->get()->map(function (Donation $donation) {
+                $value = $donation->display_value ?: '---';
 
-                    return trim($typeName . ($unitName ? ' - ' . $unitName : ''));
+                return [
+                    'name' => optional($donation->donor)->name ?? 'غير معروف',
+                    'category_name' => optional($donation->donationCategory)->name ?? '--',
+                    'amount' => $value . " <span class='locker-movement locker-movement--in'><i class='fas fa-arrow-down'></i> داخل</span>",
+                    'comment' => 'تبرع وارد',
+                    'created_at' => $donation->created_at ? $donation->created_at->format('d-m-Y') : 'غير متوفر',
+                    'sort_date' => optional($donation->created_at)->timestamp ?? 0,
+                ];
+            });
+
+            $outgoingRows = Subvention::with(['user', 'asset', 'donationCategory', 'donationUnit'])
+                ->where('price', 0)
+                ->whereNotNull('donation_category_id')
+                ->when($request->filled('from') && $request->filled('to'), function ($query) use ($request) {
+                    $query->whereBetween('created_at', [
+                        $request->from . ' 00:00:00',
+                        $request->to . ' 23:59:59',
+                    ]);
                 })
-                ->editColumn('created_at', function ($donation) {
-                    return $donation->created_at ? $donation->created_at->format('d-m-Y') : 'غير متوفر';
+                ->latest()
+                ->get()
+                ->map(function (Subvention $subvention) {
+                    $categoryName = optional($subvention->donationCategory)->name ?? optional($subvention->asset)->name ?? '--';
+                    $unitName = optional($subvention->donationUnit)->name ?: 'قطعة';
+                    $value = trim(($subvention->asset_count ?? 0) . ' ' . $unitName);
+
+                    return [
+                        'name' => optional($subvention->user)->wife_name ?? optional($subvention->user)->husband_name ?? 'غير معروف',
+                        'category_name' => $categoryName,
+                        'amount' => $value . " <span class='locker-movement locker-movement--out'><i class='fas fa-arrow-up'></i> خارج</span>",
+                        'comment' => $subvention->comment ?: 'صرف عيني',
+                        'created_at' => $subvention->created_at ? $subvention->created_at->format('d-m-Y') : 'غير متوفر',
+                        'sort_date' => optional($subvention->created_at)->timestamp ?? 0,
+                    ];
                 })
+                ->filter(function (array $row) {
+                    return $row['category_name'] !== '--';
+                });
+
+            return DataTables::of($incomingRows->concat($outgoingRows)->sortByDesc('sort_date')->values())
                 ->escapeColumns([])
                 ->make(true);
         }
@@ -109,6 +138,7 @@ class LockerLogController extends Controller
         $totalMinus = 0;
         $total = 0;
         $error = null;
+        $inKindCategorySummaries = collect();
 
         if ($isCashLocker && $moneyType) {
             $totalPlus = LockerLog::where('moneyType', $moneyType)->where('type', LockerLog::TYPE_PLUS)->sum('amount');
@@ -119,6 +149,43 @@ class LockerLogController extends Controller
             } else {
                 $total = $totalPlus - $totalMinus;
             }
+        } elseif ($selectedLockerType) {
+            $inKindCategoryCodes = [
+                'new_clothes',
+                'used_clothes',
+                'blankets',
+                'meat',
+                'new_furniture',
+                'used_furniture',
+                'electrical_appliances',
+            ];
+
+            $inKindCategorySummaries = DonationCategory::active()
+                ->with('units:id,name')
+                ->whereIn('code', $inKindCategoryCodes)
+                ->orderBy('sort_order')
+                ->orderBy('name')
+                ->get()
+                ->map(function (DonationCategory $category) use ($selectedTypeId) {
+                    $incoming = Donation::where('donation_type_id', $selectedTypeId)
+                        ->where('donation_category_id', $category->id)
+                        ->get()
+                        ->sum(function (Donation $donation) {
+                            return (float) ($donation->amount_value ?? $donation->asset_count ?? $donation->donation_amount ?? 0);
+                        });
+
+                    $spent = Subvention::where('price', 0)
+                        ->where('donation_category_id', $category->id)
+                        ->sum('asset_count');
+
+                    return [
+                        'name' => $category->name,
+                        'unit' => optional($category->units->first())->name,
+                        'incoming' => $incoming,
+                        'spent' => (float) $spent,
+                        'remaining' => max($incoming - (float) $spent, 0),
+                    ];
+                });
         }
 
         return view('admin/lock/stdPage', [
@@ -130,6 +197,7 @@ class LockerLogController extends Controller
             'totalMinus' => $totalMinus,
             'totalPlus' => $totalPlus,
             'error' => $error,
+            'inKindCategorySummaries' => $inKindCategorySummaries,
         ]);
     }
 

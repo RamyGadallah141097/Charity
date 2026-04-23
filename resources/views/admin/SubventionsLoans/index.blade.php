@@ -102,6 +102,7 @@
                                     <th class="min-w-125px">النوع</th>
                                     <th class="min-w-125px">التاريخ</th>
                                     <th class="min-w-125px">السبب</th>
+                                    <th class="min-w-100px">عمليات</th>
                                 </tr>
                             </thead>
                         </table>
@@ -146,6 +147,12 @@
             {
                 data: 'comment',
                 name: 'comment'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
             },
         ]
         showData("{{ route('SubventionsLoans.index', ['from' => $fromDate->format('Y-m-d'), 'to' => $toDate->format('Y-m-d')]) }}", columns);

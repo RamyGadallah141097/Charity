@@ -60,25 +60,95 @@
                 }
 
                 .subvention-create-card .form-control,
-                .subvention-create-card .form-select,
-                .subvention-create-card .select2-container--default .select2-selection--single,
-                .subvention-create-card .select2-container--default .select2-selection--multiple {
+                .subvention-create-card .form-select {
                     min-height: 48px;
                     border-radius: 12px;
                     border-color: #dbe3f7;
                 }
 
-                .subvention-create-card .select2-container--default .select2-selection--multiple {
-                    padding: 6px 10px;
-                }
-
-                .subvention-create-card .select2-container .select2-search--inline .select2-search__field {
-                    margin-top: 7px;
-                }
-
                 .subvention-create-card .input-group > .form-control,
                 .subvention-create-card .input-group > .form-select {
                     min-height: 48px;
+                }
+
+                .beneficiary-picker {
+                    border: 1px solid #dbe3f7;
+                    border-radius: 14px;
+                    overflow: hidden;
+                    background: #ffffff;
+                }
+
+                .beneficiary-picker__search {
+                    padding: 12px;
+                    border-bottom: 1px solid #edf1fb;
+                    background: #fbfcff;
+                }
+
+                .beneficiary-picker__search input {
+                    width: 100%;
+                    height: 46px;
+                    border: 1px solid #dbe3f7;
+                    border-radius: 10px;
+                    padding: 0 14px;
+                    color: #24335b;
+                    outline: none;
+                }
+
+                .beneficiary-picker__list {
+                    max-height: 285px;
+                    overflow-y: auto;
+                    padding: 8px;
+                }
+
+                .beneficiary-picker__row {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    padding: 12px 14px;
+                    margin-bottom: 6px;
+                    border: 1px solid transparent;
+                    border-radius: 12px;
+                    cursor: pointer;
+                    transition: background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+                }
+
+                .beneficiary-picker__row:hover {
+                    background: #f6f8ff;
+                    border-color: #e2e8fb;
+                }
+
+                .beneficiary-picker__row.is-selected {
+                    background: #fef1f1;
+                    border-color: #f5b9b9;
+                    box-shadow: inset 3px 0 0 #df2f2f;
+                }
+
+                .beneficiary-picker__checkbox {
+                    width: 19px;
+                    height: 19px;
+                    accent-color: #df2f2f;
+                    cursor: pointer;
+                    flex-shrink: 0;
+                }
+
+                .beneficiary-picker__name {
+                    flex: 1;
+                    color: #24335b;
+                    font-weight: 700;
+                    text-align: right;
+                }
+
+                .beneficiary-picker__amount {
+                    color: #7a88b6;
+                    font-size: 12px;
+                    white-space: nowrap;
+                }
+
+                .beneficiary-picker__empty {
+                    display: none;
+                    padding: 18px;
+                    color: #7a88b6;
+                    text-align: center;
                 }
 
                 .subvention-radio-group {
@@ -153,15 +223,35 @@
                             <div class="subvention-section__title">اختيار المستفيدين</div>
                             <div class="form-group mb-0">
                                 <label class="form-label">المستفيدون المؤهلون</label>
-                                <select name="user_ids[]" class="form-control select2" multiple required
-                                    data-placeholder="اختيار المستفيدين">
-                                    @foreach($users as $user)
-                                        <option value="{{ $user->id }}" data-amount="{{ $user->monthly_subvention_amount ?? 0 }}"
-                                            {{ collect(old('user_ids', []))->contains($user->id) ? 'selected' : '' }}>
-                                            {{ $user->wife_name ?: $user->husband_name }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                @php
+                                    $selectedUserIds = collect(old('user_ids', []))->map(fn ($id) => (string) $id);
+                                @endphp
+                                <div class="beneficiary-picker" id="beneficiaryPicker">
+                                    <div class="beneficiary-picker__search">
+                                        <input type="text" id="beneficiarySearch" placeholder="ابحث عن مستفيد">
+                                    </div>
+                                    <div class="beneficiary-picker__list">
+                                        @foreach($users as $user)
+                                            @php
+                                                $userName = $user->husband_name ?: $user->wife_name;
+                                                $isSelected = $selectedUserIds->contains((string) $user->id);
+                                            @endphp
+                                            <label class="beneficiary-picker__row {{ $isSelected ? 'is-selected' : '' }}"
+                                                data-name="{{ $userName }}"
+                                                data-amount="{{ $user->monthly_subvention_amount ?? 0 }}">
+                                                <input type="checkbox"
+                                                    class="beneficiary-picker__checkbox"
+                                                    name="user_ids[]"
+                                                    value="{{ $user->id }}"
+                                                    data-amount="{{ $user->monthly_subvention_amount ?? 0 }}"
+                                                    {{ $isSelected ? 'checked' : '' }}>
+                                                <span class="beneficiary-picker__name">{{ $userName }}</span>
+                                                <span class="beneficiary-picker__amount">{{ number_format((float) ($user->monthly_subvention_amount ?? 0), 0) }} EGP</span>
+                                            </label>
+                                        @endforeach
+                                        <div class="beneficiary-picker__empty" id="beneficiaryEmptyState">لا يوجد مستفيد بهذا الاسم</div>
+                                    </div>
+                                </div>
                                 <div class="subvention-helper">يتم عرض المستفيدين الذين لديهم إعانة شهرية ولم يتم الصرف لهم خلال الشهر الحالي فقط.</div>
                             </div>
                         </div>
@@ -218,48 +308,53 @@
 @section('js')
     <script>
         $(document).ready(function() {
-            const $beneficiaries = $('select[name="user_ids[]"]');
+            const $beneficiaryRows = $('.beneficiary-picker__row');
+            const $beneficiaryCheckboxes = $('.beneficiary-picker__checkbox');
+            const $beneficiarySearch = $('#beneficiarySearch');
+            const $emptyState = $('#beneficiaryEmptyState');
             const formatAmount = new Intl.NumberFormat('en-US');
-
-            $beneficiaries.select2({
-                placeholder: $beneficiaries.data('placeholder'),
-                closeOnSelect: false,
-                matcher: function(params, data) {
-                    if (!data.id) {
-                        return data;
-                    }
-
-                    if (data.element && data.element.selected) {
-                        return null;
-                    }
-
-                    if ($.trim(params.term) === '') {
-                        return data;
-                    }
-
-                    if (data.text && data.text.toLowerCase().indexOf(params.term.toLowerCase()) > -1) {
-                        return data;
-                    }
-
-                    return null;
-                }
-            });
 
             function calculateMonthlyTotal() {
                 let total = 0;
 
-                $beneficiaries.find('option:selected').each(function() {
+                $beneficiaryCheckboxes.filter(':checked').each(function() {
                     total += parseFloat($(this).data('amount') || 0);
                 });
 
                 $('#monthly_total_amount').val(formatAmount.format(total) + ' EGP');
             }
 
-            $beneficiaries.on('select2:select select2:unselect change', function() {
+            function syncSelectedRows() {
+                $beneficiaryRows.each(function() {
+                    const $row = $(this);
+                    $row.toggleClass('is-selected', $row.find('.beneficiary-picker__checkbox').is(':checked'));
+                });
+            }
+
+            $beneficiaryCheckboxes.on('change', function() {
+                syncSelectedRows();
                 calculateMonthlyTotal();
-                $(this).select2('close');
             });
 
+            $beneficiarySearch.on('input', function() {
+                const searchTerm = $(this).val().trim().toLowerCase();
+                let visibleRows = 0;
+
+                $beneficiaryRows.each(function() {
+                    const $row = $(this);
+                    const name = String($row.data('name') || '').toLowerCase();
+                    const shouldShow = !searchTerm || name.includes(searchTerm);
+
+                    $row.toggle(shouldShow);
+                    if (shouldShow) {
+                        visibleRows++;
+                    }
+                });
+
+                $emptyState.toggle(visibleRows === 0);
+            });
+
+            syncSelectedRows();
             calculateMonthlyTotal();
         });
     </script>

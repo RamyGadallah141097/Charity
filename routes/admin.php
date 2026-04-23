@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\BorrowerController;
+use App\Http\Controllers\Admin\InKindDisbursementController;
 use App\Http\Controllers\Admin\ReferenceController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Artisan;
@@ -132,6 +133,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('SubventionsLoans/index', 'SubventionsLoansController@index')->name('SubventionsLoans.index');
     Route::get('SubventionsLoans/create', 'SubventionsLoansController@create')->name('SubventionsLoans.create');
     Route::post('SubventionsLoans/store', 'SubventionsLoansController@store')->name('SubventionsLoans.store');
+    Route::get('SubventionsLoans/{subvention}/print-receipt', 'SubventionsLoansController@printReceipt')->name('SubventionsLoans.print-receipt');
+    Route::get('in-kind-disbursements', [InKindDisbursementController::class, 'index'])->name('in-kind-disbursements.index');
+    Route::get('in-kind-disbursements/create', [InKindDisbursementController::class, 'create'])->name('in-kind-disbursements.create');
+    Route::post('in-kind-disbursements', [InKindDisbursementController::class, 'store'])->name('in-kind-disbursements.store');
     #### Safer ####
 
     #### Subventions ####
