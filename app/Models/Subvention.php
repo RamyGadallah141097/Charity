@@ -20,4 +20,14 @@ class Subvention extends Model
     public function asset(){
         return $this->belongsTo(Asset::class,'asset_id');
     }
+
+    public function donationCategory()
+    {
+        return $this->belongsTo(DonationCategory::class, 'donation_category_id');
+    }
+
+    public function donationUnit()
+    {
+        return $this->belongsTo(DonationUnit::class, 'donation_unit_id');
+    }
 }

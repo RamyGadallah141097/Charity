@@ -148,7 +148,7 @@
 
         {{--     الزكاة والصدقات   --}}
         @if (auth()->check() && auth()->user()->can('zakat.index'))
-            <p>
+            {{-- <p>
                 <a class="side-menu__item
        {{ request()->routeIs('safer.CharityZakat') ? 'active' : '' }}"
                     data-toggle="collapse" href="#CharityZakatDropdown" role="button"
@@ -157,7 +157,7 @@
                     <i class="fas fa-hand-holding-heart side-menu__icon"></i>
                     <span class="side-menu__label"> الزكاة والصدقات </span>
                 </a>
-            </p>
+            </p> --}}
 
             <ul class="collapse {{ request()->routeIs('safer.CharityZakat') ? 'show' : '' }}"
                 id="CharityZakatDropdown">
@@ -193,9 +193,9 @@
         {{-- الإعانات --}}
         @if (auth()->check() && auth()->user()->can('subventions.index'))
             <p>
-                <a class="side-menu__item {{ request()->routeIs('subventions.*') ? 'active' : '' }} {{ request()->routeIs('SubventionsLoans.*') ? 'active' : '' }}"
+                <a class="side-menu__item {{ request()->routeIs('subventions.*') ? 'active' : '' }} {{ request()->routeIs('SubventionsLoans.*') ? 'active' : '' }} {{ request()->routeIs('in-kind-disbursements.*') ? 'active' : '' }}"
                     data-toggle="collapse" href="#subventionsDropdown" role="button"
-                    aria-expanded="{{ request()->routeIs('subventions.*') || request()->routeIs('SubventionsLoans.*') ? 'true' : 'false' }}"
+                    aria-expanded="{{ request()->routeIs('subventions.*') || request()->routeIs('SubventionsLoans.*') || request()->routeIs('in-kind-disbursements.*') ? 'true' : 'false' }}"
                     aria-controls="subventionsDropdown">
                     <i class="fe fe-credit-card side-menu__icon"></i>
                     <span class="side-menu__label"> الإعانات </span>
@@ -203,7 +203,7 @@
             </p>
 
 
-            <ul class="collapse {{ request()->routeIs('subventions.*') || request()->routeIs('SubventionsLoans.*') ? 'show' : '' }}"
+            <ul class="collapse {{ request()->routeIs('subventions.*') || request()->routeIs('SubventionsLoans.*') || request()->routeIs('in-kind-disbursements.*') ? 'show' : '' }}"
                 id="subventionsDropdown">
                 <li>
                     <a class="dropdown-item-text side-menu__item {{ request()->routeIs('subventions.index') ? 'active' : '' }}"
@@ -218,6 +218,14 @@
                         href="{{ route('SubventionsLoans.index') }}">
                         <i class="fas fa-user-friends" style="margin-left: 10px;"></i>
                         <span class="side-menu__label"> الإعانات الفردية </span>
+                    </a>
+                </li>
+
+                <li>
+                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('in-kind-disbursements.*') ? 'active' : '' }}"
+                        href="{{ route('in-kind-disbursements.index') }}">
+                        <i class="fas fa-box-open" style="margin-left: 10px;"></i>
+                        <span class="side-menu__label"> صرف التبرعات العينية </span>
                     </a>
                 </li>
             </ul>

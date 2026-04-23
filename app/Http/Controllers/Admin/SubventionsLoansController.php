@@ -32,6 +32,11 @@ class SubventionsLoansController extends Controller
                 ->get();
 
             return Datatables::of($data)
+                ->addColumn('action', function ($data) {
+                    return '<a href="' . route('SubventionsLoans.print-receipt', $data->id) . '" target="_blank" class="btn btn-sm btn-success-light" title="طباعة">
+                        <i class="fas fa-print"></i>
+                    </a>';
+                })
                 ->addColumn('beneficiary_code', function ($data) {
                     return $data->user->beneficiary_code ?? '-';
                 })
@@ -79,15 +84,13 @@ class SubventionsLoansController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'user_ids' => ['required', 'array', 'min:1'],
-            'user_ids.*' => ['required', 'exists:users,id'],
+            'user_id' => ['required', 'exists:users,id'],
             'donation_type_id' => ['required', 'exists:donation_types,id'],
             'price' => ['required', 'numeric', 'min:0.01'],
             'comment' => ['nullable', 'string'],
         ], [
-            'user_ids.required' => 'يرجى اختيار مستفيد واحد على الأقل.',
-            'user_ids.min' => 'يرجى اختيار مستفيد واحد على الأقل.',
-            'user_ids.*.exists' => 'أحد المستفيدين المختارين غير موجود.',
+            'user_id.required' => 'يرجى اختيار المستفيد.',
+            'user_id.exists' => 'المستفيد المختار غير موجود.',
             'donation_type_id.required' => 'يرجى اختيار الخزنة التي سيتم الصرف منها.',
             'price.required' => 'يرجى إدخال مبلغ الإعانة الفردية.',
             'price.numeric' => 'مبلغ الإعانة الفردية يجب أن يكون رقمًا.',
@@ -97,8 +100,7 @@ class SubventionsLoansController extends Controller
         DB::beginTransaction();
 
         try {
-            $userIds = collect($validated['user_ids'])->filter()->unique()->values();
-            $users = User::whereIn('id', $userIds)->get()->keyBy('id');
+            $user = User::findOrFail($validated['user_id']);
 
             $lockerType = DonationType::cashLockerTypes()->find($validated['donation_type_id']);
             $lockerMoneyType = $lockerType?->lockerMoneyType();
@@ -109,37 +111,32 @@ class SubventionsLoansController extends Controller
             }
 
             $pricePerUser = (float) $validated['price'];
-            $totalRequiredAmount = $pricePerUser * $userIds->count();
 
             $availableBalance =
                 LockerLog::where('moneyType', $lockerMoneyType)->where('type', LockerLog::TYPE_PLUS)->sum('amount')
                 - LockerLog::where('moneyType', $lockerMoneyType)->where('type', LockerLog::TYPE_MINUS)->sum('amount');
 
-            if ($availableBalance < $totalRequiredAmount) {
+            if ($availableBalance < $pricePerUser) {
                 toastr()->error('رصيد الخزنة المختارة لا يكفي لصرف الإعانات الفردية.');
                 return redirect()->back()->withInput();
             }
 
-            foreach ($userIds as $userId) {
-                $user = $users->get($userId);
+            $subvention = Subvention::create([
+                'user_id' => $user->id,
+                'price' => $pricePerUser,
+                'type' => 'once',
+                'comment' => $validated['comment'] ?? null,
+            ]);
 
-                $subvention = Subvention::create([
-                    'user_id' => $userId,
-                    'price' => $pricePerUser,
-                    'type' => 'once',
-                    'comment' => $validated['comment'] ?? null,
-                ]);
-
-                LockerLog::create([
-                    "moneyType" => $lockerMoneyType,
-                    "amount" => $pricePerUser,
-                    "type" => LockerLog::TYPE_MINUS,
-                    "admin_id" => auth()->id(),
-                    "subvention_id" => $subvention->id,
-                    "comment" => "صرف إعانة فردية من خزنة " . $lockerType->name . " إلى " . ($user ? ($user->husband_name ?: $user->wife_name) : "مجهول")
-                        . " ورقم هاتفه " . ($user ? $user->nearest_phone : "غير متوفر"),
-                ]);
-            }
+            LockerLog::create([
+                "moneyType" => $lockerMoneyType,
+                "amount" => $pricePerUser,
+                "type" => LockerLog::TYPE_MINUS,
+                "admin_id" => auth()->id(),
+                "subvention_id" => $subvention->id,
+                "comment" => "صرف إعانة فردية من خزنة " . $lockerType->name . " إلى " . ($user->husband_name ?: $user->wife_name)
+                    . " ورقم هاتفه " . ($user->nearest_phone ?: "غير متوفر"),
+            ]);
 
             DB::commit();
             toastr()->success('تمت إضافة الإعانة الفردية بنجاح');
@@ -204,5 +201,18 @@ class SubventionsLoansController extends Controller
     {
         $subventions = Subvention::where('type', 'once')->latest()->get();
         return view('admin/print/subvention-print', compact('subventions'));
+    }
+
+    public function printReceipt(Subvention $subvention)
+    {
+        $subvention->load('user');
+
+        $lockerLog = LockerLog::with('admin')
+            ->where('subvention_id', $subvention->id)
+            ->where('type', LockerLog::TYPE_MINUS)
+            ->latest()
+            ->first();
+
+        return view('admin/print/one-subvention-receipt', compact('subvention', 'lockerLog'));
     }
 }

@@ -88,6 +88,143 @@
                 </div>
             @endif
 
+            @if (!$isCashLocker && $inKindCategorySummaries->isNotEmpty())
+                <style>
+                    .in-kind-summary-grid {
+                        display: grid;
+                        grid-template-columns: repeat(7, minmax(130px, 1fr));
+                        gap: 10px;
+                        margin: 16px 0;
+                    }
+
+                    .in-kind-summary-card {
+                        position: relative;
+                        overflow: hidden;
+                        border: 0;
+                        border-radius: 14px;
+                        background:
+                            radial-gradient(circle at 16% 12%, rgba(255, 255, 255, .28), transparent 28%),
+                            linear-gradient(135deg, #243b6b 0%, #5967e8 62%, #7c4dff 100%);
+                        box-shadow: 0 10px 22px rgba(48, 63, 159, .14);
+                        color: #fff;
+                        min-height: 135px;
+                    }
+
+                    .in-kind-summary-card::after {
+                        content: "";
+                        position: absolute;
+                        width: 82px;
+                        height: 82px;
+                        border: 1px solid rgba(255, 255, 255, .18);
+                        border-radius: 999px;
+                        left: -24px;
+                        bottom: -30px;
+                    }
+
+                    .in-kind-summary-card__body {
+                        position: relative;
+                        z-index: 1;
+                        padding: 14px;
+                    }
+
+                    .in-kind-summary-card__title {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        gap: 6px;
+                        margin-bottom: 8px;
+                        font-size: 14px;
+                        font-weight: 800;
+                        line-height: 1.35;
+                    }
+
+                    .in-kind-summary-card__badge {
+                        padding: 3px 8px;
+                        border-radius: 999px;
+                        background: rgba(255, 255, 255, .18);
+                        font-size: 10px;
+                        font-weight: 700;
+                        white-space: nowrap;
+                    }
+
+                    .in-kind-summary-row {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding: 6px 0;
+                        border-top: 1px solid rgba(255, 255, 255, .16);
+                        font-size: 12px;
+                    }
+
+                    .in-kind-summary-row__value {
+                        font-size: 13px;
+                        font-weight: 800;
+                    }
+
+                    .in-kind-summary-row--remaining .in-kind-summary-row__value {
+                        color: #dfffe9;
+                    }
+
+                    @media (max-width: 1399px) {
+                        .in-kind-summary-grid {
+                            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                        }
+                    }
+
+                    .locker-movement {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 6px;
+                        margin-right: 10px;
+                        font-weight: 800;
+                        white-space: nowrap;
+                    }
+
+                    .locker-movement i {
+                        font-size: 22px;
+                        transform: rotate(45deg);
+                    }
+
+                    .locker-movement--in {
+                        color: #22c55e;
+                    }
+
+                    .locker-movement--out {
+                        color: #ef4444;
+                    }
+                </style>
+
+                <div class="in-kind-summary-grid">
+                    @foreach ($inKindCategorySummaries as $summary)
+                        @php
+                            $unit = $summary['unit'] ? ' ' . $summary['unit'] : '';
+                        @endphp
+                        <div class="in-kind-summary-card">
+                            <div class="in-kind-summary-card__body">
+                                <div class="in-kind-summary-card__title">
+                                    <span>خزنة {{ $summary['name'] }}</span>
+                                    @if ($summary['unit'])
+                                        <span class="in-kind-summary-card__badge">{{ $summary['unit'] }}</span>
+                                    @endif
+                                </div>
+                                <div class="in-kind-summary-row">
+                                    <span>الإجمالي</span>
+                                    <span class="in-kind-summary-row__value">{{ number_format($summary['incoming'], 0) }}{{ $unit }}</span>
+                                </div>
+                                <div class="in-kind-summary-row">
+                                    <span>المنصرف</span>
+                                    <span class="in-kind-summary-row__value">{{ number_format($summary['spent'], 0) }}{{ $unit }}</span>
+                                </div>
+                                <div class="in-kind-summary-row in-kind-summary-row--remaining">
+                                    <span>المتبقي</span>
+                                    <span class="in-kind-summary-row__value">{{ number_format($summary['remaining'], 0) }}{{ $unit }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+
             @if (!empty($error))
                 <div class="alert alert-danger">
                     {{ $error }}
@@ -105,6 +242,9 @@
                                 <tr class="fw-bolder text-muted bg-light">
                                     <th class="min-w-25px">#</th>
                                     <th class="min-w-50px">الاسم</th>
+                                    @if (!$isCashLocker)
+                                        <th class="min-w-125px">صنف التبرع</th>
+                                    @endif
                                     <th class="min-w-125px">القيمه</th>
                                     <th class="min-w-125px">ملاحظات</th>
                                     <th class="min-w-125px">التاريخ</th>
@@ -198,6 +338,10 @@
                         data: 'name',
                         name: 'name'
                     },
+                    ...(!isCashLocker ? [{
+                        data: 'category_name',
+                        name: 'category_name'
+                    }] : []),
                     {
                         data: 'amount',
                         name: 'amount'

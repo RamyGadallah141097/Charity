@@ -60,15 +60,10 @@
 
                 .subvention-create-card .form-control,
                 .subvention-create-card .form-select,
-                .subvention-create-card .select2-container--default .select2-selection--single,
-                .subvention-create-card .select2-container--default .select2-selection--multiple {
+                .subvention-create-card .select2-container--default .select2-selection--single {
                     min-height: 48px;
                     border-radius: 12px;
                     border-color: #dbe3f7;
-                }
-
-                .subvention-create-card .select2-container--default .select2-selection--multiple {
-                    padding: 6px 10px;
                 }
 
                 .subvention-actions {
@@ -106,17 +101,18 @@
                         @csrf
 
                         <div class="subvention-section">
-                            <div class="subvention-section__title">اختيار المستفيدين</div>
+                            <div class="subvention-section__title">اختيار المستفيد</div>
                             <div class="form-group mb-0">
-                                <label class="form-label">المستفيدون</label>
-                                <select name="user_ids[]" class="form-control select2" multiple required data-placeholder="اختيار المستفيدين">
+                                <label class="form-label">المستفيد</label>
+                                <select name="user_id" class="form-control select2" required data-placeholder="اختيار المستفيد">
+                                    <option value="">اختيار المستفيد</option>
                                     @foreach($users as $user)
-                                        <option value="{{ $user->id }}" {{ collect(old('user_ids', []))->contains($user->id) ? 'selected' : '' }}>
+                                        <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
                                             {{ $user->wife_name ?: $user->husband_name }}{{ $user->beneficiary_code ? ' - ' . $user->beneficiary_code : '' }}
                                         </option>
                                     @endforeach
                                 </select>
-                                <div class="subvention-helper">يمكن صرف إعانات فردية لنفس المستفيد أكثر من مرة بدون أي قيود.</div>
+                                <div class="subvention-helper">اختر مستفيد واحد فقط لصرف الإعانة الفردية.</div>
                             </div>
                         </div>
 
@@ -143,7 +139,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <div class="subvention-helper">إذا اخترت أكثر من مستفيد، سيتم صرف نفس المبلغ لكل مستفيد من المختارين.</div>
+                                    <div class="subvention-helper">سيتم صرف المبلغ للمستفيد المختار فقط.</div>
                                 </div>
                             </div>
                         </div>
@@ -170,9 +166,10 @@
 @section('js')
     <script>
         $(document).ready(function() {
-            $('select[name="user_ids[]"]').select2({
-                placeholder: 'اختيار المستفيدين',
-                closeOnSelect: false
+            $('select[name="user_id"]').select2({
+                placeholder: 'اختيار المستفيد',
+                allowClear: true,
+                width: '100%'
             });
         });
     </script>
