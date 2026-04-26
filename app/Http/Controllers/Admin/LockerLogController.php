@@ -21,8 +21,30 @@ class LockerLogController extends Controller
 
     public function index(Request $request, $model = null)
     {
+        $allowedLockerCodes = [
+            DonationType::CASH_CODE,
+            DonationType::GOOD_LOAN_CODE,
+            'in_kind',
+            DonationType::ASSOCIATION_CODE,
+        ];
+
+        $lockerLabels = [
+            DonationType::CASH_CODE => 'خزنة التبرعات المالية',
+            DonationType::GOOD_LOAN_CODE => 'خزنة القرض الحسن',
+            'in_kind' => 'خزنة التبرعات العينية',
+            DonationType::ASSOCIATION_CODE => 'خزنة الجمعية',
+        ];
+
         $selectedTypeId = $request->input('locker_type', $model);
-        $lockerTypes = DonationType::active()->orderBy('sort_order')->get();
+        $lockerTypes = DonationType::active()
+            ->whereIn('code', $allowedLockerCodes)
+            ->orderBy('sort_order')
+            ->get()
+            ->map(function (DonationType $lockerType) use ($lockerLabels) {
+                $lockerType->display_name = $lockerLabels[$lockerType->code] ?? $lockerType->name;
+
+                return $lockerType;
+            });
         $selectedLockerType = $lockerTypes->firstWhere('id', (int) $selectedTypeId);
 
         if (! $selectedLockerType && $lockerTypes->isNotEmpty()) {
@@ -133,7 +155,7 @@ class LockerLogController extends Controller
                 ->make(true);
         }
 
-        $title = $selectedLockerType?->name ?? 'الخزنة';
+        $title = $selectedLockerType?->display_name ?? 'الخزنة';
         $totalPlus = 0;
         $totalMinus = 0;
         $total = 0;

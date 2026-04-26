@@ -28,13 +28,15 @@ class loansController extends Controller
             return Datatables::of($loans)
                 ->addColumn('action', function ($loans) {
                     return '
-                            <a href="' . route("person.loans", $loans->id) . '" class="btn btn-pill btn-secondary-light"
-                                    data-id="' . $loans->id . '"
-                                    >
-                                     الاقساط
-                                    <i class="fas fa-money-check-alt"></i>
+                        <div class="d-flex" style="gap: 5px;">
+                            <a href="' . route("person.loans", $loans->id) . '" class="btn btn-sm btn-secondary-light" data-id="' . $loans->id . '">
+                                الاقساط <i class="fas fa-money-check-alt"></i>
                             </a>
-                       ';
+                            <button class="btn btn-sm btn-danger-light" data-toggle="modal" data-target="#delete_modal" data-id="' . $loans->id . '" data-title="هذا القرض">
+                                <i class="fe fe-trash"></i>
+                            </button>
+                        </div>
+                    ';
                 })
                 ->editColumn('borrower_id', function ($loans) {
                     return $loans->borrower ? $loans->borrower->name : "-";
@@ -333,5 +335,18 @@ class loansController extends Controller
     {
         $loans = Loan::all();
         return view('admin/print/printLoan', compact('loans'));
+    }
+
+    public function delete(Request $request)
+    {
+        try {
+            $loan = Loan::findOrFail($request->id);
+            LockerLog::where('loan_id', $loan->id)->delete();
+            \App\Models\PersonalLoan::where('loan_id', $loan->id)->delete();
+            $loan->delete();
+            return redirect()->back();
+        } catch (\Exception $e) {
+            return redirect()->back();
+        }
     }
 }

@@ -5,89 +5,121 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Borrower;
 use App\Models\Donation;
+use App\Models\DonationCategory;
+use App\Models\DonationType;
 use App\Models\Donor;
 use App\Models\Loan;
-use App\Models\Order;
-use App\Models\OrderOfferDetails;
-use App\Models\Product;
-use App\Models\Provider;
-use App\Models\Reviews;
+use App\Models\LockerLog;
 use App\Models\Setting;
 use App\Models\Subvention;
 use App\Models\Task;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
     public function index()
     {
+        $setting = Setting::first();
+        $now = Carbon::now();
+        $startOfDay = $now->copy()->startOfDay();
+        $startOfMonth = $now->copy()->startOfMonth();
+        $startOfYear = $now->copy()->startOfYear();
+        $lastMonthStart = $now->copy()->subMonth()->startOfMonth();
+        $lastMonthEnd = $now->copy()->subMonth()->endOfMonth();
 
-        //        users
-        $users_count     = User::all()->count();
-        $newUsers     = User::where("status",  "new")->count();
-        $accepedUsers     = User::where("status", "accepted")->count();
-        $preparingUsers     = User::where("status", "preparing")->count();
-        $rejectedUsers     = User::where("status", "refused")->count();
-        $social_status0     = User::where("social_status", '0')->count();
-        $social_status1     = User::where("social_status", '1')->count();
-        $social_status2     = User::where("social_status", '2')->count();
-        $social_status3    = User::where("social_status", '3')->count();
-        //        dd($social_status0 , $social_status1 , $social_status2 , $social_status3 );
+        // Donations stats (Financial)
+        $donationsToday = Donation::where('donation_kind', '!=', 'in_kind')->whereDate('created_at', $startOfDay)->sum(DB::raw('COALESCE(amount_value, donation_amount)'));
+        $donationsMonth = Donation::where('donation_kind', '!=', 'in_kind')->whereMonth('created_at', $now->month)->whereYear('created_at', $now->year)->sum(DB::raw('COALESCE(amount_value, donation_amount)'));
+        $donationsYear = Donation::where('donation_kind', '!=', 'in_kind')->whereYear('created_at', $now->year)->sum(DB::raw('COALESCE(amount_value, donation_amount)'));
+        
+        $donationsLastMonth = Donation::where('donation_kind', '!=', 'in_kind')->whereBetween('created_at', [$lastMonthStart, $lastMonthEnd])->sum(DB::raw('COALESCE(amount_value, donation_amount)'));
+        $donationsLastYear = Donation::where('donation_kind', '!=', 'in_kind')->whereYear('created_at', $now->copy()->subYear()->year)->sum(DB::raw('COALESCE(amount_value, donation_amount)'));
+        
+        // Donors stats
+        $activeDonors = Donor::count(); 
+        $newDonorsMonth = Donor::whereMonth('created_at', $now->month)->whereYear('created_at', $now->year)->count();
 
-        //        donors and donations
-        $donors_count    = Donor::all()->count();
-        $total_donors_money    = Donor::all()->sum('price');
-        $totalDonations    = Donation::all()->sum('donation_amount');
+        // Beneficiaries
+        $totalBeneficiaries = User::where('status', 'accepted')->count();
+        $newBeneficiariesMonth = User::where('status', 'accepted')->whereMonth('created_at', $now->month)->whereYear('created_at', $now->year)->count();
 
-        //  loans
-        $totalLoans = Loan::whereHas('Personal_loan', function ($query) {
-            $query->where('status', '0');
-        })->count();
-        $totalLoanOut     = Loan::all()->sum('loan_amount');
-        $totalBorrowers     = Borrower::all()->count();
-        $totalLoansDonations = Donation::where('donation_type', 2)->sum('donation_amount');
+        // Subventions
+        $totalMonthlySubventionsUsers = Subvention::where('type', 'monthly')->distinct('user_id')->count('user_id');
+        $totalMonthlySubventionsValue = Subvention::where('type', 'monthly')->sum('price');
 
+        // Expenses and Revenues (LockerLogs)
+        $revenueMonth = LockerLog::where('type', LockerLog::TYPE_PLUS)->whereMonth('created_at', $now->month)->whereYear('created_at', $now->year)->sum('amount');
+        $expenseMonth = LockerLog::where('type', LockerLog::TYPE_MINUS)->whereMonth('created_at', $now->month)->whereYear('created_at', $now->year)->sum('amount');
+        $surplusMonth = $revenueMonth - $expenseMonth;
 
-        //        zaka
-        $totalMonthlySubventions  = Subvention::where('type', 'monthly')->sum('price');
-        $totalZakat  = Donation::whereIn('donation_type', [0, 1])->sum('donation_amount');;
+        $revenueYear = LockerLog::where('type', LockerLog::TYPE_PLUS)->whereYear('created_at', $now->year)->sum('amount');
+        $expenseYear = LockerLog::where('type', LockerLog::TYPE_MINUS)->whereYear('created_at', $now->year)->sum('amount');
+        $surplusYear = $revenueYear - $expenseYear;
 
+        // Distributions
+        $donationsByKind = Donation::select('donation_kind', DB::raw('count(*) as total'))
+            ->groupBy('donation_kind')
+            ->pluck('total', 'donation_kind')->toArray();
 
+        // Monthly Data for charts (Last 6 months)
+        $monthlyChartData = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $monthDate = $now->copy()->subMonths($i);
+            $monthStart = $monthDate->copy()->startOfMonth();
+            $monthEnd = $monthDate->copy()->endOfMonth();
+            $monthLabel = $monthDate->translatedFormat('F Y');
 
-        $users_month          = User::whereMonth('created_at', '=', Carbon::now()->month)->count();
-        $users_last_month     = User::whereMonth('created_at', '=', Carbon::now()->subMonth()->month)->count();
-        if ($users_last_month != 0)
-            $diff = $users_month / $users_last_month;
-        else
-            $diff = 1;
-
-        $donors      = Donor::take(5)->get();
-        $subvention  = Subvention::orderBy('price', 'DESC')->first();
-        $totalSubventions  = Subvention::all()->sum('price');
-        //        $subvention  = Subvention::orderBy('price', 'DESC')->first();
-
-        $users       = User::latest()->take(5)->get();
-
-
-
-
-        $progressData = [];
-
-        $tasks = Task::select('title', 'status')->get();
-
-        foreach ($tasks as $key => $task) {
-            $progressData[$key] = [
-                'title' => $task->title,
-                'progress' => $task->status == 0 ? 0 : ($task->status == 1 ? 25 : ($task->status == 2 ? 50 : ($task->status == 3 ? 75 : 100)))
-            ];
+            $rev = LockerLog::where('type', LockerLog::TYPE_PLUS)->whereBetween('created_at', [$monthStart, $monthEnd])->sum('amount');
+            $exp = LockerLog::where('type', LockerLog::TYPE_MINUS)->whereBetween('created_at', [$monthStart, $monthEnd])->sum('amount');
+            $ben = User::where('status', 'accepted')->whereBetween('created_at', [$monthStart, $monthEnd])->count();
+            
+            $monthlyChartData['labels'][] = $monthLabel;
+            $monthlyChartData['revenues'][] = $rev;
+            $monthlyChartData['expenses'][] = $exp;
+            $monthlyChartData['beneficiaries'][] = $ben;
         }
 
+        // Widgets
+        $topDonors = Donor::withSum('donations', 'amount_value')->orderByDesc('donations_sum_amount_value')->take(5)->get();
+        $mostCommonDonationCategories = DonationCategory::withCount('donations')->orderByDesc('donations_count')->take(5)->get();
+        
+        $beneficiaryCategoriesCount = User::select('beneficiary_category_id', DB::raw('count(*) as total'))
+            ->whereNotNull('beneficiary_category_id')
+            ->groupBy('beneficiary_category_id')
+            ->with('beneficiaryCategory')
+            ->orderByDesc('total')
+            ->take(5)
+            ->get();
 
-        $setting = Setting::first();
+        // Locker Balances
+        $moneyLockerBalance = LockerLog::whereIn('moneyType', [LockerLog::moneyTypeSadaka, LockerLog::moneyTypeZakat])
+            ->selectRaw('SUM(CASE WHEN type = "plus" THEN amount ELSE -amount END) as balance')
+            ->value('balance') ?? 0;
 
+        $loanLockerBalance = LockerLog::where('moneyType', LockerLog::moneyTypeLoans)
+            ->selectRaw('SUM(CASE WHEN type = "plus" THEN amount ELSE -amount END) as balance')
+            ->value('balance') ?? 0;
 
-        return view('admin/index', compact('total_donors_money', "totalDonations", "donors_count", 'preparingUsers', "progressData", 'users', "accepedUsers", "newUsers", "rejectedUsers", 'donors', 'diff', 'users_count', 'subvention', "totalSubventions", 'users_month', 'users_last_month', 'totalMonthlySubventions', "totalZakat", "totalLoans", "totalBorrowers", "totalLoanOut", "totalLoansDonations", "setting", "social_status3", "social_status2", "social_status1", "social_status0"));
+        $associationLockerBalance = LockerLog::where('moneyType', LockerLog::moneyTypeAssociation)
+            ->selectRaw('SUM(CASE WHEN type = "plus" THEN amount ELSE -amount END) as balance')
+            ->value('balance') ?? 0;
+
+        $inKindTypeId = DonationType::where('code', 'in_kind')->first()?->id;
+        $inKindIncoming = Donation::where('donation_type_id', $inKindTypeId)->sum(DB::raw('COALESCE(asset_count, amount_value, 0)'));
+        $inKindSpent = Subvention::where('price', 0)->sum('asset_count');
+        $inKindLockerBalance = max($inKindIncoming - $inKindSpent, 0);
+
+        return view('admin.index', compact(
+            'setting', 'donationsToday', 'donationsMonth', 'donationsYear',
+            'donationsLastMonth', 'donationsLastYear', 'activeDonors', 'newDonorsMonth',
+            'totalBeneficiaries', 'newBeneficiariesMonth', 'revenueMonth', 'expenseMonth',
+            'surplusMonth', 'revenueYear', 'expenseYear', 'surplusYear', 'donationsByKind',
+            'monthlyChartData', 'topDonors', 'mostCommonDonationCategories', 'beneficiaryCategoriesCount',
+            'totalMonthlySubventionsUsers', 'totalMonthlySubventionsValue',
+            'moneyLockerBalance', 'loanLockerBalance', 'associationLockerBalance', 'inKindLockerBalance'
+        ));
     }
 }

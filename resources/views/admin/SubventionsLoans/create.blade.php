@@ -79,6 +79,104 @@
                     padding: 10px 18px;
                     font-weight: 700;
                 }
+
+                .beneficiary-picker {
+                    border: 1px solid #dbe3f7;
+                    border-radius: 14px;
+                    overflow: hidden;
+                    background: #ffffff;
+                }
+
+                .beneficiary-picker__search {
+                    padding: 12px;
+                    border-bottom: 1px solid #edf1fb;
+                    background: #fbfcff;
+                }
+
+                .beneficiary-picker__filters {
+                    display: grid;
+                    grid-template-columns: minmax(220px, 280px) 1fr auto;
+                    gap: 12px;
+                    align-items: center;
+                }
+
+                .beneficiary-picker__search input,
+                .beneficiary-picker__search select {
+                    width: 100%;
+                    height: 46px;
+                    border: 1px solid #dbe3f7;
+                    border-radius: 10px;
+                    padding: 0 14px;
+                    color: #24335b;
+                    background: #fff;
+                    outline: none;
+                }
+
+                .beneficiary-picker__list {
+                    max-height: 285px;
+                    overflow-y: auto;
+                    padding: 8px;
+                }
+
+                .beneficiary-picker__row {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    padding: 12px 14px;
+                    margin-bottom: 6px;
+                    border: 1px solid transparent;
+                    border-radius: 12px;
+                    cursor: pointer;
+                    transition: background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+                }
+
+                .beneficiary-picker__row:hover {
+                    background: #f6f8ff;
+                    border-color: #e2e8fb;
+                }
+
+                .beneficiary-picker__row.is-selected {
+                    background: #fef1f1;
+                    border-color: #f5b9b9;
+                    box-shadow: inset 3px 0 0 #df2f2f;
+                }
+
+                .beneficiary-picker__checkbox {
+                    width: 19px;
+                    height: 19px;
+                    accent-color: #df2f2f;
+                    cursor: pointer;
+                    flex-shrink: 0;
+                }
+
+                .beneficiary-picker__name {
+                    flex: 1;
+                    color: #24335b;
+                    font-weight: 700;
+                    text-align: right;
+                }
+
+                .beneficiary-picker__meta {
+                    color: #7a88b6;
+                    font-size: 12px;
+                    white-space: nowrap;
+                }
+
+                .beneficiary-picker__empty {
+                    display: none;
+                    padding: 18px;
+                    color: #7a88b6;
+                    text-align: center;
+                }
+
+                .beneficiary-picker__select-all {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                    white-space: nowrap;
+                    font-weight: 700;
+                    color: #24335b;
+                }
             </style>
 
             <div class="card subvention-create-card">
@@ -104,15 +202,50 @@
                             <div class="subvention-section__title">اختيار المستفيد</div>
                             <div class="form-group mb-0">
                                 <label class="form-label">المستفيد</label>
-                                <select name="user_id" class="form-control select2" required data-placeholder="اختيار المستفيد">
-                                    <option value="">اختيار المستفيد</option>
-                                    @foreach($users as $user)
-                                        <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
-                                            {{ $user->wife_name ?: $user->husband_name }}{{ $user->beneficiary_code ? ' - ' . $user->beneficiary_code : '' }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <div class="subvention-helper">اختر مستفيد واحد فقط لصرف الإعانة الفردية.</div>
+                                @php
+                                    $selectedUserIds = collect(old('user_ids', []))->map(fn ($id) => (string) $id);
+                                    $selectedCategoryId = old('beneficiary_category_filter');
+                                @endphp
+                                <div class="beneficiary-picker" id="beneficiaryPicker">
+                                    <div class="beneficiary-picker__search">
+                                        <div class="beneficiary-picker__filters">
+                                            <select id="beneficiaryCategoryFilter" name="beneficiary_category_filter">
+                                                <option value="">كل التصنيفات</option>
+                                                @foreach($beneficiaryCategories as $category)
+                                                    <option value="{{ $category->id }}" {{ (string) $selectedCategoryId === (string) $category->id ? 'selected' : '' }}>
+                                                        {{ $category->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <input type="text" id="beneficiarySearch" placeholder="ابحث عن مستفيد">
+                                            <label class="beneficiary-picker__select-all">
+                                                <input type="checkbox" id="beneficiarySelectAll">
+                                                <span>تحديد الكل</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="beneficiary-picker__list">
+                                        @foreach($users as $user)
+                                            @php
+                                                $userName = $user->husband_name ?: $user->wife_name;
+                                                $isSelected = $selectedUserIds->contains((string) $user->id);
+                                            @endphp
+                                            <label class="beneficiary-picker__row {{ $isSelected ? 'is-selected' : '' }}"
+                                                data-name="{{ $userName }}"
+                                                data-category-id="{{ $user->beneficiary_category_id }}">
+                                                <input type="checkbox"
+                                                    class="beneficiary-picker__checkbox"
+                                                    name="user_ids[]"
+                                                    value="{{ $user->id }}"
+                                                    {{ $isSelected ? 'checked' : '' }}>
+                                                <span class="beneficiary-picker__name">{{ $userName }}</span>
+                                                <span class="beneficiary-picker__meta">{{ $user->beneficiary_code ?: 'بدون كود' }}</span>
+                                            </label>
+                                        @endforeach
+                                        <div class="beneficiary-picker__empty" id="beneficiaryEmptyState">لا يوجد مستفيد بهذا الاسم أو التصنيف</div>
+                                    </div>
+                                </div>
+                                <div class="subvention-helper">يمكنك اختيار مستفيد واحد أو أكثر، وسيتم صرف نفس المبلغ لكل مستفيد محدد.</div>
                             </div>
                         </div>
 
@@ -139,7 +272,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <div class="subvention-helper">سيتم صرف المبلغ للمستفيد المختار فقط.</div>
+                                    <div class="subvention-helper">سيتم صرف المبلغ المدخل لكل مستفيد تم تحديده من القائمة.</div>
                                 </div>
                             </div>
                         </div>
@@ -166,11 +299,82 @@
 @section('js')
     <script>
         $(document).ready(function() {
-            $('select[name="user_id"]').select2({
-                placeholder: 'اختيار المستفيد',
-                allowClear: true,
-                width: '100%'
+            const $beneficiaryRows = $('.beneficiary-picker__row');
+            const $beneficiaryCheckboxes = $('.beneficiary-picker__checkbox');
+            const $beneficiarySearch = $('#beneficiarySearch');
+            const $beneficiaryCategoryFilter = $('#beneficiaryCategoryFilter');
+            const $beneficiarySelectAll = $('#beneficiarySelectAll');
+            const $emptyState = $('#beneficiaryEmptyState');
+
+            function syncSelectedRows() {
+                $beneficiaryRows.each(function() {
+                    const $row = $(this);
+                    $row.toggleClass('is-selected', $row.find('.beneficiary-picker__checkbox').is(':checked'));
+                });
+            }
+
+            function syncSelectAllState() {
+                const $visibleRows = $beneficiaryRows.filter(function() {
+                    return $(this).is(':visible');
+                });
+
+                if (!$visibleRows.length) {
+                    $beneficiarySelectAll.prop('checked', false).prop('indeterminate', false);
+                    return;
+                }
+
+                const visibleCheckedCount = $visibleRows.find('.beneficiary-picker__checkbox:checked').length;
+                const allVisibleChecked = visibleCheckedCount === $visibleRows.length;
+                const someVisibleChecked = visibleCheckedCount > 0 && !allVisibleChecked;
+
+                $beneficiarySelectAll
+                    .prop('checked', allVisibleChecked)
+                    .prop('indeterminate', someVisibleChecked);
+            }
+
+            function applyBeneficiaryFilters() {
+                const searchTerm = $beneficiarySearch.val().trim().toLowerCase();
+                const categoryId = String($beneficiaryCategoryFilter.val() || '');
+                let visibleRows = 0;
+
+                $beneficiaryRows.each(function() {
+                    const $row = $(this);
+                    const name = String($row.data('name') || '').toLowerCase();
+                    const rowCategoryId = String($row.data('category-id') || '');
+                    const matchesSearch = !searchTerm || name.includes(searchTerm);
+                    const matchesCategory = !categoryId || rowCategoryId === categoryId;
+                    const shouldShow = matchesSearch && matchesCategory;
+
+                    $row.toggle(shouldShow);
+                    if (shouldShow) {
+                        visibleRows++;
+                    }
+                });
+
+                $emptyState.toggle(visibleRows === 0);
+                syncSelectAllState();
+            }
+
+            $beneficiaryCheckboxes.on('change', function() {
+                syncSelectedRows();
+                syncSelectAllState();
             });
+
+            $beneficiarySearch.on('input', applyBeneficiaryFilters);
+            $beneficiaryCategoryFilter.on('change', applyBeneficiaryFilters);
+            $beneficiarySelectAll.on('change', function() {
+                const shouldCheck = $(this).is(':checked');
+
+                $beneficiaryRows.filter(':visible').each(function() {
+                    $(this).find('.beneficiary-picker__checkbox').prop('checked', shouldCheck);
+                });
+
+                syncSelectedRows();
+                syncSelectAllState();
+            });
+
+            syncSelectedRows();
+            applyBeneficiaryFilters();
         });
     </script>
 @endsection

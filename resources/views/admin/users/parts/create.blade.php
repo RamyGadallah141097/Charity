@@ -32,27 +32,23 @@
                                 <input type="text" value="{{ old('beneficiary_code') }}" class="form-control rounded-pill" name="beneficiary_code" placeholder="أدخل كود المستفيد">
                             </div>
                             <div class="form-group col-md-6">
-                                <label class="form-label font-weight-bold">اسم الزوج <span class="text-danger">*</span></label>
+                                <label class="form-label font-weight-bold">اسم المستفيد <span class="text-danger">*</span></label>
                                 <input type="text" value="{{ old('husband_name') }}" class="form-control rounded-pill" name="husband_name" required>
                             </div>
                             <div class="form-group col-md-6">
-                                <label class="form-label font-weight-bold">اسم الزوجة <span class="text-danger">*</span></label>
-                                <input type="text" value="{{ old('wife_name') }}" class="form-control rounded-pill" name="wife_name" required>
+                                <label class="form-label font-weight-bold">اسم الزوج/الزوجة</label>
+                                <input type="text" value="{{ old('wife_name') }}" class="form-control rounded-pill" name="wife_name">
                             </div>
                             <div class="form-group col-md-6">
-                                <label class="form-label font-weight-bold">الرقم القومى للزوج</label>
-                                <input type="number" value="{{ old('husband_national_id') }}" class="form-control rounded-pill" name="husband_national_id">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label class="form-label font-weight-bold">الرقم القومى للزوجة</label>
-                                <input type="number" value="{{ old('wife_national_id') }}" class="form-control rounded-pill" name="wife_national_id">
+                                <label class="form-label font-weight-bold">الرقم القومي للمستفيد <span class="text-danger">*</span></label>
+                                <input type="number" value="{{ old('husband_national_id') }}" class="form-control rounded-pill" name="husband_national_id" required>
                             </div>
                             <div class="form-group col-md-3">
-                                <label class="form-label">عمر الزوج</label>
+                                <label class="form-label">عمر الحالة</label>
                                 <input type="number" value="{{ old('age_husband') }}" class="form-control bg-light" name="age_husband" readonly>
                             </div>
                             <div class="form-group col-md-3">
-                                <label class="form-label">عمر الزوجة</label>
+                                <label class="form-label">عمر الزوج/الزوجة</label>
                                 <input type="number" value="{{ old('age_wife') }}" class="form-control bg-light" name="age_wife" readonly>
                             </div>
                             <div class="form-group col-md-3">

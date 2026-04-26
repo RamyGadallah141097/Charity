@@ -46,32 +46,19 @@ class BorrowerController extends Controller
                         ';
 
                     // التحقق من إذن الحذف
-                    // $deleteButton = '
-                    //     <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
-                    //             data-id="' . $borrower->id . '">
-                    //         <i class="fas fa-trash"></i>
-                    //     </button>
-                    // ';
+                    $deleteButton = '
+                        <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                                data-id="' . $borrower->id . '" data-title="' . e($borrower->name) . '">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    ';
 
-                    // $viewGuarantorsButton = '
-                    //     <button class="btn btn-pill view-guarantors btn-success-light" data-id="' . $borrower->id . '">
-                    //         <i class="fa fa-eye"></i>
-                    //     </button>
-                    // ';
+                    $viewGuarantorsButton = '';
 
 
-                    // $viewMediaButton = '
-                    //     <button class="btn btn-pill btn-primary-light viewMedia" data-id="' . $borrower->id . '">
-                    //         <i class="fa fa-photo-video"></i>
-                    //     </button>
-                    // ';
+                    $viewMediaButton = '';
 
-                    $borrowerReview = '
-                            <button class="btn btn-pill btn-primary-light borrowerReview" data-id="' . $borrower->id . '"  data-review="' . $borrower->review . '">
-                                <i class="fa fa-star"></i>
-
-                            </button>
-                        ';
+                    $borrowerReview = '';
 
                     return '<div class="d-flex">' . $editButton . $deleteButton . $viewGuarantorsButton . $viewMediaButton . $borrowerReview . '</div>';
                 })

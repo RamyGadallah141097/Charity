@@ -11,6 +11,7 @@ use App\Models\DonationType;
 use App\Models\LockerLog;
 use App\Models\Subvention;
 use App\Models\User;
+use App\Models\BeneficiaryCategory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -22,16 +23,12 @@ class SubventionController extends Controller
 {
     public function index(Request $request)
     {
-        $fromDate = $request->filled('from')
-            ? Carbon::parse($request->from)->startOfDay()
-            : now()->startOfMonth();
-        $toDate = $request->filled('to')
-            ? Carbon::parse($request->to)->endOfDay()
-            : now()->endOfMonth();
+        [$fromDate, $toDate] = $this->resolveDateRange($request);
 
         if ($request->ajax()) {
 
-            $data = Subvention::query();
+            $data = Subvention::query()
+                ->where('type', 'monthly');
 
             $data->whereBetween('created_at', [$fromDate, $toDate]);
 
@@ -63,25 +60,51 @@ class SubventionController extends Controller
                 ->editColumn('type', function ($data) {
                     return $data->type == 'once' ? 'مرة واحدة' : 'إعانة شهرية';
                 })
+                ->addColumn('action', function ($data) {
+                    return '
+                        <button type="button" data-id="' . $data->id . '" class="btn btn-sm btn-info-light editBtn" title="تعديل">
+                            <i class="fe fe-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger-light" data-toggle="modal" data-target="#delete_modal" data-id="' . $data->id . '" data-title="هذه الإعانة" title="حذف">
+                            <i class="fe fe-trash"></i>
+                        </button>
+                    ';
+                })
                 ->escapeColumns([])
                 ->make(true);
         }
 
-        $totoaSadaka = LockerLog::where("type", LockerLog::TYPE_MINUS)
-            ->where("moneyType", LockerLog::moneyTypeSadaka)
+        $totalSpent = Subvention::query()
+            ->where('type', 'monthly')
             ->whereBetween('created_at', [$fromDate, $toDate])
-            ->sum("amount");
-        $totalZakat = LockerLog::where("type", LockerLog::TYPE_MINUS)
-            ->where("moneyType", LockerLog::moneyTypeZakat)
-            ->whereBetween('created_at', [$fromDate, $toDate])
-            ->sum("amount");
-        $totalSpent = $totoaSadaka + $totalZakat;
+            ->sum('price');
 
         $periodLabel = $request->filled('from') && $request->filled('to')
             ? 'إجمالي المنصرف خلال الفترة من ' . $fromDate->format('Y-m-d') . ' إلى ' . $toDate->format('Y-m-d')
             : 'إجمالي المنصرف خلال الشهر الحالي';
 
         return view('admin/subventions/index', compact("totalSpent", 'fromDate', 'toDate', 'periodLabel'));
+    }
+
+    private function resolveDateRange(Request $request): array
+    {
+        $rawFrom = (string) $request->query('from', '');
+        $rawTo = (string) $request->query('to', '');
+
+        if (!$rawTo && str_contains($rawFrom, 'to=')) {
+            [$fromPart, $toPart] = explode('to=', $rawFrom, 2);
+            $rawFrom = rtrim($fromPart, '&?');
+            $rawTo = trim($toPart);
+        }
+
+        $fromDate = $rawFrom !== ''
+            ? Carbon::parse($rawFrom)->startOfDay()
+            : now()->startOfMonth();
+        $toDate = $rawTo !== ''
+            ? Carbon::parse($rawTo)->endOfDay()
+            : now()->endOfMonth();
+
+        return [$fromDate, $toDate];
     }
 
 
@@ -96,11 +119,13 @@ class SubventionController extends Controller
                     ->whereYear('created_at', now()->year)
                     ->whereMonth('created_at', now()->month);
             })
-            ->select('id', 'husband_name', 'wife_name', 'monthly_subvention_amount')
+            ->with('beneficiaryCategory:id,name')
+            ->select('id', 'husband_name', 'wife_name', 'monthly_subvention_amount', 'beneficiary_category_id')
             ->latest()
             ->get();
+        $beneficiaryCategories = $this->beneficiaryCategoriesForFilters();
         $lockerTypes = DonationType::cashLockerTypes()->active()->orderBy('sort_order')->get();
-        return view('admin/subventions/create', compact('users', "lockerTypes"));
+        return view('admin/subventions/create', compact('users', 'beneficiaryCategories', "lockerTypes"));
     }
 
 
@@ -341,11 +366,14 @@ class SubventionController extends Controller
             ->with('user')
             ->when($request->filled('ids'), function ($query) use ($request) {
                 $ids = collect(explode(',', $request->ids))
-                    ->filter()
+                    ->filter(fn ($id) => trim((string) $id) !== '')
                     ->map(fn ($id) => (int) $id)
+                    ->filter(fn ($id) => $id > 0)
                     ->values();
 
-                $query->whereIn('id', $ids);
+                if ($ids->isNotEmpty()) {
+                    $query->whereIn('id', $ids);
+                }
             })
             ->latest()
             ->get();
@@ -394,5 +422,28 @@ class SubventionController extends Controller
 
         $subventions = Subvention::where('id', $id)->latest()->first();
         return view('admin/print/invoices2', compact('subventions'));
+    }
+
+    private function beneficiaryCategoriesForFilters()
+    {
+        $categories = BeneficiaryCategory::active()
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get(['id', 'name']);
+
+        if ($categories->isNotEmpty()) {
+            return $categories;
+        }
+
+        $usedCategoryIds = User::where('status', 'accepted')
+            ->whereNotNull('beneficiary_category_id')
+            ->distinct()
+            ->pluck('beneficiary_category_id');
+
+        return BeneficiaryCategory::query()
+            ->whereIn('id', $usedCategoryIds)
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get(['id', 'name']);
     }
 }

@@ -90,11 +90,8 @@
         @endif
 
         @php
-            $associationLockerId = \App\Models\DonationType::query()->where('code', \App\Models\DonationType::ASSOCIATION_CODE)->value('id');
             $associationMenuOpen = request()->routeIs('association-expenses.*')
-                || request()->routeIs('association-revenues.*')
-                || (request()->routeIs('lock') && request('locker_type') == $associationLockerId)
-                || (request()->segment(2) === 'lock' && request()->segment(3) == $associationLockerId);
+                || request()->routeIs('association-revenues.*');
         @endphp
         {{--    القروض الحسنة   --}}
 
@@ -221,6 +218,15 @@
         @endif
 
         @if (auth()->check() && auth()->user()->can('lock.index'))
+            <li class="slide">
+                <a class="side-menu__item {{ request()->routeIs('lock') ? 'active' : '' }}" href="{{ route('lock') }}">
+                    <i class="fas fa-wallet" style="margin-left: 10px;"></i>
+                    <span class="side-menu__label"> الخزنة </span>
+                </a>
+            </li>
+        @endif
+
+        @if (auth()->check() && auth()->user()->can('lock.index'))
             <p>
                 <a class="side-menu__item {{ $associationMenuOpen ? 'active' : '' }}"
                     data-toggle="collapse" href="#associationDropdown" role="button"
@@ -232,13 +238,6 @@
             </p>
 
             <ul class="collapse {{ $associationMenuOpen ? 'show' : '' }}" id="associationDropdown">
-                <li>
-                    <a class="dropdown-item-text side-menu__item {{ (request()->routeIs('lock') && request('locker_type') == $associationLockerId) || (request()->segment(2) === 'lock' && request()->segment(3) == $associationLockerId) ? 'active' : '' }}"
-                        href="{{ $associationLockerId ? route('lock', ['lock' => $associationLockerId]) : route('lock') }}">
-                        <i class="fas fa-wallet" style="margin-left: 10px;"></i>
-                        <span class="side-menu__label"> خزنة الجمعية </span>
-                    </a>
-                </li>
                 <li>
                     <a class="dropdown-item-text side-menu__item {{ request()->routeIs('association-expenses.*') ? 'active' : '' }}"
                         href="{{ route('association-expenses.index') }}">

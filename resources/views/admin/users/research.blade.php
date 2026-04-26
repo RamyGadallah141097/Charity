@@ -27,8 +27,8 @@
                             <thead>
                                 <tr class="fw-bolder text-muted bg-light">
                                     <th class="min-w-25px">#</th>
-                                    <th class="min-w-50px">اسم الزوج</th>
-                                    <th class="min-w-50px">اسم الزوجة</th>
+                                    <th class="min-w-50px">اسم المستفيد</th>
+                                    <th class="min-w-50px">اسم الزوج/الزوجة</th>
                                     <th class="min-w-50px">الحالة الاجتماعية</th>
                                     <th class="min-w-50px">الهاتف</th>
                                     <th class="min-w-50px">نوع العمل</th>

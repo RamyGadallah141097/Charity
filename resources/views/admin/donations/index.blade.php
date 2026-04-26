@@ -42,6 +42,7 @@
                                     <th class="min-w-125px">المسؤول</th>
                                     <th class="min-w-125px">شهر التبرع</th>
                                     <th class="min-w-125px">المناسبة</th>
+                                    <th class="min-w-125px">العمليات</th>
                                 </tr>
                             </thead>
                         </table>
@@ -72,6 +73,7 @@
                                     <th class="min-w-125px">المسؤول</th>
                                     <th class="min-w-125px">شهر التبرع</th>
                                     <th class="min-w-125px">المناسبة</th>
+                                    <th class="min-w-125px">العمليات</th>
                                 </tr>
                             </thead>
                         </table>
@@ -184,6 +186,12 @@
             {
                 data: 'occasion_name',
                 name: 'occasion_name'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
             },
         ]
         showData('{{ route('Donations.index', ['category' => 'cash']) }}', columns);

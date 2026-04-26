@@ -84,6 +84,13 @@
                     background: #fbfcff;
                 }
 
+                .beneficiary-picker__filters {
+                    display: grid;
+                    grid-template-columns: minmax(220px, 280px) 1fr auto;
+                    gap: 12px;
+                    align-items: center;
+                }
+
                 .beneficiary-picker__search input {
                     width: 100%;
                     height: 46px;
@@ -92,6 +99,26 @@
                     padding: 0 14px;
                     color: #24335b;
                     outline: none;
+                }
+
+                .beneficiary-picker__search select {
+                    width: 100%;
+                    height: 46px;
+                    border: 1px solid #dbe3f7;
+                    border-radius: 10px;
+                    padding: 0 14px;
+                    color: #24335b;
+                    background: #fff;
+                    outline: none;
+                }
+
+                .beneficiary-picker__select-all {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                    white-space: nowrap;
+                    font-weight: 700;
+                    color: #24335b;
                 }
 
                 .beneficiary-picker__list {
@@ -197,6 +224,10 @@
                     .subvention-actions .btn {
                         width: 100%;
                     }
+
+                    .beneficiary-picker__filters {
+                        grid-template-columns: 1fr;
+                    }
                 }
             </style>
 
@@ -225,10 +256,25 @@
                                 <label class="form-label">المستفيدون المؤهلون</label>
                                 @php
                                     $selectedUserIds = collect(old('user_ids', []))->map(fn ($id) => (string) $id);
+                                    $selectedCategoryId = old('beneficiary_category_filter');
                                 @endphp
                                 <div class="beneficiary-picker" id="beneficiaryPicker">
                                     <div class="beneficiary-picker__search">
-                                        <input type="text" id="beneficiarySearch" placeholder="ابحث عن مستفيد">
+                                        <div class="beneficiary-picker__filters">
+                                            <select id="beneficiaryCategoryFilter" name="beneficiary_category_filter">
+                                                <option value="">كل التصنيفات</option>
+                                                @foreach($beneficiaryCategories as $category)
+                                                    <option value="{{ $category->id }}" {{ (string) $selectedCategoryId === (string) $category->id ? 'selected' : '' }}>
+                                                        {{ $category->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <input type="text" id="beneficiarySearch" placeholder="ابحث عن مستفيد">
+                                            <label class="beneficiary-picker__select-all">
+                                                <input type="checkbox" id="beneficiarySelectAll">
+                                                <span>تحديد الكل</span>
+                                            </label>
+                                        </div>
                                     </div>
                                     <div class="beneficiary-picker__list">
                                         @foreach($users as $user)
@@ -238,6 +284,7 @@
                                             @endphp
                                             <label class="beneficiary-picker__row {{ $isSelected ? 'is-selected' : '' }}"
                                                 data-name="{{ $userName }}"
+                                                data-category-id="{{ $user->beneficiary_category_id }}"
                                                 data-amount="{{ $user->monthly_subvention_amount ?? 0 }}">
                                                 <input type="checkbox"
                                                     class="beneficiary-picker__checkbox"
@@ -311,6 +358,8 @@
             const $beneficiaryRows = $('.beneficiary-picker__row');
             const $beneficiaryCheckboxes = $('.beneficiary-picker__checkbox');
             const $beneficiarySearch = $('#beneficiarySearch');
+            const $beneficiaryCategoryFilter = $('#beneficiaryCategoryFilter');
+            const $beneficiarySelectAll = $('#beneficiarySelectAll');
             const $emptyState = $('#beneficiaryEmptyState');
             const formatAmount = new Intl.NumberFormat('en-US');
 
@@ -331,19 +380,37 @@
                 });
             }
 
-            $beneficiaryCheckboxes.on('change', function() {
-                syncSelectedRows();
-                calculateMonthlyTotal();
-            });
+            function syncSelectAllState() {
+                const $visibleRows = $beneficiaryRows.filter(function() {
+                    return $(this).is(':visible');
+                });
 
-            $beneficiarySearch.on('input', function() {
-                const searchTerm = $(this).val().trim().toLowerCase();
+                if (!$visibleRows.length) {
+                    $beneficiarySelectAll.prop('checked', false).prop('indeterminate', false);
+                    return;
+                }
+
+                const visibleCheckedCount = $visibleRows.find('.beneficiary-picker__checkbox:checked').length;
+                const allVisibleChecked = visibleCheckedCount === $visibleRows.length;
+                const someVisibleChecked = visibleCheckedCount > 0 && !allVisibleChecked;
+
+                $beneficiarySelectAll
+                    .prop('checked', allVisibleChecked)
+                    .prop('indeterminate', someVisibleChecked);
+            }
+
+            function applyBeneficiaryFilters() {
+                const searchTerm = $beneficiarySearch.val().trim().toLowerCase();
+                const categoryId = String($beneficiaryCategoryFilter.val() || '');
                 let visibleRows = 0;
 
                 $beneficiaryRows.each(function() {
                     const $row = $(this);
                     const name = String($row.data('name') || '').toLowerCase();
-                    const shouldShow = !searchTerm || name.includes(searchTerm);
+                    const rowCategoryId = String($row.data('category-id') || '');
+                    const matchesSearch = !searchTerm || name.includes(searchTerm);
+                    const matchesCategory = !categoryId || rowCategoryId === categoryId;
+                    const shouldShow = matchesSearch && matchesCategory;
 
                     $row.toggle(shouldShow);
                     if (shouldShow) {
@@ -352,10 +419,38 @@
                 });
 
                 $emptyState.toggle(visibleRows === 0);
+                syncSelectAllState();
+            }
+
+            $beneficiaryCheckboxes.on('change', function() {
+                syncSelectedRows();
+                calculateMonthlyTotal();
+                syncSelectAllState();
+            });
+
+            $beneficiarySearch.on('input', function() {
+                applyBeneficiaryFilters();
+            });
+
+            $beneficiaryCategoryFilter.on('change', function() {
+                applyBeneficiaryFilters();
+            });
+
+            $beneficiarySelectAll.on('change', function() {
+                const shouldCheck = $(this).is(':checked');
+
+                $beneficiaryRows.filter(':visible').each(function() {
+                    $(this).find('.beneficiary-picker__checkbox').prop('checked', shouldCheck);
+                });
+
+                syncSelectedRows();
+                calculateMonthlyTotal();
+                syncSelectAllState();
             });
 
             syncSelectedRows();
             calculateMonthlyTotal();
+            applyBeneficiaryFilters();
         });
     </script>
 @endsection

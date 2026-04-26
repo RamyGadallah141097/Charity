@@ -33,11 +33,12 @@ class StoreUser extends FormRequest
                 'max:255',
                 Rule::unique('users', 'beneficiary_code')->ignore($userId),
             ],
-            'husband_name'          => 'nullable',
+            'husband_name'          => 'required|string',
             'wife_name'             => 'nullable',
             'husband_national_id'   => [
-                'nullable',
+                'required',
                 'numeric',
+                'digits:14',
                 Rule::unique('users', 'husband_national_id')->ignore($userId),
             ],
             'wife_national_id'      => [
@@ -114,13 +115,12 @@ class StoreUser extends FormRequest
     public function messages()
     {
         return [
-            'husband_name.required'     => 'يرجي ادخال اسم الزوج',
-            'wife_name.required'        => 'يرجي ادخال اسم الزوجة',
+            'husband_name.required'     => 'يرجى ادخال اسم المستفيد',
             'beneficiary_code.unique' => 'كود المستفيد موجود بالفعل',
-            'husband_national_id.required' => 'يرجي ادخال الرقم القومى للزوج',
-            'husband_national_id.numeric' => 'الرقم القومى للزوج يجب أن يكون رقمًا',
-            'husband_national_id.digits' => 'الرقم القومى للزوج يجب أن يتكون من 14 رقمًا',
-            'husband_national_id.unique' => 'الرقم القومى للزوج موجود بالفعل',
+            'husband_national_id.required' => 'يرجى ادخال الرقم القومي للمستفيد',
+            'husband_national_id.numeric' => 'الرقم القومي للمستفيد يجب أن يكون رقمًا',
+            'husband_national_id.digits' => 'الرقم القومي للمستفيد يجب أن يتكون من 14 رقمًا',
+            'husband_national_id.unique' => 'الرقم القومي للمستفيد موجود بالفعل',
             'wife_national_id.required' => 'يرجي ادخال الرقم القومى للزوجة',
             'wife_national_id.numeric' => 'الرقم القومى للزوجة يجب أن يكون رقمًا',
             'wife_national_id.digits' => 'الرقم القومى للزوجة يجب أن يتكون من 14 رقمًا',

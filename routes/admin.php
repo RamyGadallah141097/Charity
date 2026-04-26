@@ -131,6 +131,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('person-loans/{id}', 'loansController@personLoans')->name('person.loans');
     Route::get('loans/{id}', 'loansController@checkout')->name('loan.checkout');
     Route::post('loans/pay/{id}', 'loansController@payLoan')->name('loan.pay');
+    Route::post('loans/delete', 'loansController@delete')->name('delete_loans');
     Route::get("loan/print", "loansController@printLoan")->name("printLoan");
 
     //الزكاة والصدقات
@@ -148,10 +149,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('SubventionsLoans/index', 'SubventionsLoansController@index')->name('SubventionsLoans.index');
     Route::get('SubventionsLoans/create', 'SubventionsLoansController@create')->name('SubventionsLoans.create');
     Route::post('SubventionsLoans/store', 'SubventionsLoansController@store')->name('SubventionsLoans.store');
+    Route::post('SubventionsLoans/delete', 'SubventionsLoansController@delete')->name('SubventionsLoans.delete');
+    Route::get('SubventionsLoans/print-selected', 'SubventionsLoansController@showSubventions')->name('SubventionsLoans.print-selected');
     Route::get('SubventionsLoans/{subvention}/print-receipt', 'SubventionsLoansController@printReceipt')->name('SubventionsLoans.print-receipt');
     Route::get('in-kind-disbursements', [InKindDisbursementController::class, 'index'])->name('in-kind-disbursements.index');
     Route::get('in-kind-disbursements/create', [InKindDisbursementController::class, 'create'])->name('in-kind-disbursements.create');
-    Route::post('in-kind-disbursements', [InKindDisbursementController::class, 'store'])->name('in-kind-disbursements.store');
+    Route::post('in-kind-disbursements/store', [InKindDisbursementController::class, 'store'])->name('in-kind-disbursements.store');
+    Route::post('in-kind-disbursements/delete', [InKindDisbursementController::class, 'delete'])->name('in-kind-disbursements.delete');
     #### Safer ####
 
     #### Subventions ####
