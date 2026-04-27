@@ -36,14 +36,25 @@ class SubventionsLoansController extends Controller
                     </div>';
                 })
                 ->addColumn('action', function ($data) {
-                    return '<div class="d-flex" style="gap: 5px;">
-                        <a href="' . route('SubventionsLoans.print-receipt', $data->id) . '" target="_blank" class="btn btn-sm btn-success-light" title="طباعة">
-                            <i class="fas fa-print"></i>
-                        </a>
-                        <button class="btn btn-sm btn-danger-light" data-toggle="modal" data-target="#delete_modal" data-id="' . $data->id . '" data-title="هذه الإعانة الفردية" title="حذف">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>';
+                    $buttons = [];
+
+                    if (auth()->guard('admin')->user()->can('SubventionsLoans.index')) {
+                        $buttons[] = '
+                            <a href="' . route('SubventionsLoans.print-receipt', $data->id) . '" target="_blank" class="btn btn-sm btn-success-light" title="طباعة">
+                                <i class="fas fa-print"></i>
+                            </a>
+                        ';
+                    }
+
+                    if (auth()->guard('admin')->user()->can('SubventionsLoans.delete')) {
+                        $buttons[] = '
+                            <button class="btn btn-sm btn-danger-light" data-toggle="modal" data-target="#delete_modal" data-id="' . $data->id . '" data-title="هذه الإعانة الفردية" title="حذف">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        ';
+                    }
+
+                    return '<div class="d-flex" style="gap: 5px;">' . implode('', $buttons) . '</div>';
                 })
                 ->addColumn('beneficiary_code', function ($data) {
                     return $data->user->beneficiary_code ?? '-';

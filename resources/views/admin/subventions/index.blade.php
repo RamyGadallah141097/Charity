@@ -86,16 +86,20 @@
                     <h3 class="card-title">تخصيص الاعانات ل قائمة المقبولين</h3>
 
                     <div class="">
-                        <a href="{{ route('showSubventions') }}" id="print-selected-subventions" title="طباعة" class="btn btn-success btn-icon text-white">
-                            طباعة
-                            <i class="fa fa-print"></i>
-                        </a>
+                        @if (auth()->user()->can('showSubventions'))
+                            <a href="{{ route('showSubventions') }}" id="print-selected-subventions" title="طباعة" class="btn btn-success btn-icon text-white">
+                                طباعة
+                                <i class="fa fa-print"></i>
+                            </a>
+                        @endif
 
-                        <a href="{{ route('subventions.create') }}" class="btn btn-secondary btn-icon text-white">
-                            <span>
-                                <i class="fe fe-plus"></i>
-                            </span> اضافة جديد
-                        </a>
+                        @if (auth()->user()->can('subventions.create'))
+                            <a href="{{ route('subventions.create') }}" class="btn btn-secondary btn-icon text-white">
+                                <span>
+                                    <i class="fe fe-plus"></i>
+                                </span> اضافة جديد
+                            </a>
+                        @endif
                     </div>
                 </div>
 

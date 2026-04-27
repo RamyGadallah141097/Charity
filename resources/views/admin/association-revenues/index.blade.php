@@ -12,11 +12,13 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">إيرادات الجمعية</h3>
-                    <div class="">
-                        <button class="btn btn-secondary btn-icon text-white addBtn">
-                            <span><i class="fe fe-plus"></i></span> إضافة إيراد
-                        </button>
-                    </div>
+                    @if (auth()->user()->can('association.revenues.create'))
+                        <div class="">
+                            <button class="btn btn-secondary btn-icon text-white addBtn">
+                                <span><i class="fe fe-plus"></i></span> إضافة إيراد
+                            </button>
+                        </div>
+                    @endif
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

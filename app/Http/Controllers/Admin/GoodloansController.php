@@ -37,11 +37,15 @@ class GoodloansController extends Controller
                         'created_at' => optional($donationsByDonor->first()->created_at)->format('d-m-y'),
                     ];
                 } else {
+                    $operations = auth()->guard('admin')->user()->can('goodLoans.index')
+                        ? '<button class="btn btn-primary view-donations" data-total="'.$donationsByDonor->sum('donation_amount'). ' " data-donor="' . $donationsByDonor->first()->donor_id . '">  <i class="fa fa-eye"></i> </button>'
+                        : '-';
+
                     return [
                         'id' => $donationsByDonor->first()->donor_id,
                         'donor_name' => $donationsByDonor->first()->donor->name ?? 'غير معروف',
                         'donation_amount' => $donationsByDonor->sum('donation_amount'),
-                        "operations" => '<button class="btn btn-primary view-donations" data-total="'.$donationsByDonor->sum('donation_amount'). ' " data-donor="' . $donationsByDonor->first()->donor_id . '">  <i class="fa fa-eye"></i> </button>',
+                        "operations" => $operations,
                         'created_at' => optional($donationsByDonor->first()->created_at)->format('d-m-y') ?? '-',
                     ];
                 }

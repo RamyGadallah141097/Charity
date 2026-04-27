@@ -30,23 +30,38 @@ class DonorController extends Controller
 
             return DataTables::of($donors)
                 ->addColumn('action', function ($donors) {
-                    $editButton = '
-<div class="d-flex justify-content-center align-items-center gap-2">
-    <button type="button" data-id="' . $donors->id . '"
-        class="btn btn-pill btn-info-light editBtn"
-        title="تعديل">
-        <i class="fa fa-edit"></i>
-    </button>
+                    $buttons = [];
 
-    <a href="' . route('donorDetails', $donors->id) . '"
-       class="btn btn-pill btn-success-light"
-       title="عرض التفاصيل">
-        <i class="fas fa-eye"></i>
-    </a>
-</div>
-';
+                    if (auth()->guard('admin')->user()->can('donors.edit')) {
+                        $buttons[] = '
+                            <button type="button" data-id="' . $donors->id . '"
+                                class="btn btn-pill btn-info-light editBtn"
+                                title="تعديل">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                        ';
+                    }
 
-                    return '<div class="d-flex">' . $editButton . '</div>';
+                    if (auth()->guard('admin')->user()->can('donors.index')) {
+                        $buttons[] = '
+                            <a href="' . route('donorDetails', $donors->id) . '"
+                               class="btn btn-pill btn-success-light"
+                               title="عرض التفاصيل">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        ';
+                    }
+
+                    if (auth()->guard('admin')->user()->can('delete_donors')) {
+                        $buttons[] = '
+                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                                    data-id="' . $donors->id . '" data-title="' . e($donors->name) . '">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        ';
+                    }
+
+                    return '<div class="d-flex justify-content-center align-items-center gap-2">' . implode('', $buttons) . '</div>';
                 })
                 ->addColumn('phone_display', function ($donors) {
                     return collect([$donors->phone, $donors->phone_second, $donors->relative_phone])->filter()->implode(' / ') ?: 'غير متوفر';

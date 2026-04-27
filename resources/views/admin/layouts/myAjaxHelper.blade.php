@@ -161,7 +161,16 @@
             $('#modal-body').html(loader)
             $('#editOrCreate').modal('show')
             setTimeout(function() {
-                $('#modal-body').load(routeOfShow)
+                $('#modal-body').load(routeOfShow, function(response, status, xhr) {
+                    if (status === 'error') {
+                        $('#editOrCreate').modal('hide');
+                        if (xhr && xhr.status === 403) {
+                            toastr.error('ليس لديك صلاحية للوصول إلى هذا الجزء.');
+                        } else {
+                            toastr.error('تعذر تحميل البيانات.');
+                        }
+                    }
+                })
             }, 250)
         });
     }
@@ -222,7 +231,16 @@
             $('#editOrCreate').modal('show')
 
             setTimeout(function() {
-                $('#modal-body').load(url)
+                $('#modal-body').load(url, function(response, status, xhr) {
+                    if (status === 'error') {
+                        $('#editOrCreate').modal('hide');
+                        if (xhr && xhr.status === 403) {
+                            toastr.error('ليس لديك صلاحية للوصول إلى هذا الجزء.');
+                        } else {
+                            toastr.error('تعذر تحميل البيانات.');
+                        }
+                    }
+                })
             }, 500)
         })
     }

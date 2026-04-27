@@ -56,6 +56,10 @@ class InKindDisbursementController extends Controller
                     return $subvention->created_at ? $subvention->created_at->format('d/m/Y') : '-';
                 })
                 ->addColumn('action', function ($subvention) {
+                    if (!auth()->guard('admin')->user()->can('in-kind-disbursements.delete')) {
+                        return '';
+                    }
+
                     return '
                         <button class="btn btn-sm btn-danger-light" data-toggle="modal" data-target="#delete_modal" data-id="' . $subvention->id . '" data-title="هذا الصرف العيني" title="حذف">
                             <i class="fe fe-trash"></i>

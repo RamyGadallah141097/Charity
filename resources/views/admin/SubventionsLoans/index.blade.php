@@ -71,15 +71,19 @@
                 <div class="card-header">
                     <h3 class="card-title">الإعانات الفردية</h3>
                     <div class="">
-                        <a href="{{ route('SubventionsLoans.print-selected') }}" id="print-selected-subventions-loans" title="طباعة" class="btn btn-success btn-icon text-white">
-                            طباعة
-                            <i class="fa fa-print"></i>
-                        </a>
-                        <a href="{{ route('SubventionsLoans.create') }}" class="btn btn-secondary btn-icon text-white">
-                            <span>
-                                <i class="fe fe-plus"></i>
-                            </span> اضافة جديد
-                        </a>
+                        @if (auth()->user()->can('SubventionsLoans.index'))
+                            <a href="{{ route('SubventionsLoans.print-selected') }}" id="print-selected-subventions-loans" title="طباعة" class="btn btn-success btn-icon text-white">
+                                طباعة
+                                <i class="fa fa-print"></i>
+                            </a>
+                        @endif
+                        @if (auth()->user()->can('SubventionsLoans.create'))
+                            <a href="{{ route('SubventionsLoans.create') }}" class="btn btn-secondary btn-icon text-white">
+                                <span>
+                                    <i class="fe fe-plus"></i>
+                                </span> اضافة جديد
+                            </a>
+                        @endif
                     </div>
                 </div>
                 <div class="card-body">

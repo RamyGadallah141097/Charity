@@ -83,14 +83,25 @@ class DonationController extends Controller
                     return $donation->occasion ?: '--';
                 })
                 ->addColumn('action', function ($donation) {
-                    return '
-                        <button type="button" data-id="' . $donation->id . '" class="btn btn-sm btn-info-light editBtn" title="تعديل">
-                            <i class="fe fe-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-danger-light" data-toggle="modal" data-target="#delete_modal" data-id="' . $donation->id . '" data-title="هذا التبرع" title="حذف">
-                            <i class="fe fe-trash"></i>
-                        </button>
-                    ';
+                    $buttons = [];
+
+                    if (auth()->guard('admin')->user()->can('Donations.edit')) {
+                        $buttons[] = '
+                            <button type="button" data-id="' . $donation->id . '" class="btn btn-sm btn-info-light editBtn" title="تعديل">
+                                <i class="fe fe-edit"></i>
+                            </button>
+                        ';
+                    }
+
+                    if (auth()->guard('admin')->user()->can('donations_delete')) {
+                        $buttons[] = '
+                            <button class="btn btn-sm btn-danger-light" data-toggle="modal" data-target="#delete_modal" data-id="' . $donation->id . '" data-title="هذا التبرع" title="حذف">
+                                <i class="fe fe-trash"></i>
+                            </button>
+                        ';
+                    }
+
+                    return implode('', $buttons);
                 })
                 ->escapeColumns([])
                 ->make(true);

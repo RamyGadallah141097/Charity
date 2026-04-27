@@ -17,11 +17,13 @@
                         <h3 class="card-title mb-1">{{ $lookup['title'] }}</h3>
                         <p class="mb-0 text-muted">يمكن استخدام هذه القيم كمرجع داخل باقي الوحدات.</p>
                     </div>
-                    <div class="">
-                        <button class="btn btn-secondary btn-icon text-white addBtn">
-                            <span><i class="fe fe-plus"></i></span> إضافة جديد
-                        </button>
-                    </div>
+                    @if (auth()->user()->can('references.create'))
+                        <div class="">
+                            <button class="btn btn-secondary btn-icon text-white addBtn">
+                                <span><i class="fe fe-plus"></i></span> إضافة جديد
+                            </button>
+                        </div>
+                    @endif
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

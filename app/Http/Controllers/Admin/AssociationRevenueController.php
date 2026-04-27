@@ -31,10 +31,17 @@ class AssociationRevenueController extends Controller
                     return optional($revenue->transaction_date)->format('Y-m-d') ?: '-';
                 })
                 ->addColumn('action', function ($revenue) {
-                    return '<div class="d-flex">'
-                        . '<button type="button" data-id="' . $revenue->id . '" class="btn btn-pill btn-info-light editBtn"><i class="fa fa-edit"></i></button>'
-                        . '<button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal" data-id="' . $revenue->id . '" data-title="' . e(optional($revenue->revenueType)->name ?? 'إيراد') . '"><i class="fas fa-trash"></i></button>'
-                        . '</div>';
+                    $buttons = [];
+
+                    if (auth()->guard('admin')->user()->can('association.revenues.edit')) {
+                        $buttons[] = '<button type="button" data-id="' . $revenue->id . '" class="btn btn-pill btn-info-light editBtn"><i class="fa fa-edit"></i></button>';
+                    }
+
+                    if (auth()->guard('admin')->user()->can('association.revenues.delete')) {
+                        $buttons[] = '<button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal" data-id="' . $revenue->id . '" data-title="' . e(optional($revenue->revenueType)->name ?? 'إيراد') . '"><i class="fas fa-trash"></i></button>';
+                    }
+
+                    return '<div class="d-flex">' . implode('', $buttons) . '</div>';
                 })
                 ->escapeColumns([])
                 ->make(true);

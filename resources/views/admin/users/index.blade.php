@@ -82,15 +82,21 @@
                             <i class="fe fe-list mr-2"></i> إدارة المستفيدين
                         </h3>
                         <div class="d-flex align-items-center" style="gap: 10px;">
-                            <button type="button" class="btn btn-outline-success btn-pill" data-toggle="modal" data-target="#importExcelModal">
-                                <i class="fe fe-upload mr-1"></i> استيراد Excel
-                            </button>
-                            <a href="{{ route('users.export.excel') }}" class="btn btn-outline-info btn-pill">
-                                <i class="fe fe-download mr-1"></i> تصدير Excel
-                            </a>
-                            <a href="{{ route('users.create') }}" class="btn btn-primary btn-pill">
-                                <i class="fe fe-plus mr-1"></i> إضافة مستفيد جديد
-                            </a>
+                            @if (auth()->user()->can('users.create'))
+                                <button type="button" class="btn btn-outline-success btn-pill" data-toggle="modal" data-target="#importExcelModal">
+                                    <i class="fe fe-upload mr-1"></i> استيراد Excel
+                                </button>
+                            @endif
+                            @if (auth()->user()->can('users.index'))
+                                <a href="{{ route('users.export.excel') }}" class="btn btn-outline-info btn-pill">
+                                    <i class="fe fe-download mr-1"></i> تصدير Excel
+                                </a>
+                            @endif
+                            @if (auth()->user()->can('users.create'))
+                                <a href="{{ route('users.create') }}" class="btn btn-primary btn-pill">
+                                    <i class="fe fe-plus mr-1"></i> إضافة مستفيد جديد
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>

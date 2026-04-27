@@ -12,6 +12,189 @@ use Spatie\Permission\Models\Role;
 
 class RulesController extends Controller
 {
+    private function permissionGroupsOrder(): array
+    {
+        return [
+            'admins' => 'المشرفين',
+            'users' => 'المستفيدين',
+            'research' => 'الأبحاث الاجتماعية',
+            'case-research' => 'الحالات قيد البحث',
+            'case-research-researchers' => 'الباحثون',
+            'case-research-workload' => 'عبء العمل',
+            'donors' => 'المتبرعين',
+            'Donations' => 'التبرعات',
+            'goodLoans' => 'القروض الحسنة',
+            'borrower' => 'المقترضين',
+            'subventions' => 'الإعانات الشهرية',
+            'SubventionsLoans' => 'الإعانات الفردية',
+            'in-kind-disbursements' => 'صرف التبرعات العينية',
+            'zakat' => 'الزكاة',
+            'lock' => 'الخزنة',
+            'association-expenses' => 'مصروفات الجمعية',
+            'association-revenues' => 'إيرادات الجمعية',
+            'setting' => 'الإعدادات',
+            'references' => 'التعريفات العامة',
+            'roles' => 'الصلاحيات',
+            'tasks' => 'الأفكار',
+            'assets' => 'الأصول',
+            'subscription' => 'الاشتراكات',
+            'auth' => 'المصادقة',
+            'other' => 'صلاحيات أخرى',
+        ];
+    }
+
+    private function permissionLabel(string $permission): string
+    {
+        if (str_ends_with($permission, '.store')) {
+            $permission = str_replace('.store', '.create', $permission);
+        }
+
+        if (str_ends_with($permission, '.update')) {
+            $permission = str_replace('.update', '.edit', $permission);
+        }
+
+        if (str_ends_with($permission, '.destroy')) {
+            $permission = preg_replace('/\.destroy$/', '.delete', $permission);
+        }
+
+        $translated = __('permissions.' . $permission);
+
+        if ($translated !== 'permissions.' . $permission) {
+            return $translated;
+        }
+
+        return ucwords(str_replace(['.', '-'], ' ', $permission));
+    }
+
+    private function permissionGroupKey(string $permission): string
+    {
+        if ($permission === 'delete_admin') {
+            return 'admins';
+        }
+
+        if ($permission === 'delete_users') {
+            return 'users';
+        }
+
+        if ($permission === 'delete_donors') {
+            return 'donors';
+        }
+
+        if ($permission === 'delete_task') {
+            return 'tasks';
+        }
+
+        if ($permission === 'delete_assets') {
+            return 'assets';
+        }
+
+        if ($permission === 'delete_borrower') {
+            return 'borrower';
+        }
+
+        if ($permission === 'delete_goodLoans') {
+            return 'goodLoans';
+        }
+
+        if ($permission === 'delete_zakat') {
+            return 'zakat';
+        }
+
+        if ($permission === 'delete_subventions') {
+            return 'subventions';
+        }
+
+        if ($permission === 'Role_delete') {
+            return 'roles';
+        }
+
+        if ($permission === 'donations_delete') {
+            return 'Donations';
+        }
+
+        if (str_starts_with($permission, 'case-research.researchers')) {
+            return 'case-research-researchers';
+        }
+
+        if (str_starts_with($permission, 'case-research.workload')) {
+            return 'case-research-workload';
+        }
+
+        if (str_starts_with($permission, 'case-research.')) {
+            return 'case-research';
+        }
+
+        if (str_starts_with($permission, 'association.expenses')) {
+            return 'association-expenses';
+        }
+
+        if (str_starts_with($permission, 'association.revenues')) {
+            return 'association-revenues';
+        }
+
+        if (str_starts_with($permission, 'admin.')) {
+            return 'auth';
+        }
+
+        if (str_starts_with($permission, 'research.')) {
+            return 'research';
+        }
+
+        if (str_starts_with($permission, 'references.')) {
+            return 'references';
+        }
+
+        if (str_starts_with($permission, 'in-kind-disbursements.')) {
+            return 'in-kind-disbursements';
+        }
+
+        if (str_starts_with($permission, 'SubventionsLoans.')) {
+            return 'SubventionsLoans';
+        }
+
+        if (str_contains($permission, '.')) {
+            return explode('.', $permission)[0];
+        }
+
+        return 'other';
+    }
+
+    private function groupedPermissions()
+    {
+        $groupLabels = $this->permissionGroupsOrder();
+
+        $permissions = Permission::all()->map(function ($permission) {
+            $permission->label = $this->permissionLabel($permission->name);
+            $permission->group_key = $this->permissionGroupKey($permission->name);
+            return $permission;
+        })->filter(function ($permission) {
+            $name = $permission->name;
+
+            if (str_ends_with($name, '.store') || str_ends_with($name, '.update') || str_ends_with($name, '.destroy')) {
+                return false;
+            }
+
+            if (in_array($name, ['updateUserStatus', 'userDetails', 'DonationDetails', 'get_donor_phone', 'search.donor', 'showSubventions', 'settingUpdate', 'references.store', 'references.update', 'references.toggle-status', 'social_research', 'research.receive', 'admin.login', 'admin.logout', 'safer.loans', 'safer.InKindDonations'], true)) {
+                return false;
+            }
+
+            return true;
+        });
+
+        $grouped = $permissions->groupBy('group_key');
+
+        return collect($groupLabels)
+            ->map(function ($label, $key) use ($grouped) {
+                return [
+                    'key' => $key,
+                    'label' => $label,
+                    'permissions' => $grouped->get($key, collect())->sortBy('label')->values(),
+                ];
+            })
+            ->filter(fn ($group) => $group['permissions']->isNotEmpty())
+            ->values();
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -29,7 +212,7 @@ class RulesController extends Controller
                 ->addColumn("permissions", function ($role) {
                     $permissions = $role->permissions
                         ->pluck('name')
-                        ->map(fn($permission) => __('permissions.' . $permission))
+                        ->map(fn($permission) => $this->permissionLabel($permission))
                         ->implode(" - ");
 
 
@@ -50,19 +233,29 @@ class RulesController extends Controller
                         '</span>';
                 })
                 ->addColumn('action', function ($role) {
-                    return '
-                        <button type="button" data-id="' . e($role->id) . '"
-                                class="btn btn-pill btn-info-light editBtn">
-                            <i class="fa fa-edit"></i>
-                        </button>
+                    $buttons = '';
 
-                        <button class="btn btn-pill btn-danger-light"
-                                data-toggle="modal" data-target="#delete_modal"
-                                data-id="' . e($role->id) . '"
-                                data-title="' . e($role->name) . '">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    ';
+                    if (auth()->guard('admin')->user()->can('roles.edit')) {
+                        $buttons .= '
+                            <button type="button" data-id="' . e($role->id) . '"
+                                    class="btn btn-pill btn-info-light editBtn">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                        ';
+                    }
+
+                    if (auth()->guard('admin')->user()->can('Role_delete')) {
+                        $buttons .= '
+                            <button class="btn btn-pill btn-danger-light"
+                                    data-toggle="modal" data-target="#delete_modal"
+                                    data-id="' . e($role->id) . '"
+                                    data-title="' . e($role->name) . '">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        ';
+                    }
+
+                    return $buttons ?: '-';
                 })
 
 
@@ -81,8 +274,8 @@ class RulesController extends Controller
      */
     public function create()
     {
-        $permissions = Permission::all();
-        return view('admin/Roles/parts/create' , ["permissions" =>$permissions]) ;
+        $permissionGroups = $this->groupedPermissions();
+        return view('admin/Roles/parts/create' , ["permissionGroups" =>$permissionGroups]) ;
     }
 
     /**
@@ -138,9 +331,8 @@ class RulesController extends Controller
      */
     public function edit(Role $role)
     {
-//        $role = Role::with("permission")->where("id" , $id)->find($id);
-        $permissions = Permission::all();
-        return view('admin/Roles/parts/edit' , ["permissions" =>$permissions , "role" =>$role]) ;
+        $permissionGroups = $this->groupedPermissions();
+        return view('admin/Roles/parts/edit' , ["permissionGroups" =>$permissionGroups , "role" =>$role]) ;
     }
 
     /**

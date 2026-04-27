@@ -31,10 +31,17 @@ class AssociationExpenseController extends Controller
                     return optional($expense->transaction_date)->format('Y-m-d') ?: '-';
                 })
                 ->addColumn('action', function ($expense) {
-                    return '<div class="d-flex">'
-                        . '<button type="button" data-id="' . $expense->id . '" class="btn btn-pill btn-info-light editBtn"><i class="fa fa-edit"></i></button>'
-                        . '<button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal" data-id="' . $expense->id . '" data-title="' . e(optional($expense->expenseType)->name ?? 'مصروف') . '"><i class="fas fa-trash"></i></button>'
-                        . '</div>';
+                    $buttons = [];
+
+                    if (auth()->guard('admin')->user()->can('association.expenses.edit')) {
+                        $buttons[] = '<button type="button" data-id="' . $expense->id . '" class="btn btn-pill btn-info-light editBtn"><i class="fa fa-edit"></i></button>';
+                    }
+
+                    if (auth()->guard('admin')->user()->can('association.expenses.delete')) {
+                        $buttons[] = '<button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal" data-id="' . $expense->id . '" data-title="' . e(optional($expense->expenseType)->name ?? 'مصروف') . '"><i class="fas fa-trash"></i></button>';
+                    }
+
+                    return '<div class="d-flex">' . implode('', $buttons) . '</div>';
                 })
                 ->escapeColumns([])
                 ->make(true);
