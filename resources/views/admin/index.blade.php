@@ -84,19 +84,28 @@
     }
 
     /* Stats Cards */
+    .stats-row > [class*='col-'] {
+        display: flex;
+    }
     .stat-card {
-        background: white;
-        border-radius: 20px;
-        padding: 25px;
+        --stat-accent: #3498db;
+        background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+        border-radius: 24px;
+        padding: 22px 22px 20px;
         position: relative;
         overflow: hidden;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.04);
-        border: none;
+        box-shadow: 0 14px 35px rgba(31, 45, 61, 0.08);
+        border: 1px solid rgba(126, 144, 168, 0.16);
         margin-bottom: 25px;
-        transition: transform 0.3s;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        min-height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
     }
     .stat-card:hover {
-        transform: translateY(-3px);
+        transform: translateY(-6px);
+        box-shadow: 0 20px 45px rgba(31, 45, 61, 0.14);
     }
     .stat-card::before {
         content: '';
@@ -104,38 +113,105 @@
         top: 0;
         right: 0;
         width: 100%;
-        height: 4px;
+        height: 5px;
     }
+    .stat-card::after {
+        content: '';
+        position: absolute;
+        left: -40px;
+        bottom: -40px;
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255,255,255,0) 28%, rgba(255,255,255,0.42) 100%);
+        opacity: 0.55;
+        pointer-events: none;
+    }
+    .stat-card.primary { --stat-accent: #3498db; }
+    .stat-card.success { --stat-accent: #2ecc71; }
+    .stat-card.warning { --stat-accent: #f1c40f; }
+    .stat-card.danger { --stat-accent: #e74c3c; }
+    .stat-card.purple { --stat-accent: #9b59b6; }
     .stat-card.primary::before { background: #3498db; }
     .stat-card.success::before { background: #2ecc71; }
     .stat-card.warning::before { background: #f1c40f; }
     .stat-card.danger::before { background: #e74c3c; }
     .stat-card.purple::before { background: #9b59b6; }
 
-    .stat-icon {
-        position: absolute;
-        left: 20px;
-        top: 25px;
-        font-size: 40px;
-        opacity: 0.1;
+    .stat-card-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 18px;
     }
-    .stat-title {
-        color: #7f8c8d;
-        font-size: 0.95rem;
-        font-weight: 600;
-        margin-bottom: 10px;
-    }
-    .stat-value {
-        font-size: 2rem;
-        font-weight: 800;
-        color: #2c3e50;
-        margin-bottom: 5px;
-    }
-    .stat-sub {
-        font-size: 0.85rem;
+    .stat-icon-wrap {
+        width: 54px;
+        height: 54px;
+        flex-shrink: 0;
+        border-radius: 16px;
         display: flex;
         align-items: center;
-        gap: 5px;
+        justify-content: center;
+        background: rgba(52, 152, 219, 0.12);
+        box-shadow: inset 0 0 0 1px rgba(52, 152, 219, 0.08);
+    }
+    .stat-card.primary .stat-icon-wrap { background: rgba(52, 152, 219, 0.12); box-shadow: inset 0 0 0 1px rgba(52, 152, 219, 0.08); }
+    .stat-card.success .stat-icon-wrap { background: rgba(46, 204, 113, 0.12); box-shadow: inset 0 0 0 1px rgba(46, 204, 113, 0.08); }
+    .stat-card.warning .stat-icon-wrap { background: rgba(241, 196, 15, 0.16); box-shadow: inset 0 0 0 1px rgba(241, 196, 15, 0.1); }
+    .stat-card.danger .stat-icon-wrap { background: rgba(231, 76, 60, 0.12); box-shadow: inset 0 0 0 1px rgba(231, 76, 60, 0.08); }
+    .stat-card.purple .stat-icon-wrap { background: rgba(155, 89, 182, 0.12); box-shadow: inset 0 0 0 1px rgba(155, 89, 182, 0.08); }
+    .stat-icon {
+        font-size: 24px;
+        color: var(--stat-accent);
+    }
+    .stat-content {
+        flex: 1;
+        min-width: 0;
+    }
+    .stat-title {
+        color: #5f7086;
+        font-size: 1rem;
+        font-weight: 700;
+        line-height: 1.5;
+        margin-bottom: 0;
+    }
+    .stat-value {
+        font-size: clamp(2rem, 2.5vw, 2.45rem);
+        font-weight: 800;
+        color: #20324a;
+        line-height: 1;
+        margin-bottom: 14px;
+        letter-spacing: -0.02em;
+    }
+    .stat-sub {
+        font-size: 0.95rem;
+        line-height: 1.75;
+        color: #7a8aa0;
+        margin-top: auto;
+        padding-top: 14px;
+        border-top: 1px solid rgba(126, 144, 168, 0.14);
+    }
+    .stat-sub .text-muted {
+        color: inherit !important;
+    }
+
+    @media (max-width: 991.98px) {
+        .stat-card {
+            padding: 20px 18px;
+            border-radius: 20px;
+        }
+    }
+    @media (max-width: 575.98px) {
+        .stat-card-head {
+            align-items: center;
+        }
+        .stat-title {
+            font-size: 0.95rem;
+        }
+        .stat-value {
+            font-size: 1.85rem;
+        }
     }
     .text-success-custom { color: #2ecc71; }
     .text-danger-custom { color: #e74c3c; }
@@ -214,12 +290,18 @@
     </div>
 
     <!-- Key Statistics -->
-    <div class="row">
+    <div class="row stats-row">
         <!-- Total Donors -->
         <div class="col-xl col-lg-6 col-md-6">
             <div class="stat-card primary">
-                <i class="fas fa-hand-holding-heart stat-icon"></i>
-                <div class="stat-title">إجمالي المتبرعين</div>
+                <div class="stat-card-head">
+                    <div class="stat-content">
+                        <div class="stat-title">إجمالي المتبرعين</div>
+                    </div>
+                    <div class="stat-icon-wrap">
+                        <i class="fas fa-hand-holding-heart stat-icon"></i>
+                    </div>
+                </div>
                 <div class="stat-value">{{ number_format($activeDonors) }}</div>
                 <div class="stat-sub">
                     <span class="text-muted">عدد الأشخاص المتبرعين بالجمعية</span>
@@ -229,8 +311,14 @@
         <!-- Monthly Donor Amounts -->
         <div class="col-xl col-lg-6 col-md-6">
             <div class="stat-card purple">
-                <i class="fas fa-calendar-alt stat-icon"></i>
-                <div class="stat-title">إجمالي مبالغ المتبرعين الشهرية</div>
+                <div class="stat-card-head">
+                    <div class="stat-content">
+                        <div class="stat-title">إجمالي مبالغ المتبرعين الشهرية</div>
+                    </div>
+                    <div class="stat-icon-wrap">
+                        <i class="fas fa-calendar-alt stat-icon"></i>
+                    </div>
+                </div>
                 <div class="stat-value">{{ number_format($donationsMonth) }}</div>
                 <div class="stat-sub">
                     <span class="text-muted">إجمالي التبرعات النقدية لهذا الشهر</span>
@@ -240,8 +328,14 @@
         <!-- Total Beneficiaries -->
         <div class="col-xl col-lg-6 col-md-6">
             <div class="stat-card success">
-                <i class="fas fa-users stat-icon"></i>
-                <div class="stat-title">المستفيدين المقبولين</div>
+                <div class="stat-card-head">
+                    <div class="stat-content">
+                        <div class="stat-title">المستفيدين المقبولين</div>
+                    </div>
+                    <div class="stat-icon-wrap">
+                        <i class="fas fa-users stat-icon"></i>
+                    </div>
+                </div>
                 <div class="stat-value">{{ number_format($totalBeneficiaries) }}</div>
                 <div class="stat-sub">
                     <span class="text-muted">إجمالي عدد المستفيدين المعتمدين</span>
@@ -251,8 +345,14 @@
         <!-- Subvention Users -->
         <div class="col-xl col-lg-6 col-md-6">
             <div class="stat-card warning">
-                <i class="fas fa-user-check stat-icon"></i>
-                <div class="stat-title">مستفيدي الإعانات الشهرية</div>
+                <div class="stat-card-head">
+                    <div class="stat-content">
+                        <div class="stat-title">مستفيدي الإعانات الشهرية</div>
+                    </div>
+                    <div class="stat-icon-wrap">
+                        <i class="fas fa-user-check stat-icon"></i>
+                    </div>
+                </div>
                 <div class="stat-value">{{ number_format($totalMonthlySubventionsUsers) }}</div>
                 <div class="stat-sub">
                     <span class="text-muted">إجمالي الأشخاص أصحاب الإعانات الشهرية</span>
@@ -262,8 +362,14 @@
         <!-- Subvention Value -->
         <div class="col-xl col-lg-6 col-md-6">
             <div class="stat-card danger">
-                <i class="fas fa-money-bill-wave stat-icon"></i>
-                <div class="stat-title">قيمة الإعانات الشهرية</div>
+                <div class="stat-card-head">
+                    <div class="stat-content">
+                        <div class="stat-title">قيمة الإعانات الشهرية</div>
+                    </div>
+                    <div class="stat-icon-wrap">
+                        <i class="fas fa-money-bill-wave stat-icon"></i>
+                    </div>
+                </div>
                 <div class="stat-value">{{ number_format($totalMonthlySubventionsValue, 0) }}</div>
                 <div class="stat-sub">
                     <span class="text-muted">إجمالي القيمة النقدية للإعانات الشهرية</span>
@@ -342,7 +448,7 @@
         
         <!-- Donations by Kind (Pie Chart) -->
         <div class="col-xl-4 col-lg-12">
-            <div class="chart-card" style="height: 100%;">
+            <div class="chart-card">
                 <div class="chart-card-header">
                     <h3 class="chart-card-title">توزيع التبرعات (مالية / عينية)</h3>
                 </div>
@@ -353,19 +459,27 @@
 
     <!-- Secondary Charts & Widgets Row -->
     <div class="row">
-        <!-- Beneficiaries Chart -->
-        <div class="col-xl-4 col-lg-12">
+        <!-- Top Beneficiary Categories -->
+        <div class="col-xl-4 col-lg-4 col-md-12">
             <div class="chart-card">
                 <div class="chart-card-header">
-                    <h3 class="chart-card-title">نمو المستفيدين النشطين</h3>
-                    <span class="badge badge-success">+{{ $newBeneficiariesMonth }} هذا الشهر</span>
+                    <h3 class="chart-card-title"><i class="fas fa-users-cog text-success mr-2"></i> أكثر تصنيفات المستفيدين</h3>
                 </div>
-                <div id="beneficiariesChart"></div>
+                <ul class="widget-list">
+                    @forelse($beneficiaryCategoriesCount as $cat)
+                        <li class="widget-list-item">
+                            <span class="widget-list-title">{{ $cat->beneficiaryCategory->name ?? 'غير محدد' }}</span>
+                            <span class="widget-list-value">{{ $cat->total }} مستفيد</span>
+                        </li>
+                    @empty
+                        <li class="text-center text-muted py-4">لا توجد بيانات</li>
+                    @endforelse
+                </ul>
             </div>
         </div>
 
         <!-- Top Donors -->
-        <div class="col-xl-4 col-md-6">
+        <div class="col-xl-4 col-lg-4 col-md-6">
             <div class="chart-card">
                 <div class="chart-card-header">
                     <h3 class="chart-card-title"><i class="fas fa-trophy text-warning mr-2"></i> أعلى 5 متبرعين إفادة</h3>
@@ -384,7 +498,7 @@
         </div>
 
         <!-- Top Donation Categories -->
-        <div class="col-xl-4 col-md-6">
+        <div class="col-xl-4 col-lg-4 col-md-6">
             <div class="chart-card">
                 <div class="chart-card-header">
                     <h3 class="chart-card-title"><i class="fas fa-chart-pie text-primary mr-2"></i> أكثر أصناف التبرعات شيوعاً</h3>
@@ -401,23 +515,18 @@
                 </ul>
             </div>
         </div>
+    </div>
 
-        <!-- Top Beneficiary Categories -->
-        <div class="col-xl-4 col-md-12">
+    <!-- Bottom Charts Row -->
+    <div class="row mt-4">
+        <!-- Beneficiaries Chart -->
+        <div class="col-xl-12 col-lg-12">
             <div class="chart-card">
                 <div class="chart-card-header">
-                    <h3 class="chart-card-title"><i class="fas fa-users-cog text-success mr-2"></i> أكثر تصنيفات المستفيدين</h3>
+                    <h3 class="chart-card-title">نمو المستفيدين النشطين</h3>
+                    <span class="badge badge-success">+{{ $newBeneficiariesMonth }} هذا الشهر</span>
                 </div>
-                <ul class="widget-list">
-                    @forelse($beneficiaryCategoriesCount as $cat)
-                        <li class="widget-list-item">
-                            <span class="widget-list-title">{{ $cat->beneficiaryCategory->name ?? 'غير محدد' }}</span>
-                            <span class="widget-list-value">{{ $cat->total }} مستفيد</span>
-                        </li>
-                    @empty
-                        <li class="text-center text-muted py-4">لا توجد بيانات</li>
-                    @endforelse
-                </ul>
+                <div id="beneficiariesChart"></div>
             </div>
         </div>
     </div>

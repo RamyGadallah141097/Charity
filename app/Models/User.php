@@ -80,7 +80,15 @@ class User extends Authenticatable
         return $this->hasMany(Subvention::class,'user_id');
     }
 
-   
+    public function caseResearchFiles()
+    {
+        return $this->hasMany(CaseResearchFile::class);
+    }
+
+    public function latestCaseResearchFile()
+    {
+        return $this->hasOne(CaseResearchFile::class)->latestOfMany();
+    }
 
 
 }

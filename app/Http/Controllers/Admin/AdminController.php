@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use App\Models\Center;
 use App\Models\Governorate;
+use App\Models\JobTitle;
 use App\Models\Village;
 use App\Traits\PhotoTrait;
 use Illuminate\Http\Request;
@@ -113,6 +114,7 @@ class AdminController extends Controller
         $roles = Role::all();
         return view('admin/admin/parts/create' , [
             "roles" => $roles,
+            'job_titles' => JobTitle::active()->orderBy('name')->get(),
             'governorates' => Governorate::active()->orderBy('name')->get(),
             'centers' => Center::active()->orderBy('name')->get(),
             'villages' => Village::active()->orderBy('name')->get(),
@@ -169,6 +171,7 @@ class AdminController extends Controller
         return view('admin/admin/parts/edit',[
             'admin' => $admin,
             'roles' => $roles,
+            'job_titles' => JobTitle::active()->orderBy('name')->get(),
             'governorates' => Governorate::active()->orderBy('name')->get(),
             'centers' => Center::active()->orderBy('name')->get(),
             'villages' => Village::active()->orderBy('name')->get(),
