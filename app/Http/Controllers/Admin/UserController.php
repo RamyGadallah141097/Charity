@@ -94,6 +94,14 @@ class UserController extends Controller
             return Datatables::of($users)
                 ->addColumn('action', function ($users) {
                     $canDelete = $this->canDeleteUser($users);
+                    $canEdit = auth()->guard('admin')->user()->can('users.edit');
+
+                    $editButton = $canEdit
+                        ? '<a href="' . route("users.edit", $users->id) . '" class="btn btn-sm btn-info-light px-3 py-2" title="تعديل">
+                                <i class="fe fe-edit"></i>
+                            </a>'
+                        : '';
+
                     $deleteButton = $canDelete
                         ? '<button class="btn btn-sm btn-danger-light delete_button px-3 py-2" data-id="' . $users->id . '" data-title="' . e($users->husband_name) . '" title="حذف">
                                 <i class="fe fe-trash"></i>
@@ -105,9 +113,7 @@ class UserController extends Controller
                             <button class="btn btn-sm btn-primary-light detailsBtn px-3 py-2" data-id="' . $users->id . '" title="عرض التفاصيل">
                                 <i class="fe fe-eye"></i>
                             </button>
-                            <a href="' . route("users.edit", $users->id) . '" class="btn btn-sm btn-info-light px-3 py-2" title="تعديل">
-                                <i class="fe fe-edit"></i>
-                            </a>
+                            ' . $editButton . '
                             ' . $deleteButton . '
                         </div>
                     ';

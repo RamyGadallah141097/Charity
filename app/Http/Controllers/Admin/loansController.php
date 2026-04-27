@@ -27,16 +27,27 @@ class loansController extends Controller
 
             return Datatables::of($loans)
                 ->addColumn('action', function ($loans) {
-                    return '
-                        <div class="d-flex" style="gap: 5px;">
+                    $buttons = '';
+
+                    if (auth()->guard('admin')->user()->can('goodLoans.index')) {
+                        $buttons .= '
                             <a href="' . route("person.loans", $loans->id) . '" class="btn btn-sm btn-secondary-light" data-id="' . $loans->id . '">
                                 الاقساط <i class="fas fa-money-check-alt"></i>
                             </a>
+                        ';
+                    }
+
+                    if (auth()->guard('admin')->user()->can('delete_goodLoans')) {
+                        $buttons .= '
                             <button class="btn btn-sm btn-danger-light" data-toggle="modal" data-target="#delete_modal" data-id="' . $loans->id . '" data-title="هذا القرض">
                                 <i class="fe fe-trash"></i>
                             </button>
-                        </div>
-                    ';
+                        ';
+                    }
+
+                    return $buttons
+                        ? '<div class="d-flex" style="gap: 5px;">' . $buttons . '</div>'
+                        : '-';
                 })
                 ->editColumn('borrower_id', function ($loans) {
                     return $loans->borrower ? $loans->borrower->name : "-";

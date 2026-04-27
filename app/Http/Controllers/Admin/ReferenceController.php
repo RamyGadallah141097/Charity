@@ -64,14 +64,24 @@ class ReferenceController extends Controller
                         return '<span class="badge badge-secondary">نوع ثابت</span>';
                     }
 
-                    $editButton = '<button type="button" data-id="' . $row->id . '" class="btn btn-pill btn-info-light editBtn"><i class="fa fa-edit"></i></button>';
-                    $deleteButton = '<button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal" data-id="' . $row->id . '" data-title="' . e($row->name) . '"><i class="fas fa-trash"></i></button>';
+                    $editButton = auth()->guard('admin')->user()->can('references.edit')
+                        ? '<button type="button" data-id="' . $row->id . '" class="btn btn-pill btn-info-light editBtn"><i class="fa fa-edit"></i></button>'
+                        : '';
+                    $deleteButton = auth()->guard('admin')->user()->can('references.delete')
+                        ? '<button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal" data-id="' . $row->id . '" data-title="' . e($row->name) . '"><i class="fas fa-trash"></i></button>'
+                        : '';
 
                     return '<div class="d-flex">' . $editButton . $deleteButton . '</div>';
                 })
                 ->editColumn('is_active', function ($row) use ($type) {
                     if ($this->isProtectedDonationType($type, $row)) {
                         return '<span class="badge badge-success">مفعل</span>';
+                    }
+
+                    if (!auth()->guard('admin')->user()->can('references.edit')) {
+                        return $row->is_active
+                            ? '<span class="badge badge-success">مفعل</span>'
+                            : '<span class="badge badge-secondary">غير مفعل</span>';
                     }
 
                     return '<label class="custom-switch mb-0 reference-status-switch">

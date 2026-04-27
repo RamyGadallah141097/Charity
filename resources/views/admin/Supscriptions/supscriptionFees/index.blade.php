@@ -35,11 +35,13 @@
                     <h3 class="card-title"> مصروفات المشرفين {{ isset($setting) ? $setting->title : '' }}
                     </h3>
                     <div class="">
-                        <button class="btn btn-secondary btn-icon text-white addBtn">
-                            <span>
-                                <i class="fe fe-plus"></i>
-                            </span> اضافة مصروف
-                        </button>
+                        @if (auth()->user()->can('subscription.index'))
+                            <button class="btn btn-secondary btn-icon text-white addBtn">
+                                <span>
+                                    <i class="fe fe-plus"></i>
+                                </span> اضافة مصروف
+                            </button>
+                        @endif
                     </div>
                 </div>
                 <div class="card-body">
@@ -139,7 +141,9 @@
         showData('{{ route('SubscriptionFee.index') }}', columns);
 
         {{-- // Add Using Ajax --}}
+        @if (auth()->user()->can('subscription.index'))
         showAddModal('{{ route('SubscriptionFee.create') }}');
         addScript();
+        @endif
     </script>
 @endsection

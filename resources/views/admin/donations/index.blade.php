@@ -14,14 +14,18 @@
                 <div class="card-header">
                     <h3 class="card-title"> التبرعات المالية الواردة </h3>
                     <div class="">
-                        <a href="{{ route('PrintDonations') }}" class="btn btn-warning">
-                            <i class="fa fa-print"></i> طباعة التبرعات
-                        </a>
-                        <button class="btn btn-secondary btn-icon text-white addBtn">
-                            <span>
-                                <i class="fe fe-plus"></i>
-                            </span> اضافة جديد
-                        </button>
+                        @if (auth()->user()->can('Donations.index'))
+                            <a href="{{ route('PrintDonations') }}" class="btn btn-warning">
+                                <i class="fa fa-print"></i> طباعة التبرعات
+                            </a>
+                        @endif
+                        @if (auth()->user()->can('Donations.create'))
+                            <button class="btn btn-secondary btn-icon text-white addBtn">
+                                <span>
+                                    <i class="fe fe-plus"></i>
+                                </span> اضافة جديد
+                            </button>
+                        @endif
                     </div>
                 </div>
                 <div class="card-body">

@@ -35,11 +35,13 @@
                     <h3 class="card-title">{{ isset($setting) ? $setting->title : '' }}
                     </h3>
                     <div class="">
-                        <button class="btn btn-secondary btn-icon text-white addBtn">
-                            <span>
-                                <i class="fe fe-plus"></i>
-                            </span> اضافة جديد
-                        </button>
+                        @if (auth()->user()->can('roles.create'))
+                            <button class="btn btn-secondary btn-icon text-white addBtn">
+                                <span>
+                                    <i class="fe fe-plus"></i>
+                                </span> اضافة جديد
+                            </button>
+                        @endif
                     </div>
                 </div>
                 <div class="card-body">
@@ -95,7 +97,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="example-Modal3">بيانات المتبرع</h5>
+                        <h5 class="modal-title" id="example-Modal3">بيانات الصلاحية</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -138,12 +140,18 @@
         ]
         showData('{{ route('roles.index') }}', columns);
         // Delete Using Ajax
+        @if (auth()->user()->can('Role_delete'))
         deleteScript('{{ route('Role_delete') }}');
+        @endif
         // Add Using Ajax
+        @if (auth()->user()->can('roles.create'))
         showAddModal('{{ route('roles.create') }}');
         addScript();
+        @endif
         // Add Using Ajax
+        @if (auth()->user()->can('roles.edit'))
         showEditModal('{{ route('roles.edit', ':id') }}');
         editScript();
+        @endif
     </script>
 @endsection

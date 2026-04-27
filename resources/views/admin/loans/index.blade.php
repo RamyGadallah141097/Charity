@@ -18,15 +18,19 @@
                         {{--                            طباعة --}}
                         {{--                            <i class="fa fa-print"></i> --}}
                         {{--                        </button> --}}
-                        <a href="{{ route('printLoan') }}" title="طباعة" class="btn btn-success btn-icon text-white">
-                            طباعة
-                            <i class="fa fa-print"></i>
-                        </a>
-                        <button class="btn btn-secondary btn-icon text-white addBtn">
-                            <span>
-                                <i class="fe fe-plus"></i>
-                            </span> اضافة جديد
-                        </button>
+                        @if (auth()->user()->can('goodLoans.index'))
+                            <a href="{{ route('printLoan') }}" title="طباعة" class="btn btn-success btn-icon text-white">
+                                طباعة
+                                <i class="fa fa-print"></i>
+                            </a>
+                        @endif
+                        @if (auth()->user()->can('goodLoans.create'))
+                            <button class="btn btn-secondary btn-icon text-white addBtn">
+                                <span>
+                                    <i class="fe fe-plus"></i>
+                                </span> اضافة جديد
+                            </button>
+                        @endif
                     </div>
                 </div>
                 <div class="card-body">
@@ -139,11 +143,13 @@
             },
         ]
         showData('{{ route('index.Loans') }}', columns);
+        @if (auth()->user()->can('delete_goodLoans'))
         deleteScript('{{ route('delete_loans') }}');
+        @endif
+        @if (auth()->user()->can('goodLoans.create'))
         showAddModal('{{ route('create.Loans') }}');
         addScript();
-        showEditModal('{{ route('Donations.edit', ':id') }}');
-        editScript();
+        @endif
     </script>
 
     {{--    <script> --}}

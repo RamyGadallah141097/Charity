@@ -15,11 +15,13 @@
                         <h3 class="card-title mb-1">مصروفات الجمعية</h3>
                         <small class="text-muted">رصيد خزنة الجمعية الحالي: {{ number_format($balance, 2) }}</small>
                     </div>
-                    <div class="">
-                        <button class="btn btn-secondary btn-icon text-white addBtn">
-                            <span><i class="fe fe-plus"></i></span> إضافة مصروف
-                        </button>
-                    </div>
+                    @if (auth()->user()->can('association.expenses.create'))
+                        <div class="">
+                            <button class="btn btn-secondary btn-icon text-white addBtn">
+                                <span><i class="fe fe-plus"></i></span> إضافة مصروف
+                            </button>
+                        </div>
+                    @endif
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

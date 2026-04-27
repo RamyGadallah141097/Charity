@@ -21,7 +21,15 @@ class PermissionMiddleware
         $user = Auth::guard('admin')->user(); // Ensure you are checking for admin users
 
         if (!$user || !$user->hasPermissionTo($permission)) {
-            abort(403, 'Unauthorized');
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'message' => 'ليس لديك صلاحية للوصول إلى هذا الجزء.',
+                ], 403);
+            }
+
+            return redirect()
+                ->back()
+                ->with('error', 'ليس لديك صلاحية للوصول إلى هذا الجزء.');
         }
 
         return $next($request);

@@ -70,20 +70,22 @@ class TaskController extends Controller
                     $editButton = '';
                     $deleteButton = '';
 
-                    // التحقق من إذن التعديل
+                    if (auth()->guard('admin')->user()->can('tasks.edit')) {
                         $editButton = '
                             <button type="button" data-id="' . $task->id . '" class="btn btn-pill btn-info-light editBtn">
                                 <i class="fa fa-edit"></i>
                             </button>
                         ';
+                    }
 
-                    // التحقق من إذن الحذف
+                    if (auth()->guard('admin')->user()->can('delete_task')) {
                         $deleteButton = '
                             <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
                                     data-id="' . $task->id . '">
                                 <i class="fas fa-trash"></i>
                             </button>
                         ';
+                    }
 
                     return '<div class="d-flex">' . $editButton . $deleteButton . '</div>';
                 })

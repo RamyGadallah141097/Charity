@@ -61,14 +61,25 @@ class SubventionController extends Controller
                     return $data->type == 'once' ? 'مرة واحدة' : 'إعانة شهرية';
                 })
                 ->addColumn('action', function ($data) {
-                    return '
-                        <button type="button" data-id="' . $data->id . '" class="btn btn-sm btn-info-light editBtn" title="تعديل">
-                            <i class="fe fe-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-danger-light" data-toggle="modal" data-target="#delete_modal" data-id="' . $data->id . '" data-title="هذه الإعانة" title="حذف">
-                            <i class="fe fe-trash"></i>
-                        </button>
-                    ';
+                    $buttons = [];
+
+                    if (auth()->guard('admin')->user()->can('subventions.edit')) {
+                        $buttons[] = '
+                            <button type="button" data-id="' . $data->id . '" class="btn btn-sm btn-info-light editBtn" title="تعديل">
+                                <i class="fe fe-edit"></i>
+                            </button>
+                        ';
+                    }
+
+                    if (auth()->guard('admin')->user()->can('delete_subventions')) {
+                        $buttons[] = '
+                            <button class="btn btn-sm btn-danger-light" data-toggle="modal" data-target="#delete_modal" data-id="' . $data->id . '" data-title="هذه الإعانة" title="حذف">
+                                <i class="fe fe-trash"></i>
+                            </button>
+                        ';
+                    }
+
+                    return implode('', $buttons);
                 })
                 ->escapeColumns([])
                 ->make(true);

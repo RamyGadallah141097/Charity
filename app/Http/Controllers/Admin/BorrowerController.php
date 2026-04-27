@@ -34,24 +34,33 @@ class BorrowerController extends Controller
                     $viewGuarantorsButton = '';
                     $viewMediaButton = '';
 
-                    $editButton = '
-                            <button type="button" data-id="' . $borrower->id . '" class="btn btn-pill btn-info-light editBtn">
-                                <i class="fa fa-edit"></i>
-                            </button>
+                    if (auth()->guard('admin')->user()->can('borrower.edit')) {
+                        $editButton .= '
+                                <button type="button" data-id="' . $borrower->id . '" class="btn btn-pill btn-info-light editBtn">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                            ';
+                    }
+
+                    if (auth()->guard('admin')->user()->can('borrower.index')) {
+                        $editButton .= '
                               <a href="' . route('borrowerDetails', $borrower->id) . '"
                             class="btn btn-pill btn-success-light"
                             title="عرض التفاصيل">
                                 <i class="fas fa-eye"></i>
                             </a>
                         ';
+                    }
 
                     // التحقق من إذن الحذف
-                    $deleteButton = '
-                        <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
-                                data-id="' . $borrower->id . '" data-title="' . e($borrower->name) . '">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    ';
+                    if (auth()->guard('admin')->user()->can('delete_borrower')) {
+                        $deleteButton = '
+                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                                    data-id="' . $borrower->id . '" data-title="' . e($borrower->name) . '">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        ';
+                    }
 
                     $viewGuarantorsButton = '';
 

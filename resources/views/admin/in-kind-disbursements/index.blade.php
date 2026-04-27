@@ -71,9 +71,11 @@
             <div class="card">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h3 class="card-title mb-0">عمليات صرف التبرعات العينية</h3>
-                    <a href="{{ route('in-kind-disbursements.create') }}" class="btn btn-primary">
-                        <i class="fe fe-plus ml-1"></i> صرف تبرع عيني
-                    </a>
+                    @if (auth()->user()->can('in-kind-disbursements.create'))
+                        <a href="{{ route('in-kind-disbursements.create') }}" class="btn btn-primary">
+                            <i class="fe fe-plus ml-1"></i> صرف تبرع عيني
+                        </a>
+                    @endif
                 </div>
                 <div class="card-body">
                     <form class="mb-5" method="GET" action="{{ route('in-kind-disbursements.index') }}">

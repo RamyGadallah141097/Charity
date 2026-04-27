@@ -37,11 +37,13 @@
                         {{ isset($setting) ? $setting->title : '' }}
                     </h3>
                     <div class="">
-                        <button class="btn btn-secondary btn-icon text-white addBtn">
-                            <span>
-                                <i class="fe fe-plus"></i>
-                            </span> اضافة اشتراك
-                        </button>
+                        @if (auth()->user()->can('subscription.index'))
+                            <button class="btn btn-secondary btn-icon text-white addBtn">
+                                <span>
+                                    <i class="fe fe-plus"></i>
+                                </span> اضافة اشتراك
+                            </button>
+                        @endif
                     </div>
                 </div>
                 <div class="card-body">
@@ -146,7 +148,9 @@
         showData('{{ route('adminSubscription.index') }}', columns);
 
         {{-- // Add Using Ajax --}}
+        @if (auth()->user()->can('subscription.index'))
         showAddModal('{{ route('adminSubscription.create') }}');
         addScript();
+        @endif
     </script>
 @endsection

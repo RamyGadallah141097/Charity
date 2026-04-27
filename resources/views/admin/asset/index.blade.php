@@ -14,13 +14,15 @@
                 <div class="card-header">
                     <h3 class="card-title"> {{ isset($setting) ? $setting->title : '' }}
                     </h3>
-                    <div class="">
-                        <button class="btn btn-secondary btn-icon text-white addBtn">
-                            <span>
-                                <i class="fe fe-plus"></i>
-                            </span> اضافة جديد
-                        </button>
-                    </div>
+                    @if (auth()->user()->can('assets.create'))
+                        <div class="">
+                            <button class="btn btn-secondary btn-icon text-white addBtn">
+                                <span>
+                                    <i class="fe fe-plus"></i>
+                                </span> اضافة جديد
+                            </button>
+                        </div>
+                    @endif
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

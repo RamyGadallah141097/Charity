@@ -107,15 +107,21 @@
             <p class="text-muted mb-0">كل المستفيدين المضاف لهم ملف بحث مع حالة التنفيذ والزيارات والنتيجة النهائية.</p>
         </div>
         <div class="d-flex flex-wrap" style="gap: 10px;">
-            <a href="{{ route('case-research.create') }}" class="btn btn-primary btn-pill">
-                <i class="fe fe-plus ml-1"></i> إضافة ملف بحث
-            </a>
-            <a href="{{ route('case-research.researchers') }}" class="btn btn-outline-info btn-pill">
-                <i class="fe fe-users ml-1"></i> الباحثون
-            </a>
-            <a href="{{ route('case-research.workload') }}" class="btn btn-outline-dark btn-pill">
-                <i class="fe fe-bar-chart-2 ml-1"></i> عبء العمل
-            </a>
+            @can('case-research.create')
+                <a href="{{ route('case-research.create') }}" class="btn btn-primary btn-pill">
+                    <i class="fe fe-plus ml-1"></i> إضافة ملف بحث
+                </a>
+            @endcan
+            @can('case-research.researchers.index')
+                <a href="{{ route('case-research.researchers') }}" class="btn btn-outline-info btn-pill">
+                    <i class="fe fe-users ml-1"></i> الباحثون
+                </a>
+            @endcan
+            @can('case-research.workload.index')
+                <a href="{{ route('case-research.workload') }}" class="btn btn-outline-dark btn-pill">
+                    <i class="fe fe-bar-chart-2 ml-1"></i> عبء العمل
+                </a>
+            @endcan
         </div>
     </div>
 
@@ -244,9 +250,13 @@
                                 <div class="badge badge-{{ $badgeClass }}">{{ $file ? ($statusLabels[$file->status] ?? $file->status) : 'بدون ملف بحث' }}</div>
                             </div>
                             @if($file)
-                                <a href="{{ route('case-research.edit', $file->id) }}" class="btn btn-sm btn-outline-primary">إدارة</a>
+                                @can('case-research.edit')
+                                    <a href="{{ route('case-research.edit', $file->id) }}" class="btn btn-sm btn-outline-primary">إدارة</a>
+                                @endcan
                             @else
-                                <a href="{{ route('case-research.create', ['user_id' => $beneficiary->id]) }}" class="btn btn-sm btn-primary">فتح ملف</a>
+                                @can('case-research.create')
+                                    <a href="{{ route('case-research.create', ['user_id' => $beneficiary->id]) }}" class="btn btn-sm btn-primary">فتح ملف</a>
+                                @endcan
                             @endif
                         </div>
 
