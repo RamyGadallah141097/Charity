@@ -61,7 +61,7 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <form action="{{ route('donations_delete') }}" method="post">
+                    <form action="{{ route('delete_loans') }}" method="post">
                         @csrf
                         @method('post')
                         <div class="modal-body">
@@ -85,7 +85,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="example-Modal3">بيانات المتبرع</h5>
+                        <h5 class="modal-title" id="example-Modal3">بيانات القرض</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -139,7 +139,7 @@
             },
         ]
         showData('{{ route('index.Loans') }}', columns);
-        deleteScript('{{ route('donations_delete') }}');
+        deleteScript('{{ route('delete_loans') }}');
         showAddModal('{{ route('create.Loans') }}');
         addScript();
         showEditModal('{{ route('Donations.edit', ':id') }}');

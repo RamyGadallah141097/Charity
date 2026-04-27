@@ -11,6 +11,8 @@ use App\Models\DonationType;
 use App\Models\DonationUnit;
 use App\Models\ExpenseType;
 use App\Models\Governorate;
+use App\Models\JobTitle;
+use App\Models\RequiredDocument;
 use App\Models\RevenueType;
 use App\Models\Village;
 use Illuminate\Http\Request;
@@ -340,6 +342,8 @@ class ReferenceController extends Controller
             'expense-types' => ['model' => ExpenseType::class, 'title' => 'أنواع المصروفات', 'parent_label' => null, 'show_code' => false, 'show_sort_order' => false, 'show_notes' => false],
             'revenue-types' => ['model' => RevenueType::class, 'title' => 'أنواع الإيرادات الأخرى', 'parent_label' => null, 'show_code' => false, 'show_sort_order' => false, 'show_notes' => false],
             'disbursement-frequencies' => ['model' => DisbursementFrequency::class, 'title' => 'توقيتات وأنماط الصرف', 'parent_label' => null, 'show_code' => false, 'show_sort_order' => false, 'show_notes' => false],
+            'job-titles' => ['model' => JobTitle::class, 'title' => 'المناصب والوظائف', 'parent_label' => null, 'show_code' => false, 'show_sort_order' => false, 'show_notes' => false],
+            'required-documents' => ['model' => RequiredDocument::class, 'title' => 'المستندات المطلوبة', 'parent_label' => null, 'show_code' => false, 'show_sort_order' => false, 'show_notes' => false],
         ];
     }
 }

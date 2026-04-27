@@ -50,12 +50,11 @@
                     <thead>
                         <tr class="fw-bolder text-muted bg-light">
                             <th>كود المستفيد</th>
-                            <th>اسم الزوج</th>
-                            <th>اسم الزوجة</th>
-                            <th>الرقم القومى للزوج</th>
-                            <th>الرقم القومى للزوجة</th>
-                            <th>عمر الزوج</th>
-                            <th>عمر الزوجة</th>
+                            <th>اسم المستفيد</th>
+                            <th>اسم الزوج/الزوجة</th>
+                            <th>الرقم القومي للمستفيد</th>
+                            <th>عمر الحالة</th>
+                            <th>عمر الزوج/الزوجة</th>
                             <th>الحالة الاجتماعية للمستفيد</th>
                             <th>الهاتف</th>
                             <th>نوع العمل</th>
@@ -72,7 +71,6 @@
                             <td>{{ $user->husband_name ?: '-' }}</td>
                             <td>{{ $user->wife_name ?: '-' }}</td>
                             <td>{{ $user->husband_national_id ?: '-' }}</td>
-                            <td>{{ $user->wife_national_id ?: '-' }}</td>
                             <td>{{ $user->age_husband ?: '-' }}</td>
                             <td>{{ $user->age_wife ?: '-' }}</td>
                             <td>{{ $user->social_status == 0 ? 'اعزب' : ($user->social_status == 1 ? 'متزوج' : ($user->social_status == 2 ? 'مطلق' : 'ارمل')) }}</td>

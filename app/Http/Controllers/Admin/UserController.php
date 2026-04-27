@@ -114,7 +114,6 @@ class UserController extends Controller
                 })
                 ->addColumn('beneficiary', function ($user) {
                     $husband = $user->husband_name ?: '<span class="text-muted">نقص</span>';
-                    $wife = $user->wife_name ?: '<span class="text-muted">نقص</span>';
                     $codeHtml = $user->beneficiary_code
                         ? '<span class="badge badge-light text-dark border">الكود: ' . e($user->beneficiary_code) . '</span>'
                         : '<span class="badge badge-light text-muted border">الكود: -</span>';
@@ -122,7 +121,6 @@ class UserController extends Controller
                                 <div class="ml-3 text-right">
                                     <div class="mb-1">' . $codeHtml . '</div>
                                     <h6 class="mb-0 font-weight-bold text-primary">' . $husband . '</h6>
-                                    <small class="text-muted"><i class="fe fe-user mr-1"></i>الزوجة: ' . $wife . '</small>
                                 </div>
                             </div>';
                 })
@@ -372,7 +370,7 @@ class UserController extends Controller
             'husband_name' => @$request->husband_name,
             'wife_name' => @$request->wife_name,
             'husband_national_id' => @$request->husband_national_id,
-            'wife_national_id' => @$request->wife_national_id,
+            'wife_national_id' => null,
             'age_husband' => @$request->age_husband,
             'address' => @$request->address,
             'governorate_id' => $request->governorate_id,
@@ -479,7 +477,7 @@ class UserController extends Controller
                 'husband_name' => $request['husband_name'],
                 'wife_name' => $request['wife_name'],
                 'husband_national_id' => $request['husband_national_id'],
-                'wife_national_id' => $request['wife_national_id'],
+                'wife_national_id' => $user->wife_national_id,
                 'age_husband' => $request->age_husband,
                 'age_wife' => $request->age_wife,
                 'address' => $request['address'],

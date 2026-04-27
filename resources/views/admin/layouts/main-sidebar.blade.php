@@ -51,6 +51,44 @@
             </li>
         @endif
 
+        @if (auth()->check() && auth()->user()->can('research.index'))
+            @php
+                $caseResearchOpen = request()->routeIs('case-research.researchers*') || request()->routeIs('case-research.workload');
+            @endphp
+            <li class="slide">
+                <a class="side-menu__item {{ request()->routeIs('case-research.index') || request()->routeIs('case-research.create') || request()->routeIs('case-research.edit') ? 'active' : '' }}"
+                    href="{{ route('case-research.index') }}">
+                    <i class="fas fa-clipboard-check" style="margin-left: 10px;"></i>
+                    <span class="side-menu__label"> الحالات قيد البحث </span>
+                </a>
+            </li>
+            <p>
+                <a class="side-menu__item {{ $caseResearchOpen ? 'active' : '' }}"
+                    data-toggle="collapse" href="#caseResearchDropdown" role="button"
+                    aria-expanded="{{ $caseResearchOpen ? 'true' : 'false' }}"
+                    aria-controls="caseResearchDropdown">
+                    <i class="fas fa-sitemap" style="margin-left: 10px;"></i>
+                    <span class="side-menu__label"> إدارة الباحثين </span>
+                </a>
+            </p>
+            <ul class="collapse {{ $caseResearchOpen ? 'show' : '' }}" id="caseResearchDropdown">
+                <li>
+                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('case-research.researchers*') ? 'active' : '' }}"
+                        href="{{ route('case-research.researchers') }}">
+                        <i class="fas fa-user-tie" style="margin-left: 10px;"></i>
+                        <span class="side-menu__label"> الباحثون </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('case-research.workload') ? 'active' : '' }}"
+                        href="{{ route('case-research.workload') }}">
+                        <i class="fas fa-chart-line" style="margin-left: 10px;"></i>
+                        <span class="side-menu__label"> عبء العمل </span>
+                    </a>
+                </li>
+            </ul>
+        @endif
+
         {{-- التبرعات والمتبرعين --}}
         @if (auth()->check())
             @if (auth()->user()->can('donors.index') || auth()->user()->can('Donations.index'))
@@ -90,11 +128,8 @@
         @endif
 
         @php
-            $associationLockerId = \App\Models\DonationType::query()->where('code', \App\Models\DonationType::ASSOCIATION_CODE)->value('id');
             $associationMenuOpen = request()->routeIs('association-expenses.*')
-                || request()->routeIs('association-revenues.*')
-                || (request()->routeIs('lock') && request('locker_type') == $associationLockerId)
-                || (request()->segment(2) === 'lock' && request()->segment(3) == $associationLockerId);
+                || request()->routeIs('association-revenues.*');
         @endphp
         {{--    القروض الحسنة   --}}
 
@@ -158,6 +193,7 @@
                     </a>
                 </li>
             </ul>
+            
         @endif
         {{--     الزكاة والصدقات   --}}
 
@@ -171,13 +207,6 @@
         {{--                </a> --}}
         {{--            </li> --}}
         {{--        </ul> --}}
-
-        {{--     التبرعات العينية    --}}
-
-
-
-
-
 
         {{-- الإعانات --}}
         @if (auth()->check() && auth()->user()->can('subventions.index'))
@@ -221,6 +250,15 @@
         @endif
 
         @if (auth()->check() && auth()->user()->can('lock.index'))
+            <li class="slide">
+                <a class="side-menu__item {{ request()->routeIs('lock') ? 'active' : '' }}" href="{{ route('lock') }}">
+                    <i class="fas fa-wallet" style="margin-left: 10px;"></i>
+                    <span class="side-menu__label"> الخزنة </span>
+                </a>
+            </li>
+        @endif
+
+        @if (auth()->check() && auth()->user()->can('lock.index'))
             <p>
                 <a class="side-menu__item {{ $associationMenuOpen ? 'active' : '' }}"
                     data-toggle="collapse" href="#associationDropdown" role="button"
@@ -232,13 +270,6 @@
             </p>
 
             <ul class="collapse {{ $associationMenuOpen ? 'show' : '' }}" id="associationDropdown">
-                <li>
-                    <a class="dropdown-item-text side-menu__item {{ (request()->routeIs('lock') && request('locker_type') == $associationLockerId) || (request()->segment(2) === 'lock' && request()->segment(3) == $associationLockerId) ? 'active' : '' }}"
-                        href="{{ $associationLockerId ? route('lock', ['lock' => $associationLockerId]) : route('lock') }}">
-                        <i class="fas fa-wallet" style="margin-left: 10px;"></i>
-                        <span class="side-menu__label"> خزنة الجمعية </span>
-                    </a>
-                </li>
                 <li>
                     <a class="dropdown-item-text side-menu__item {{ request()->routeIs('association-expenses.*') ? 'active' : '' }}"
                         href="{{ route('association-expenses.index') }}">

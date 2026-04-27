@@ -19,7 +19,7 @@
                                 @foreach ($lockerTypes as $lockerType)
                                     <option value="{{ $lockerType->id }}"
                                         {{ (int) $selectedTypeId === (int) $lockerType->id ? 'selected' : '' }}>
-                                        {{ $lockerType->name }}
+                                        {{ $lockerType->display_name ?? $lockerType->name }}
                                     </option>
                                 @endforeach
                             </select>

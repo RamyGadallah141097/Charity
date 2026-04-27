@@ -20,7 +20,12 @@
 
             <div class="form-group">
                 <label class="form-control-label">الصفة / المنصب</label>
-                <input type="text" class="form-control" name="job_title" placeholder="عضو مجلس إدارة / مدير / موظف">
+                <select name="job_title" class="form-control select2">
+                    <option value="">اختر الصفة / المنصب</option>
+                    @foreach($job_titles as $job)
+                        <option value="{{ $job->name }}">{{ $job->name }}</option>
+                    @endforeach
+                </select>
             </div>
 
             <div class="form-row">

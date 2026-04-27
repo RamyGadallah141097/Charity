@@ -71,6 +71,10 @@
                 <div class="card-header">
                     <h3 class="card-title">الإعانات الفردية</h3>
                     <div class="">
+                        <a href="{{ route('SubventionsLoans.print-selected') }}" id="print-selected-subventions-loans" title="طباعة" class="btn btn-success btn-icon text-white">
+                            طباعة
+                            <i class="fa fa-print"></i>
+                        </a>
                         <a href="{{ route('SubventionsLoans.create') }}" class="btn btn-secondary btn-icon text-white">
                             <span>
                                 <i class="fe fe-plus"></i>
@@ -95,6 +99,9 @@
                         <table class="table table-striped table-bordered text-nowrap w-100" id="dataTable">
                             <thead>
                                 <tr class="fw-bolder text-muted bg-light">
+                                    <th class="min-w-25px text-center">
+                                        <input type="checkbox" id="select_all_subventions_loans">
+                                    </th>
                                     <th class="min-w-25px">#</th>
                                     <th class="min-w-50px">كود الحالة</th>
                                     <th class="min-w-50px">المستفيد</th>
@@ -111,11 +118,41 @@
             </div>
         </div>
     </div>
+    <!-- Delete MODAL -->
+    <div class="modal fade" id="delete_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">حذف بيانات</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="{{ route('SubventionsLoans.delete') }}" method="post">
+                    @csrf
+                    <div class="modal-body">
+                        <input id="delete_id" name="id" type="hidden">
+                        <p>هل انت متأكد من حذف البيانات التالية <span id="title" class="text-danger"></span>؟</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="dismiss_delete_modal">اغلاق</button>
+                        <button type="submit" class="btn btn-danger" id="delete_btn">حذف !</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     @include('admin/layouts/myAjaxHelper')
 @endsection
 @section('ajaxCalls')
     <script>
         var columns = [{
+                data: 'row_checkbox',
+                name: 'row_checkbox',
+                orderable: false,
+                searchable: false
+            },
+            {
                 data: null,
                 name: 'index',
                 render: function(data, type, row, meta) {
@@ -155,6 +192,40 @@
                 searchable: false
             },
         ]
-        showData("{{ route('SubventionsLoans.index', ['from' => $fromDate->format('Y-m-d'), 'to' => $toDate->format('Y-m-d')]) }}", columns);
+        showData(@json(route('SubventionsLoans.index', ['from' => $fromDate->format('Y-m-d'), 'to' => $toDate->format('Y-m-d')])), columns);
+        
+        deleteScript('{{ route('SubventionsLoans.delete') }}');
+    </script>
+    <script>
+        $(document).ready(function() {
+            $(document).on('change', '#select_all_subventions_loans', function() {
+                $('.subvention-row-checkbox').prop('checked', $(this).is(':checked'));
+            });
+
+            $(document).on('change', '.subvention-row-checkbox', function() {
+                let total = $('.subvention-row-checkbox').length;
+                let checked = $('.subvention-row-checkbox:checked').length;
+                $('#select_all_subventions_loans').prop('checked', total > 0 && total === checked);
+            });
+
+            $('#print-selected-subventions-loans').on('click', function(e) {
+                e.preventDefault();
+
+                let ids = $('.subvention-row-checkbox:checked').map(function() {
+                    return $(this).val();
+                }).get().filter(function(id) {
+                    return String(id || '').trim() !== '';
+                });
+
+                if (ids.length === 0) {
+                    toastr.error('يرجى تحديد مستفيد واحد على الأقل للطباعة');
+                    return;
+                }
+
+                let url = new URL($(this).attr('href'), window.location.origin);
+                url.searchParams.set('ids', ids.join(','));
+                window.open(url.toString(), '_blank');
+            });
+        });
     </script>
 @endsection

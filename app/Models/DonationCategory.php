@@ -16,4 +16,9 @@ class DonationCategory extends Model
     {
         return $this->belongsToMany(DonationUnit::class, 'donation_category_unit')->withTimestamps();
     }
+
+    public function donations()
+    {
+        return $this->hasMany(Donation::class, 'donation_category_id');
+    }
 }

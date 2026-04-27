@@ -15,23 +15,29 @@ class DonationTypeSeeder extends Seeder
 
         $types = [
             [
-                'name' => 'تبرع مالي',
+                'name' => 'خزنة التبرعات المالية',
                 'code' => DonationType::CASH_CODE,
                 'sort_order' => 1,
                 'is_active' => true,
             ],
             [
-                'name' => 'تبرع قرض حسن',
+                'name' => 'خزنة القرض الحسن',
                 'code' => DonationType::GOOD_LOAN_CODE,
                 'sort_order' => 2,
                 'is_active' => true,
             ],
             [
-                'name' => 'تبرع عيني',
+                'name' => 'خزنة التبرعات العينية',
                 'code' => 'in_kind',
                 'sort_order' => 3,
                 'is_active' => true,
-            ]
+            ],
+            [
+                'name' => 'خزنة الجمعية',
+                'code' => DonationType::ASSOCIATION_CODE,
+                'sort_order' => 4,
+                'is_active' => true,
+            ],
         ];
 
         foreach ($types as $type) {

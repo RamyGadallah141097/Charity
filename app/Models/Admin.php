@@ -71,4 +71,9 @@ class Admin extends Authenticatable
         return $this->belongsTo(Village::class);
     }
 
+    public function socialResearcherProfile()
+    {
+        return $this->hasOne(SocialResearcher::class);
+    }
+
 }

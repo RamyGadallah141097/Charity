@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\BorrowerController;
+use App\Http\Controllers\Admin\CaseResearchController;
 use App\Http\Controllers\Admin\InKindDisbursementController;
 use App\Http\Controllers\Admin\ReferenceController;
 use App\Http\Controllers\Admin\UserController;
@@ -131,6 +132,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('person-loans/{id}', 'loansController@personLoans')->name('person.loans');
     Route::get('loans/{id}', 'loansController@checkout')->name('loan.checkout');
     Route::post('loans/pay/{id}', 'loansController@payLoan')->name('loan.pay');
+    Route::post('loans/delete', 'loansController@delete')->name('delete_loans');
     Route::get("loan/print", "loansController@printLoan")->name("printLoan");
 
     //الزكاة والصدقات
@@ -148,10 +150,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('SubventionsLoans/index', 'SubventionsLoansController@index')->name('SubventionsLoans.index');
     Route::get('SubventionsLoans/create', 'SubventionsLoansController@create')->name('SubventionsLoans.create');
     Route::post('SubventionsLoans/store', 'SubventionsLoansController@store')->name('SubventionsLoans.store');
+    Route::post('SubventionsLoans/delete', 'SubventionsLoansController@delete')->name('SubventionsLoans.delete');
+    Route::get('SubventionsLoans/print-selected', 'SubventionsLoansController@showSubventions')->name('SubventionsLoans.print-selected');
     Route::get('SubventionsLoans/{subvention}/print-receipt', 'SubventionsLoansController@printReceipt')->name('SubventionsLoans.print-receipt');
     Route::get('in-kind-disbursements', [InKindDisbursementController::class, 'index'])->name('in-kind-disbursements.index');
     Route::get('in-kind-disbursements/create', [InKindDisbursementController::class, 'create'])->name('in-kind-disbursements.create');
-    Route::post('in-kind-disbursements', [InKindDisbursementController::class, 'store'])->name('in-kind-disbursements.store');
+    Route::post('in-kind-disbursements/store', [InKindDisbursementController::class, 'store'])->name('in-kind-disbursements.store');
+    Route::post('in-kind-disbursements/delete', [InKindDisbursementController::class, 'delete'])->name('in-kind-disbursements.delete');
     #### Safer ####
 
     #### Subventions ####
@@ -177,6 +182,16 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('research', 'ResearchController@index')->name('research.index')->middleware('permission:research.index');
     Route::get('social_research/{user_id}', 'ResearchController@social_research')->name('social_research');
     Route::get('researchReceive', 'ResearchController@researchReceive')->name('research.receive');
+    Route::get('case-research', [CaseResearchController::class, 'index'])->name('case-research.index')->middleware('permission:research.index');
+    Route::get('case-research/create', [CaseResearchController::class, 'create'])->name('case-research.create')->middleware('permission:research.index');
+    Route::post('case-research/store', [CaseResearchController::class, 'store'])->name('case-research.store')->middleware('permission:research.index');
+    Route::get('case-research/{id}/edit', [CaseResearchController::class, 'edit'])->name('case-research.edit')->middleware('permission:research.index');
+    Route::get('case-research/{id}/attachments/{index}', [CaseResearchController::class, 'attachment'])->name('case-research.attachment')->middleware('permission:research.index');
+    Route::put('case-research/{id}', [CaseResearchController::class, 'update'])->name('case-research.update')->middleware('permission:research.index');
+    Route::delete('case-research/delete', [CaseResearchController::class, 'destroy'])->name('case-research.delete')->middleware('permission:research.index');
+    Route::get('case-research/workload', [CaseResearchController::class, 'workload'])->name('case-research.workload')->middleware('permission:research.index');
+    Route::get('case-research/researchers', [CaseResearchController::class, 'researchers'])->name('case-research.researchers')->middleware('permission:research.index');
+    Route::post('case-research/researchers', [CaseResearchController::class, 'storeResearcher'])->name('case-research.researchers.store')->middleware('permission:research.index');
 
     #### Setting ####
     Route::get('setting', 'SettingController@index')->name('setting.index')->middleware(['permission:setting.index', 'admin']);
