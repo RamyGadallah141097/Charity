@@ -116,7 +116,7 @@
     //     pdf solved successfully
 
     // Delete Using Ajax
-    function deleteScript(routeOfDelete) {
+    function deleteScript(routeOfDelete = null) {
         $(document).ready(function() {
             //Show data in the delete form
             $('#delete_modal').on('show.bs.modal', function(event) {
@@ -128,31 +128,65 @@
                 modal.find('.modal-body #title').text(title);
             });
         });
-        $(document).on('click', '#delete_btn', function(event) {
+
+        function executeDeleteRequest(event) {
+            if (event) {
+                event.preventDefault();
+            }
+
+            var $form = $('#delete_modal form').first();
             var id = $("#delete_id").val();
+            var deleteUrl = routeOfDelete || $form.attr('action');
+            var methodOverride = ($form.find('input[name="_method"]').val() || '').toUpperCase();
+            var requestData = {
+                '_token': "{{ csrf_token() }}",
+                'id': id,
+            };
+
+            if (methodOverride) {
+                requestData._method = methodOverride;
+            }
+
+            if (!deleteUrl) {
+                toastr.error('تعذر تحديد مسار الحذف');
+                return;
+            }
+
             $.ajax({
-                type: 'POST ',
-                url: routeOfDelete,
-                data: {
-                    '_token': "{{ csrf_token() }}",
-                    'id': id,
-                },
+                type: 'POST',
+                url: deleteUrl,
+                data: requestData,
                 success: function(data) {
                     if (data.status === 200) {
-                        console.log(data);
-                        $("#dismiss_delete_modal")[0].click();
-                        $('#dataTable').DataTable().ajax.reload();
+                        $('#delete_modal').modal('hide');
+                        $('.modal-backdrop').remove();
+                        $('body').removeClass('modal-open');
+
+                        if ($.fn.DataTable.isDataTable('#dataTable')) {
+                            $('#dataTable').DataTable().ajax.reload(null, false);
+                        }
+
                         toastr.success(data.message)
                     } else {
-                        $("#dismiss_delete_modal")[0].click();
+                        $('#delete_modal').modal('hide');
                         toastr.error(data.message)
                     }
                 },
-                errer: function(data) {
-                    toastr.error(data.message)
+                error: function(xhr) {
+                    var message = 'حدث خطأ أثناء الحذف';
+
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        message = xhr.responseJSON.message;
+                    }
+
+                    $('#delete_modal').modal('hide');
+                    toastr.error(message)
                 }
             });
-        });
+        }
+
+        $(document).on('click', '#delete_btn', executeDeleteRequest);
+        $(document).on('submit', '#delete_modal form', executeDeleteRequest);
     }
 
     // show Add Modal

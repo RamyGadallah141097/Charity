@@ -375,20 +375,7 @@
                 $('#dataTable_filter input').val('');
             });
 
-            // Delete button handler
-            $(document).on("click", ".delete_button", function() {
-                let id = $(this).data("id");
-                let title = $(this).data("title");
-
-                $("#delete_id").val(id);
-                $("#title").text(title);
-                $("#delete_modal").modal("show");
-            });
-
-            // Delete form submission handler
-            $("#delete_btn").on("click", function() {
-                $("#delete_form").submit();
-            });
+            deleteScript();
 
             // Status change handler
             $(document).on('click', '.statusBtn', function(event) {
