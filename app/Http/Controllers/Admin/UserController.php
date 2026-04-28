@@ -593,12 +593,26 @@ class UserController extends Controller
         $user = User::findOrFail($request->id);
 
         if (! $this->canDeleteUser($user)) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => 400,
+                    'message' => 'لا يمكن حذف هذا المستفيد لأنه مقبول أو تمت عليه عمليات إعانة.',
+                ], 400);
+            }
+
             return redirect()
                 ->back()
                 ->with('error', 'لا يمكن حذف هذا المستفيد لأنه مقبول أو تمت عليه عمليات إعانة.');
         }
 
         $user->delete();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 200,
+                'message' => 'تم الحذف بنجاح',
+            ]);
+        }
 
         return redirect()->back()->with('success', 'تم الحذف بنجاح!');
     }
