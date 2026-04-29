@@ -25,9 +25,14 @@ class SettingController extends Controller
             $input['logo'] = $file_name;
         }
 
+        $setting = Setting::query()->first();
 
+        if ($setting) {
+            $setting->update($input);
+        } else {
+            Setting::create($input);
+        }
 
-        Setting::first()->update($input);
         toastr()->success('تم تحديث البيانات بنجاح');
         return back();
     }
