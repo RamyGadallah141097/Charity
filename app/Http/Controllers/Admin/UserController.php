@@ -676,9 +676,26 @@ class UserController extends Controller
             'excel_file.mimes' => 'الملف يجب أن يكون بصيغة xlsx أو xls أو csv.',
         ]);
 
-        Excel::import(new UsersImport(), $request->file('excel_file'));
+        $import = new UsersImport();
+        Excel::import($import, $request->file('excel_file'));
 
-        return redirect()->route('users.index')->with('success', 'تم استيراد المستفيدين بنجاح');
+        $summary = "تمت معالجة {$import->processedRows} صف، إضافة {$import->createdRows}، وتحديث {$import->updatedRows}";
+
+        if ($import->skippedRows > 0) {
+            $summary .= "، وتخطي {$import->skippedRows}";
+        }
+
+        if (! empty($import->issues)) {
+            toastr()->warning($summary);
+
+            foreach (array_slice($import->issues, 0, 10) as $issue) {
+                toastr()->error($issue);
+            }
+        } else {
+            toastr()->success($summary);
+        }
+
+        return redirect()->route('users.index');
     }
 
     private function referenceViewData(): array
