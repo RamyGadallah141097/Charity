@@ -43,14 +43,7 @@ class AdminsTableSeeder extends Seeder
 
 
 
-        DB::table('admins')->insert([
-            'name' => 'Admin2',
-            'email' => 'admin2@admin.com',
-            'password' => Hash::make('123456'),
-            'image' => null,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+       
 
         $admin = Admin::where('email', 'admin2@admin.com')->first();
 

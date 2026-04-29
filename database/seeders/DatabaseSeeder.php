@@ -16,11 +16,5 @@ class DatabaseSeeder extends Seeder
         $this->call(PermissionsSeeder::class);
         $this->call(RoleSeeder::class);
         $this->call(AdminsTableSeeder::class);
-        $this->call(SettingTableSeeder::class);
-        $this->call(DonationTypeSeeder::class);
-        $this->call(BorrowersSeeder::class);
-        $this->call(GuarantorsSeeder::class);
-        $this->call(MediaSeeder::class);
-        $this->call(BeneficiariesAndDonorsSeeder::class);
     }
 }
