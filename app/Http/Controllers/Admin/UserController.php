@@ -103,7 +103,7 @@ class UserController extends Controller
                         : '';
 
                     $deleteButton = $canDelete
-                        ? '<button class="btn btn-sm btn-danger-light delete_button px-3 py-2" data-id="' . $users->id . '" data-title="' . e($users->husband_name) . '" title="حذف">
+                        ? '<button class="btn btn-sm btn-danger-light delete_button px-3 py-2" data-toggle="modal" data-target="#delete_modal" data-id="' . $users->id . '" data-title="' . e($users->husband_name ?: $users->wife_name ?: ('المستفيد رقم ' . $users->id)) . '" title="حذف">
                                 <i class="fe fe-trash"></i>
                             </button>'
                         : '';

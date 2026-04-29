@@ -117,26 +117,35 @@
 
     // Delete Using Ajax
     function deleteScript(routeOfDelete = null) {
-        $(document).ready(function() {
-            //Show data in the delete form
-            $('#delete_modal').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget)
-                var id = button.data('id')
-                var title = button.data('title')
-                var modal = $(this)
-                modal.find('.modal-body #delete_id').val(id);
-                modal.find('.modal-body #title').text(title);
-            });
+        var $deleteModal = $('#delete_modal');
+
+        if (!$deleteModal.length) {
+            return;
+        }
+
+        $deleteModal.attr('data-delete-script-initialized', 'true');
+        $deleteModal.data('delete-route', routeOfDelete || $deleteModal.data('delete-route') || '');
+
+        // Show data in the delete form
+        $deleteModal.off('show.bs.modal.deleteHelper').on('show.bs.modal.deleteHelper', function(event) {
+            var button = $(event.relatedTarget);
+            var id = button.data('id');
+            var title = button.data('title');
+            var modal = $(this);
+
+            modal.find('.modal-body #delete_id').val(id);
+            modal.find('.modal-body #title').text(title || '');
         });
 
         function executeDeleteRequest(event) {
             if (event) {
                 event.preventDefault();
+                event.stopPropagation();
             }
 
-            var $form = $('#delete_modal form').first();
+            var $form = $deleteModal.find('form').first();
             var id = $("#delete_id").val();
-            var deleteUrl = routeOfDelete || $form.attr('action');
+            var deleteUrl = routeOfDelete || $deleteModal.data('delete-route') || $form.attr('action');
             var methodOverride = ($form.find('input[name="_method"]').val() || '').toUpperCase();
             var requestData = {
                 '_token': "{{ csrf_token() }}",
@@ -152,25 +161,34 @@
                 return;
             }
 
+            var $deleteButton = $('#delete_btn');
+            $deleteButton.prop('disabled', true);
+
             $.ajax({
                 type: 'POST',
                 url: deleteUrl,
                 data: requestData,
                 success: function(data) {
-                    if (data.status === 200) {
-                        $('#delete_modal').modal('hide');
+                    var isSuccess = data && (data.status === 200 || data.status === '200' || data.success === true);
+
+                    if (isSuccess) {
+                        $deleteModal.modal('hide');
                         $('.modal-backdrop').remove();
                         $('body').removeClass('modal-open');
 
                         if ($.fn.DataTable.isDataTable('#dataTable')) {
                             $('#dataTable').DataTable().ajax.reload(null, false);
+                        } else {
+                            window.location.reload();
                         }
 
-                        toastr.success(data.message)
+                        toastr.success(data.message || 'تم الحذف بنجاح');
                     } else {
-                        $('#delete_modal').modal('hide');
-                        toastr.error(data.message)
+                        $deleteModal.modal('hide');
+                        toastr.error((data && data.message) ? data.message : 'تعذر إتمام الحذف');
                     }
+
+                    $deleteButton.prop('disabled', false);
                 },
                 error: function(xhr) {
                     var message = 'حدث خطأ أثناء الحذف';
@@ -179,15 +197,22 @@
                         message = xhr.responseJSON.message;
                     }
 
-                    $('#delete_modal').modal('hide');
-                    toastr.error(message)
+                    $deleteModal.modal('hide');
+                    $deleteButton.prop('disabled', false);
+                    toastr.error(message);
                 }
             });
         }
 
-        $(document).on('click', '#delete_btn', executeDeleteRequest);
-        $(document).on('submit', '#delete_modal form', executeDeleteRequest);
+        $(document).off('click.deleteHelper', '#delete_btn').on('click.deleteHelper', '#delete_btn', executeDeleteRequest);
+        $(document).off('submit.deleteHelper', '#delete_modal form').on('submit.deleteHelper', '#delete_modal form', executeDeleteRequest);
     }
+
+    $(document).ready(function() {
+        if ($('#delete_modal').length && $('#delete_modal').attr('data-delete-script-initialized') !== 'true') {
+            deleteScript();
+        }
+    });
 
     // show Add Modal
     function showAddModal(routeOfShow) {
