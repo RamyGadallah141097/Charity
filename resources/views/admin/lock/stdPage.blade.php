@@ -54,13 +54,13 @@
                 </div>
             @endif
 
-            @if ($isCashLocker)
+            @if ($showsBalanceCard)
                 <div class="card-body w-100">
                     <div class="row w-100">
                         <div class="col-12">
                             <div class="card bg-secondary img-card box-secondary-shadow">
                                 <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
-                                    <span class="text-white fs-30">المتوفر في خزنة {{ $title }}</span>
+                                    <span class="text-white fs-30">المتوفر في {{ $title }}</span>
                                     <span class="text-white fs-30">{{ number_format($total, 0) }} EGP</span>
                                 </div>
                                 <div class="d-flex justify-content-between pr-3 pl-3 pt-3 w-100">
@@ -88,11 +88,11 @@
                 </div>
             @endif
 
-            @if (!$isCashLocker && $inKindCategorySummaries->isNotEmpty())
+            @if ($isInKindLocker && $inKindCategorySummaries->isNotEmpty())
                 <style>
                     .in-kind-summary-grid {
                         display: grid;
-                        grid-template-columns: repeat(7, minmax(130px, 1fr));
+                        grid-template-columns: repeat(4, minmax(0, 1fr));
                         gap: 10px;
                         margin: 16px 0;
                     }
@@ -167,7 +167,19 @@
 
                     @media (max-width: 1399px) {
                         .in-kind-summary-grid {
-                            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                            grid-template-columns: repeat(3, minmax(150px, 1fr));
+                        }
+                    }
+
+                    @media (max-width: 991px) {
+                        .in-kind-summary-grid {
+                            grid-template-columns: repeat(2, minmax(150px, 1fr));
+                        }
+                    }
+
+                    @media (max-width: 575px) {
+                        .in-kind-summary-grid {
+                            grid-template-columns: 1fr;
                         }
                     }
 
@@ -242,7 +254,7 @@
                                 <tr class="fw-bolder text-muted bg-light">
                                     <th class="min-w-25px">#</th>
                                     <th class="min-w-50px">الاسم</th>
-                                    @if (!$isCashLocker)
+                                    @if ($isInKindLocker)
                                         <th class="min-w-125px">صنف التبرع</th>
                                     @endif
                                     <th class="min-w-125px">القيمه</th>
@@ -311,6 +323,7 @@
         $(document).ready(function() {
             const selectedTypeId = "{{ $selectedTypeId ?? '' }}";
             const isCashLocker = @json($isCashLocker);
+            const isInKindLocker = @json($isInKindLocker);
             let dataTableUrl = "{{ route('lock') }}" + '?locker_type=' + selectedTypeId;
 
             var table = $('#dataTable').DataTable({
@@ -338,7 +351,7 @@
                         data: 'name',
                         name: 'name'
                     },
-                    ...(!isCashLocker ? [{
+                    ...(isInKindLocker ? [{
                         data: 'category_name',
                         name: 'category_name'
                     }] : []),

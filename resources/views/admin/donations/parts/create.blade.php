@@ -70,7 +70,7 @@
                     <select name="donation_type_id" id="donation_type_id" class="form-control">
                         <option value="">اختر التصنيف</option>
                         @foreach ($donationTypes as $type)
-                            <option value="{{ $type->id }}" data-code="{{ $type->code }}">{{ $type->name }}</option>
+                            <option value="{{ $type->id }}" data-code="{{ $type->code }}" data-is-in-kind="{{ $type->isInKindType() ? 1 : 0 }}">{{ $type->donationFormLabel() }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -171,9 +171,9 @@
 
         function syncDonationUnits() {
             const selectedOption = $donationType.find('option:selected');
-            const selectedTypeCode = selectedOption.data('code');
+            const isInKindType = String(selectedOption.data('is-in-kind') || '0') === '1';
             const selectedCategoryId = $donationCategory.val();
-            const isCashType = selectedTypeCode === 'cash' || selectedTypeCode === 'good_loan';
+            const isMonetaryType = !!selectedOption.val() && !isInKindType;
             const previousValue = $donationUnit.val();
 
             $donationUnit.html(originalUnitOptions);
@@ -183,18 +183,19 @@
                 const optionCategoryIds = (($option.data('category-ids') || '') + '').split(',').filter(Boolean);
                 const optionCode = $option.data('code');
                 const shouldKeep = !$option.val()
-                    || (isCashType && optionCode === 'egp')
-                    || (!isCashType && selectedCategoryId && optionCategoryIds.includes(selectedCategoryId));
+                    || (isMonetaryType && optionCode === 'egp')
+                    || (isInKindType && selectedCategoryId && optionCategoryIds.includes(selectedCategoryId));
 
                 if (!shouldKeep) {
                     $option.remove();
                 }
             });
 
-            if (isCashType) {
+            if (isMonetaryType) {
                 $donationCategory.val('');
                 $donationCategoryWrapper.addClass('d-none');
                 $donationUnit.val(cashUnitId || '');
+                $donationUnit.prop('disabled', false);
                 $donationUnitWrapper.addClass('d-none');
                 $cashUnitNote.removeClass('d-none');
             } else {

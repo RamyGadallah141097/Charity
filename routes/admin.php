@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\BorrowerController;
 use App\Http\Controllers\Admin\CaseResearchController;
 use App\Http\Controllers\Admin\InKindDisbursementController;
 use App\Http\Controllers\Admin\ReferenceController;
+use App\Http\Controllers\Admin\ReportsController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -149,8 +150,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::post('loans/delete', 'loansController@delete')->name('delete_loans')->middleware('permission:delete_goodLoans');
     Route::get("loan/print", "loansController@printLoan")->name("printLoan")->middleware('permission:goodLoans.index');
 
-    //الزكاة والصدقات
-    Route::get("safer/CharityZakat", "SaferController@indexCharityZakat")->name("safer.CharityZakat")->middleware('permission:zakat.index'); //تبرعات الزكاة والصدقات
     //التبرعات العينية
     Route::get('safer/InKindDonations', 'SaferController@InKindDonations')->name('safer.InKindDonations')->middleware('permission:safer.InKindDonations'); //التبرعات العينية
     #### Subventions ####
@@ -233,6 +232,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::put('references/{type}/{id}', [ReferenceController::class, 'update'])->name('references.update')->middleware('permission:references.edit');
     Route::post('references/{type}/{id}/toggle-status', [ReferenceController::class, 'toggleStatus'])->name('references.toggle-status')->middleware('permission:references.edit');
     Route::post('references/{type}/delete', [ReferenceController::class, 'delete'])->name('references.delete')->middleware('permission:references.delete');
+    Route::get('reports/incoming-donations', [ReportsController::class, 'incomingDonations'])->name('reports.incoming-donations');
+    Route::get('reports/outgoing-donations', [ReportsController::class, 'outgoingDonations'])->name('reports.outgoing-donations');
+    Route::get('reports/expenses', [ReportsController::class, 'expenses'])->name('reports.expenses');
+    Route::get('reports/comparison', [ReportsController::class, 'comparison'])->name('reports.comparison');
+    Route::get('reports/beneficiaries', [ReportsController::class, 'beneficiaries'])->name('reports.beneficiaries');
+    Route::get('reports/case-research', [ReportsController::class, 'caseResearch'])->name('reports.case-research');
     Route::post('borrowerReviewModal', 'BorrowerController@storeReview')->name('BorrowerReview');
     #### Auth ####
     Route::get('logout', 'AuthController@logout')->name('admin.logout');

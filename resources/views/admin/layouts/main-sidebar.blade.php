@@ -50,27 +50,32 @@
                 $canManageResearchers = auth()->user()->can('case-research.manage-researchers');
                 $canCaseResearchers = auth()->user()->can('case-research.researchers.index');
                 $canCaseResearchWorkload = auth()->user()->can('case-research.workload.index');
-                $caseResearchOpen = request()->routeIs('case-research.researchers*') || request()->routeIs('case-research.workload');
+                $canShowCaseResearchMenu = $canCaseResearchIndex || ($canManageResearchers && ($canCaseResearchers || $canCaseResearchWorkload));
+                $caseResearchOpen = request()->routeIs('case-research.index')
+                    || request()->routeIs('case-research.create')
+                    || request()->routeIs('case-research.edit')
+                    || request()->routeIs('case-research.researchers*')
+                    || request()->routeIs('case-research.workload');
             @endphp
-            @if ($canCaseResearchIndex)
-                <li class="slide">
-                    <a class="side-menu__item {{ request()->routeIs('case-research.index') || request()->routeIs('case-research.create') || request()->routeIs('case-research.edit') ? 'active' : '' }}"
-                        href="{{ route('case-research.index') }}">
-                        <i class="fas fa-clipboard-check" style="margin-left: 10px;"></i>
-                        <span class="side-menu__label"> الحالات قيد البحث </span>
-                    </a>
-                </li>
-            @endif
-            @if ($canManageResearchers && ($canCaseResearchers || $canCaseResearchWorkload))
+            @if ($canShowCaseResearchMenu)
                 <li class="slide">
                     <a class="side-menu__item {{ $caseResearchOpen ? 'active' : '' }}"
                         data-toggle="collapse" href="#caseResearchDropdown" role="button"
                         aria-expanded="{{ $caseResearchOpen ? 'true' : 'false' }}"
                         aria-controls="caseResearchDropdown">
                         <i class="fas fa-sitemap" style="margin-left: 10px;"></i>
-                        <span class="side-menu__label"> إدارة الباحثين </span>
+                        <span class="side-menu__label"> إدارة الباحثين والأبحاث </span>
                     </a>
                     <ul class="collapse {{ $caseResearchOpen ? 'show' : '' }}" id="caseResearchDropdown">
+                        @if ($canCaseResearchIndex)
+                            <li>
+                                <a class="dropdown-item-text side-menu__item {{ request()->routeIs('case-research.index') || request()->routeIs('case-research.create') || request()->routeIs('case-research.edit') ? 'active' : '' }}"
+                                    href="{{ route('case-research.index') }}">
+                                    <i class="fas fa-clipboard-check" style="margin-left: 10px;"></i>
+                                    <span class="side-menu__label"> الحالات قيد البحث </span>
+                                </a>
+                            </li>
+                        @endif
                         @if ($canCaseResearchers)
                             <li>
                                 <a class="dropdown-item-text side-menu__item {{ request()->routeIs('case-research.researchers*') ? 'active' : '' }}"
@@ -187,29 +192,6 @@
 
         {{--    القروض الحسنة   --}}
 
-        {{--     الزكاة والصدقات   --}}
-        @if (auth()->check() && auth()->user()->can('zakat.index'))
-            <li class="slide">
-                <a class="side-menu__item {{ request()->routeIs('safer.CharityZakat') ? 'active' : '' }}"
-                    href="{{ route('safer.CharityZakat') }}">
-                    <i class="fas fa-donate" style="margin-left: 10px;"></i>
-                    <span class="side-menu__label"> الزكاة </span>
-                </a>
-            </li>
-        @endif
-        {{--     الزكاة والصدقات   --}}
-
-        {{--     التبرعات العينية    --}}
-        {{--        <ul> --}}
-        {{--            <li> --}}
-        {{--                <a class="dropdown-item-text side-menu__item {{ request()->routeIs('safer.CharityZakat') ? 'active' : '' }}" --}}
-        {{--                   href="{{ route('safer.CharityZakat') }}"> --}}
-        {{--                    <i class="fas fa-box-open side-menu__icon" style="margin-left: 10px;"></i> --}}
-        {{--                    <span class="side-menu__label"> التبرعات العينية </span> --}}
-        {{--                </a> --}}
-        {{--            </li> --}}
-        {{--        </ul> --}}
-
         {{-- الإعانات --}}
         @if (auth()->check())
             @php
@@ -274,6 +256,66 @@
                     <span class="side-menu__label"> الخزنة </span>
                 </a>
             </li>
+        @endif
+
+        @if (auth()->check())
+            @php
+                $reportsOpen = request()->routeIs('reports.*');
+            @endphp
+            <li class="slide">
+                <a class="side-menu__item {{ $reportsOpen ? 'active' : '' }}"
+                    data-toggle="collapse" href="#reportsDropdown" role="button"
+                    aria-expanded="{{ $reportsOpen ? 'true' : 'false' }}"
+                    aria-controls="reportsDropdown">
+                    <i class="fas fa-chart-bar" style="margin-left: 10px;"></i>
+                    <span class="side-menu__label"> التقارير والاستعلامات </span>
+                </a>
+            </li>
+
+            <ul class="collapse {{ $reportsOpen ? 'show' : '' }}" id="reportsDropdown">
+                <li>
+                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('reports.incoming-donations') ? 'active' : '' }}"
+                        href="{{ route('reports.incoming-donations') }}">
+                        <i class="fas fa-arrow-down" style="margin-left: 10px;"></i>
+                        <span class="side-menu__label"> التبرعات الواردة </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('reports.outgoing-donations') ? 'active' : '' }}"
+                        href="{{ route('reports.outgoing-donations') }}">
+                        <i class="fas fa-arrow-up" style="margin-left: 10px;"></i>
+                        <span class="side-menu__label"> التبرعات المنصرفة </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('reports.expenses') ? 'active' : '' }}"
+                        href="{{ route('reports.expenses') }}">
+                        <i class="fas fa-file-invoice-dollar" style="margin-left: 10px;"></i>
+                        <span class="side-menu__label"> تقارير المصروفات </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('reports.comparison') ? 'active' : '' }}"
+                        href="{{ route('reports.comparison') }}">
+                        <i class="fas fa-balance-scale" style="margin-left: 10px;"></i>
+                        <span class="side-menu__label"> تقارير المقارنة </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('reports.beneficiaries') ? 'active' : '' }}"
+                        href="{{ route('reports.beneficiaries') }}">
+                        <i class="fas fa-users" style="margin-left: 10px;"></i>
+                        <span class="side-menu__label"> تقارير المستفيدين </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item-text side-menu__item {{ request()->routeIs('reports.case-research') ? 'active' : '' }}"
+                        href="{{ route('reports.case-research') }}">
+                        <i class="fas fa-search" style="margin-left: 10px;"></i>
+                        <span class="side-menu__label"> تقارير بحث الحالات </span>
+                    </a>
+                </li>
+            </ul>
         @endif
 
         @if (auth()->check())

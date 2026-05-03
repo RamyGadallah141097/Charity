@@ -21,27 +21,15 @@ class LockerLogController extends Controller
 
     public function index(Request $request, $model = null)
     {
-        $allowedLockerCodes = [
-            DonationType::CASH_CODE,
-            DonationType::GOOD_LOAN_CODE,
-            'in_kind',
-            DonationType::ASSOCIATION_CODE,
-        ];
-
-        $lockerLabels = [
-            DonationType::CASH_CODE => 'خزنة التبرعات المالية',
-            DonationType::GOOD_LOAN_CODE => 'خزنة القرض الحسن',
-            'in_kind' => 'خزنة التبرعات العينية',
-            DonationType::ASSOCIATION_CODE => 'خزنة الجمعية',
-        ];
-
         $selectedTypeId = $request->input('locker_type', $model);
         $lockerTypes = DonationType::active()
-            ->whereIn('code', $allowedLockerCodes)
+            ->lockerTypes()
             ->orderBy('sort_order')
             ->get()
-            ->map(function (DonationType $lockerType) use ($lockerLabels) {
-                $lockerType->display_name = $lockerLabels[$lockerType->code] ?? $lockerType->name;
+            ->map(function (DonationType $lockerType) {
+                $lockerType->display_name = $lockerType->isInKindType()
+                    ? 'خزنة التبرعات العينية'
+                    : (str_starts_with($lockerType->name, 'خزنة') ? $lockerType->name : 'خزنة ' . $lockerType->name);
 
                 return $lockerType;
             });
@@ -53,6 +41,8 @@ class LockerLogController extends Controller
         }
 
         $isCashLocker = $selectedLockerType?->isCashLockerType() ?? false;
+        $isInKindLocker = $selectedLockerType?->isInKindType() ?? false;
+        $showsBalanceCard = ! $isInKindLocker;
         $moneyType = $selectedLockerType?->lockerMoneyType();
 
         if ($request->ajax()) {
@@ -108,18 +98,24 @@ class LockerLogController extends Controller
                 ]);
             }
 
-            $incomingRows = $donations->latest()->get()->map(function (Donation $donation) {
+            $incomingRows = $donations->latest()->get()->map(function (Donation $donation) use ($isInKindLocker) {
                 $value = $donation->display_value ?: '---';
 
                 return [
                     'name' => optional($donation->donor)->name ?? 'غير معروف',
-                    'category_name' => optional($donation->donationCategory)->name ?? '--',
+                    'category_name' => $isInKindLocker ? (optional($donation->donationCategory)->name ?? '--') : (optional($donation->referenceDonationType)->name ?? '--'),
                     'amount' => $value . " <span class='locker-movement locker-movement--in'><i class='fas fa-arrow-down'></i> داخل</span>",
                     'comment' => 'تبرع وارد',
                     'created_at' => $donation->created_at ? $donation->created_at->format('d-m-Y') : 'غير متوفر',
                     'sort_date' => optional($donation->created_at)->timestamp ?? 0,
                 ];
             });
+
+            if (! $isInKindLocker) {
+                return DataTables::of($incomingRows->sortByDesc('sort_date')->values())
+                    ->escapeColumns([])
+                    ->make(true);
+            }
 
             $outgoingRows = Subvention::with(['user', 'asset', 'donationCategory', 'donationUnit'])
                 ->where('price', 0)
@@ -171,15 +167,16 @@ class LockerLogController extends Controller
             } else {
                 $total = $totalPlus - $totalMinus;
             }
-        } elseif ($selectedLockerType) {
+        } elseif ($selectedLockerType && $selectedLockerType->isInKindType()) {
             $inKindCategoryCodes = [
                 'new_clothes',
                 'used_clothes',
+                'bags',
                 'blankets',
                 'meat',
                 'new_furniture',
                 'used_furniture',
-                'electrical_appliances',
+                'electrical_devices',
             ];
 
             $inKindCategorySummaries = DonationCategory::active()
@@ -208,6 +205,9 @@ class LockerLogController extends Controller
                         'remaining' => max($incoming - (float) $spent, 0),
                     ];
                 });
+        } elseif ($selectedLockerType) {
+            $totalPlus = Donation::where('donation_type_id', $selectedTypeId)->sum('amount_value');
+            $total = $totalPlus;
         }
 
         return view('admin/lock/stdPage', [
@@ -215,6 +215,8 @@ class LockerLogController extends Controller
             'selectedTypeId' => $selectedTypeId,
             'title' => $title,
             'isCashLocker' => $isCashLocker,
+            'isInKindLocker' => $isInKindLocker,
+            'showsBalanceCard' => $showsBalanceCard,
             'total' => $total,
             'totalMinus' => $totalMinus,
             'totalPlus' => $totalPlus,
