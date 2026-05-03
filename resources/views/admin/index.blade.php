@@ -388,50 +388,38 @@
                 أرصدة الخزائن الحالية
             </h4>
         </div>
-        <!-- Money Locker -->
-        <div class="col-xl-3 col-lg-6">
-            <div class="stat-card success">
-                <i class="fas fa-money-bill-wave stat-icon"></i>
-                <div class="stat-title">خزنة المال (تبرعات)</div>
-                <div class="stat-value" style="color: #2ecc71;">{{ number_format($moneyLockerBalance, 2) }}</div>
-                <div class="stat-sub">
-                    <span class="badge badge-success-light">جنيه مصري</span>
+        @foreach($lockerCards as $lockerCard)
+            @php
+                $themeClass = $lockerCard['theme'];
+                $badgeClass = match ($themeClass) {
+                    'success' => 'badge-success-light',
+                    'primary' => 'badge-primary-light',
+                    'purple' => 'badge-purple-light',
+                    'warning' => 'badge-warning-light',
+                    'danger' => 'badge-danger-light',
+                    default => 'badge-primary-light',
+                };
+
+                $valueColor = match ($themeClass) {
+                    'success' => '#2ecc71',
+                    'primary' => '#3498db',
+                    'purple' => '#9b59b6',
+                    'warning' => '#f1c40f',
+                    'danger' => '#e74c3c',
+                    default => '#20324a',
+                };
+            @endphp
+            <div class="col-xl-3 col-lg-6 col-md-6">
+                <div class="stat-card {{ $themeClass }}">
+                    <i class="{{ $lockerCard['icon'] }} stat-icon"></i>
+                    <div class="stat-title">{{ $lockerCard['name'] }}</div>
+                    <div class="stat-value" style="color: {{ $valueColor }};">{{ $lockerCard['display_value'] }}</div>
+                    <div class="stat-sub">
+                        <span class="badge {{ $badgeClass }}">{{ $lockerCard['badge'] }}</span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- Loan Locker -->
-        <div class="col-xl-3 col-lg-6">
-            <div class="stat-card primary">
-                <i class="fas fa-hand-holding-usd stat-icon"></i>
-                <div class="stat-title">خزنة القروض الحسنة</div>
-                <div class="stat-value" style="color: #3498db;">{{ number_format($loanLockerBalance, 2) }}</div>
-                <div class="stat-sub">
-                    <span class="badge badge-primary-light">جنيه مصري</span>
-                </div>
-            </div>
-        </div>
-        <!-- Association Locker -->
-        <div class="col-xl-3 col-lg-6">
-            <div class="stat-card purple">
-                <i class="fas fa-building stat-icon"></i>
-                <div class="stat-title">خزنة الجمعية</div>
-                <div class="stat-value" style="color: #9b59b6;">{{ number_format($associationLockerBalance, 2) }}</div>
-                <div class="stat-sub">
-                    <span class="badge badge-purple-light">جنيه مصري</span>
-                </div>
-            </div>
-        </div>
-        <!-- In-kind Locker -->
-        <div class="col-xl-3 col-lg-6">
-            <div class="stat-card warning">
-                <i class="fas fa-box-open stat-icon"></i>
-                <div class="stat-title">خزنة العينيات</div>
-                <div class="stat-value" style="color: #f1c40f;">{{ number_format($inKindLockerBalance) }}</div>
-                <div class="stat-sub">
-                    <span class="badge badge-warning-light">إجمالي عدد الأصناف</span>
-                </div>
-            </div>
-        </div>
+        @endforeach
     </div>
 
     <!-- Charts Row -->

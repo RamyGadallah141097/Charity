@@ -95,22 +95,53 @@ class HomeController extends Controller
             ->get();
 
         // Locker Balances
-        $moneyLockerBalance = LockerLog::whereIn('moneyType', [LockerLog::moneyTypeSadaka, LockerLog::moneyTypeZakat])
-            ->selectRaw('SUM(CASE WHEN type = "plus" THEN amount ELSE -amount END) as balance')
-            ->value('balance') ?? 0;
+        $lockerCardThemes = ['success', 'primary', 'purple', 'warning', 'danger'];
+        $lockerCards = DonationType::active()
+            ->lockerTypes()
+            ->orderBy('sort_order')
+            ->get()
+            ->values()
+            ->map(function (DonationType $lockerType, int $index) use ($lockerCardThemes) {
+                $theme = $lockerCardThemes[$index % count($lockerCardThemes)];
 
-        $loanLockerBalance = LockerLog::where('moneyType', LockerLog::moneyTypeLoans)
-            ->selectRaw('SUM(CASE WHEN type = "plus" THEN amount ELSE -amount END) as balance')
-            ->value('balance') ?? 0;
+                if ($lockerType->isInKindType()) {
+                    $incoming = Donation::where('donation_type_id', $lockerType->id)
+                        ->sum(DB::raw('COALESCE(asset_count, amount_value, 0)'));
+                    $spent = Subvention::where('price', 0)->sum('asset_count');
+                    $balance = max($incoming - $spent, 0);
 
-        $associationLockerBalance = LockerLog::where('moneyType', LockerLog::moneyTypeAssociation)
-            ->selectRaw('SUM(CASE WHEN type = "plus" THEN amount ELSE -amount END) as balance')
-            ->value('balance') ?? 0;
+                    return [
+                        'name' => 'خزنة التبرعات العينية',
+                        'value' => $balance,
+                        'display_value' => number_format($balance),
+                        'badge' => 'إجمالي عدد الأصناف',
+                        'theme' => $theme,
+                        'icon' => 'fas fa-box-open',
+                        'is_in_kind' => true,
+                    ];
+                }
 
-        $inKindTypeId = DonationType::where('code', 'in_kind')->first()?->id;
-        $inKindIncoming = Donation::where('donation_type_id', $inKindTypeId)->sum(DB::raw('COALESCE(asset_count, amount_value, 0)'));
-        $inKindSpent = Subvention::where('price', 0)->sum('asset_count');
-        $inKindLockerBalance = max($inKindIncoming - $inKindSpent, 0);
+                $moneyType = $lockerType->lockerMoneyType();
+                $balance = 0;
+
+                if ($moneyType) {
+                    $balance = LockerLog::where('moneyType', $moneyType)
+                        ->selectRaw('SUM(CASE WHEN type = "plus" THEN amount ELSE -amount END) as balance')
+                        ->value('balance') ?? 0;
+                } else {
+                    $balance = Donation::where('donation_type_id', $lockerType->id)->sum('amount_value');
+                }
+
+                return [
+                    'name' => str_starts_with($lockerType->name, 'خزنة') ? $lockerType->name : 'خزنة ' . $lockerType->name,
+                    'value' => $balance,
+                    'display_value' => number_format($balance, 2),
+                    'badge' => 'جنيه مصري',
+                    'theme' => $theme,
+                    'icon' => $this->lockerIcon($lockerType),
+                    'is_in_kind' => false,
+                ];
+            });
 
         return view('admin.index', compact(
             'setting', 'donationsToday', 'donationsMonth', 'donationsYear',
@@ -119,7 +150,25 @@ class HomeController extends Controller
             'surplusMonth', 'revenueYear', 'expenseYear', 'surplusYear', 'donationsByKind',
             'monthlyChartData', 'topDonors', 'mostCommonDonationCategories', 'beneficiaryCategoriesCount',
             'totalMonthlySubventionsUsers', 'totalMonthlySubventionsValue',
-            'moneyLockerBalance', 'loanLockerBalance', 'associationLockerBalance', 'inKindLockerBalance'
+            'lockerCards'
         ));
+    }
+
+    private function lockerIcon(DonationType $lockerType): string
+    {
+        return match ($lockerType->code) {
+            DonationType::ASSOCIATION_CODE => 'fas fa-building',
+            DonationType::GOOD_LOAN_CODE => 'fas fa-hand-holding-usd',
+            DonationType::ZAKAT_MONEY_CODE => 'fas fa-coins',
+            DonationType::SADAQAT_CODE => 'fas fa-donate',
+            DonationType::ORPHAN_SPONSORSHIP_CODE => 'fas fa-child',
+            DonationType::ONGOING_CHARITY_CODE => 'fas fa-infinity',
+            DonationType::QURAN_CODE => 'fas fa-book-open',
+            DonationType::ZAKAT_FITR_CODE => 'fas fa-moon',
+            DonationType::FEEDING_CODE => 'fas fa-utensils',
+            DonationType::WATER_CODE => 'fas fa-tint',
+            DonationType::GENERAL_CHARITY_CODE => 'fas fa-hands-helping',
+            default => 'fas fa-wallet',
+        };
     }
 }

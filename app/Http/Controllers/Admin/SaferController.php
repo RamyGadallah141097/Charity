@@ -15,30 +15,6 @@ class SaferController extends Controller
         return "not exist ";
     }
 
-    //زكاة مال
-    public function indexCharityZakat(Request $request)
-    {
-        if ($request->ajax()) {
-            $donations = Donation::whereIn("donation_type", [0, 1])->get();
-            return Datatables::of($donations)
-                ->addColumn("donor_name", function ($donation) {
-                    return $donation->donor->name ?? 'غير معروف';
-                })
-                ->editColumn('created_at', function ($donation) {
-                    return $donation->created_at ? $donation->created_at->format('d-m-y') : 'غير متوفر';
-                })
-                ->escapeColumns([])
-                ->make(true);
-        } else {
-            $Charity = Donation::whereIn("donation_type", [0,1])->sum("donation_amount");
-            return view('admin/safer/charity', ["Charity" => $Charity]);
-        }
-    }
-
-
-
-
-
     //تبرعات عينية
     public function InKindDonations(Request $request)
     {

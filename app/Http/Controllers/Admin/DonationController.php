@@ -250,7 +250,7 @@ class DonationController extends Controller
 
     protected function formData(): array
     {
-        $donationTypes = DonationType::active()->orderBy('sort_order')->get();
+        $donationTypes = DonationType::active()->donationFormTypes()->orderBy('sort_order')->get();
         $donationUnits = DonationUnit::active()
             ->with('categories:id')
             ->orderBy('sort_order')

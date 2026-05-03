@@ -64,6 +64,10 @@ class ReferenceController extends Controller
                         return '<span class="badge badge-secondary">نوع ثابت</span>';
                     }
 
+                    if ($this->isReadOnlyDonationCategory($type)) {
+                        return '<span class="badge badge-secondary">بدون تعديل أو حذف</span>';
+                    }
+
                     $editButton = auth()->guard('admin')->user()->can('references.edit')
                         ? '<button type="button" data-id="' . $row->id . '" class="btn btn-pill btn-info-light editBtn"><i class="fa fa-edit"></i></button>'
                         : '';
@@ -123,6 +127,7 @@ class ReferenceController extends Controller
     {
         $lookup = $this->lookupOrFail($type);
         $item = $lookup['model']::findOrFail($id);
+        $this->abortIfReadOnlyDonationCategory($type);
         $this->abortIfProtectedDonationType($type, $item);
 
         return view('admin.references.parts.form', $this->formViewData($type, $item, route('references.update', [$type, $id]), 'PUT', 'updateForm', 'تعديل'));
@@ -132,6 +137,7 @@ class ReferenceController extends Controller
     {
         $lookup = $this->lookupOrFail($type);
         $item = $lookup['model']::findOrFail($id);
+        $this->abortIfReadOnlyDonationCategory($type);
         $this->abortIfProtectedDonationType($type, $item);
         $validator = Validator::make($request->all(), $this->rulesFor($type), $this->messages());
 
@@ -168,6 +174,7 @@ class ReferenceController extends Controller
     {
         $lookup = $this->lookupOrFail($type);
         $item = $lookup['model']::findOrFail($request->id);
+        $this->abortIfReadOnlyDonationCategory($type);
         $this->abortIfProtectedDonationType($type, $item);
         $item->delete();
 
@@ -183,6 +190,11 @@ class ReferenceController extends Controller
             && $item->isProtectedType();
     }
 
+    private function isReadOnlyDonationCategory(string $type): bool
+    {
+        return $type === 'donation-categories';
+    }
+
     private function abortIfProtectedDonationType(string $type, $item): void
     {
         if (! $this->isProtectedDonationType($type, $item)) {
@@ -190,6 +202,15 @@ class ReferenceController extends Controller
         }
 
         abort(403, 'هذا النوع ثابت ولا يمكن تعديله أو حذفه أو تعطيله.');
+    }
+
+    private function abortIfReadOnlyDonationCategory(string $type): void
+    {
+        if (! $this->isReadOnlyDonationCategory($type)) {
+            return;
+        }
+
+        abort(403, 'أصناف التبرعات العينية متاحة للإضافة والعرض فقط ولا يمكن تعديلها أو حذفها.');
     }
 
     private function formViewData(string $type, $item, string $formAction, string $formMethod, string $formId, string $submitLabel): array
